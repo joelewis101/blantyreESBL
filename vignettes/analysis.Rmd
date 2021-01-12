@@ -14,11 +14,15 @@ knitr::opts_chunk$set(
 )
 library(tidyverse)
 library(stringr)
+library(lubridate)
 library(glue)
 library(kableExtra)
 library(broom)
 library(devtools)
 library(ggsci)
+library(bayesplot)
+library(patchwork)
+library(loo)
 load_all()
 
 specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
@@ -509,9 +513,14 @@ left_join(
 ```
 
 
-```{r esbl-prev-plot, fig.cap = "ESBL prevalence as a function of time, stratified by study arm: sepsis patients exposed to antimicrobials and admitted to hospital; inpatients admitted to hospital but without antimicrobial exposure; and community members not admitted to hospital and without antimicrobial exposure. Non-sepsis inpatients are censored on first antimicrobial exposure and community members censored on antimicrobial expoure or hospitalisation. Smoothed prevalence is estimated from fitting a LOESS nonparametric regression line with span parameter 0.8.", fig.height=3, fig.width = 6 }
+```{r esbl-prev-plot, fig.cap = "SUPPLEMENTARY FIGURE 2: ESBL prevalence as a function of time, stratified by study arm: sepsis patients exposed to antimicrobials and admitted to hospital; inpatients admitted to hospital but without antimicrobial exposure; and community members not admitted to hospital and without antimicrobial exposure. Non-sepsis inpatients are censored on first antimicrobial exposure and community members censored on antimicrobial expoure or hospitalisation. Smoothed prevalence is estimated from fitting a LOESS nonparametric regression line with span parameter 0.8.", fig.height=3, fig.width = 6 }
+fills = c("#A25050","#6497b1","#7cb9b9")
 
-# get first ab exposure and hosp to censor plot
+
+
+cols = c("#8F2727","#03396c","#278f8f")
+
+# get first ab exposure 
 btESBL_stoolESBL %>% 
 left_join(
     btESBL_exposures %>%
@@ -527,6 +536,7 @@ left_join(
       slice(n = 1) %>%
       mutate(first_ab = assess_type) %>%
       select(pid, first_ab)) %>% 
+  # and hospital exposure
   left_join(
     btESBL_exposures %>%
       group_by(pid) %>%
@@ -538,35 +548,450 @@ left_join(
       slice(n=1) %>% 
       mutate(first_hosp = assess_type) %>%
       select(pid, first_hosp)) %>% 
+  # censor as described
   filter(
     !(arm == 2 & !is.na(first_ab) & first_ab < t),
     !(arm == 3 & !is.na(first_ab) & first_ab < t),
     !(arm == 3 & !is.na(first_hosp) & first_hosp < t)
-  ) -> te
-
-te %>% 
+  ) %>% 
   mutate(arm = case_when(
-    arm == 1 ~ "Sepsis",
-    arm == 2 ~ "Inpatient",
+    arm == 1 ~ "Inpatient:\nantimicrobials",
+    arm == 2 ~ "Inpatient:\nno antimicrobials",
     arm == 3 ~ "Community"),
-    arm = factor(arm, levels = c("Sepsis", "Inpatient", "Community"))
+    arm = factor(arm, levels = c("Inpatient:\nantimicrobials", 
+                                 "Inpatient:\nno antimicrobials",
+                                 "Community"))
     ) %>% 
 ggplot(aes(t, as.numeric(ESBL == "Positive"), 
                color = as.factor(arm), 
                group = as.factor(arm),
                fill = as.factor(arm))) +
   geom_smooth(size = 0.5) +
-  coord_cartesian(xlim = c(0,180), ylim = c(0.2,0.9)) +
+  coord_cartesian(xlim = c(0,180), ylim = c(0.1,0.9)) +
   theme_bw() +
-  scale_color_npg() +
-    scale_fill_npg() + 
+  scale_fill_manual(values = fills) +
+  scale_color_manual(values = cols) +
+#  scale_color_npg() +
+ #   scale_fill_npg() + 
 #  scale_color_manual(values = pal_lancet()(3)[c(2,1,3)]) + 
  # scale_fill_manual(values = pal_lancet()(3)[c(2,1,3)]) +
-  xlab("Day post enrolment") +
-  ylab("Proportion ESBL") +
+  xlab("Day post enrollment") +
+  ylab("ESBL-E prevalence") +
   theme(legend.title = element_blank(),
-        legend.position = "bottom") -> ESBLprevplot
+        legend.position = "top") -> ESBLprevplot
 
-ESBLprevplot
 ```
+
+### Baseline associations of ESBL colonisation
+
+```{r ESBLbaseline-log-reg-plot}
+
+# helper function for univariable ods ratios
+
+univ_or <- function(df, oc_var) {
+  out <- list()
+  varz <- names(df)
+  varz <- varz[!grepl(oc_var, varz)]
+  for (i in 1:length(varz)) {
+    form <- formula(paste0(oc_var, " ~ " ,varz[i]))
+    modout <- glm(formula = form, data = df, family = "binomial")
+    dfout <- tidy(modout, conf.int = TRUE)
+    dfout[c(2,3,6,7)] <- sapply(dfout[c(2,3,6,7)], exp)
+    dfout <- dplyr::select(dfout, term, estimate, conf.low, conf.high, p.value)
+    dfout <- dplyr::filter(dfout, term != "(Intercept)")
+    out[[i]] <- dfout
+  }
+  out <- do.call(rbind, out)
+  return(out)
+}
+
+# get the variables we need
+
+btESBL_participants %>%
+  select(
+    pid,
+    arm,
+    calc_age,
+    ptsex,
+    hivstatus,
+    hivonart,
+    hivcpt,
+    tbongoing,
+    recieved_prehosp_ab,
+    pmhxrechospital,
+    watersource,
+    watertreated,
+    toilet,
+    housholdadultsno,
+    householdchildno,
+    keepanim,
+    enroll_date
+  ) %>% 
+  left_join(
+    btESBL_stoolESBL %>% 
+      filter(visit == 0) %>% 
+      select(pid, ESBL)
+    ) %>% 
+  mutate(
+    toilet = case_when(
+      toilet == "Flush Toliet (any type)" ~ "Flush toilet",
+      TRUE ~ "Latrine or no toilet"
+    ),
+    watersource = case_when(
+      watersource %in% c(
+        "Unprotected well/spring",
+        "Surface water (including rainwater collection)"
+      ) ~
+        "Unprotected",
+      TRUE ~ "Protected"
+    ),
+    season = case_when(
+      month(enroll_date) >= 11 | month(enroll_date) <= 4 ~ "rainy",
+      TRUE ~ "dry"),
+    arm = case_when(
+    arm == 1 ~ "Sepsis",
+    arm == 2 ~ "Inpatient",
+    arm == 3 ~ "Community"),
+    ESBL = if_else(ESBL == "Positive", 1,0)) %>% 
+  mutate(across(matches("hiv|tb"), ~ if_else(is.na(.x), "No", .x))) %>% 
+  select(-c("pid", "enroll_date")) ->
+  bl.esbl
+ 
+# fit models
+
+left_join(
+  univ_or(bl.esbl, "ESBL") %>% 
+    mutate(op = paste0(specify_decimal(estimate,2), " (",
+                       specify_decimal(conf.low,2), "-",
+                       specify_decimal(conf.high,2), ")")
+           ),
+  tidy(
+  glm(ESBL ~ ., data = bl.esbl, family = binomial(link = "logit")),
+  conf.int = TRUE) %>% 
+  select( term, estimate, conf.low, conf.high, p.value) %>% 
+    mutate(across(!matches("term|p"), exp)) %>% 
+  filter(term != "(Intercept)") %>% 
+    mutate(op = paste0(specify_decimal(estimate,2), " (",
+                       specify_decimal(conf.low,2), "-",
+                       specify_decimal(conf.high,2), ")")
+    ),
+  by = "term",
+  suffix = c("_uv", "_mv")) -> log_regESBL
+
+# recode variables lookup vector
+    
+recode.str <- c(calc_age = "Age (per year)",
+  ptsexMale = "Male sex (vs female)",
+  armInpatient = "Inpatient (vs community)",
+  armSepsis = "Sepsis (vs community)",
+  
+  hivstatusReactive = "HIV+ (vs HIV-)",
+  hivstatusUnknown = "HIV unknown (vs HIV-)",
+  hivcptYes = "CPT (vs none)",
+  pmhxrechospitalYes = "Hospitalisation",
+  recieved_prehosp_abYes = "Antibiotics*",
+  tbongoingYes = "Current TB treatment",
+  housholdadultsno = "Adults (per 1)",
+  householdchildno = "Children (per 1)",
+  keepanimYes = "Keep animals (vs. not)",
+  `toiletLatrine or no toilet` = "Flushing toilet (vs. not)",
+  watersourceUnprotected = "Unprotected water source",
+  watertreatedYes = "Treat water (vs not)",
+  seasonrainy = "Rainy season (vs. dry)"
+  
+  )
+
+
+
+log_regESBL %>% 
+  mutate(across(matches("p\\.value"), ~ case_when(
+    .x < 0.001 ~ "<0.001",
+    TRUE ~ specify_decimal(.x, 3)))
+  ) %>% 
+  select(term,op_uv, p.value_uv,
+         op_mv, p.value_mv) %>% 
+  mutate(term = recode_factor(term, !!!recode.str, .ordered = TRUE)) %>% 
+   kable( col.names = c("Variable",
+                        "OR (95\\% CI)", 
+                        "p-value", 
+                        "aOR (95\\% CI)",
+                        "p-value"),
+      caption = "TABLE 2: Univariable and multivariable associations of ESBL colonisation at enrolment") %>% 
+        kable_classic(full_width = FALSE) %>%
+      column_spec(2:3, bold = log_regESBL$p.value_uv < 0.05) %>% 
+  column_spec(4:5, bold = log_regESBL$p.value_mv < 0.05) %>% 
+       pack_rows("Study Arm", 1,2, bold = FALSE) %>%
+       pack_rows("Demographics", 3,4, bold = FALSE) %>%
+       pack_rows("HIV status", 5,8, bold = FALSE) %>%
+       pack_rows("Healthcare exposure", 9,11, bold = FALSE) %>%
+       pack_rows("Household", 12,17, bold = FALSE) %>%
+       pack_rows("Season", 18,18, bold = FALSE) %>% 
+  add_header_above(c(" " = 1, "Univariable" = 2, "Multivariable" = 2)) %>% 
+  footnote(general = "CPT = Cotrimoxazole preventative therapy, ART = antiretroviral therapy, TB = tuberculosis. Entries in bold are those for which 95% confidence intervals do not cross 1.", symbol = "Antibiotics includes TB therapy but excludes CPT.") 
+
+
+```
+
+```{r markov-model-panel-plot, fig.cap = "FIGURE 1: Determinants of ESBL-E carriage. A: Prevalence of ESBL-E carriage stratified by study arm. Inpatients without sepsis are censored at first antimicrobial exposure and community members censored at first antimicrobial exposure or hospital admission. Estimated prevalence and 95% confience intervals derived from a nonparametric LOESS regression with span parameter 0.8. B: Simulated probability of ESBL colonisation generated from the posterior parameter estimates of the fitted model with a starting probability of colonisation of 0.5 and seven days of hospitalisation with either seven, two, or no days antimicrobial exposure. In this model, truncated courses of antimicrobials havelittle effect on reducing ESBL-E carriage. C-E: Density plots of parameter estimates form fitted model with median (line) and 95% credible intervals (shading) shown. A: log hazard ratios of ESBL-E gain and loss for hospialisation and antimicrobial exposure: hospitalisation acts to acts to increase both acquisition and loss of ESBL-E whereas antmicrobial exposure acts to prevent loss. D: mean time in state for uncolonised and colonised states. E: Half life of decay of effecr of antimicrobials, showing that the effect of antimicrobials, in this model, acts for many days after exposure has finished.", fig.width = 12, fig.height=6  }
+
+inv <- function(x) {
+  return(1/x)
+}
+
+log2scale <- function(x) {
+  return(log(2) *x )
+}
+color_scheme_set(scheme = "gray")
+mcmc_areas(btESBL_model2posterior, regex_pars = "alpha|beta",  area_method = "equal height", prob = 0.95, prob_outer = 0.99)  + 
+  theme_bw() +
+  scale_y_discrete(
+    limits = c("alphas[1]", "betas[1]", "alphas[2]", "betas[2]"),
+                   labels = c("alphas[1]" = "Loss[abx]", #expression(paste(alpha,"[abx]")),
+                              "alphas[2]" = "Loss[hosp]", #expression(paste(alpha,"[hosp]")),
+                              "betas[1]" = "Gain[abx]", #expression(paste(beta,"[abx]")),
+                              "betas[2]" = "Gain[hosp]" #expression(paste(beta,"[hosp]"))
+                              ),
+    expand = expansion(add = c(0.2,1)) 
+    ) +
+    labs(x = "Log hazard ratio of ESBL gain/loss")-> a
+
+mcmc_areas(btESBL_model2posterior, regex_pars = "lambda|mu", transformations = inv, area_method = "equal height", prob = 0.95, prob_outer = 0.99)  + theme_bw() +   #-> c #+ 
+ scale_y_discrete(limits = c("t(lambda)", "t(mu)"),
+                   labels = c("t(lambda)" = "Uncolonised", #expression(paste(lambda^'-1')),
+                              "t(mu)" = "Colonised"), # expression(paste(mu^'-1'))),
+  expand = expansion(add = c(0.2,1))) +
+  labs(x = "Mean time in state (days)") -> b
+
+mcmc_areas(btESBL_model2posterior, regex_pars = "gamma" , transformations = log2scale, prob = 0.95, prob_outer = 0.99) + theme_bw()+   #-> c #+ 
+ scale_y_discrete(limits = "t(gammas[1])",
+                  labels = c("t(gammas[1])" = "Half life"), # expression(paste(gamma, "log(2))"))),
+          #        labels = c("t(gammas[1])" = "\u03b3 log(2)"),
+  expand = expansion(add = c(0.2,1))) +
+  labs(x = "Half life of antimicrobial effect (days)")-> c
+
+# simulated data
+
+
+
+#cols2 = c("#ffcc80", "#a25079","#660066")
+
+btESBL_model2simulations %>%
+    group_by(time, abx_stop) %>%
+    summarise(
+        median = median(`2`),
+        lq = quantile(`2`, 0.025)[[1]],
+        uq = quantile(`2`, 0.975)[[1]]
+    ) %>%
+    mutate(abx_stop = paste0(as.character(abx_stop), " days \nantimicrobials")) %>%
+    ggplot(aes(
+        time,
+        median,
+        ymin = lq,
+        ymax = uq,
+        linetype = fct_rev(abx_stop),
+        fill = fct_rev(abx_stop),
+        color = fct_rev(abx_stop))
+    ) +
+    geom_line() + geom_ribbon(alpha = 0.4, color = NA) +
+    theme_bw() +
+  theme(legend.position = "top") +
+  scale_color_manual(values = c(cols[1], cols[1], cols[2])) +
+  scale_fill_manual(values = c(fills[1], fills[1], fills[2])) +
+  scale_linetype_manual(values = c("solid", "dashed", "solid")) +
+  labs(#linetype = "Antimicrobial exposure",
+       #color = "Antimicrobial exposure",
+       #fill = "Antimicrobial exposure",
+       y = "Simulated ESBL prevalence",
+       x = "Days post enrollment") +
+  coord_cartesian(ylim = c(0.1,0.9)) +
+  theme(legend.title = element_blank())-> e
+
+
+((ESBLprevplot +e) / (a+b+ c)) + 
+  plot_layout(heights = c(1.5,1)) + 
+  plot_annotation(tag_levels = "A") -> markov_panel_plot
+
+markov_panel_plot
+
+#ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/F1_markov_panel.png",
+       #width = 10, height = 6)
+```
+
+```{r compare-models-plot, fig.cap = "SUPPLEMENTARY FIGURE X: Model comparisons for models with and without an exponentially dcaying effect of antmicrobials. A-B: Parameter estimates from stepwise-constant covariate model. C-E: parameter estimates from model with exponentially-decaying effect of antinicrobial exposure. F: Posterior predictive checks of modelsm comparing model with piecewise-constant covariates (model 1) to exponentially decaying effect of antimicrobial exposure (model 2). Dashed lines show actual ESBL-E prevalence across three study arms; probability density of predicted prevalence from the two models show that model 1 tends to underestimate ESBL-E prevalence in the antimicrobial-exposed, compared to model 2.", fig.width= 11, fig.height = 8}
+# to
+
+# parameter estimates from model 1 and 2
+
+mcmc_areas(btESBL_model1posterior, regex_pars = "alpha|beta",  area_method = "equal height", prob = 0.95, prob_outer = 0.99)  + 
+  theme_bw() +
+  scale_y_discrete(
+    limits = c("ab_alpha0", "ab_beta0", "hosp_alpha1", "hosp_beta1"),
+                   labels = c("ab_alpha0" = "Loss[abx]", #expression(paste(alpha,"[abx]")),
+                              "hosp_alpha1" = "Loss[hosp]", #expression(paste(alpha,"[hosp]")),
+                              "ab_beta0" = "Gain[abx]", #expression(paste(beta,"[abx]")),
+                              "hosp_beta1" = "Gain[hosp]" #expression(paste(beta,"[hosp]"))
+                              ),
+    expand = expansion(add = c(0.2,1)) 
+    ) +
+    labs(x = "Log hazard ratio of ESBL gain/loss")-> a1
+
+mcmc_areas(btESBL_model1posterior, regex_pars = "lambda|mu", transformations = inv, area_method = "equal height", prob = 0.95, prob_outer = 0.99)  + theme_bw() +   #-> c #+ 
+ scale_y_discrete(limits = c("t(lambda)", "t(mu)"),
+                   labels = c("t(lambda)" = "Uncolonised", #expression(paste(lambda^'-1')),
+                              "t(mu)" = "Colonised"), # expression(paste(mu^'-1'))),
+  expand = expansion(add = c(0.2,1))) +
+  labs(x = "Mean time in state (days)") -> b1
+
+
+
+bind_rows(
+  bind_cols(as.data.frame(t(
+    extract_log_lik(btESBL_model1posterior)
+  )),
+  select(btESBL_modeldata, pid, ESBL_stop)) %>%
+    left_join(select(btESBL_participants, pid, arm), by = "pid") %>%
+    pivot_longer(-c(pid, arm, ESBL_stop)) %>%
+    mutate(
+      pred_prob = exp(value),
+      pred_state = rbinom(
+        length(pred_prob),
+        1,
+        if_else(ESBL_stop == 1, pred_prob, 1 - pred_prob)
+      )
+    ) %>% group_by(arm, name) %>%
+    summarise(prop = sum(pred_state == 1) / length(pred_state),
+               model = "Model 1") ,
+  
+  bind_cols(as.data.frame(t(
+    extract_log_lik(btESBL_model2posterior)
+  )),
+  select(btESBL_modeldata, pid, ESBL_stop)) %>%
+    left_join(select(btESBL_participants, pid, arm), by = "pid") %>%
+    pivot_longer(-c(pid, arm, ESBL_stop)) %>%
+    mutate(
+      pred_prob = exp(value),
+      pred_state = rbinom(
+        length(pred_prob),
+        1,
+        if_else(ESBL_stop == 1, pred_prob, 1 - pred_prob)
+      )
+    ) %>% group_by(arm, name) %>%
+    summarise(prop = sum(pred_state == 1) / length(pred_state),
+              model = "Model 2")
+) %>%
+  mutate(arm = case_when(
+    arm == 1 ~ "Sepsis",
+    arm == 2 ~ "Inpatient",
+    arm == 3 ~ "Community"),
+    arm = factor(arm, levels = c("Sepsis", "Inpatient", "Community")) 
+    )%>% 
+  ggplot(aes(prop, group = arm, fill = arm, color = arm)) +
+  geom_density(alpha = 0.5) + 
+  facet_wrap( ~ model, ncol = 1) +
+  geom_vline(
+    data = bind_cols(as.data.frame(t(
+      extract_log_lik(btESBL_model1posterior)
+    )),
+    select(btESBL_modeldata, pid, ESBL_stop)) %>%
+      left_join(select(btESBL_participants, pid, arm), by = "pid") %>%
+      pivot_longer(-c(pid, arm, ESBL_stop)) %>% 
+      group_by(arm) %>% 
+      summarise(prop = sum(ESBL_stop) / length(ESBL_stop)) %>%
+      mutate(
+        arm = case_when(
+          arm == 1 ~ "Sepsis",
+          arm == 2 ~ "Inpatient",
+          arm == 3 ~ "Community"
+        )
+      ) ,
+    aes(xintercept = prop, color= arm),
+    linetype = "dashed"
+  ) +
+  scale_fill_manual(values = fills) +
+  scale_color_manual(values = cols) +
+  theme_bw() +
+  labs(x = "ESBL-E prevalence") ->post_check
+  
+((a1 + b1 + plot_spacer() + a + b + c +  plot_layout(ncol = 3, nrow = 2))  / (post_check) ) + 
+  plot_annotation(tag_levels = "A") + plot_layout(heights =  c(1,1))
+
+# compare models with loo  
+
+```
+
+
+```{r model2-param-table}
+
+mcmc_intervals_data(
+  btESBL_model2posterior,
+  pars = c(
+    "alphas[1]",
+    "betas[1]",
+    "alphas[2]",
+    "betas[2]",
+    "gammas[1]",
+    "lambda",
+    "mu"
+  ),
+  transformations = list(
+    "alphas[1]" = exp,
+    "betas[1]" = exp,
+    "alphas[2]" = exp,
+    "betas[2]" = exp,
+    "gammas[1]" = log2scale,
+    "lambda" = inv,
+    "mu" = inv
+  ),
+  prob_outer = 0.95
+) %>% 
+  select(parameter, ll,m,hh) %>% 
+  mutate(stri = glue('{specify_decimal(m,2)} ({specify_decimal(ll,2)}-{specify_decimal(hh,2)})'),
+         parameter2 = case_when(
+           grepl("alpha", parameter)  ~"Hazard ratio ESBL-E Loss",
+           grepl("beta", parameter)  ~"Hazard ratio ESBL-E Loss",
+           grepl("gamma", parameter)  ~"Half life of effect (days)",
+           grepl("lambda", parameter)  ~"Colonised (days)",
+           grepl("mu", parameter)  ~"Uncolonised (days)",
+  ),
+  parameter = factor(parameter, levels = c("t(alphas[1])",
+                                           "t(betas[1])",
+                                           "t(gammas[1])",
+                                           "t(alphas[2])",
+                                           "t(betas[2])",
+                                           "t(lambda)",
+                                           "t(mu)"))) %>% 
+  arrange(parameter) %>% 
+  select(parameter2, stri) %>% 
+  
+
+kable( col.names = c("Variable", "Value"),
+      caption = "Parameter estimates (and 95% confidence intervals) from model 2") %>% kable_classic(full_width = FALSE) %>%
+  pack_rows("Effect of Antibacterials", 1,3) %>%
+  pack_rows("Effect of Hospitalisation", 4,5) %>%
+  pack_rows("Mean time in state", 6,7) %>%
+  footnote(general = "Hazard ratios are the exponential of the parameters alpha and beta in the model; half life is equal to log(2) multiplied by gamma; mean time in state assumes all other covariates are equal to zero and is then the reciprocal of lambda or mu.")
+
+
+```
+
+### Compare out-of-sample prediction with _loo_
+
+```{r loo}
+
+# compare model 1 and model 2 with loo
+
+ll_m1 <- extract_log_lik(btESBL_model1posterior, merge_chains = FALSE)
+r_eff_m1 <- relative_eff(exp(ll_m1)) 
+
+ll_m2 <- extract_log_lik(btESBL_model2posterior, merge_chains = FALSE)
+r_eff_m2 <- relative_eff(exp(ll_m2)) 
+loo_mod1 <- loo(ll_m1, r_eff = r_eff_m1)
+loo_mod2 <- loo(ll_m2, r_eff = r_eff_m2)
+loo_compare(loo_mod1, loo_mod2)
+
+```
+
+
+
+
 
