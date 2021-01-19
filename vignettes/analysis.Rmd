@@ -12,17 +12,23 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+library(igraph)
+library(ggraph)
 library(tidyverse)
 library(stringr)
 library(lubridate)
 library(glue)
-library(kableExtra)
 library(broom)
 library(devtools)
 library(ggsci)
 library(bayesplot)
 library(patchwork)
 library(loo)
+library(ggplotify)
+library(pheatmap)
+library(viridis)
+library(ggtree)
+library(kableExtra)
 load_all()
 
 specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
@@ -742,7 +748,12 @@ log2scale <- function(x) {
   return(log(2) *x )
 }
 color_scheme_set(scheme = "gray")
-mcmc_areas(btESBL_model2posterior, regex_pars = "alpha|beta",  area_method = "equal height", prob = 0.95, prob_outer = 0.99)  + 
+mcmc_areas(
+  btESBL_model2posterior,
+  regex_pars = "alpha|beta",
+  area_method = "equal height",
+  prob = 0.95,
+  prob_outer = 0.99)  + 
   theme_bw() +
   scale_y_discrete(
     limits = c("alphas[1]", "betas[1]", "alphas[2]", "betas[2]"),
@@ -755,15 +766,28 @@ mcmc_areas(btESBL_model2posterior, regex_pars = "alpha|beta",  area_method = "eq
     ) +
     labs(x = "Log hazard ratio of ESBL gain/loss")-> a
 
-mcmc_areas(btESBL_model2posterior, regex_pars = "lambda|mu", transformations = inv, area_method = "equal height", prob = 0.95, prob_outer = 0.99)  + theme_bw() +   #-> c #+ 
- scale_y_discrete(limits = c("t(lambda)", "t(mu)"),
+mcmc_areas(
+  btESBL_model2posterior,
+  regex_pars = "lambda|mu",
+  transformations = inv,
+  area_method = "equal height",
+  prob = 0.95,
+  prob_outer = 0.99)  +
+  theme_bw() +   #-> c #+ 
+  scale_y_discrete(limits = c("t(lambda)", "t(mu)"),
                    labels = c("t(lambda)" = "Uncolonised", #expression(paste(lambda^'-1')),
                               "t(mu)" = "Colonised"), # expression(paste(mu^'-1'))),
   expand = expansion(add = c(0.2,1))) +
   labs(x = "Mean time in state (days)") -> b
 
-mcmc_areas(btESBL_model2posterior, regex_pars = "gamma" , transformations = log2scale, prob = 0.95, prob_outer = 0.99) + theme_bw()+   #-> c #+ 
- scale_y_discrete(limits = "t(gammas[1])",
+mcmc_areas(
+  btESBL_model2posterior,
+  regex_pars = "gamma" ,
+  transformations = log2scale,
+  prob = 0.95,
+  prob_outer = 0.99) +
+  theme_bw() +   #-> c #+ 
+  scale_y_discrete(limits = "t(gammas[1])",
                   labels = c("t(gammas[1])" = "Half life"), # expression(paste(gamma, "log(2))"))),
           #        labels = c("t(gammas[1])" = "\u03b3 log(2)"),
   expand = expansion(add = c(0.2,1))) +
@@ -782,7 +806,8 @@ btESBL_model2simulations %>%
         lq = quantile(`2`, 0.025)[[1]],
         uq = quantile(`2`, 0.975)[[1]]
     ) %>%
-    mutate(abx_stop = paste0(as.character(abx_stop), " days \nantimicrobials")) %>%
+    mutate(abx_stop = paste0(as.character(abx_stop), 
+                             " days \nantimicrobials")) %>%
     ggplot(aes(
         time,
         median,
@@ -835,8 +860,13 @@ mcmc_areas(btESBL_model1posterior, regex_pars = "alpha|beta",  area_method = "eq
     ) +
     labs(x = "Log hazard ratio of ESBL gain/loss")-> a1
 
-mcmc_areas(btESBL_model1posterior, regex_pars = "lambda|mu", transformations = inv, area_method = "equal height", prob = 0.95, prob_outer = 0.99)  + theme_bw() +   #-> c #+ 
- scale_y_discrete(limits = c("t(lambda)", "t(mu)"),
+mcmc_areas(btESBL_model1posterior, 
+           regex_pars = "lambda|mu",
+           transformations = inv, 
+           area_method = "equal height", prob = 0.95, 
+           prob_outer = 0.99)  + 
+  theme_bw() +   #-> c #+ 
+  scale_y_discrete(limits = c("t(lambda)", "t(mu)"),
                    labels = c("t(lambda)" = "Uncolonised", #expression(paste(lambda^'-1')),
                               "t(mu)" = "Colonised"), # expression(paste(mu^'-1'))),
   expand = expansion(add = c(0.2,1))) +
@@ -948,7 +978,7 @@ mcmc_intervals_data(
   mutate(stri = glue('{specify_decimal(m,2)} ({specify_decimal(ll,2)}-{specify_decimal(hh,2)})'),
          parameter2 = case_when(
            grepl("alpha", parameter)  ~"Hazard ratio ESBL-E Loss",
-           grepl("beta", parameter)  ~"Hazard ratio ESBL-E Loss",
+           grepl("beta", parameter)  ~"Hazard ratio ESBL-E Gain",
            grepl("gamma", parameter)  ~"Half life of effect (days)",
            grepl("lambda", parameter)  ~"Colonised (days)",
            grepl("mu", parameter)  ~"Uncolonised (days)",
@@ -964,8 +994,10 @@ mcmc_intervals_data(
   select(parameter2, stri) %>% 
   
 
-kable( col.names = c("Variable", "Value"),
-      caption = "Parameter estimates (and 95% confidence intervals) from model 2") %>% kable_classic(full_width = FALSE) %>%
+kable( 
+  col.names = c("Variable", "Value"),
+  caption = "Parameter estimates (and 95% confidence intervals) from model 2") %>% 
+  kable_classic(full_width = FALSE) %>%
   pack_rows("Effect of Antibacterials", 1,3) %>%
   pack_rows("Effect of Hospitalisation", 4,5) %>%
   pack_rows("Mean time in state", 6,7) %>%
@@ -991,7 +1023,1169 @@ loo_compare(loo_mod1, loo_mod2)
 
 ```
 
+### plasmid replicons
 
+```{r plasm-amr-gene-plot, fig.width = 10, fig.height = 12, fig.cap = "FIGURE 2: Species and lineage association of mobile genetic elements. A-B: Jaccard-distance hierarchical clustered heatmap of presence-absence matrix of antimicrobial resistance genes (A) and plasmid replicons (B). Yellow= present, purple = absent. Each row is a sample, and each column an AMR gene (A) or plasmid replicon (B), showing that the samples tend to cluster by species. C: Distribution of ESBL contig clusters by species showing that most contog-clusters are species associated or restricted. D-E: Contig clusters mapped back to E. coli phylogeny (D) or K. pneumoniae KpI phylogeny showing that most contig clusters are lineage-associated."  }
+
+# plasmid replicons clustered heatmap --------------------------
+
+btESBL_plasmidreplicons %>%
+  pivot_wider(
+    id_cols = c(sample, species),
+    names_from = ref_seq,
+    values_from = ref_seq,
+    values_fn = length,
+    values_fill = 0
+  )  %>%
+  relocate(species, before = everything()) %>%
+  rename(Species = species) %>% 
+  as.data.frame() -> plasmids_onehot
+
+rownames(plasmids_onehot) <- plasmids_onehot$sample
+
+as.ggplot(
+  pheatmap(
+    plasmids_onehot[-c(1, 2)],
+    annotation_row = plasmids_onehot["Species"],
+    annotation_names_row = FALSE,
+    show_rownames = FALSE,
+    show_colnames = FALSE,
+    legend = FALSE,
+    clustering_distance_cols = "binary",
+    clustering_distance_rows  = "binary",
+    color = viridis_pal()(10),
+    treeheight_row = 0, 
+    treeheight_col = 0,
+    silent = TRUE,
+    annotation_colors = list(Species = 
+                               c("E. coli" = viridis_pal()(4)[2],
+                                 "K. pneumoniae" = viridis_pal()(4)[3])
+    )
+    
+  )
+) -> plasm_heatmap
+
+# amr gene heatmap
+
+btESBL_amrgenes %>%
+  pivot_wider(
+    id_cols = c(sample, species),
+    names_from = ref_seq,
+    values_from = ref_seq,
+    values_fn = length,
+    values_fill = 0
+  )  %>%
+  relocate(species, before = everything()) %>%
+  rename(Species = species) %>% 
+  as.data.frame() -> amr_onehot
+
+rownames(amr_onehot) <- amr_onehot$sample
+
+as.ggplot(
+  pheatmap(
+    amr_onehot[-c(1, 2)],
+    annotation_row = amr_onehot["Species"],
+    annotation_names_row = FALSE,
+    show_rownames = FALSE,
+    show_colnames = FALSE,
+    legend = FALSE,
+    clustering_distance_cols = "binary",
+    clustering_distance_rows  = "binary",
+    color = viridis_pal()(10), 
+    treeheight_row = 0, 
+    treeheight_col = 0,
+    annotation_legend = FALSE,
+    silent = TRUE,
+    annotation_colors = list(Species = 
+                               c("E. coli" = viridis_pal()(4)[2],
+                                 "K. pneumoniae" = viridis_pal()(4)[3]))
+)) -> amr_heatmap
+
+#amr_heatmap + plasm_heatmap + plot_layout(widths = c(1,1.4), tag_level = "A")
+
+# contig clusters: species distn -------------------------------------
+
+
+btESBL_contigclusters %>% filter(clstr_size > 1) %>%
+  mutate(clstr_name = fct_rev(fct_infreq(clstr_name)),
+         species = fct_rev(as.factor(species))) %>%
+  group_by(species, clstr_name) %>%
+  tally() %>%
+  mutate(n = if_else(species == "E. coli", n,-n)) %>%
+  ggplot(aes(x = clstr_name, y = n, fill = species)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  theme_bw() +
+  scale_y_continuous(breaks = c(-20, 0, 20, 40),
+                     labels = as.character(c(20, 0, 20, 40))) +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_blank(),
+    axis.text = element_text(size = 6)) +
+      scale_fill_manual(values = viridis_pal()(4)[c(3,2)]) -> 
+  contigs_species_distnplot
+
+# # map to tree
+
+btESBL_contigclusters %>% arrange(desc(clstr_size)) %>%
+  filter(clstr_size > 4) %>% 
+  select(lane, clstr_name) %>%
+  bind_rows(
+  btESBL_contigclusters %>% 
+  filter(clstr_size <= 4) %>% 
+  mutate(clstr_name = "Other") %>% 
+  select(lane, clstr_name)) %>% 
+  pivot_wider(
+    id_col = lane,
+    names_from = clstr_name,
+    values_from = clstr_name,
+    values_fn = length,
+    values_fill = 0
+  ) %>% 
+  mutate(across(where(is.numeric), ~ as.character(if_else(.x > 0, 1, 0)))) %>% 
+  as.data.frame() -> clst.onehot
+
+rownames(clst.onehot) <- clst.onehot$lane
+
+
+ggtree(btESBL_coregene_tree_esco) %>%
+  gheatmap((clst.onehot[-c(1, ncol(clst.onehot))]),
+           font.size = 2.5,
+           color = NA,
+           width = 3,
+           colnames = TRUE,
+           colnames_angle = 90,
+           colnames_offset_y = 10,
+           colnames_position = "top",
+           hjust = 0
+  ) +
+  ylim(c(0, 570)) +
+  theme(legend.position = "none") +
+ scale_fill_manual(values = c( "lightgrey", viridis_pal()(4)[1]) ) +
+  theme(plot.margin = unit(c(0.5,0.5,0,0.5), units = "cm")) -> 
+  contigclusters_map_to_tree_esco
+
+ggtree(treeio::tree_subset(btESBL_coregene_tree_kleb, 210, 
+                           levels_back = 0)) %>% 
+  gheatmap((clst.onehot[-c(1,ncol(clst.onehot))]),
+           font.size = 2.5,
+           colnames = FALSE,
+           color = NA,
+        #   colnames_angle = 90,
+           width = 3,
+          # colnames_offset_y = 10,
+          # colnames_position = "top",
+         #  hjust = 0
+  ) + #+ ylim(0,230) +
+  scale_fill_manual(values = c( "lightgrey", viridis_pal()(4)[1]))  +
+  theme(legend.position = "none")+ 
+  theme(plot.margin = unit(c(0,0.5,0.5,0.5), units = "cm")) -> 
+  contigclusters_map_to_tree_kleb
+
+(
+  (amr_heatmap + plasm_heatmap + plot_layout(widths = c(1,1.6))) /
+    (
+      (contigs_species_distnplot | 
+         (contigclusters_map_to_tree_esco / contigclusters_map_to_tree_kleb + 
+            plot_layout(heights = c(2.8,1)))) + 
+        plot_layout(widths = c(1,3))
+     ) 
+) + plot_layout(heights = c(1,2)) + plot_annotation(tag_levels = "A")
+
+
+```
+
+```{r sup-amr-heatmap, fig.cap = "SUPPLEMENTARY FIGURE: Enlarged AMR gene (A) and plasmid replicon (B) jaccard-distance hierarchical-clustered heatmaps. Each row is a sample, each column an AMR gene or plasmid replicon. Yellow = present, purple = absent.", fig.width = 18, fig.height = 10}
+as.ggplot(
+  pheatmap(
+    amr_onehot[-c(1, 2)],
+    annotation_row = amr_onehot["Species"],
+    annotation_names_row = FALSE,
+    show_rownames = FALSE,
+    legend = FALSE,
+    clustering_distance_cols = "binary",
+    clustering_distance_rows  = "binary",
+    color = viridis_pal()(10), 
+   # treeheight_row = 0, 
+  #  treeheight_col = 0,
+  #  annotation_legend = FALSE,
+    silent = TRUE,
+    annotation_colors = list(Species = 
+                               c("E. coli" = viridis_pal()(4)[2],
+                                 "K. pneumoniae" = viridis_pal()(4)[3]))
+)) -> amr_heatmap_sup
+
+as.ggplot(
+  pheatmap(
+    plasmids_onehot[-c(1, 2)],
+    annotation_row = plasmids_onehot["Species"],
+    annotation_names_row = FALSE,
+    show_rownames = FALSE,
+#    show_colnames = FALSE,
+    legend = FALSE,
+    clustering_distance_cols = "binary",
+    clustering_distance_rows  = "binary",
+    color = viridis_pal()(10),
+#    treeheight_row = 0, 
+#    treeheight_col = 0,
+    silent = TRUE,
+    annotation_colors = list(Species = 
+                               c("E. coli" = viridis_pal()(4)[2],
+                                 "K. pneumoniae" = viridis_pal()(4)[3])
+    )
+    
+  )
+) -> plasm_heatmap_sup
+
+amr_heatmap_sup / plasm_heatmap_sup +
+  plot_annotation(tag_levels = "A") +
+  plot_layout(heights = c(1, 1.5))
+```
+
+```{r contig-cluster-stats, fig.cap = "SUPPLEMENTARY FIGURE XXX: Size, representative cluster length, distribution of coverage and sequence identity of ESBL-contig clusters", fig.width=9, fig.height=7}
+
+btESBL_contigclusters %>%
+    group_by(clstr_name) %>% 
+     filter(clstr_size > 1) %>% 
+    arrange(clstr_name, clstr_rep) %>% 
+    mutate(clstr_iden = clstr_iden /100,
+           clstr_cov = clstr_cov/100, clstr_size2 = clstr_size,
+           clstr_rep_size = log10(last(length)/1000),
+           length = log10(length/1000)) %>%
+               ungroup() %>% 
+               # select(-length) %>% 
+               pivot_longer(-c(id,
+                               lane,
+                               clstr_rep, 
+                               clstr_name,
+                               species, 
+                               gene, 
+                               clstr_size)) %>%
+  mutate(name  = recode_factor(name,
+    "clstr_size2" = "Number of samples in cluster",
+    "clstr_rep_size" = "Log (base 10) length (kBases) of cluster representative sequence",
+      "clstr_iden" = "Distribution of sample sequence identity to cluster representative sequence",
+      "clstr_cov" = "Distribution of sample sequence coverage of cluster representative sequence",
+      "length" = "Distributrion of log (base 10) sample sequence length (kBases)"),
+    .ordered = TRUE) %>% 
+  ggplot(aes(fct_reorder(clstr_name, desc(clstr_size)), value)) +
+  geom_boxplot(outlier.shape = NA) +
+  facet_wrap( ~ name, ncol = 1, scales = "free_y") + theme_bw() + theme(axis.text.x = element_text(
+    angle = 90,
+    hjust = 1,
+    size = 6
+  )) +
+  labs(x = "Cluster identifier", y = "")
+
+```
+
+### Within-participant temporal correlation
+
+```{r autocorrelation-plot, fig.height = 7, fig.width = 9, fig.cap = "Within participant correlation of organism, lineage, mobile genetic element (MGE) and clone. A-B show proportions of participants that have a detectible E. coli (A), K. pneumoniae (B) at t time t=0 and the same organism at a time t later. Dashed lines show the proportion of samples in the collection that would be expected to have the same organism by chance: the proportion of between-participant samples that have the same organism. C shows (for E. coli only) the proportion of participants who are colonised with E. coli at time t=0 and the proportion of those who have the same lineage (as defined by popPUNK cluster), clone (as defined by <6 SNPs), or mobile genetic element (defined by ESBl-contig cluster) detectible a at time t later. Dashed lined again show the between-participant proportion of samples that contain the same lineage, clone or MGE to show the chance of obtaining any result ny chance. Fitted lines are from a nonparametric LOESS fit with 95% confidence intervals. D shows odds ratios of any within-participant E. coli pair containing the same popPUNK cluster only, ESBL-contig cluster, or both, compared to between-participant pairs. It is more likely that both lineage (popPUNK cluster) and MGE (ESBL-cluster) are conserved together than either seperately, suggesting that the lineage-MGE combination is the conserved unit within this system." }
+
+# prepare list column tibble
+
+# START HERE TOMORROW
+btESBL_snpdists_esco %>% 
+  pivot_longer(-sample) %>% 
+  rename("sample.x" = "sample",
+         "sample.y" = "name",
+         "snpdist_esco" = "value") %>% 
+  left_join(
+    select(btESBL_sequence_sample_metadata, lane, supplier_name) %>% 
+      rename("lab_id.x" = "supplier_name"),
+    by = c("sample.x" = "lane")) %>% 
+  left_join(
+    select(btESBL_sequence_sample_metadata, lane, supplier_name) %>% 
+      rename("lab_id.y" = "supplier_name"),
+    by = c("sample.y" = "lane")) %>% 
+  group_by(lab_id.x, lab_id.y) %>% 
+  slice(n=1) %>% 
+  mutate(same_snpclust_esco = snpdist_esco <= 5) -> snpdist.e.long
+
+btESBL_snpdists_kleb  %>% 
+  pivot_longer(-sample) %>% 
+  rename("sample.x" = "sample",
+         "sample.y" = "name",
+         "snpdist_kleb" = "value") %>% 
+  left_join(
+    select(btESBL_sequence_sample_metadata, lane, supplier_name) %>% 
+      rename("lab_id.x" = "supplier_name"),
+    by = c("sample.x" = "lane")) %>% 
+  left_join(
+    select(btESBL_sequence_sample_metadata, lane, supplier_name) %>% 
+      rename("lab_id.y" = "supplier_name"),
+    by = c("sample.y" = "lane")) %>% 
+  group_by(lab_id.x, lab_id.y) %>% 
+  slice(n=1) %>% 
+  mutate(same_snpclust_kleb = snpdist_kleb <= 5) -> snpdist.k.long
+
+# make list-column df -----------------------------------------------------
+
+
+btESBL_stoolESBL %>%
+  left_join(select(btESBL_stoolorgs, lab_id, organism),
+            by = "lab_id") %>%
+  nest(orgs = organism) %>%
+  left_join(
+    btESBL_popPUNK %>%
+      left_join(
+        select(btESBL_sequence_sample_metadata , lane, supplier_name),
+        by = c("Taxon" = "lane")
+      ) %>%
+      select(supplier_name, Cluster),
+    by = c("lab_id" = "supplier_name")
+  ) %>%
+  nest(pp_clust = Cluster) %>%
+  left_join(
+    btESBL_contigclusters %>%  
+      left_join(
+        select(btESBL_sequence_sample_metadata , lane, supplier_name)
+      ) %>% 
+      select(supplier_name, clstr_name),
+    by = c("lab_id" = "supplier_name")
+  ) %>%
+  nest(contig_clust = clstr_name) %>%
+  left_join(
+    select(btESBL_sequence_sample_metadata, lane, supplier_name),
+    by = c("lab_id" = "supplier_name")
+  ) %>%
+  nest(lanes = lane) -> samples
+
+samples %>% 
+  full_join(samples, by = character())  %>% 
+  filter(lab_id.x != lab_id.y) %>% 
+  mutate(delta_t = 
+           interval(data_date.x, data_date.y) / days(1)) %>% 
+  filter(delta_t >= 0) -> samples
+# compare presence absence of clusters
+
+samples %>% 
+  mutate(esbl.x.and.y = ESBL.x == "Positive" &
+           ESBL.y == "Positive") %>% 
+  #compare ESCO poppunk clusters between x and y
+  # and add variables for e coli cluster and presence/absence
+  # e coli to later remove isolates that weren't sequenced
+  mutate(
+    same.esco.poppunk.xandy =
+      map2(pp_clust.x,
+           pp_clust.y,
+           ~ .x$Cluster[grepl("E", .x$Cluster)] %in%
+             .y$Cluster[grepl("E", .y$Cluster)]) %>%
+      map_lgl(any),
+    # flags for existence of poppunk clusters
+    esco.poppunk.cluster.exists.x =
+      map(pp_clust.x, ~ grepl("E", .x$Cluster)) %>%
+      map_lgl(any),
+    esco.poppunk.cluster.exists.y =
+      map(pp_clust.y, ~ grepl("E", .x$Cluster)) %>%
+      map_lgl(any),
+    # flag for existence of esco
+    esco.exists.x =
+      map_lgl(orgs.x, ~ any(grepl("coli", .x$organism))),
+    esco.exists.y =
+      map_lgl(orgs.y,  ~ any(grepl("coli", .x$organism))),
+    same.esco.xandy = esco.exists.x & esco.exists.y,
+    # contig clusters
+    same.contig.cluster =
+      map2(contig_clust.x,
+           contig_clust.y,
+           ~ .x$clstr_name %in%
+             .y$clstr_name) %>%
+      map_lgl(any)
+  ) %>% 
+  # same but for klebs
+  mutate(
+    same.kleb.poppunk.xandy =
+      map2(pp_clust.x,
+           pp_clust.y,
+           ~ .x$Cluster[grepl("K", .x$Cluster)] %in%
+             .y$Cluster[grepl("K", .y$Cluster)]) %>%
+      map_lgl(any),
+    # flags for existence of poppunk clusters
+    kleb.poppunk.cluster.exists.x =
+      map(pp_clust.x, ~ grepl("K", .x$Cluster)) %>%
+      map_lgl(any),
+    kleb.poppunk.cluster.exists.y =
+      map(pp_clust.y, ~ grepl("K", .x$Cluster)) %>%
+      map_lgl(any),
+    # flag for existence of kleb
+    kleb.exists.x =
+      map_lgl(orgs.x, ~ any(grepl("Klebsiella pneumoniae", .x$organism))),
+    kleb.exists.y =
+      map_lgl(orgs.y,  ~ any(grepl("Klebsiella pneumoniae", .x$organism))),
+    same.kleb.xandy = kleb.exists.x & kleb.exists.y) ->
+  samples
+
+# merge in snpdist clusters
+  
+samples %>% 
+  left_join(
+    select(snpdist.e.long, lab_id.x, lab_id.y, same_snpclust_esco),
+    by = c("lab_id.x", "lab_id.y")
+  ) %>% 
+  left_join(
+    select(snpdist.k.long, lab_id.x, lab_id.y, same_snpclust_kleb),
+    by = c("lab_id.x", "lab_id.y")
+  ) %>%
+  mutate(
+    same_snpclust_esco = if_else(
+      is.na(same_snpclust_esco),
+      FALSE, 
+      same_snpclust_esco
+    ),
+    same_snpclust_kleb = if_else(
+      is.na(same_snpclust_kleb), 
+      FALSE, 
+      same_snpclust_kleb
+    )
+  ) -> samples
+
+# find null hypothesis values ----------------------------
+
+samples %>% 
+  filter(pid.x != pid.y) %>% 
+  filter(esco.exists.x) %>% 
+  filter(lab_id.x != lab_id.y) %>% 
+  select(data_date.x, data_date.y,
+         delta_t,
+         esco.exists.x,
+         esco.poppunk.cluster.exists.x, 
+         esco.exists.y,
+         esco.poppunk.cluster.exists.y,
+         delta_t,
+         esbl.x.and.y,
+         same.esco.poppunk.xandy,
+         same.esco.xandy,
+         same.contig.cluster,
+         same_snpclust_esco) %>% 
+  pivot_longer(-c(data_date.x, data_date.y,
+                  esco.exists.x, esco.exists.y,
+                  esco.poppunk.cluster.exists.x, 
+                  esco.poppunk.cluster.exists.y,
+                  delta_t)) %>% 
+  #filter out those with an esco but no poppunk cluster - they've not been 
+  # sequenced
+  filter(!((name == "same.esco.poppunk.xandy" | 
+              name == "same.contig.cluster" |
+            name == "same_snpclust_esco") &
+             esco.exists.x & !esco.poppunk.cluster.exists.x)) %>% 
+  filter(!((name == "same.esco.poppunk.xandy"  | 
+              name == "same.contig.cluster" |
+              name == "same_snpclust_esco") &
+             esco.exists.y & !esco.poppunk.cluster.exists.y)) %>% 
+  mutate(name = case_when(
+    grepl("same_snpclust", name) ~ "SNP cluster",
+    grepl("same.contig", name) ~ "ESBL contig cluster",
+    grepl("same.esco.x", name) ~ "Organism",
+    grepl("poppunk", name) ~ "popPUNK cluster",
+    grepl("esbl.x.and.y", name) ~ "ESBL")) %>% 
+  group_by(name) %>%
+  summarise(prop = sum(value)/length(value)) -> null
+
+samples %>% 
+  filter(pid.x != pid.y) %>% 
+  filter(kleb.exists.x) %>% 
+  filter(lab_id.x != lab_id.y) %>% 
+  select(data_date.x, data_date.y,
+         delta_t,
+         kleb.exists.x,
+         kleb.poppunk.cluster.exists.x, 
+         kleb.exists.y,
+         kleb.poppunk.cluster.exists.y,
+         delta_t,
+         esbl.x.and.y,
+         same.kleb.poppunk.xandy,
+         same.kleb.xandy,
+         same.contig.cluster,
+         same_snpclust_kleb) %>% 
+  pivot_longer(-c(data_date.x, data_date.y,
+                  kleb.exists.x, kleb.exists.y,
+                  kleb.poppunk.cluster.exists.x, 
+                  kleb.poppunk.cluster.exists.y,
+                  delta_t)) %>% 
+  #filter out those with an kleb but no poppunk cluster - they've not been 
+  # sequenced
+  filter(!((name == "same.kleb.poppunk.xandy" | 
+              name == "same.contig.cluster" |
+              name == "same_snpclust_kleb") &
+             kleb.exists.x & !kleb.poppunk.cluster.exists.x)) %>% 
+  filter(!((name == "same.kleb.poppunk.xandy"  | 
+              name == "same.contig.cluster" |
+              name == "same_snpclust_kleb") &
+             kleb.exists.y & !kleb.poppunk.cluster.exists.y)) %>%
+  mutate(
+    name = case_when(
+      grepl("same_snpclust", name) ~ "SNP cluster",
+      grepl("same.contig", name) ~ "ESBL contig cluster",
+      grepl("same.kleb.x", name) ~ "Organism",
+      grepl("poppunk", name) ~ "popPUNK cluster",
+      grepl("esbl.x.and.y", name) ~ "ESBL")
+    ) %>%  
+  group_by(name) %>%
+  summarise(prop = sum(value)/length(value)) -> null.kleb
+  
+
+# within-participant ------------------------------------------
+
+samples%>% 
+  filter(pid.x == pid.y)-> pairwise_within
+
+# now plot
+
+# esco
+
+pairwise_within %>% 
+  filter(esco.exists.x) %>% 
+  select(data_date.x, data_date.y,
+         delta_t,
+         esco.exists.x,
+         esco.poppunk.cluster.exists.x, 
+         esco.exists.y,
+         esco.poppunk.cluster.exists.y,
+         delta_t,
+         esbl.x.and.y,
+         same.esco.poppunk.xandy,
+         same.esco.xandy,
+         same.contig.cluster,
+         same_snpclust_esco) %>% 
+  pivot_longer(-c(data_date.x, data_date.y,
+                  esco.exists.x, esco.exists.y,
+                  esco.poppunk.cluster.exists.x, 
+                  esco.poppunk.cluster.exists.y,
+                  delta_t)) %>% 
+  #filter out those with an esco but no poppunk cluster - they've not been 
+  # sequenced
+  filter(!(
+    (name == "same.esco.poppunk.xandy" |  
+       name == "same.contig.cluster" | 
+       name == "same_snpclust_esco") &
+      esco.exists.x & 
+      !esco.poppunk.cluster.exists.x
+    )
+  ) %>% 
+  filter(!(
+    (name == "same.esco.poppunk.xandy" | 
+       name == "same.contig.cluster" |
+       name == "same_snpclust_esco") &
+      esco.exists.y & 
+      !esco.poppunk.cluster.exists.y
+    )
+  ) %>% 
+  mutate(name = case_when(
+    grepl("same_snpclust", name) ~ "SNP cluster",
+    grepl("same.contig", name) ~ "ESBL contig cluster",
+    grepl("same.esco.x", name) ~ "Organism",
+    grepl("poppunk", name) ~ "popPUNK cluster",
+    grepl("esbl.x.and.y", name) ~ "ESBL")) ->
+  ecoli.long
+
+
+
+
+
+# ------ kleb
+
+
+pairwise_within %>% 
+  filter(kleb.exists.x) %>% 
+  select(data_date.x, data_date.y,
+         delta_t,
+         kleb.exists.x,
+         kleb.poppunk.cluster.exists.x, 
+         kleb.exists.y,
+         kleb.poppunk.cluster.exists.y,
+         delta_t,
+         esbl.x.and.y,
+         same.kleb.poppunk.xandy,
+         same.kleb.xandy,
+         same.contig.cluster,
+         same_snpclust_kleb) %>% 
+  pivot_longer(-c(data_date.x, data_date.y,
+                  kleb.exists.x, kleb.exists.y,
+                  kleb.poppunk.cluster.exists.x, 
+                  kleb.poppunk.cluster.exists.y,
+                  delta_t)) %>% 
+  #filter out those with an esco but no poppunk cluster - they've not been 
+  # sequenced
+  filter(!(
+    (name == "same.kleb.poppunk.xandy" | 
+       name == "same.contig.cluster" |
+       name == "same_snpclust_kleb") &
+      kleb.exists.x & !kleb.poppunk.cluster.exists.x
+  )
+  ) %>% 
+  filter(!(
+    (name == "same.kleb.poppunk.xandy" | 
+       name == "same.contig.cluster" |
+       name == "same_snpclust_kleb") &
+      kleb.exists.y & !kleb.poppunk.cluster.exists.y)
+  ) %>% 
+  mutate(name = case_when(
+    grepl("same_snpclust", name) ~ "SNP cluster",
+    grepl("same.contig", name) ~ "ESBL contig cluster",
+    grepl("same.kleb.x", name) ~ "Organism",
+    grepl("poppunk", name) ~ "popPUNK cluster",
+    grepl("esbl.x.and.y", name) ~ "ESBL"))->
+  kleb.long
+
+#kleb.long %>% 
+#  mutate(zerod_date = as.Date("2020-01-01") + days(delta_t)) %>% 
+#  group_by(name) %>% 
+#  tbr_binom(value, zerod_date, unit = "days",n = 14 ) -> kleb.long
+
+#kleb.long %>% 
+#  filter(delta_t > 7) %>% 
+#  ggplot(
+#    aes(
+#      delta_t,
+#      PointEst,
+#      group = name,
+#      colour = name,
+#      fill = name,
+#      ymin = Lower,
+#      ymax = Upper
+#    )) +
+#  geom_line() +
+#  geom_ribbon(alpha = 0.3, color = NA) +
+#  xlim(c(0,200))  +
+#  geom_hline(aes(yintercept = prop, color = name), data = null.kleb)
+ # plot
+
+varorder = c("Organism", "popPUNK cluster", "ESBL contig cluster",
+             "SNP cluster")
+
+ecoli.long %>%
+  filter(!name %in% c("ESBL contig cluster",
+                      "popPUNK cluster",
+                      "SNP cluster",
+                      "ESBL")) %>%
+  mutate(name = as.character(name)) %>% 
+  ggplot(aes(
+    delta_t,
+    as.numeric(value),
+  )) +
+  geom_smooth(method = "loess",
+           #   size = 0.5,
+         #     alpha = 0.2, 
+              color = "black")  +
+  geom_hline(aes(yintercept = null$prop[null$name == "Organism"]),
+             linetype = "dashed",
+             alpha = 0.5) +
+  coord_cartesian(xlim = c(0, 150), ylim = c(0,1)) +
+  theme_bw() +
+#  scale_color_lancet() +
+  labs(x= "Time/days", y = "Proportion") +
+  theme(legend.title = element_blank())-> e
+#theme(legend.position = "right")-> e
+
+kleb.long %>%
+  filter(!name %in% c("ESBL contig cluster",
+                      "popPUNK cluster",
+                      "SNP cluster",
+                      "ESBL")) %>%
+  mutate(name = as.character(name)) %>% 
+  ggplot(aes(
+    delta_t,
+    as.numeric(value),
+  )) +
+  geom_smooth(method = "loess",
+           #   size = 0.5,
+         #     alpha = 0.2, 
+              color = "black")  +
+  geom_hline(aes(yintercept = null.kleb$prop[null.kleb$name == "Organism"]),
+             linetype = "dashed",
+             alpha = 0.5) +
+  coord_cartesian(xlim = c(0, 150), ylim = c(0,1)) +
+  theme_bw() +
+#  scale_color_lancet() +
+  labs(x= "Time/days", y = "Proportion") +
+  theme(legend.title = element_blank())-> k
+
+
+
+ecoli.long %>%
+    filter(name %in% c("ESBL contig cluster",
+                      "popPUNK cluster",
+                      "SNP cluster")) %>%
+  mutate(name =
+         case_when(
+     name ==  "ESBL contig cluster" ~ "ESBL-contig",
+     name == "popPUNK cluster" ~ "popPUNK",
+    name == "SNP cluster" ~"SNP<6")) %>% 
+  ggplot(aes(
+    delta_t,
+    as.numeric(value),
+    group = name,
+    color = name
+  )) +
+  geom_smooth(method = "loess")+
+              #size = 0.5,
+              #alpha = 0.2)  +
+  geom_hline(aes(yintercept = prop, color = name),
+         #    data = null[null$name %in% 
+         #                  c("ESBL-contig",
+          #                   "popPUNK",
+          #                   "SNP<5"), ], 
+         data = null %>% 
+           filter(name %in% c("ESBL contig cluster",
+                      "popPUNK cluster",
+                      "SNP cluster")) %>% 
+           mutate(name = 
+                  case_when(
+     name ==  "ESBL contig cluster" ~ "ESBL-contig",
+     name == "popPUNK cluster" ~ "popPUNK",
+    name == "SNP cluster" ~"SNP<6")
+                  ), 
+         linetype = "dashed",
+         alpha = 0.5) +
+  coord_cartesian(xlim = c(0, 150), ylim = c(0, 0.2)) +
+  theme_bw()  +
+  scale_color_manual(
+    values = viridis_pal()(4)[c(3,1,2)]) +
+  labs(x= "Time/days", y = "Proportion") +
+  theme(legend.title = element_blank(),
+        legend.position = "bottom")-> e2
+# theme(legend.position = "right") -> e2
+
+
+
+samples %>% 
+    filter(lab_id.x != lab_id.y) %>% 
+    filter(esco.exists.x & esco.exists.y) %>% 
+    #filter out those with an esco but no poppunk cluster - they've not been 
+    # sequenced
+    filter(!(esco.exists.x & !esco.poppunk.cluster.exists.x)) %>% 
+    filter(!(esco.exists.y & !esco.poppunk.cluster.exists.y))  %>% 
+    #filter(!(kleb.exists.y & !kleb.poppunk.cluster.exists.y))  %>% 
+    # filter(!(kleb.exists.x & !kleb.poppunk.cluster.exists.x))  %>% 
+    transmute(
+        within_patient = if_else(pid.x == pid.y,
+                                 "within",
+                                 "between"),
+        same_pp_and_esbl_contig = 
+            (same.contig.cluster & same.esco.poppunk.xandy),
+        same_pp_only = (same.esco.poppunk.xandy & !same.contig.cluster),
+        same.contig.cluster_only = (same.contig.cluster & !same.esco.poppunk.xandy)) %>% 
+    pivot_longer(-within_patient) %>% 
+    group_by(within_patient, name, value) %>% 
+    tally() %>% 
+    pivot_wider(id_cols = c(within_patient,name), names_from = value, values_from = n) %>% 
+  mutate(name = 
+           case_when(
+             name == "same.contig.cluster_only" ~ "ESBL-contig only",
+             name == "same_pp_only" ~ "popPUNK only",
+             name == "same_pp_and_esbl_contig" ~ 
+               "Both")) %>% 
+    group_by(name) %>%
+    nest() %>%  
+    mutate(fish = map(data,  ~ tidy(fisher.test(.x[, 2:3])))) %>%  
+    unnest(fish) %>% 
+    ggplot(aes(
+        x = fct_reorder(name, desc(estimate)),
+        y = estimate,
+        ymin = conf.low,
+        ymax = conf.high)) +
+    geom_point() + 
+    geom_errorbar(width = 0) + 
+    geom_hline(aes(yintercept = 1), linetype = "dotted") +
+    coord_flip() + 
+    theme_bw() +
+    labs(y = "Odds ratio", x = "") +
+  scale_x_discrete(position = "top") -> or.plot
+   #theme(axis.text.x = element_text(angle = 90, hjust = 1)) -> or.plot
+
+
+
+e + k + e2 + or.plot + plot_annotation(tag_levels = "A")
+
+
+
+```
+
+### Hospital associated lineages and MGE
+
+```{r hosp-assoc-lineages, fig.height = 8, fig.width = 9}
+
+btESBL_popPUNK %>% 
+  left_join(unique(btESBL_sequence_sample_metadata),
+            by = c("Taxon" = "lane")) %>% 
+  as.data.frame() -> clusts
+
+rownames(clusts) <- clusts$Taxon
+
+ggtree(btESBL_coregene_tree_esco) %>% 
+  gheatmap(
+    clusts["hosp_assoc"], 
+    width = 0.05, 
+    color = NA, 
+    font.size = 3,
+    colnames = FALSE
+   # colnames_angle = 90, 
+  #  colnames_position = "top", 
+  #  colnames_offset_y = 10,
+  )  +
+ # ylim(c(0,500)) +
+  geom_hilight(node = 727, fill = "red") +
+  scale_fill_manual(values = c( "grey86", "black", "grey65"),
+                    labels= c("Community",
+                              "In hospital",
+                              "Post-discharge",
+                              "")
+                              )  +
+  theme(legend.title = element_blank()) -> hospassoc.tree.esco
+
+ggtree(btESBL_coregene_tree_kleb) %>% 
+  gheatmap(
+    clusts["hosp_assoc"], 
+    width = 0.05, 
+    color = NA, 
+    font.size = 3, 
+    colnames = FALSE
+  #  colnames_angle = 90, 
+  #  colnames_position = "top", 
+  #  colnames_offset_y = 10,
+  )  +
+  #ylim(c(0,220)) +
+  scale_fill_manual(values = c( "grey86", "black", "grey65")) +
+  scale_fill_manual(values = c( "grey86", "black", "grey65"),
+                    labels= c("Community",
+                              "In hospital",
+                              "Post-discharge",
+                              "")
+                              )  +
+  theme(legend.title = element_blank()) -> hospassoc.tree.kleb
+
+
+clusts %>%
+  ungroup() %>%
+  mutate(
+    total_in_hosp = sum(hosp_assoc == "in_hospital", na.rm = TRUE),
+    total_not_in_hosp = sum(hosp_assoc != "in_hospital", na.rm = TRUE)
+  ) %>%
+  group_by(Cluster) %>%
+  summarise(
+    clust_in_hosp = sum(hosp_assoc == "in_hospital", na.rm = TRUE),
+    clust_not_in_hosp = sum(hosp_assoc != "in_hospital", na.rm = TRUE),
+    total_in_hosp = median(total_in_hosp)- clust_in_hosp,
+    total_not_in_hosp = median(total_not_in_hosp) - clust_not_in_hosp,
+    pval = fisher.test(matrix(
+      c(clust_in_hosp, total_in_hosp, clust_not_in_hosp, total_not_in_hosp), nrow = 2
+    ), simulate.p.value = TRUE)$p.value
+  ) %>% 
+  rename(clustr = Cluster) %>% 
+  mutate(log_pval = -log10(pval))-> df.manhattan.popPUNK
+
+ggplot(df.manhattan.popPUNK, aes(clustr, log_pval, color = log_pval > 
+                                   -log10(0.05 /
+                                     nrow(df.manhattan.popPUNK)))) +
+  geom_point(size = 0.5) +
+  geom_hline(aes(yintercept = -log10(0.05 /
+                                     nrow(df.manhattan.popPUNK))),
+             linetype = "dashed") +
+  theme_bw() +
+  theme(
+    legend.position = "none",
+    axis.text.x = element_text(angle = 90, hjust = 0, size = 4)) +
+      scale_color_manual(values = c("black", "red")) +
+  labs(y = "-log(p)", x = "popPUNK cluster") -> manhattanplot_popPUNK
+ # 
+
+## -- esbl clusters
+
+btESBL_contigclusters %>% 
+  left_join(btESBL_sequence_sample_metadata,
+            by = c("lane" = "lane")
+  ) %>% 
+  as.data.frame() -> clusts_esbl
+
+
+clusts_esbl %>%
+  ungroup() %>%
+  mutate(
+    total_in_hosp = sum(hosp_assoc == "in_hospital", na.rm = TRUE),
+    total_not_in_hosp = sum(hosp_assoc != "in_hospital", na.rm = TRUE)
+  ) %>%
+  group_by(clstr_name) %>%
+  summarise(
+    clust_in_hosp = sum(hosp_assoc == "in_hospital", na.rm = TRUE),
+    clust_not_in_hosp = sum(hosp_assoc != "in_hospital", na.rm = TRUE),
+    total_in_hosp = median(total_in_hosp)- clust_in_hosp,
+    total_not_in_hosp = median(total_not_in_hosp) - clust_not_in_hosp,
+    pval = fisher.test(matrix(
+      c(clust_in_hosp, total_in_hosp, clust_not_in_hosp, total_not_in_hosp), nrow = 2
+    ), simulate.p.value = TRUE)$p.value
+  ) %>% 
+  mutate(log_pval = -log10(pval))-> df.manhattan.esbl
+
+ggplot(df.manhattan.esbl, aes(clstr_name, log_pval, color = log_pval > 
+                                   -log10(0.05 /
+                                     nrow(df.manhattan.popPUNK)))) +
+  geom_point(size = 0.5) +
+  geom_hline(aes(yintercept = -log10(0.05 /
+                                     nrow(df.manhattan.popPUNK))),
+             linetype = "dashed") +
+  theme_bw() +
+  theme(
+    legend.position = "none",
+    axis.text.x = element_text(angle = 90, hjust = 0, size = 4)) +
+      scale_color_manual(values = c("black", "red")) +
+  labs(y = "-log(p)", x = "ESBL-contig cluster") -> manhattanplot_esbl
+ # 
+
+(((hospassoc.tree.esco |
+  hospassoc.tree.kleb)))/ 
+  (manhattanplot_popPUNK /
+  manhattanplot_esbl)+
+  plot_annotation(tag_levels = "A") + plot_layout(heights = c(1.5,1), guides = "collect")
+  
+```
+```{r snp-clusts, fig.width = 13.2, fig.height = 6}
+
+
+
+make_cluster_pairwise_comparison_df <- function(pairwise_snp_df,
+                                                metadata_df,
+                                                cut_tree_vect,
+                                                n) {
+  cluster_samples <- names(cut_tree_vect[cut_tree_vect == n])
+  pairwise_snp_df <- as.data.frame(pairwise_snp_df)
+  rownames(pairwise_snp_df) <- pairwise_snp_df$sample
+  pairwise_snp_df[cluster_samples, c("sample", cluster_samples)] %>%
+    pivot_longer(-sample) %>%
+    filter(sample != name) -> d
+  
+  d[!duplicated(apply(d[1:2], 1, sort), MARGIN = 2), ] -> d
+  names(d) <- c("sample.x", "sample.y", "snpdist")
+  d$sample.x <- gsub("#", "_", d$sample.x)
+  d$sample.y <- gsub("#", "_", d$sample.y)
+  
+  
+  left_join(
+    d,
+    select(
+      metadata_df,
+      lane,
+      pid,
+      arm,
+      visit,
+      enroll_date,
+      hospoutcomedate,
+      data_date
+    ),
+    by = c("sample.x" = "lane")
+  ) %>%
+    left_join(
+      select(
+        metadata_df,
+        lane,
+        pid,
+        arm,
+        visit,
+        enroll_date,
+        hospoutcomedate,
+        data_date
+      ),
+      by = c("sample.y" = "lane")
+    ) -> d
+  d$pair <- paste0(d$sample.x, "-", d$sample.y)
+  d$cluster_number <- n
+  d$cluster_name <- n
+  d %>%
+    mutate(type = case_when(pid.x == pid.y ~ "within",
+                            TRUE ~ "between")) ->   d
+  return(d)
+  
+}
+
+
+make_all_clusters_pairwise_comparison_df  <-
+  function(pairwise_snp_df,
+           metadata_df,
+           cut_tree_vect) {
+    out <- list()
+    for (i in 1:max(cut_tree_vect)) {
+  #    print(i)
+      #  print(i)
+      make_cluster_pairwise_comparison_df(pairwise_snp_df,
+                                          metadata_df,
+                                          cut_tree_vect,
+                                          i) -> out[[i]]
+      
+    }
+    return(do.call(rbind, out))
+    
+    
+  }
+
+
+hclust(as.dist(btESBL_snpdists_esco[-1])) -> hclust_snpdists.e
+cutree(hclust_snpdists.e, h =5 ) -> cut_tree_vect.e
+
+hclust(as.dist(btESBL_snpdists_kleb[-1])) -> hclust_snpdists.k
+cutree(hclust_snpdists.k, h =5 ) -> cut_tree_vect.k
+
+make_all_clusters_pairwise_comparison_df(
+  btESBL_snpdists_esco,
+  btESBL_sequence_sample_metadata,
+  cut_tree_vect.e) -> pairwise_snpclust.e
+
+
+bind_rows(
+  btESBL_sequence_sample_metadata %>%
+    semi_join(btESBL_snpdists_esco,
+              by = c("lane" = "sample")
+    ) %>% 
+    select(lane, pid) %>%
+    full_join(select(btESBL_sequence_sample_metadata, lane, pid) %>%
+                semi_join(btESBL_snpdists_esco ,
+                          by = c("lane" = "sample")),
+              by = character())  %>%
+    filter(lane.x != lane.y,
+           pid.x == pid.y) %>%
+    select(lane.x, lane.y) %>%
+    mutate(type = "Same Patient") %>%
+    rename(from = lane.x,
+           to = lane.y),
+  pairwise_snpclust.e %>% 
+    select(sample.x, sample.y) %>% 
+    rename(from = sample.x,
+           to = sample.y) %>% 
+    mutate(type = "SNPs <6")
+
+) -> edges.e
+
+
+
+
+  btESBL_sequence_sample_metadata %>% 
+  semi_join(btESBL_snpdists_esco,
+            by = c("lane" = "sample")
+  ) %>% 
+  group_by(lane) %>% 
+  slice(n=1) %>% 
+    filter(!is.na(hosp_assoc)) %>% 
+  mutate(
+    hosp_assoc = case_when(
+      hosp_assoc == "community" ~ "Community",
+      hosp_assoc == "in_hospital" ~ "In hospital",
+      hosp_assoc == "recent_dc" ~ "Post discharge"),
+    ) -> 
+    vertices.e
+
+edges.e%>% 
+  mutate(sortvar = map2_chr(from, to, ~paste(sort(c(.x,.y)), collapse = ""))) %>% 
+  group_by(sortvar,type) %>% 
+  slice(n=1) %>% 
+  ungroup() %>% 
+  select(-sortvar) %>% 
+  group_by(from,to) %>% 
+  mutate(weight = n()/10) %>% 
+  # remove those with missing metadata
+  anti_join(
+    btESBL_sequence_sample_metadata %>% 
+      filter(is.na(hosp_assoc)),
+             by = c("from" = "lane")
+      ) %>% 
+  anti_join(
+    btESBL_sequence_sample_metadata %>% 
+      filter(is.na(hosp_assoc)),
+             by = c("to" = "lane")
+      ) -> edges.e
+
+
+gr.e <- graph_from_data_frame(edges.e, directed = FALSE, vertices = vertices.e)
+
+ggraph(gr.e, layout = "fr") + geom_edge_fan(aes(color = type), width =1) + 
+  geom_node_point(aes(fill = hosp_assoc), shape = 21, size = 3) + 
+  #  facet_edges(~ type) + 
+  theme_void() + scale_fill_manual(values = c("white","black","grey")) + 
+  theme(legend.title = element_blank()) -> 
+  snp_network_plot.esco
+
+# kleb
+
+make_all_clusters_pairwise_comparison_df(
+  btESBL_snpdists_kleb,
+  btESBL_sequence_sample_metadata,
+  cut_tree_vect.k) -> pairwise_snpclust.k
+
+
+bind_rows(
+  btESBL_sequence_sample_metadata %>%
+    semi_join(btESBL_snpdists_kleb,
+              by = c("lane" = "sample")
+    ) %>% 
+    select(lane, pid) %>%
+    full_join(select(btESBL_sequence_sample_metadata, lane, pid) %>%
+                semi_join(btESBL_snpdists_kleb ,
+                          by = c("lane" = "sample")),
+              by = character())  %>%
+    filter(lane.x != lane.y,
+           pid.x == pid.y) %>%
+    select(lane.x, lane.y) %>%
+    mutate(type = "Same Patient") %>%
+    rename(from = lane.x,
+           to = lane.y),
+  pairwise_snpclust.k %>% 
+    select(sample.x, sample.y) %>% 
+    rename(from = sample.x,
+           to = sample.y) %>% 
+    mutate(type = "SNPs <6")
+
+) -> edges.k
+
+
+
+
+  btESBL_sequence_sample_metadata %>% 
+  semi_join(btESBL_snpdists_kleb,
+            by = c("lane" = "sample")
+  ) %>% 
+  group_by(lane) %>% 
+  slice(n=1) %>% 
+    filter(!is.na(hosp_assoc)) %>% 
+  mutate(
+    hosp_assoc = case_when(
+      hosp_assoc == "community" ~ "Community",
+      hosp_assoc == "in_hospital" ~ "In hospital",
+      hosp_assoc == "recent_dc" ~ "Post discharge"),
+    ) -> 
+    vertices.k
+
+edges.k %>% 
+  mutate(sortvar = map2_chr(from, to, ~paste(sort(c(.x,.y)), collapse = ""))) %>% 
+  group_by(sortvar,type) %>% 
+  slice(n=1) %>% 
+  ungroup() %>% 
+  select(-sortvar) %>% 
+  group_by(from,to) %>% 
+  mutate(weight = n()/10) %>% 
+  # remove those with missing metadata
+  semi_join(
+    vertices.k,
+    by = c("from" = "lane")
+      ) %>% 
+  semi_join(
+    vertices.k, by = c("to" = "lane")
+      ) -> edges.k
+
+
+gr.k <- graph_from_data_frame(edges.k, directed = FALSE, vertices = vertices.k)
+
+ggraph(gr.k, layout = "fr") + geom_edge_fan(aes(color = type), width =1) + 
+  geom_node_point(aes(fill = hosp_assoc), shape = 21, size = 3) + 
+  #  facet_edges(~ type) + 
+  theme_void() + scale_fill_manual(values = c("white","black","grey")) + 
+  theme(legend.title = element_blank())  -> 
+  snp_network_plot.kleb
+
+
+(snp_network_plot.esco + 
+  snp_network_plot.kleb) + plot_layout(guides = "collect") +  
+  plot_annotation(tag_levels = "A")
+
+```
 
 
 
