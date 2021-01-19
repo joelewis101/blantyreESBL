@@ -1,10 +1,16 @@
 # Load raw data and save it as .rda files for blantyreESBL package
 
 # the load_phd_data scripts are from the Thesis repo https://github.com/joelewis101/thesis
+library("phytools")
 
 source("/Users/joelewis/Documents/PhD/Thesis/bookdown/final_cleaning_scripts/load_PhD_data.R")
 
 source("/Users/joelewis/Documents/PhD/Thesis/bookdown/final_cleaning_scripts/load_and_clean_lims.R")
+
+library("here")
+library("ape")
+
+source(here("data-raw/load_metadata_fn.R"))
 
 # baseline characteristics -------------------------------------------
 
@@ -72,7 +78,7 @@ btESBL_exposures %>%
 
 use_data(btESBL_exposures, overwrite = TRUE)
 
-# ESBL carriage data
+# ESBL carriage data -------------------------------------------------
 
 
 lims_dates %>%
@@ -105,7 +111,7 @@ readRDS("/Users/joelewis/Documents/PhD/Thesis/bookdown/chapter_9/stan_models/mod
   btESBL_model2data
 
 use_data(btESBL_model2data, overwrite = TRUE)
-"
+
 readRDS("/Users/joelewis/Documents/PhD/Thesis/bookdown/chapter_9/stan_models/model_1/stan_data_m1.rds") ->
   btESBL_model1data
 
@@ -126,4 +132,232 @@ use_data(btESBL_model1posterior, overwrite = TRUE)
 btESBL_model2simulations <- read_csv("~/Documents/PhD/Thesis/bookdown/chapter_9/simulations2.csv")
 
 use_data(btESBL_model2simulations, overwrite = TRUE)
+
+# plasmid replicons
+
+esco.plasm <- read_csv(here("data-raw/plasmids/esco-plasmidfinder-summ.csv"))
+klebs.plasm <- read_csv("data-raw/plasmids/klebs-plasmidfinder-summary.csv")
+
+dassim.klebs <- read_lines(here("data-raw/included_lanes/kleb_lanes_retained_following_qc.txt"))
+
+bind_rows(
+
+esco.plasm %>%
+  pivot_longer(-name,
+               names_to = c("cluster_name", ".value"),
+               names_sep = "\\.") %>%
+  mutate(name = gsub("\\./","", name),
+         name = gsub("/report\\.tsv","",name)) %>%
+  filter(match == "yes") %>%
+  select(name, ref_seq) %>%
+  mutate(species = "E. coli"),
+
+klebs.plasm %>%
+  mutate(name = gsub("\\./","", name),
+         name = gsub("/report\\.tsv","",name)) %>%
+  filter(name %in% dassim.klebs) %>%
+  pivot_longer(-name,
+               names_to = c("cluster_name", ".value"),
+               names_sep = "\\.") %>%
+  filter(match == "yes") %>%
+  select(name, ref_seq) %>%
+  mutate(species = "K. pneumoniae")
+) %>%
+  rename("sample" = "name") -> btESBL_plasmidreplicons
+
+
+use_data(btESBL_plasmidreplicons, overwrite = TRUE)
+
+# amr genes ---------------------------------------------------------
+
+
+esco1 <- read_csv(here("data-raw/amr_genes/esco-amr-ariba-report-part1.csv"))
+esco2 <- read_csv(here("data-raw/amr_genes/esco-amr-ariba-report-part2.csv"))
+klebs <- read_csv(here("data-raw/amr_genes/kleb-amr-ariba-report.csv"))
+
+bind_rows(
+esco1 %>%
+  select(contains("name") |
+           contains("match") |
+           contains("assembled") |
+           contains("ref_seq")) %>%
+  pivot_longer(-name,
+               names_to = c("cluster_name", ".value"),
+               names_sep = "\\.") %>%
+  filter(match == "yes") %>%
+  select(name, ref_seq) %>%
+  mutate(ref_seq = sapply(strsplit(ref_seq, split = "__"), function(x)
+    x[3]),
+    species = "E. coli"),
+
+esco2 %>%
+  select(contains("name") |
+           contains("match") |
+           contains("assembled") |
+           contains("ref_seq")) %>%
+  pivot_longer(-name,
+               names_to = c("cluster_name", ".value"),
+               names_sep = "\\.") %>%
+  filter(match == "yes") %>%
+  select(name, ref_seq) %>%
+  mutate(ref_seq = sapply(strsplit(ref_seq, split = "__"), function(x)
+    x[3]),
+    species = "E. coli"),
+
+klebs %>%
+  mutate(name = gsub("\\./","", name),
+         name = gsub("/report\\.tsv","",name)) %>%
+  filter(name %in% dassim.klebs) %>%
+  select(contains("name") |
+           contains("match") |
+           contains("assembled") |
+           contains("ref_seq")) %>%
+  pivot_longer(-name,
+               names_to = c("cluster_name", ".value"),
+               names_sep = "\\.") %>%
+  filter(match == "yes") %>%
+  select(name, ref_seq) %>%
+  mutate(ref_seq = sapply(strsplit(ref_seq, split = "__"), function(x)
+    x[3]),
+    species = "K. pneumoniae"
+    )
+) %>%
+  mutate(name = gsub("\\./","", name),
+         name = gsub("/report\\.tsv","",name),
+         name = gsub("_1\\.fastq\\.gz", "", name)
+  )  %>%
+  rename("sample" = "name") -> btESBL_amrgenes
+
+use_data(btESBL_amrgenes, overwrite = TRUE)
+
+# core gene trees --------------------------------------------------------
+
+read.tree(here("data-raw/core_gene_trees/esco_core_gene_tree.treefile")) ->
+  btESBL_coregene_tree_esco
+
+read.tree(here("data-raw/core_gene_trees/kleb_core_gene_tree.treefile")) ->
+  btESBL_coregene_tree_kleb
+
+btESBL_coregene_tree_esco <- midpoint.root(btESBL_coregene_tree_esco)
+btESBL_coregene_tree_kleb <- midpoint.root(btESBL_coregene_tree_kleb)
+
+use_data(btESBL_coregene_tree_esco, overwrite = TRUE)
+use_data(btESBL_coregene_tree_kleb, overwrite = TRUE)
+
+# sequence sample metadata ----------------------------------
+
+samp_metadata <- load_DASSIM3_metadata(
+  location_of_phd_loading_script =
+    "/Users/joelewis/Documents/PhD/Thesis/bookdown/final_cleaning_scripts/load_PhD_data.R",
+  location_of_lims_loading_script =
+    "/Users/joelewis/Documents/PhD/Thesis/bookdown/final_cleaning_scripts/load_and_clean_lims.R",
+  lanes_to_include =
+    "/Users/joelewis/Documents/Sanger/DASSIM3/data_raw/metadata/all_DASSIM_kleb_and_esco_lanes.txt",
+  sanger_metadata_file <- "/Users/joelewis/Documents/Sanger/DASSIM3/data_raw/metadata/all_DASSIM_kleb_and_esco_metadata.csv",
+  recent_dc_def = 120 )
+
+outcome %>%
+  group_by(pid) %>%
+  arrange(pid,hospoutcome,hospoutcomedate) %>%
+  slice(n=1) -> outcome
+
+samp_metadata %>%
+  rename_with(~ tolower(gsub(" |\\.","_", .x))) %>%
+  mutate(lane = gsub("#","_", lane)) %>%
+  left_join(outcome,
+            by = "pid") %>%
+  select(lane, supplier_name,pid, arm, visit, data_date, enroll_date, assess_type,
+         hosp_assoc, hospoutcomedate) -> btESBL_sequence_sample_metadata
+
+use_data(btESBL_sequence_sample_metadata, overwrite = TRUE)
+
+# contig clusters --------------------------------
+
+
+#make summary df
+
+filez <- list.files(here("data-raw/contig_clusters/"))
+
+out <- list()
+for (i in 1:length(filez)) {
+  dftemp <-
+    read_tsv(paste0(
+      here("data-raw/contig_clusters/", filez[i])
+    ))
+  dftemp$gene <-
+    str_extract(filez[i], "(?<=contigs-).*(?=\\.clust\\.)")
+  out[[i]] <- dftemp
+}
+
+do.call(rbind, out) -> clusters
+
+clusters %>%
+  mutate(clstr_name = paste0(gene, ".", clstr),
+         lane = gsub("^\\.", "", id),
+         lane = gsub("\\..*$", "", lane),
+         clstr_iden = as.numeric(gsub("%", "", clstr_iden)),
+         clstr_cov = as.numeric(gsub("%", "", clstr_cov))) %>%
+  select(-clstr) %>%
+  mutate(species = case_when(
+    lane %in% btESBL_coregene_tree_kleb$tip.label ~ "K. pneumoniae",
+    lane %in% btESBL_coregene_tree_esco$tip.label ~ "E. coli",
+    TRUE ~ NA_character_)
+    )-> btESBL_contigclusters
+
+use_data(btESBL_contigclusters, overwrite = TRUE)
+
+# poppunk clusters --------------------
+
+
+bind_rows(
+  read_csv(here(
+    "data-raw/poppunk/strain_db_clustersKLEB.csv"
+  )) %>%
+    mutate(
+      Taxon = gsub("#", "_", Taxon),
+      Cluster = paste0("K", Cluster)
+    ),
+  read_csv(here(
+    "data-raw/poppunk/strain_db_clustersESCO.csv"
+  )) %>%
+    mutate(
+      Taxon = gsub("#", "_", Taxon),
+      Cluster = paste0("E", Cluster)
+    )
+) -> btESBL_popPUNK
+
+use_data(btESBL_popPUNK, overwrite = TRUE)
+
+# snpdist matrices ----------------------------------------------------
+
+snpdists.e <- read_csv(here("data-raw/snpdists/esco_clean.full.filtered_polymorphic_sites-snp-dists.csv"))
+
+
+
+names(snpdists.e)[1] <- "sample"
+snpdists.e %>%
+  filter(sample != "Reference") %>%
+  select(-Reference) %>%
+  rename_with(~ gsub("#", "_", .x)) %>%
+  mutate(sample =  gsub("#", "_", sample)) ->
+  btESBL_snpdists_esco
+
+# kleb
+snpdists.k <- read_csv(here("data-raw/snpdists/clean.full.filtered_polymorphic_sites_kleb_snp-dists.csv"))
+
+names(snpdists.k)[1] <- "sample"
+snpdists.k %>%
+  filter(sample != "Reference") %>%
+  select(-Reference) %>%
+  rename_with(~ gsub("#", "_", .x)) %>%
+  mutate(sample =  gsub("#", "_", sample)) ->
+  btESBL_snpdists_kleb
+
+use_data(btESBL_snpdists_esco, overwrite = TRUE)
+use_data(btESBL_snpdists_kleb, overwrite = TRUE)
+
+# ----------------------------------------------------------------
+
+
+
 
