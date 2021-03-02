@@ -1,6 +1,7 @@
 # Load raw data and save it as .rda files for blantyreESBL package
 
 # the load_phd_data scripts are from the Thesis repo https://github.com/joelewis101/thesis
+#library(tidyverse)
 library("phytools")
 
 source("/Users/joelewis/Documents/PhD/Thesis/bookdown/final_cleaning_scripts/load_PhD_data.R")
@@ -246,6 +247,9 @@ use_data(btESBL_coregene_tree_kleb, overwrite = TRUE)
 
 # sequence sample metadata ----------------------------------
 
+# If there is no lane accession this will use sample accession
+# Need to update once klebs go into the wild!
+
 samp_metadata <- load_DASSIM3_metadata(
   location_of_phd_loading_script =
     "/Users/joelewis/Documents/PhD/Thesis/bookdown/final_cleaning_scripts/load_PhD_data.R",
@@ -268,6 +272,29 @@ samp_metadata %>%
             by = "pid") %>%
   select(lane, supplier_name,pid, arm, visit, data_date, enroll_date, assess_type,
          hosp_assoc, hospoutcomedate) -> btESBL_sequence_sample_metadata
+
+left_join(
+  btESBL_sequence_sample_metadata,
+  bind_rows(
+    read_csv(
+      "~/Documents/PhD/Thesis/bookdown/chapter_7/global_tree/all_acc.csv"
+    ),
+    read_csv(
+      "~/Documents/PhD/Manuscripts/20200208vanilla_genomics/carriage_genomics/data_raw/DASSIM3_accession.csv"
+    )
+  ) %>%
+    mutate(
+      `Lane name` = gsub("#", "_", `Lane name`),
+      `Lane accession` = if_else(`Lane accession` == "not found",
+                                 `Sample accession`,
+                                 `Lane accession`)
+    ) %>%
+    transmute(lane = `Lane name`,
+              accession = `Lane accession`),
+  by = "lane"
+)  %>%
+  relocate(accession, before = everything()) ->
+  btESBL_sequence_sample_metadata
 
 use_data(btESBL_sequence_sample_metadata, overwrite = TRUE)
 
