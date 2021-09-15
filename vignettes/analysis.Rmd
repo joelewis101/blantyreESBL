@@ -31,7 +31,7 @@ library(ggtree)
 library(kableExtra)
 load_all()
 
-specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
+specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall = k))
 
 p.lci <- function(x,n) {
   return(binom.test(x,n)$conf.int[[1]])
@@ -40,6 +40,15 @@ p.lci <- function(x,n) {
 p.uci <- function(x,n) {
   return(binom.test(x,n)$conf.int[[2]])
 }
+
+write_figs <- TRUE
+
+
+if (write_figs) {
+  if (!dir.exists(here("figures"))) {dir.create(here("figures"))}
+  if (!dir.exists(here("tables"))) {dir.create(here("tables"))}
+}
+
 
 #render(here("vignettes/analysis.Rmd", output_dir = "~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/"))
 ```
@@ -160,7 +169,7 @@ bind_rows(
     rename(p.value = p,
            str_tot = Total) 
   ) %>% 
-  mutate(value = if_else(is.na(value), name, value)) ->t1
+  mutate(value = if_else(is.na(value), name, value)) -> t1
 
 t1 %>% 
   filter(
@@ -291,7 +300,7 @@ t1 %>%
 ```{r exp, fig.cap="Supplementary figure 1: Exposures during study period. Panels show proportion of participants in each arm of the study who are hospitalised of exposed to antimicrobials on a given day", fig.width=8, fig.height = 5}
 
  c("Amoxicillin" = "amoxy",
-  "Gentamicin"= "genta",
+  "Gentamicin" = "genta",
   "Azithromycin" = "azithro",
   "TB therapy" = "tb",
   "Penicillin" = "benzy",
@@ -332,7 +341,7 @@ btESBL_exposures %>%
     ) %>% 
   select(-c(pid, died)) %>% #filter(arm != 3) %>%
   pivot_longer(-c(assess_type, arm)) %>%
-  group_by(arm, assess_type, name)%>%
+  group_by(arm, assess_type, name) %>%
   summarise(n = n(), x = sum(value == 1), prop = x/n)  %>% 
   filter(
     name %in% c(
