@@ -7,6 +7,46 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+<br />
+
+*Dynamics of gut mucosal colonisation with extended spectrum beta-lactamase producing Enterobacterales in Malawi*
+
+<br />
+
+Joseph M Lewis^1,2,3,4^, , Madalitso Mphasa^1^, Rachel Banda^1^,  Matthew Beale^4^, Eva Heinz^2^, Jane Mallewa^5^, Christopher Jewell^6^, Nicholas R Thomson^4^, Nicholas A Feasey^1,2^
+
+1. Malawi Liverpool Wellcome Clinical Research Programme, Blantyre, Malawi
+2. Department of Clinical Sciences, Liverpool School of Tropical Medicine, Liverpool, UK
+3. Department of Clinical Infection, Microbiology and Immunology, University of Liverpool, Liverpool, UK
+4. Wellcome Sanger Institute, Hinxton, UK
+5. College of Medicine, University of Malawi, Malawi
+6. University of Lancaster, Lanaster, UK
+
+This document provides the analysis code for the above manuscript.
+
+## Installing and accessing data
+
+Install the package from GitHub:
+
+``` r
+install.packages("devtools")
+devtools::install_github("https://github.com/joelewis101/blantyreESBL)
+```
+
+Or check out the source code at [GitHub](https://github.com/joelewis101/blantyreESBL)
+
+Data objects are included in the package
+
+The analysis is available as a package vignette; this can be built when downloading the package by typing:
+
+``` r
+devtools::install_github("https://github.com/joelewis101/blantyreESBL", build_vignettes = TRUE )
+```
+
+Alternatively the source code for the vignette is `analysis.Rmd` in the `vignettes/` folder of this repo or the  [pkgdown](https://joelewis101.github.io/blantyreESBL/) site for this package has a rendered version, as well as variable definitions for the datasets.
+
+### Setup, load packages
+
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -43,7 +83,7 @@ p.uci <- function(x,n) {
   return(binom.test(x,n)$conf.int[[2]])
 }
 
-write_figs <- TRUE
+write_figs <- FALSE
 
 
 if (write_figs) {
@@ -691,6 +731,7 @@ if (write_figs) {
 }
 
 ```
+
 ### Baseline associations of ESBL colonisation
 
 ```{r ESBLbaseline-log-reg-plot}
@@ -841,6 +882,10 @@ log_regESBL %>%
 
 ```
 
+### Longitudinal carriage
+
+Describe carriage prevalence; plot model parameters; plot predicted prevalence.
+
 ```{r markov-model-panel-plot, fig.cap = "FIGURE 1: Determinants of ESBL-E carriage. A: Prevalence of ESBL-E carriage stratified by study arm. Inpatients without sepsis are censored at first antimicrobial exposure and community members censored at first antimicrobial exposure or hospital admission. Estimated prevalence and 95% confience intervals derived from a nonparametric LOESS regression with span parameter 0.8. B: Simulated probability of ESBL colonisation generated from the posterior parameter estimates of the fitted model with a starting probability of colonisation of 0.5 and seven days of hospitalisation with either seven, two, or no days antimicrobial exposure. In this model, truncated courses of antimicrobials havelittle effect on reducing ESBL-E carriage. C-E: Density plots of parameter estimates form fitted model with median (line) and 95% credible intervals (shading) shown. A: log hazard ratios of ESBL-E gain and loss for hospialisation and antimicrobial exposure: hospitalisation acts to acts to increase both acquisition and loss of ESBL-E whereas antmicrobial exposure acts to prevent loss. D: mean time in state for uncolonised and colonised states. E: Half life of decay of effecr of antimicrobials, showing that the effect of antimicrobials, in this model, acts for many days after exposure has finished.", fig.width = 12, fig.height=6  }
 
 inv <- function(x) {
@@ -987,6 +1032,10 @@ if (write_figs) {
 }
 ```
 
+### Compare different paramaterisation of antimicrobial effect
+
+Stepwise constant vs exponential decay.
+
 ```{r compare-models-plot, fig.cap = "SUPPLEMENTARY FIGURE X: Model comparisons for models with and without an exponentially dcaying effect of antmicrobials. A-B: Parameter estimates from stepwise-constant covariate model. C-E: parameter estimates from model with exponentially-decaying effect of antinicrobial exposure. F: Posterior predictive checks of modelsm comparing model with piecewise-constant covariates (model 1) to exponentially decaying effect of antimicrobial exposure (model 2). Dashed lines show actual ESBL-E prevalence across three study arms; probability density of predicted prevalence from the two models show that model 1 tends to underestimate ESBL-E prevalence in the antimicrobial-exposed, compared to model 2.", fig.width= 11, fig.height = 8}
 # to
 
@@ -1106,6 +1155,8 @@ if (write_figs) {
 ```
 
 
+### Table of model parameter values
+
 ```{r model2-param-table}
 
 mcmc_intervals_data(
@@ -1179,7 +1230,7 @@ loo_compare(loo_mod1, loo_mod2)
 
 ```
 
-### plasmid replicons
+### Contig cluster associations with lineage and genus
 
 ```{r plasm-amr-gene-plot, fig.width = 10, fig.height = 12, fig.cap = "Distribution of contig-clusters between and within genera. (A) shows distribution of contig clusters by genus. (B-C) show contig-cluster presence (purple)-absence (grey) mapped back to core gene maximum likelihood phylogeny for E. coli (B) and K. pneumoniae subsp. pneumoniae (C)"  }
 
@@ -1285,6 +1336,7 @@ if (write_figs) {
 
 ```
 
+### Contig cluster basic statistics
 
 ```{r contig-cluster-stats, fig.cap = "SUPPLEMENTARY FIGURE XXX: Size, representative cluster length, distribution of coverage and sequence identity of ESBL-contig clusters", fig.width=9, fig.height=7}
 
@@ -2211,6 +2263,7 @@ if (write_figs) {
 }
 ```
 
+### Construct and fit SNP-clusters
 
 ```{r snp-clusts, fig.width = 13.2, fig.height = 6}
 
@@ -2490,6 +2543,8 @@ if (write_figs) {
 }
 ```
 
+### Misc SNP cluster stats
+
 ```{r calc-snpclust-bits}
 
 ## calculate stats about snpclusts
@@ -2558,7 +2613,7 @@ btESBL_sequence_sample_metadata %>%
 
 ```
 
-
+### SNP cutoff sensitivity analysis
 
 ```{r snp-cutoff-sens-analysis, fig.width = 9, fig.height = 4, fig.cap = "SUPPLEMENTARY FIGURE: Sensitivity analysis showing proportion of within-participant sample pairs that contain E. coli (A) or K. pneumoniae (B) that are within a given SNP distance."}
 
@@ -3202,6 +3257,8 @@ if (write_figs) {
 }
 ```
 
+### Model posterior pairs plot
+
 ```{r posterior-pairs-plot, fig.width= 12, fig.height=12, fig.cap = "Pairs plots of posterior of final model showing nonidentifiability of gain and loss parameters."}
 
 mcmc_pairs(btESBL_model2posterior, pars = c("alphas[1]", "betas[1]", "alphas[2]", "betas[2]", "lambda", "mu", "gammas[1]")) -> pairsplot
@@ -3220,6 +3277,8 @@ if (write_figs) {
 }
 
 ```
+
+### SNP cluster comparisons sensitivity analysis
 
 ```{r snpclust-sens-stats-plots, fig.height = 5, fig.width = 6.5, fig.cap = "Sensitivity analysis examining epidemiology of SNP-clusters (i.e. putative transmission clusters) as the SNP-threshold varies from 0 to 10. (A) shows the proportion of pairwise comparisons of within-SNP-cluster isolates that are within a single participant; most putative transmission clusters are between-, rather than within- participants. (B) shows the proportion of isolates that are community associated stratified by whether they are members of a putative transmission cluster or not; the proportion is similar at all threshold values, which is not suggestive of hospital-associated transmission." }
 
