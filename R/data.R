@@ -1,10 +1,10 @@
-R#' Characteristics of study participants.
+#' Characteristics of study participants.
 #'
 #' ART - antiretroviral therapy, CPT = co-trimoxazole preventative therapy
 #'
 #' @format A data frame with 425 rows and 32 variables:
 #' \describe{
-#'   \item{pid}{Unique patient identified}
+#'   \item{pid}{Unique patient identifier}
 #'   \item{arm}{Study arm; 1=sepsis, 2=inpatient, no abx, 3=community}
 #'   \item{enroll_date}{Date of enrolment in study}
 #'   \item{calc_age}{Age, years, at enrolment}
@@ -51,7 +51,7 @@ R#' Characteristics of study participants.
 #'
 #' @format A data frame with 1838 rows and 26 variables:
 #' \describe{
-#'   \item{pid}{Unique patient identified}
+#'   \item{pid}{Unique patient identifier}
 #'   \item{assess_type}{Day of observation (day 0=enrolment day)}
 #'   \item{died}{1=died on day of current observation}
 #'   \item{hosp}{1=hospitalised on day of current observation, 0 =not}
@@ -78,3 +78,192 @@ R#' Characteristics of study participants.
 #'   \item{strepto}{Exposure to streptomicin on day of observation}
 #' }
 "btESBL_exposures"
+
+
+#' Results of stool testing for ESBL
+#'
+#' Results of testing stool/rectal swab samples for presence of any ESBL
+#' producer
+#'
+#' @format A data frame with 1416 rows and 9 variables:
+#' \describe{
+#'   \item{pid}{Unique patient identifier}
+#'   \item{lab_id}{Unique speciment identfier}
+#'   \item{arm}{Study arm; 1 = sepsis, 2 = inpatient, no abx, 3 = community }
+#'   \item{visit}{Study visit: 0 = baseline, 1 = d7, 2 = d28, 3 = d90, 4 = d180}
+#'   \item{data_date}{Date of sample collection}
+#'   \item{sample_type}{Sample type (stool or rectal swab}
+#'   \item{ESBL}{Phenotypic ESBL presence (Positive) or absence (Negative)}
+#'   \item{enroll_date}{Date of patient enrolment to study}
+#'   \item{t}{Number of days post-enrolment that sample was collected}
+#' }
+"btESBL_stoolESBL"
+
+
+#' Results of stool testing for ESBL
+#'
+#' Organisms identified from culture of stool on CHROMagar
+#' (selective agar for cephalosporin resistance)
+#'
+#' @format A data frame with 1032 rows and 3 variables:
+#' \describe{
+#'   \item{lab_id}{Unique speciment identfier}
+#'   \item{organism}{Organism identification}
+#'   \item{ESBL}{Phenotypic presence of absence of ESBL in organism}
+#' }
+"btESBL_stoolorgs"
+
+#' Posterior of fitted carriage model (decaying antimicrobial effect)
+#'
+#' Posterior of fitted longitudinal model of ESBL colonisation incorporating
+#' an effect of antimicrobial exposure that exponentially decays following
+#' cessation of exposure
+#'
+#' See manuscript for interpretation of parameters etc.
+#'
+#'
+#' @format An S4 stanfit object (package "rstan") including model log-likelihood
+#'
+#'
+"btESBL_model2posterior"
+
+#' Posterior of fitted carriage model (constant antimicrobial effect)
+#'
+#' Posterior of fitted longitudinal model of ESBL colonisation incorporating
+#' an effect of antimicrobial exposure that is stepwise-constant and
+#' finsihes immediately following exposure
+#'
+#' See manuscript for interpretation of parameters etc.
+#'
+#'
+#' @format An S4 stanfit object (package "rstan") including model log-likelihood
+#'
+#'
+"btESBL_model1posterior"
+
+
+#' Results of simulations from the model posterior
+#'
+#' These simulations set the antimicrobial and hospital exposure to
+#' arbitrary values, set starting probability of colonisation to 0.5 then
+#' draw parameter values from the posterior of the fitted model
+#' (btESBL_model2posterior) to generate probability of being ESBL colonised
+#' a time t later
+#'
+#'
+#' @format A data frame with 600,000 rows and 18 variables:
+#' \describe{
+#'   \item{time}{Number of days post enrollment}
+#'   \item{1}{Probability of being ESBL non-colonised at current time}
+#'   \item{0}{Probability of being ESBL colonised at current time}
+#'   \item{draw}{Unique ID of draw from posterior (1,2...1000)}
+#'   \item{hosp_days}{Number of days of hospitalisation}
+#'   \item{abx_days}{Number of days of antimicrobial exposure}
+#'   \item{p0}{Probability at time 0 of being uncolonised}
+#'   \item{p1}{Probability at time 0 of being colonised}
+#'   \item{abx_start}{Time of antimicrobial exposure start}
+#'   \item{abx_stop}{Time of antimicrobial exposure stop}
+#'   \item{prev_abx}{Time of cessation of prev antimicrobial exposure (999=none)}
+#'   \item{hosp_start}{Time of hospitalisation start}
+#'   \item{hosp_stop}{Time of hospitalisation stop}
+#'   \item{prev_hosp}{Time of cessation of prev hospitalisation (999=none)}
+#' }
+"btESBL_model2simulations"
+
+
+#' Plasmid replicons identified in sequenced isolates
+#'
+#' Identified plasmid replicons using ARIBA and the PlamidFinder database.
+#' See manuscript for details
+#'
+#' @format A tidy data frame with 2893 rows and 3 variables:
+#' \describe{
+#'   \item{lane}{Unique sample-sequencing run ID}
+#'   \item{ref_seq}{Identified plasmid replicon sequence}
+#'   \item{species}{Species of sample}
+#' }
+"btESBL_plasmidreplicons"
+
+#' Contig cluster membership
+#'
+#' Contig cluster assignment of all ESBL gene containing contigs, as
+#' determined by cd-hit
+#'
+#' @format A tidy data frame with 714 rows and 10 variables:
+#' \describe{
+#'   \item{id}{Contig identifier}
+#'   \item{clstr_size}{Number of contigs in cluster}
+#'   \item{length}{Contig length, bases}
+#'   \item{clstr_rep}{Is this the cd-hit cluster representative sample (1=yes,0=no)}
+#'   \item{clstr_iden}{Identity (%) of sample to cluster representative sample}
+#'   \item{clstr_cov}{Coverage (%) of sample to cluster representative sample}
+#'   \item{gene}{ESBL gene}
+#'   \item{clstr_name}{cd-hit cluster identfier: gene.n where n = 1,2..N and N is total no. clusters for given gene}
+#'   \item{lane}{Unique sample-sequencing run ID}
+#'   \item{species}{Species of sample}
+#' }
+"btESBL_contigclusters"
+
+
+#' Metadata of sequenced isolates
+#'
+#' Metadata of all sequenced isolates
+#'
+#' @format A tidy data frame with 676 rows and 12 variables:
+#' \describe{
+#'   \item{accession}{Sample NCBI accession number}
+#'   \item{lane}{Unique sample-sequencing run ID}
+#'   \item{supplier_name}{Unique sample id}
+#'   \item{pid}{Unique participant identifier}
+#'   \item{arm}{Arm of study 1=sepsis, 2=inpatient, no abx, 3=community}
+#'   \item{visit}{Study visit: 0 = baseline, 1 = d7, 2 = d28, 3 = d90, 4 = d180}
+#'   \item{data_date}{Date of sample collection}
+#'   \item{enroll_date}{Date of patient enrolment to study}
+#'   \item{assess_type}{Number of days post-enrolment that sample was collected}
+#'   \item{hosp_assoc}{Is sample community. hospital associated, or recent dc (see manuscript for details)}
+#'   \item{hospoutcomedate}{Date of discharge from hospital. NA = never admittted}
+#'   \item{Cluster}{PopPUNK cluster assignment. Prefix K = K. pneumo, E = E. coli}
+#' }
+"btESBL_sequence_sample_metadata"
+
+#' E. coli core gene tree
+#'
+#' Midpoint rooted maximum likelihood core gene phylogeny for E. coli
+#'
+#'
+#' @format A "phylo" object ("ape" package)
+#'
+#'
+"btESBL_coregene_tree_esco"
+
+
+#' K. pneumoniae complex core gene tree
+#'
+#' Midpoint rooted maximum likelihood core gene phylogeny for K. pneumoniae
+#' complex
+#'
+#'
+#' @format A "phylo" object ("ape" package)
+#'
+#'
+"btESBL_coregene_tree_kleb"
+
+#' Pairwise SNP-distance matrix for all E. coli genomes
+#'
+#' First column is sample names - all other columns are sample names
+#'
+#' @format A 473 x 474 tibble.
+#'
+#'
+"btESBL_snpdists_esco"
+
+#' Pairwise SNP-distance matrix for all K. pneumoniae complex genomes
+#'
+#' First column is sample names - all other columns are sample names
+#'
+#' @format A 350 x 351 tibble.
+#'
+"btESBL_snpdists_kleb"
+
+
+
