@@ -12,6 +12,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+library(here)
 library(igraph)
 library(ggraph)
 library(tidyverse)
@@ -29,7 +30,8 @@ library(pheatmap)
 library(viridis)
 library(ggtree)
 library(kableExtra)
-load_all()
+library(blantyreESBL)
+# load_all()
 
 specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall = k))
 
@@ -47,8 +49,15 @@ write_figs <- TRUE
 if (write_figs) {
   if (!dir.exists(here("figures"))) {dir.create(here("figures"))}
   if (!dir.exists(here("tables"))) {dir.create(here("tables"))}
+  
+  if (!dir.exists(here("figures/long-modelling"))) {
+    dir.create(here("figures/long-modelling"))
+  }
+  
+  if (!dir.exists(here("tables/long-modelling"))) {
+    dir.create(here("tables/long-modelling"))
+    }
 }
-
 
 #render(here("vignettes/analysis.Rmd", output_dir = "~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/"))
 ```
@@ -284,13 +293,28 @@ t1 %>%
   ungroup() %>% 
   select(value, str1, str2, str3, p.value,str_tot) %>% 
   kbl(col.names = 
-        c("Variable", "Sepsis (n=225)", "Inpatient (n=100)", "Community (n=100)", "p", "Total (n = 425)"),
+        c(
+          "Variable",
+          "Sepsis (n=225)",
+          "Inpatient (n=100)",
+          "Community (n=100)",
+          "p",
+          "Total (n = 425)"
+        ), 
       escape = FALSE,
       caption = "TABLE 1: Baseline characteristics of included participants") %>% 
   kable_classic(full_width = F) %>% 
   pack_rows(index = groupvar) %>% 
   row_spec(indentrows, italic = TRUE  ) %>% 
-  footnote(general = "ART = Antiretroviral therapy, CPT = Cotrimoxazole preventative therapy, EFV: Efavirenz, 3TC: Lamivudine, TDF: Tenofovir. Numeric variables are summarised as median (IQR) and categorical variables as proportions. P-values are from Fisher's exact test (categorical variables) or Kruskal-Wallace test (continuous variables) across the three groups; p-value for HIV status compares distribution of HIV reactive, non-reactive and unknown across the three groups. In smoe cases denominator may be less than the total number of participants due to missing data.", symbol = c("Denominator for ART status is HIV reactive participants only", "Excluding TB treatment and CPT", "Flush toilet vs latrine (pit or hanging) or no toilet", "Protected water source includes borehole, water piped into or outside dwelling or public standpipe; unprotected sources include surface water or unprotected springs."))
+  footnote(
+    general = "ART = Antiretroviral therapy, CPT = Cotrimoxazole preventative therapy, EFV: Efavirenz, 3TC: Lamivudine, TDF: Tenofovir. Numeric variables are summarised as median (IQR) and categorical variables as proportions. P-values are from Fisher's exact test (categorical variables) or Kruskal-Wallace test (continuous variables) across the three groups; p-value for HIV status compares distribution of HIV reactive, non-reactive and unknown across the three groups. In smoe cases denominator may be less than the total number of participants due to missing data.",
+    symbol = c(
+      "Denominator for ART status is HIV reactive participants only",
+      "Excluding TB treatment and CPT",
+      "Flush toilet vs latrine (pit or hanging) or no toilet",
+      "Protected water source includes borehole, water piped into or outside dwelling or public standpipe; unprotected sources include surface water or unprotected springs."
+    )
+  )
 
 
 ```
@@ -387,10 +411,10 @@ btESBL_exposures %>%
   xlab("Day post enrolment") + 
   ylab("Proportion") -> exp_plot
 
-ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/SUPP_FIG_exposures.svg",exp_plot,width = 8, height = 5)
-
-ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/SUPP_FIG_exposures.pdf",exp_plot,width = 8, height = 5)
-
+if (write_figs) {
+  ggsave(here("figures/long-modelling/SUP_FIG_exposures.pdf"),exp_plot,width = 8, height = 5)
+  ggsave(here("figures/long-modelling/SUP_FIG_exposures.svg"),exp_plot,width = 8, height = 5)
+}
 exp_plot
     
   
@@ -470,7 +494,9 @@ left_join(
               n_esbl = sum(ESBL == "Positive")),
   
   btESBL_stoolESBL %>%
-    left_join(btESBL_stoolorgs) %>%
+    left_join(btESBL_stoolorgs %>% 
+                filter(ESBL == "Positive") %>%
+                select(lab_id,organism)) %>% 
     group_by(arm, visit) %>%
     summarise(
       n_esco = sum(organism == "Escherichia coli", na.rm = TRUE),
@@ -617,14 +643,20 @@ btESBL_stoolESBL %>%
   xlim(c(0, 300)) + 
   theme_bw() + 
   xlab("Time post enrolment (days)") + 
-  ylab("n")-> samp_col_dates
+  ylab("n") -> samp_col_dates
 
 samp_col_dates
 
-ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/SUPP_FIG_sample_collection_dates.svg",samp_col_dates, width = 6, height = 4)
-
-ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/SUPP_FIG_sample_collection_dates.pdf",samp_col_dates, width = 6, height = 4)
-
+if (write_figs) {
+  ggsave(here("figures/long-modelling/SUP_FIG_sample_collection_dates.pdf"),
+         samp_col_dates,
+         width = 6,
+         height = 4)
+  ggsave(here("figures/long-modelling/SUP_FIG_sample_collection_dates.svg"),
+         samp_col_dates,
+         width = 4, 
+         height = 4)
+}
 ```
 
 ### Species plot
@@ -638,17 +670,25 @@ btESBL_stoolorgs %>%
                 organism == "Gram negative bacilli" ~
                   "Gram negative bacilli*",
                 TRUE ~ organism)) %>% 
-  ggplot(aes(fct_rev(fct_infreq(organism)))) +
+  ggplot(aes(fct_rev(fct_infreq(organism)), fill = ESBL)) +
   geom_bar() +
   coord_flip() +
   labs(y = "n",
-       x = "")+
+       x = "") +
   theme_bw() -> stool_spec
+
 stool_spec
 
-ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/SUPP_FIG_stool_spec.svg",stool_spec, width = 6, height = 4)
-
-ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/SUPP_FIG_stool_spec.pdf",stool_spec, width = 6, height = 4)
+if (write_figs) {
+  ggsave(here("figures/long-modelling/SUP_FIG_stool_spec.pdf"),
+         stool_spec,
+         width = 6,
+         height = 4)
+  ggsave(here("figures/long-modelling/SUP_FIG_stool_spec.svg"),
+         stool_spec,
+         width = 6, 
+         height = 4)
+}
 
 ```
 ### Baseline associations of ESBL colonisation
@@ -808,7 +848,7 @@ inv <- function(x) {
 }
 
 log2scale <- function(x) {
-  return(log(2) *x )
+  return(log(2) * x)
 }
 color_scheme_set(scheme = "gray")
 
@@ -828,7 +868,7 @@ mcmc_areas(
                               ),
     expand = expansion(add = c(0.2,1)) 
     ) +
-    labs(x = "Log HR ESBL gain/loss")-> a
+    labs(x = "Log HR ESBL gain/loss") -> a
 
 mcmc_areas(
     btESBL_model2posterior,
@@ -843,7 +883,7 @@ mcmc_areas(
                               "t(betas[2])" = "Gain[hosp]"
                               ),
     expand = expansion(add = c(0.2,1)) 
-    )-> a.1
+    ) -> a.1
 
 mcmc_areas(
     btESBL_model2posterior,
@@ -859,7 +899,7 @@ mcmc_areas(
                               ),
     expand = expansion(add = c(0.2,1)) 
     ) +
-    labs(x = "Hazard ratio  \nESBL gain/loss")-> a.2
+    labs(x = "Hazard ratio  \nESBL gain/loss") -> a.2
 
 
 
@@ -888,7 +928,7 @@ mcmc_areas(
                   labels = c("t(gammas[1])" = "Half life"), # expression(paste(gamma, "log(2))"))),
           #        labels = c("t(gammas[1])" = "\u03b3 log(2)"),
   expand = expansion(add = c(0.2,1))) +
-  labs(x = "Antimicrobial effect  \nhalf life (days)")-> c
+  labs(x = "Antimicrobial effect  \nhalf life (days)") -> c
 
 # simulated data
 
@@ -926,19 +966,25 @@ btESBL_model2simulations %>%
        y = "Simulated ESBL prevalence",
        x = "Days post enrollment") +
   coord_cartesian(ylim = c(0.1,0.9)) +
-  theme(legend.title = element_blank())-> e
+  theme(legend.title = element_blank()) -> e
 
 a <- a.1 / a.2
 
-((ESBLprevplot +e) / (a | b | c)) + 
+((ESBLprevplot + e) / (a | b | c)) + 
   plot_layout(heights = c(1.5,1.5)) + 
   plot_annotation(tag_levels = "A") -> markov_panel_plot
 
 markov_panel_plot
-
-ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/F1_markov_panel.svg",markov_panel_plot,width = 10, height = 7)
-
-ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/F1_markov_panel.pdf",markov_panel_plot,width = 10, height = 7)
+if (write_figs) {
+  ggsave(here("figures/long-modelling/F1_markov_panel.svg"),
+         markov_panel_plot,
+         width = 10,
+         height = 7)
+  ggsave(here("figures/long-modelling/F1_markov_panel.pdf"),
+         markov_panel_plot,
+         width = 10, 
+         height = 7)
+}
 ```
 
 ```{r compare-models-plot, fig.cap = "SUPPLEMENTARY FIGURE X: Model comparisons for models with and without an exponentially dcaying effect of antmicrobials. A-B: Parameter estimates from stepwise-constant covariate model. C-E: parameter estimates from model with exponentially-decaying effect of antinicrobial exposure. F: Posterior predictive checks of modelsm comparing model with piecewise-constant covariates (model 1) to exponentially decaying effect of antimicrobial exposure (model 2). Dashed lines show actual ESBL-E prevalence across three study arms; probability density of predicted prevalence from the two models show that model 1 tends to underestimate ESBL-E prevalence in the antimicrobial-exposed, compared to model 2.", fig.width= 11, fig.height = 8}
@@ -957,7 +1003,7 @@ mcmc_areas(btESBL_model1posterior, regex_pars = "alpha|beta",  area_method = "eq
                               ),
     expand = expansion(add = c(0.2,1)) 
     ) +
-    labs(x = "Log hazard ratio of ESBL gain/loss")-> a1
+    labs(x = "Log hazard ratio of ESBL gain/loss") -> a1
 
 mcmc_areas(btESBL_model1posterior, 
            regex_pars = "lambda|mu",
@@ -1033,24 +1079,29 @@ bind_rows(
           arm == 3 ~ "Community"
         )
       ) ,
-    aes(xintercept = prop, color= arm),
+    aes(xintercept = prop, color = arm),
     linetype = "dashed"
   ) +
   scale_fill_manual(values = fills) +
   scale_color_manual(values = cols) +
   theme_bw() +
-  labs(x = "ESBL-E prevalence") ->post_check
+  labs(x = "ESBL-E prevalence") -> post_check
   
 ((a1 + b1 + plot_spacer() + a + b + c +  plot_layout(ncol = 3, nrow = 2))  / (post_check) ) + 
   plot_annotation(tag_levels = "A") + plot_layout(heights =  c(1,1)) -> model_comp_plot
 
 model_comp_plot
 
-ggsave( "~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/SUPP_FIG_model_comp_plot.svg", model_comp_plot, width = 11, height = 8)
-
-ggsave( "~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/SUPP_FIG_model_comp_plot.pdf", model_comp_plot, width = 11, height = 8)
-
-# compare models with loo  
+if (write_figs) {
+  ggsave(here("figures/long-modelling/SUPP_FIG_model_comp_plot.pdf"),
+         model_comp_plot,
+         width = 11,
+         height = 8)
+  ggsave(here("figures/long-modelling/SUPP_FIG_model_comp_plot.svg"),
+         model_comp_plot,
+         width = 11, 
+         height = 8)
+}
 
 ```
 
@@ -1130,86 +1181,9 @@ loo_compare(loo_mod1, loo_mod2)
 
 ### plasmid replicons
 
-```{r plasm-amr-gene-plot, fig.width = 10, fig.height = 12, fig.cap = "FIGURE 2: Species and lineage association of mobile genetic elements. A-B: Jaccard-distance hierarchical clustered heatmap of presence-absence matrix of antimicrobial resistance genes (A) and plasmid replicons (B). Yellow= present, purple = absent. Each row is a sample, and each column an AMR gene (A) or plasmid replicon (B), showing that the samples tend to cluster by species. C: Distribution of ESBL contig clusters by species showing that most contog-clusters are species associated or restricted. D-E: Contig clusters mapped back to E. coli phylogeny (D) or K. pneumoniae KpI phylogeny showing that most contig clusters are lineage-associated."  }
-
-# plasmid replicons clustered heatmap --------------------------
-
-btESBL_plasmidreplicons %>%
-  pivot_wider(
-    id_cols = c(sample, species),
-    names_from = ref_seq,
-    values_from = ref_seq,
-    values_fn = length,
-    values_fill = 0
-  )  %>%
-  relocate(species, before = everything()) %>%
-  rename(Species = species) %>% 
-  as.data.frame() -> plasmids_onehot
-
-rownames(plasmids_onehot) <- plasmids_onehot$sample
-
-as.ggplot(
-  pheatmap(
-    plasmids_onehot[-c(1, 2)],
-    annotation_row = plasmids_onehot["Species"],
-    annotation_names_row = FALSE,
-    show_rownames = FALSE,
-    show_colnames = FALSE,
-    legend = FALSE,
-    clustering_distance_cols = "binary",
-    clustering_distance_rows  = "binary",
-    color = viridis_pal()(10),
-    treeheight_row = 0, 
-    treeheight_col = 0,
-    silent = TRUE,
-    annotation_colors = list(Species = 
-                               c("E. coli" = viridis_pal()(4)[2],
-                                 "K. pneumoniae" = viridis_pal()(4)[3])
-    )
-    
-  )
-) -> plasm_heatmap
-
-# amr gene heatmap
-
-btESBL_amrgenes %>%
-  pivot_wider(
-    id_cols = c(sample, species),
-    names_from = ref_seq,
-    values_from = ref_seq,
-    values_fn = length,
-    values_fill = 0
-  )  %>%
-  relocate(species, before = everything()) %>%
-  rename(Species = species) %>% 
-  as.data.frame() -> amr_onehot
-
-rownames(amr_onehot) <- amr_onehot$sample
-
-as.ggplot(
-  pheatmap(
-    amr_onehot[-c(1, 2)],
-    annotation_row = amr_onehot["Species"],
-    annotation_names_row = FALSE,
-    show_rownames = FALSE,
-    show_colnames = FALSE,
-    legend = FALSE,
-    clustering_distance_cols = "binary",
-    clustering_distance_rows  = "binary",
-    color = viridis_pal()(10), 
-    treeheight_row = 0, 
-    treeheight_col = 0,
-    annotation_legend = FALSE,
-    silent = TRUE,
-    annotation_colors = list(Species = 
-                               c("E. coli" = viridis_pal()(4)[2],
-                                 "K. pneumoniae" = viridis_pal()(4)[3]))
-)) -> amr_heatmap
-
-#amr_heatmap + plasm_heatmap + plot_layout(widths = c(1,1.4), tag_level = "A")
+```{r plasm-amr-gene-plot, fig.width = 10, fig.height = 12, fig.cap = "Distribution of contig-clusters between and within genera. (A) shows distribution of contig clusters by genus. (B-C) show contig-cluster presence (purple)-absence (grey) mapped back to core gene maximum likelihood phylogeny for E. coli (B) and K. pneumoniae subsp. pneumoniae (C)"  }
 
 # contig clusters: species distn -------------------------------------
-
 
 btESBL_contigclusters %>% filter(clstr_size > 1) %>%
   mutate(clstr_name = fct_rev(fct_infreq(clstr_name)),
@@ -1230,7 +1204,7 @@ btESBL_contigclusters %>% filter(clstr_size > 1) %>%
     legend.title = element_blank(),
     axis.text = element_text(size = 6)) +
       scale_fill_manual(values = viridis_pal()(4)[c(3,2)]) +
-  labs(x= "") -> 
+  labs(x = "") -> 
   contigs_species_distnplot
 
 # # map to tree
@@ -1279,27 +1253,12 @@ ggtree(treeio::tree_subset(btESBL_coregene_tree_kleb, 210,
            font.size = 2.5,
            colnames = FALSE,
            color = NA,
-        #   colnames_angle = 90,
            width = 3,
-          # colnames_offset_y = 10,
-          # colnames_position = "top",
-         #  hjust = 0
-  ) + #+ ylim(0,230) +
+  ) + 
   scale_fill_manual(values = c( "lightgrey", viridis_pal()(4)[1]))  +
-  theme(legend.position = "none")+ 
+  theme(legend.position = "none") + 
   theme(plot.margin = unit(c(0,0.5,0.5,0.5), units = "cm")) -> 
   contigclusters_map_to_tree_kleb
-
-#(
-#  (amr_heatmap + plasm_heatmap + plot_layout(widths = c(1,1.6))) /
-#    (
-#      (contigs_species_distnplot | 
-#         (contigclusters_map_to_tree_esco / contigclusters_map_to_tree_kleb #+ 
-#            plot_layout(heights = c(2.8,1)))) + 
-#        plot_layout(widths = c(1,3))
-#     ) 
-#) + plot_layout(heights = c(1,2)) + plot_annotation(tag_levels = "A") -> 
-#  species_lineage_mge_association
 
 (
     (
@@ -1311,67 +1270,21 @@ ggtree(treeio::tree_subset(btESBL_coregene_tree_kleb, 210,
 )  + plot_annotation(tag_levels = "A") -> 
   species_lineage_mge_association
 
-
 species_lineage_mge_association
-ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/F2_spec_lin_mgs_assoc.svg",species_lineage_mge_association, width = 10, height = 9)
 
-ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/F2_spec_lin_mgs_assoc.pdf",species_lineage_mge_association, width = 10, height = 9)
-
-#ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/F2_spec_lin_mgs_assoc.pdf",species_lineage_mge_association, width = 10, height = 12)
-
-```
-
-```{r sup-amr-heatmap, fig.cap = "SUPPLEMENTARY FIGURE: Enlarged AMR gene (A) and plasmid replicon (B) jaccard-distance hierarchical-clustered heatmaps. Each row is a sample, each column an AMR gene or plasmid replicon. Yellow = present, purple = absent.", fig.width = 18, fig.height = 10}
-as.ggplot(
-  pheatmap(
-    amr_onehot[-c(1, 2)],
-    annotation_row = amr_onehot["Species"],
-    annotation_names_row = FALSE,
-    show_rownames = FALSE,
-    legend = FALSE,
-    clustering_distance_cols = "binary",
-    clustering_distance_rows  = "binary",
-    color = viridis_pal()(10), 
-   # treeheight_row = 0, 
-  #  treeheight_col = 0,
-  #  annotation_legend = FALSE,
-    silent = TRUE,
-    annotation_colors = list(Species = 
-                               c("E. coli" = viridis_pal()(4)[2],
-                                 "K. pneumoniae" = viridis_pal()(4)[3]))
-)) -> amr_heatmap_sup
-
-as.ggplot(
-  pheatmap(
-    plasmids_onehot[-c(1, 2)],
-    annotation_row = plasmids_onehot["Species"],
-    annotation_names_row = FALSE,
-    show_rownames = FALSE,
-#    show_colnames = FALSE,
-    legend = FALSE,
-    clustering_distance_cols = "binary",
-    clustering_distance_rows  = "binary",
-    color = viridis_pal()(10),
-#    treeheight_row = 0, 
-#    treeheight_col = 0,
-    silent = TRUE,
-    annotation_colors = list(Species = 
-                               c("E. coli" = viridis_pal()(4)[2],
-                                 "K. pneumoniae" = viridis_pal()(4)[3])
-    )
-    
-  )
-) -> plasm_heatmap_sup
-
-amr_heatmap_sup / plasm_heatmap_sup +
-  plot_annotation(tag_levels = "A") +
-  plot_layout(heights = c(1, 1.5)) -> supp_spec_heatmap
-
-supp_spec_heatmap
-
-#ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/SUPP_FIG_species_mge_heatmap.jpg", supp_spec_heatmap, width = 18, height = 10)
+if (write_figs) {
+  ggsave(here("figures/long-modelling/F2_spec_lin_mgs_assoc.svg"),
+         species_lineage_mge_association,
+         width = 10,
+         height = 9)
+  ggsave(here("figures/long-modelling/F2_spec_lin_mgs_assoc.pdf"),
+         species_lineage_mge_association,
+         width = 10, 
+         height = 9)
+}
 
 ```
+
 
 ```{r contig-cluster-stats, fig.cap = "SUPPLEMENTARY FIGURE XXX: Size, representative cluster length, distribution of coverage and sequence identity of ESBL-contig clusters", fig.width=9, fig.height=7}
 
@@ -1379,7 +1292,7 @@ btESBL_contigclusters %>%
     group_by(clstr_name) %>% 
      filter(clstr_size > 1) %>% 
     arrange(clstr_name, clstr_rep) %>% 
-    mutate(clstr_iden = clstr_iden /100,
+    mutate(clstr_iden = clstr_iden / 100,
            clstr_cov = clstr_cov/100, clstr_size2 = clstr_size,
            clstr_rep_size = log10(last(length)/1000),
            length = log10(length/1000)) %>%
@@ -1407,19 +1320,29 @@ btESBL_contigclusters %>%
     size = 6
   )) +
   labs(x = "Cluster identifier", y = "") -> esbl_contig_stats
+
 esbl_contig_stats
 
-ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/SUPP_FIG_esbl_contig_stat.svg", esbl_contig_stats, width = 9, height = 7)
 
-ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/SUPP_FIG_esbl_contig_stat.pdf", esbl_contig_stats, width = 9, height = 7)
-
+if (write_figs) {
+  ggsave(here("figures/long-modelling/SUPP_FIG_esbl_contig_stat.svg"),
+         esbl_contig_stats,
+         width = 9,
+         height = 7)
+  ggsave(here("figures/long-modelling/SUPP_FIG_esbl_contig_stat.pdf"),
+         esbl_contig_stats,
+         width = 9, 
+         height = 7)
+}
 ```
 
 ### popPUNK clusters mapped to phylogeny
 
 ```{r popPUNK+map_to_phylogeny, fig.width= 12, fig.height=10, fig.cap = "SUPPLEMENTARY FIGURE XXX: popPUNK clusters mapped to core gene maximum-likelihood phylogeny"}
 
-btESBL_popPUNK %>% 
+btESBL_sequence_sample_metadata %>% 
+  select(lane, Cluster) %>% 
+  rename(Taxon = lane) %>% 
   filter(grepl("K", Cluster)) %>% 
   group_by(Cluster) %>% 
   mutate(clst_size = n(),
@@ -1436,7 +1359,9 @@ btESBL_popPUNK %>%
   mutate(across(everything(), as.character)) %>% 
   as.data.frame() -> pp.onehot.k
 
-btESBL_popPUNK %>% 
+btESBL_sequence_sample_metadata %>% 
+  select(lane, Cluster) %>% 
+  rename(Taxon = lane) %>% 
   filter(grepl("E", Cluster)) %>% 
   group_by(Cluster) %>% 
   mutate(clst_size = n(),
@@ -1458,7 +1383,7 @@ rownames(pp.onehot.k) <- pp.onehot.k$Taxon
 
 ggtree(btESBL_coregene_tree_esco) %>%
   gheatmap((pp.onehot.e[-1]),
-           font.size = 3,
+           font.size = 2,
            color = NA,
            width = 3,
            colnames = TRUE,
@@ -1475,7 +1400,7 @@ ggtree(btESBL_coregene_tree_esco) %>%
 ggtree(treeio::tree_subset(btESBL_coregene_tree_kleb, 210, 
                            levels_back = 0)) %>%
   gheatmap((pp.onehot.k[-1]),
-           font.size = 3,
+           font.size = 2,
            color = NA,
            width = 3,
            colnames = TRUE,
@@ -1493,10 +1418,17 @@ ggtree(treeio::tree_subset(btESBL_coregene_tree_kleb, 210,
   plot_annotation(tag_levels = "A") ->
   pp.maptotree
 
-ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/SUPP_FIG_popunk_maptotree.svg", pp.maptotree, height = 10, width = 12) 
 
-ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/SUPP_FIG_popunk_maptotree.pdf",pp.maptotree, height = 10, width = 12) 
-
+if (write_figs) {
+  ggsave(here("figures/long-modelling/SUPP_FIG_popunk_maptotree.pdf"),
+         pp.maptotree,
+         width = 12,
+         height = 10)
+  ggsave(here("figures/long-modelling/SUPP_FIG_popunk_maptotree.svg"),
+         pp.maptotree,
+         width = 12, 
+         height = 10)
+}
 pp.maptotree
 
 ```
@@ -1521,7 +1453,7 @@ btESBL_snpdists_esco %>%
       rename("lab_id.y" = "supplier_name"),
     by = c("sample.y" = "lane")) %>% 
   group_by(lab_id.x, lab_id.y) %>% 
-  slice(n=1) %>% 
+  slice(n = 1) %>% 
   mutate(same_snpclust_esco = snpdist_esco <= 5) -> snpdist.e.long
 
 btESBL_snpdists_kleb  %>% 
@@ -1538,23 +1470,21 @@ btESBL_snpdists_kleb  %>%
       rename("lab_id.y" = "supplier_name"),
     by = c("sample.y" = "lane")) %>% 
   group_by(lab_id.x, lab_id.y) %>% 
-  slice(n=1) %>% 
+  slice(n = 1) %>% 
   mutate(same_snpclust_kleb = snpdist_kleb <= 5) -> snpdist.k.long
 
 # make list-column df -----------------------------------------------------
 
 
 btESBL_stoolESBL %>%
-  left_join(select(btESBL_stoolorgs, lab_id, organism),
+  left_join(
+    btESBL_stoolorgs %>% 
+      filter(ESBL == "Positive") %>% 
+      select(lab_id, organism),
             by = "lab_id") %>%
   nest(orgs = organism) %>%
   left_join(
-    btESBL_popPUNK %>%
-      left_join(
-        select(btESBL_sequence_sample_metadata , lane, supplier_name),
-        by = c("Taxon" = "lane")
-      ) %>%
-      select(supplier_name, Cluster),
+    select(btESBL_sequence_sample_metadata, supplier_name, Cluster),
     by = c("lab_id" = "supplier_name")
   ) %>%
   nest(pp_clust = Cluster) %>%
@@ -2114,21 +2044,19 @@ samples %>%
 e + k + e2 + k2 + or.plot + or.plot.kleb  + plot_annotation(tag_levels = "A") + plot_layout(ncol = 2, guides = "auto") & theme(legend.position = "bottom") -> 
   autocorrelation_plot
 
+
+if (write_figs) {
+  ggsave(here("figures/long-modelling/F3_autocorrelation.pdf"),
+         autocorrelation_plot,
+         width = 9,
+         height = 9)
+  ggsave(here("figures/long-modelling/F3_autocorrelation.svg"),
+         autocorrelation_plot,
+         width = 9, 
+         height = 9)
+}
+
 autocorrelation_plot
-ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/F3_autocorrelation.svg", autocorrelation_plot, height = 9, width = 9)
-
-ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/F3_autocorrelation.pdf", autocorrelation_plot, height = 9, width = 9)
-
-
-```
-
-```{r kleb-popunk-mge-plot, fig.cap = "SUPPLEMENTARY FIGURE XXXX: For K. pneukmoniae the proportion of participants who are colonised with K. pneukoniae at time t=0 and the proportion of those who have the same lineage (as defined by popPUNK cluster), clone (as defined by <6 SNPs), or mobile genetic element (defined by ESBl-contig cluster) detectible a at time t later. Dashed lined again show the between-participant proportion of samples that contain the same lineage, clone or MGE to show the chance of obtaining any result ny chance. Fitted lines are from a nonparametric LOESS fit with 95% confidence intervals.", fig.width=6, fig.height=4, include = FALSE}
-
-#k2
-
-#ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/SUPP_FIG_kleb-autocorrelation-plot.svg", k2, height = 4, width = 6)
-
-#ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/SUPP_FIG_kleb-autocorrelation-plot.pdf", k2, height = 4, width = 6)
 
 ```
 
@@ -2136,12 +2064,10 @@ ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_
 
 ```{r hosp-assoc-lineages, fig.height = 8, fig.width = 9}
 
-btESBL_popPUNK %>% 
-  left_join(unique(btESBL_sequence_sample_metadata),
-            by = c("Taxon" = "lane")) %>% 
+btESBL_sequence_sample_metadata %>% 
   as.data.frame() -> clusts
 
-rownames(clusts) <- clusts$Taxon
+rownames(clusts) <- clusts$lane
 
 ggtree(btESBL_coregene_tree_esco) %>% 
   gheatmap(
@@ -2157,11 +2083,10 @@ ggtree(btESBL_coregene_tree_esco) %>%
  # ylim(c(0,500)) +
   geom_hilight(node = 727, fill = "red") +
   scale_fill_manual(values = c( "grey86", "black", "grey65"),
-                    labels= c("Community",
+                    labels = c("Community",
                               "In hospital",
-                              "Post-discharge",
-                              "")
-                              )  +
+                              "Post-discharge"),
+                    na.translate = FALSE)  +
   theme(legend.title = element_blank()) -> hospassoc.tree.esco
 
 ggtree(treeio::tree_subset(btESBL_coregene_tree_kleb, 210, 
@@ -2179,10 +2104,10 @@ ggtree(treeio::tree_subset(btESBL_coregene_tree_kleb, 210,
   #ylim(c(0,220)) +
   scale_fill_manual(values = c( "grey86", "black", "grey65")) +
   scale_fill_manual(values = c( "grey86", "black", "grey65"),
-                    labels= c("Community",
+                    labels = c("Community",
                               "In hospital",
-                              "Post-discharge",
-                              "")
+                              "Post-discharge"),
+                    na.translate = FALSE
                               )  +
   theme(legend.title = element_blank()) -> hospassoc.tree.kleb
 
@@ -2197,14 +2122,14 @@ clusts %>%
   summarise(
     clust_in_hosp = sum(hosp_assoc == "in_hospital", na.rm = TRUE),
     clust_not_in_hosp = sum(hosp_assoc != "in_hospital", na.rm = TRUE),
-    total_in_hosp = median(total_in_hosp)- clust_in_hosp,
+    total_in_hosp = median(total_in_hosp) - clust_in_hosp,
     total_not_in_hosp = median(total_not_in_hosp) - clust_not_in_hosp,
     pval = fisher.test(matrix(
       c(clust_in_hosp, total_in_hosp, clust_not_in_hosp, total_not_in_hosp), nrow = 2
     ), simulate.p.value = TRUE)$p.value
   ) %>% 
   rename(clustr = Cluster) %>% 
-  mutate(log_pval = -log10(pval))-> df.manhattan.popPUNK
+  mutate(log_pval = -log10(pval)) -> df.manhattan.popPUNK
 
 ggplot(df.manhattan.popPUNK, aes(clustr, log_pval, color = log_pval > 
                                    -log10(0.05 /
@@ -2240,13 +2165,13 @@ clusts_esbl %>%
   summarise(
     clust_in_hosp = sum(hosp_assoc == "in_hospital", na.rm = TRUE),
     clust_not_in_hosp = sum(hosp_assoc != "in_hospital", na.rm = TRUE),
-    total_in_hosp = median(total_in_hosp)- clust_in_hosp,
+    total_in_hosp = median(total_in_hosp) - clust_in_hosp,
     total_not_in_hosp = median(total_not_in_hosp) - clust_not_in_hosp,
     pval = fisher.test(matrix(
       c(clust_in_hosp, total_in_hosp, clust_not_in_hosp, total_not_in_hosp), nrow = 2
     ), simulate.p.value = TRUE)$p.value
   ) %>% 
-  mutate(log_pval = -log10(pval))-> df.manhattan.esbl
+  mutate(log_pval = -log10(pval)) -> df.manhattan.esbl
 
 ggplot(df.manhattan.esbl, aes(clstr_name, log_pval, color = log_pval > 
                                    -log10(0.05 /
@@ -2264,24 +2189,30 @@ ggplot(df.manhattan.esbl, aes(clstr_name, log_pval, color = log_pval >
  # 
 
 (((hospassoc.tree.esco |
-  hospassoc.tree.kleb)))/ 
+  hospassoc.tree.kleb))) / 
   (manhattanplot_popPUNK /
-  manhattanplot_esbl)+
+  manhattanplot_esbl) +
   plot_annotation(tag_levels = "A") +
   plot_layout(heights = c(1.5,1),
               guides = "collect") -> hosp_assoc_lineages
 
 hosp_assoc_lineages
 
-ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/F4_hosp_assoc_lineages.svg", hosp_assoc_lineages, height = 8, width = 9)
 
-ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/F4_hosp_assoc_lineages.pdf", hosp_assoc_lineages, height = 8, width = 9)
-  
+if (write_figs) {
+  ggsave(here("figures/long-modelling/F4_hosp_assoc_lineages.pdf"),
+         hosp_assoc_lineages,
+         width = 9,
+         height = 8)
+  ggsave(here("figures/long-modelling/F4_hosp_assoc_lineages.svg"),
+         hosp_assoc_lineages,
+         width = 9, 
+         height = 8)
+}
 ```
 
 
 ```{r snp-clusts, fig.width = 13.2, fig.height = 6}
-
 
 
 make_cluster_pairwise_comparison_df <- function(pairwise_snp_df,
@@ -2360,15 +2291,15 @@ make_all_clusters_pairwise_comparison_df  <-
 
 
 hclust(as.dist(btESBL_snpdists_esco[-1])) -> hclust_snpdists.e
-cutree(hclust_snpdists.e, h =5 ) -> cut_tree_vect.e
+cutree(hclust_snpdists.e, h = 5) -> cut_tree_vect.e
 
 hclust(as.dist(btESBL_snpdists_kleb[-1])) -> hclust_snpdists.k
-cutree(hclust_snpdists.k, h =5 ) -> cut_tree_vect.k
+cutree(hclust_snpdists.k, h = 5) -> cut_tree_vect.k
 
 as.data.frame(cut_tree_vect.e) %>% 
   group_by(cut_tree_vect.e) %>% 
   mutate(n = n()) %>% 
-  filter(n >1) %>% 
+  filter(n > 1) %>% 
   ungroup() %>% 
   summarise(med = median(n),
             lq = quantile(n, 0.25),
@@ -2377,7 +2308,7 @@ as.data.frame(cut_tree_vect.e) %>%
 as.data.frame(cut_tree_vect.k) %>% 
   group_by(cut_tree_vect.k) %>% 
   mutate(n = n()) %>% 
-  filter(n >1) %>% 
+  filter(n > 1) %>% 
   ungroup() %>% 
   summarise(med = median(n),
             lq = quantile(n, 0.25),
@@ -2421,7 +2352,7 @@ bind_rows(
             by = c("lane" = "sample")
   ) %>% 
   group_by(lane) %>% 
-  slice(n=1) %>% 
+  slice(n = 1) %>% 
     filter(!is.na(hosp_assoc)) %>% 
   mutate(
     hosp_assoc = case_when(
@@ -2432,10 +2363,10 @@ bind_rows(
     relocate(lane, .before = everything()) -> 
     vertices.e
 
-edges.e%>% 
+edges.e %>% 
   mutate(sortvar = map2_chr(from, to, ~paste(sort(c(.x,.y)), collapse = ""))) %>% 
   group_by(sortvar,type) %>% 
-  slice(n=1) %>% 
+  slice(n = 1) %>% 
   ungroup() %>% 
   select(-sortvar) %>% 
   group_by(from,to) %>% 
@@ -2455,7 +2386,7 @@ edges.e%>%
 
 gr.e <- graph_from_data_frame(edges.e, directed = FALSE, vertices = vertices.e)
 
-ggraph(gr.e, layout = "fr") + geom_edge_fan(aes(color = type), width =1) + 
+ggraph(gr.e, layout = "fr") + geom_edge_fan(aes(color = type), width = 1) + 
   geom_node_point(aes(fill = hosp_assoc), shape = 21, size = 3) + 
   #  facet_edges(~ type) + 
   theme_void() + scale_fill_manual(values = c("white","black","grey")) + 
@@ -2546,10 +2477,17 @@ ggraph(gr.k, layout = "fr") + geom_edge_fan(aes(color = type), width =1) +
   plot_annotation(tag_levels = "A") -> snp_networks
 snp_networks
 
-ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/F4snp_networks.svg", snp_networks, width = 13.2, height = 6)
 
-ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/F4snp_networks.pdf", snp_networks, width = 13.2, height = 6)
-
+if (write_figs) {
+  ggsave(here("figures/long-modelling/F4snp_networks.pdf"),
+         snp_networks,
+         width = 13.2,
+         height = 6)
+  ggsave(here("figures/long-modelling/F4snp_networks.svg"),
+         snp_networks,
+         width = 13.2, 
+         height = 6)
+}
 ```
 
 ```{r calc-snpclust-bits}
@@ -2640,7 +2578,7 @@ btESBL_snpdists_esco %>%
       rename("lab_id.y" = "supplier_name"),
     by = c("sample.y" = "lane")) %>%
   group_by(lab_id.x, lab_id.y) %>%
-  slice(n=1) -> snpdist.e.long
+  slice(n = 1) -> snpdist.e.long
 
 
 
@@ -2658,24 +2596,21 @@ btESBL_snpdists_kleb  %>%
       rename("lab_id.y" = "supplier_name"),
     by = c("sample.y" = "lane")) %>%
   group_by(lab_id.x, lab_id.y) %>%
-  slice(n=1)  -> snpdist.k.long
+  slice(n = 1)  -> snpdist.k.long
 
 # make list-column df -----------------------------------------------------
 
 
 btESBL_stoolESBL %>%
-  left_join(select(btESBL_stoolorgs, lab_id, organism),
+  left_join(btESBL_stoolorgs %>% 
+              filter(ESBL == "Positive") %>% 
+              select(lab_id, organism),
             by = "lab_id") %>%
   nest(orgs = organism) %>%
-  left_join(
-    btESBL_popPUNK %>%
-      left_join(
-        select(btESBL_sequence_sample_metadata , lane, supplier_name),
-        by = c("Taxon" = "lane")
-      ) %>%
-      select(supplier_name, Cluster),
+ left_join(
+    select(btESBL_sequence_sample_metadata, supplier_name, Cluster),
     by = c("lab_id" = "supplier_name")
-  ) %>%
+    ) %>%
   nest(pp_clust = Cluster) %>%
   left_join(
     btESBL_contigclusters %>%
@@ -2881,82 +2816,82 @@ ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_
 
 ```{r snp-network-sens-analysis, fig.width = 13.2, fig.height = 12, fig.cap = "SUPPLEMENTARY FIGURE: Sensitivity analysis of network plot of putative transmission clusters for E. coli, allowing the definition of a SNP-cluster to vary from 0 (A), to 3 (B), 7 (C), or 10 (D). Points are samples, coloured by place of isolation (in-hospital [black], community [white], or up to 120 days post-discharge [grey]). Red lines link samples that are within a single participant. Blue lines link samples that are differ by the given SNP threshold."}
 
-
-## snp network
-
-make_cluster_pairwise_comparison_df <- function(pairwise_snp_df,
-                                                metadata_df,
-                                                cut_tree_vect,
-                                                n) {
-  cluster_samples <- names(cut_tree_vect[cut_tree_vect == n])
-  pairwise_snp_df <- as.data.frame(pairwise_snp_df)
-  rownames(pairwise_snp_df) <- pairwise_snp_df$sample
-  pairwise_snp_df[cluster_samples, c("sample", cluster_samples)] %>%
-    pivot_longer(-sample) %>%
-    filter(sample != name) -> d
-
-  d[!duplicated(apply(d[1:2], 1, sort), MARGIN = 2), ] -> d
-  names(d) <- c("sample.x", "sample.y", "snpdist")
-  d$sample.x <- gsub("#", "_", d$sample.x)
-  d$sample.y <- gsub("#", "_", d$sample.y)
-
-
-  left_join(
-    d,
-    select(
-      metadata_df,
-      lane,
-      pid,
-      arm,
-      visit,
-      enroll_date,
-      hospoutcomedate,
-      data_date
-    ),
-    by = c("sample.x" = "lane")
-  ) %>%
-    left_join(
-      select(
-        metadata_df,
-        lane,
-        pid,
-        arm,
-        visit,
-        enroll_date,
-        hospoutcomedate,
-        data_date
-      ),
-      by = c("sample.y" = "lane")
-    ) -> d
-  d$pair <- paste0(d$sample.x, "-", d$sample.y)
-  d$cluster_number <- n
-  d$cluster_name <- n
-  d %>%
-    mutate(type = case_when(pid.x == pid.y ~ "within",
-                            TRUE ~ "between")) ->   d
-  return(d)
-
-}
-
-
-make_all_clusters_pairwise_comparison_df  <-
-  function(pairwise_snp_df,
-           metadata_df,
-           cut_tree_vect) {
-    out <- list()
-    for (i in 1:max(cut_tree_vect)) {
-      #    print(i)
-      #  print(i)
-      make_cluster_pairwise_comparison_df(pairwise_snp_df,
-                                          metadata_df,
-                                          cut_tree_vect,
-                                          i) -> out[[i]]
-
-    }
-    return(do.call(rbind, out))
-
-
-  }
+# 
+# ## snp network
+# 
+# make_cluster_pairwise_comparison_df <- function(pairwise_snp_df,
+#                                                 metadata_df,
+#                                                 cut_tree_vect,
+#                                                 n) {
+#   cluster_samples <- names(cut_tree_vect[cut_tree_vect == n])
+#   pairwise_snp_df <- as.data.frame(pairwise_snp_df)
+#   rownames(pairwise_snp_df) <- pairwise_snp_df$sample
+#   pairwise_snp_df[cluster_samples, c("sample", cluster_samples)] %>%
+#     pivot_longer(-sample) %>%
+#     filter(sample != name) -> d
+# 
+#   d[!duplicated(apply(d[1:2], 1, sort), MARGIN = 2), ] -> d
+#   names(d) <- c("sample.x", "sample.y", "snpdist")
+#   d$sample.x <- gsub("#", "_", d$sample.x)
+#   d$sample.y <- gsub("#", "_", d$sample.y)
+# 
+# 
+#   left_join(
+#     d,
+#     select(
+#       metadata_df,
+#       lane,
+#       pid,
+#       arm,
+#       visit,
+#       enroll_date,
+#       hospoutcomedate,
+#       data_date
+#     ),
+#     by = c("sample.x" = "lane")
+#   ) %>%
+#     left_join(
+#       select(
+#         metadata_df,
+#         lane,
+#         pid,
+#         arm,
+#         visit,
+#         enroll_date,
+#         hospoutcomedate,
+#         data_date
+#       ),
+#       by = c("sample.y" = "lane")
+#     ) -> d
+#   d$pair <- paste0(d$sample.x, "-", d$sample.y)
+#   d$cluster_number <- n
+#   d$cluster_name <- n
+#   d %>%
+#     mutate(type = case_when(pid.x == pid.y ~ "within",
+#                             TRUE ~ "between")) ->   d
+#   return(d)
+# 
+# }
+# 
+# 
+# make_all_clusters_pairwise_comparison_df  <-
+#   function(pairwise_snp_df,
+#            metadata_df,
+#            cut_tree_vect) {
+#     out <- list()
+#     for (i in 1:max(cut_tree_vect)) {
+#       #    print(i)
+#       #  print(i)
+#       make_cluster_pairwise_comparison_df(pairwise_snp_df,
+#                                           metadata_df,
+#                                           cut_tree_vect,
+#                                           i) -> out[[i]]
+# 
+#     }
+#     return(do.call(rbind, out))
+# 
+# 
+#   }
 
 #### start plots -------------
 
@@ -3237,20 +3172,34 @@ outlist.k.plots[[1]] +
 
 esco_snp_clusters_sens_analysis_plot
 
-ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/SUPP_FIG_sens_analysis_snp_networks_esco.svg", esco_snp_clusters_sens_analysis_plot, width = 13.2, height = 12)
 
-ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/SUPP_FIG_sens_analysis_snp_networks_esco.pdf", esco_snp_clusters_sens_analysis_plot, width = 13.2, height = 12)
-
+if (write_figs) {
+  ggsave(here("figures/long-modelling/SUPP_FIG_sens_analysis_snp_networks_esco.pdf"),
+         esco_snp_clusters_sens_analysis_plot,
+         width = 13.2,
+         height = 12)
+  ggsave(here("figures/long-modelling/SUPP_FIG_sens_analysis_snp_networks_esco.svg"),
+         esco_snp_clusters_sens_analysis_plot,
+         width = 13.2, 
+         height = 12)
+}
 ```
 
 ```{r snp-network-sens-analysis_kleb, fig.width = 13.2, fig.height = 12, fig.cap = "SUPPLEMENTARY FIGURE: Sensitivity analysis of network plot of putative transmission clusters for E. coli, allowing the definition of a SNP-cluster to vary from 0 (A), to 3 (B), 7 (C), or 10 (D). Points are samples, coloured by place of isolation (in-hospital [black], community [white], or up to 120 days post-discharge [grey]). Red lines link samples that are within a single participant. Blue lines link samples that are differ by the given SNP threshold."}
 
 kleb_snp_clusters_sens_analysis_plot
 
-ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/SUPP_FIG_sens_analysis_snp_networks_kleb.svg", kleb_snp_clusters_sens_analysis_plot, width = 13.2, height = 12)
 
-ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/SUPP_FIG_sens_analysis_snp_networks_kleb.pdf", kleb_snp_clusters_sens_analysis_plot, width = 13.2, height = 12)
-
+if (write_figs) {
+  ggsave(here("figures/long-modelling/SUPP_FIG_sens_analysis_snp_networks_kleb.pdf"),
+         kleb_snp_clusters_sens_analysis_plot,
+         width = 13.2,
+         height = 12)
+  ggsave(here("figures/long-modelling/SUPP_FIG_sens_analysis_snp_networks_kleb.svg"),
+         kleb_snp_clusters_sens_analysis_plot,
+         width = 13.2, 
+         height = 12)
+}
 ```
 
 ```{r posterior-pairs-plot, fig.width= 12, fig.height=12, fig.cap = "Pairs plots of posterior of final model showing nonidentifiability of gain and loss parameters."}
@@ -3259,12 +3208,16 @@ mcmc_pairs(btESBL_model2posterior, pars = c("alphas[1]", "betas[1]", "alphas[2]"
 
 pairsplot
 
-ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/SUPP_FIG_pairsplot.svg", pairsplot, width = 12, height = 12)
-
-
-
-ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/SUPP_FIG_pairsplot.pdf", pairsplot, width = 12, height = 12)
-
+if (write_figs) {
+  ggsave(here("figures/long-modelling/SUPP_FIG_pairsplot.pdf"),
+         pairsplot,
+         width = 12,
+         height = 12)
+  ggsave(here("figures/long-modelling/SUPP_FIG_pairsplot.svg"),
+         pairsplot,
+         width = 12,
+         height = 12)
+}
 
 ```
 
@@ -3310,8 +3263,8 @@ comm_vs_hosp %>%
          cluster_member = gsub("_"," ",str_to_title(cluster_member))
          ) %>% 
   ggplot(aes(snp_dist, prop, ymin = lci, ymax = uci, color = cluster_member, group = cluster_member))  +
-           geom_point(position = position_dodge(width=0.9)) +
-  geom_errorbar(width = 0, position = position_dodge(width=0.9)) +
+           geom_point(position = position_dodge(width = 0.9)) +
+  geom_errorbar(width = 0, position = position_dodge(width = 0.9)) +
   facet_wrap(~ species) +
   theme_bw() +
   labs(y = "Proportion",
@@ -3322,8 +3275,14 @@ comm_vs_hosp %>%
 
 #5 x 6.5
 
-ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/SUPP_FIG_SNP_sens_ax_clusters.svg",sens.analysis.plot,width = 6.5, height = 5)
-
-ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/SUPP_FIG_SNP_sens_ax_clusters.pdf",sens.analysis.plot,width = 6.5, height = 5)
-
+if (write_figs) {
+  ggsave(here("figures/long-modelling/SUPP_FIG_SNP_sens_ax_clusters.svg"),
+         sens.analysis.plot,
+         width = 6.5,
+         height = 5)
+  ggsave(here("figures/long-modelling/SUPP_FIG_SNP_sens_ax_clusters.pdf"),
+         sens.analysis.plot,
+         width = 6.5,
+         height = 5)
+}
 ```
