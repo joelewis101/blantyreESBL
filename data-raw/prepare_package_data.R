@@ -90,7 +90,11 @@ lims_dates %>%
 use_data(btESBL_stoolESBL, overwrite = TRUE)
 
 lims_orgs %>%
-  select(lab_id,organism) %>%
+  select(lab_id,organism, ESBL) %>%
+  # recode - negatives were  coded as all sorts
+  mutate(ESBL = if_else(ESBL == "Positive",
+                        "Positive",
+                        "Negative")) %>%
   unique() %>%
   filter(!is.na(organism)) -> btESBL_stoolorgs
 
@@ -131,6 +135,9 @@ use_data(btESBL_model1posterior, overwrite = TRUE)
 # simulations from posterior
 
 btESBL_model2simulations <- read_csv("~/Documents/PhD/Thesis/bookdown/chapter_9/simulations2.csv")
+
+btESBL_model2simulations %>%
+  select(-c(pid, start_state, abx_cpt, tb_start))
 
 use_data(btESBL_model2simulations, overwrite = TRUE)
 
@@ -263,7 +270,7 @@ samp_metadata <- load_DASSIM3_metadata(
 outcome %>%
   group_by(pid) %>%
   arrange(pid,hospoutcome,hospoutcomedate) %>%
-  slice(n=1) -> outcome
+  slice(n = 1) -> outcome
 
 samp_metadata %>%
   rename_with(~ tolower(gsub(" |\\.","_", .x))) %>%
@@ -295,6 +302,31 @@ left_join(
 )  %>%
   relocate(accession, before = everything()) ->
   btESBL_sequence_sample_metadata
+
+# add poppunk clusters --------------------
+
+bind_rows(
+  read_csv(here(
+    "data-raw/poppunk/strain_db_clustersKLEB.csv"
+  )) %>%
+    mutate(
+      Taxon = gsub("#", "_", Taxon),
+      Cluster = paste0("K", Cluster)
+    ),
+  read_csv(here(
+    "data-raw/poppunk/strain_db_clustersESCO.csv"
+  )) %>%
+    mutate(
+      Taxon = gsub("#", "_", Taxon),
+      Cluster = paste0("E", Cluster)
+    )
+) -> btESBL_popPUNK
+
+left_join(
+  btESBL_sequence_sample_metadata,
+  btESBL_popPUNK,
+  by = c("lane" = "Taxon")
+) -> btESBL_sequence_sample_metadata
 
 use_data(btESBL_sequence_sample_metadata, overwrite = TRUE)
 
@@ -333,27 +365,6 @@ clusters %>%
 
 use_data(btESBL_contigclusters, overwrite = TRUE)
 
-# poppunk clusters --------------------
-
-
-bind_rows(
-  read_csv(here(
-    "data-raw/poppunk/strain_db_clustersKLEB.csv"
-  )) %>%
-    mutate(
-      Taxon = gsub("#", "_", Taxon),
-      Cluster = paste0("K", Cluster)
-    ),
-  read_csv(here(
-    "data-raw/poppunk/strain_db_clustersESCO.csv"
-  )) %>%
-    mutate(
-      Taxon = gsub("#", "_", Taxon),
-      Cluster = paste0("E", Cluster)
-    )
-) -> btESBL_popPUNK
-
-use_data(btESBL_popPUNK, overwrite = TRUE)
 
 # snpdist matrices ----------------------------------------------------
 
