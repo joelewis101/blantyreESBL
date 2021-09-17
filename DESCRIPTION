@@ -1,22 +1,41 @@
 Package: blantyreESBL
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Data and Code Exploring Antimicrobial Resistance in Blantyre, Malawi
+Version: 0.1.0.0000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Joseph",
+           family = "Lewis",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to
-    pick a license
+           email = "joseph.lewis@lstmed.ac.uk",
+           comment = c(ORCID = "0000-0002-3837-5188"))
+Description: Data and code to replicate the analysis in the mauscript "Dynamics of gut mucosal colonisation with extended spectrum beta-lactamase producing Enterobacterales in Malawi" by Lewis et al.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    here,
+    igraph,
+    ggraph,
+    dplyr,
+    tidyr,
+    stringr,
+    lubridate,
+    purrr,
+    forcats,
+    glue,
+    broom,
+    ggsci,
+    bayesplot,
+    patchwork,
+    loo,
+    ggplotify,
+    pheatmap,
+    viridis,
+    ggtree,
+    kableExtra
 VignetteBuilder: knitr
 Depends: 
     R (>= 2.10)
