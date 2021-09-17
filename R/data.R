@@ -1,4 +1,4 @@
-#' Characteristics of study participants.
+#' Data: Characteristics of study participants.
 #'
 #' ART - antiretroviral therapy, CPT = co-trimoxazole preventative therapy
 #'
@@ -40,7 +40,7 @@
 "btESBL_participants"
 
 
-#' Exposures of included participants
+#' Data: Exposures of included participants
 #'
 #' These data are recorded in long format. Covariate values are included
 #' in columns, and there is one row for each day where a covariate value
@@ -80,7 +80,7 @@
 "btESBL_exposures"
 
 
-#' Results of stool testing for ESBL
+#' Data: Results of stool testing for ESBL
 #'
 #' Results of testing stool/rectal swab samples for presence of any ESBL
 #' producer
@@ -100,7 +100,7 @@
 "btESBL_stoolESBL"
 
 
-#' Results of stool testing for ESBL
+#' Data: Results of stool testing for ESBL species
 #'
 #' Organisms identified from culture of stool on CHROMagar
 #' (selective agar for cephalosporin resistance)
@@ -113,7 +113,7 @@
 #' }
 "btESBL_stoolorgs"
 
-#' Posterior of fitted carriage model (decaying antimicrobial effect)
+#' Data: Posterior of fitted carriage model (decaying antimicrobial effect)
 #'
 #' Posterior of fitted longitudinal model of ESBL colonisation incorporating
 #' an effect of antimicrobial exposure that exponentially decays following
@@ -127,7 +127,7 @@
 #'
 "btESBL_model2posterior"
 
-#' Posterior of fitted carriage model (constant antimicrobial effect)
+#' Data: Posterior of fitted carriage model (constant antimicrobial effect)
 #'
 #' Posterior of fitted longitudinal model of ESBL colonisation incorporating
 #' an effect of antimicrobial exposure that is stepwise-constant and
@@ -142,7 +142,7 @@
 "btESBL_model1posterior"
 
 
-#' Results of simulations from the model posterior
+#' Data: Results of simulations from the model posterior
 #'
 #' These simulations set the antimicrobial and hospital exposure to
 #' arbitrary values, set starting probability of colonisation to 0.5 then
@@ -171,7 +171,7 @@
 "btESBL_model2simulations"
 
 
-#' Plasmid replicons identified in sequenced isolates
+#' Data: Plasmid replicons identified in sequenced isolates
 #'
 #' Identified plasmid replicons using ARIBA and the PlamidFinder database.
 #' See manuscript for details
@@ -184,7 +184,20 @@
 #' }
 "btESBL_plasmidreplicons"
 
-#' Contig cluster membership
+#' Data: AMR genes identified in sequenced isolates
+#'
+#' Identified AMR genes using ARIBA and the SRST database.
+#' See manuscript for details
+#'
+#' @format A tidy data frame with 10822 rows and 3 variables:
+#' \describe{
+#'   \item{lane}{Unique sample-sequencing run ID}
+#'   \item{ref_seq}{Identified AMR gene sequence}
+#'   \item{species}{Species of sample}
+#' }
+"btESBL_amrgenes"
+
+#' Data: Contig cluster membership
 #'
 #' Contig cluster assignment of all ESBL gene containing contigs, as
 #' determined by cd-hit
@@ -205,7 +218,7 @@
 "btESBL_contigclusters"
 
 
-#' Metadata of sequenced isolates
+#' Data: Metadata of sequenced isolates
 #'
 #' Metadata of all sequenced isolates
 #'
@@ -226,7 +239,7 @@
 #' }
 "btESBL_sequence_sample_metadata"
 
-#' E. coli core gene tree
+#' Data: E. coli core gene tree
 #'
 #' Midpoint rooted maximum likelihood core gene phylogeny for E. coli
 #'
@@ -237,7 +250,7 @@
 "btESBL_coregene_tree_esco"
 
 
-#' K. pneumoniae complex core gene tree
+#' Data: K. pneumoniae complex core gene tree
 #'
 #' Midpoint rooted maximum likelihood core gene phylogeny for K. pneumoniae
 #' complex
@@ -248,7 +261,7 @@
 #'
 "btESBL_coregene_tree_kleb"
 
-#' Pairwise SNP-distance matrix for all E. coli genomes
+#' data: Pairwise SNP-distance matrix for all E. coli genomes
 #'
 #' First column is sample names - all other columns are sample names
 #'
@@ -257,7 +270,7 @@
 #'
 "btESBL_snpdists_esco"
 
-#' Pairwise SNP-distance matrix for all K. pneumoniae complex genomes
+#' Data: Pairwise SNP-distance matrix for all K. pneumoniae complex genomes
 #'
 #' First column is sample names - all other columns are sample names
 #'
