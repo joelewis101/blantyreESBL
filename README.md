@@ -1,12 +1,12 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# dassimKlebs
+# blantyreESBL
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-The dassimKlebs R package contains data and code to replicate the
+The blantyreESBL R package contains data and code to replicate the
 analysis of the manuscript:
 
 <br />
@@ -29,31 +29,38 @@ Thomson<sup>4</sup>, Nicholas A Feasey<sup>1,2</sup>
     University of Liverpool, Liverpool, UK
 4.  Wellcome Sanger Institute, Hinxton, UK
 5.  College of Medicine, University of Malawi, Malawi
-6.  University of Lancaster, Lanaster, UK
+6.  University of Lancaster, Lanaster, UK:w
 
-## Installing and accessing data
+### Installing and accessing data
 
-Install the package from GitHub:
+If you just want the data, then all the data to replicate the analysis
+are bundled with the package. To install the package from GitHub:
 
 ``` r
 install.packages("devtools")
 devtools::install_github("https://github.com/joelewis101/blantyreESBL)
 ```
 
-Or check out the source code at
-[GitHub](https://github.com/joelewis101/blantyreESBL)
-
-Data objects are included in the package
+The various data objects are described in the
+[pkgdown](https://joelewis101.github.io/blantyreESBL/) site for this
+package, and available via R in the usual way
+(i.e. `?btESBL_participants` brings up the definitions for the
+`btESBL_participants` data. They are all lazy loaded so will be
+available for use immediately; they all start with `btESBL_` to make it
+easy to choose the one you want using autocomplete.
 
 The analysis is available as a package vignette; this can be built when
 downloading the package by typing:
 
 ``` r
-devtools::install_github("https://github.com/joelewis101/blantyreESBL", build_vignettes = TRUE )
+devtools::install_github("https://github.com/joelewis101/blantyreESBL", build_vignettes = TRUE, dependencies = TRUE )
 ```
 
+The `dependencies = TRUE` option will install all the packages necessary
+to run the vignette.
+
 Alternatively the source code for the vignette is `analysis.Rmd` in the
-`vignettes/` folder of this repo or the
+`vignettes/` folder of the
+[GitHub](https://github.com/joelewis101/blantyreESBL) repo or the
 [pkgdown](https://joelewis101.github.io/blantyreESBL/) site for this
-package has a rendered version, as well as variable definitions for the
-datasets.
+package has a rendered version.
