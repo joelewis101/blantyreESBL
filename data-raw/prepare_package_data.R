@@ -196,7 +196,7 @@ esco1 %>%
   select(name, ref_seq) %>%
   mutate(ref_seq = sapply(strsplit(ref_seq, split = "__"), function(x)
     x[3]),
-    species = "E. coli"),
+    genus = "E. coli"),
 
 esco2 %>%
   select(contains("name") |
@@ -210,12 +210,11 @@ esco2 %>%
   select(name, ref_seq) %>%
   mutate(ref_seq = sapply(strsplit(ref_seq, split = "__"), function(x)
     x[3]),
-    species = "E. coli"),
+    genus = "E. coli"),
 
 klebs %>%
   mutate(name = gsub("\\./","", name),
          name = gsub("/report\\.tsv","",name)) %>%
-  filter(name %in% dassim.klebs) %>%
   select(contains("name") |
            contains("match") |
            contains("assembled") |
@@ -227,16 +226,129 @@ klebs %>%
   select(name, ref_seq) %>%
   mutate(ref_seq = sapply(strsplit(ref_seq, split = "__"), function(x)
     x[3]),
-    species = "K. pneumoniae"
+    genus = "K. pneumoniae complex"
     )
 ) %>%
   mutate(name = gsub("\\./","", name),
          name = gsub("/report\\.tsv","",name),
          name = gsub("_1\\.fastq\\.gz", "", name)
   )  %>%
-  rename("sample" = "name") -> btESBL_amrgenes
+  rename("lane" = "name")  %>%
+  mutate(lane = gsub("#", "_", lane)) %>%
+  filter(lane %in% btESBL_sequence_sample_metadata$lane) ->
+  btESBL_amrgenes
 
 use_data(btESBL_amrgenes, overwrite = TRUE)
+
+# QRDR resistance determinants
+
+
+bind_rows(
+  read_tsv(
+    here("data-raw/ecoli-genomics-paper/QRDR_ariba_output.tsv")
+  )  %>%
+    rename(sample = "26141_1#222") %>%
+    filter(ref_name != "ref_name") %>%
+    mutate(sample = gsub("#", "_", sample)) %>%
+    filter(sample %in% btESBL_sequence_sample_metadata$lane) %>%
+    mutate(
+      codon_posn = str_extract(ref_ctg_change, "[0-9]+"),
+      codon_posn = as.numeric(codon_posn)
+    ) %>%
+    filter(ref_ctg_effect == "NONSYN") %>%
+    filter(
+      (ref_name == "GyrA" &
+         codon_posn >= 67 & codon_posn <= 106) |
+        (ref_name == "GyrB" &
+           codon_posn >= 426 & codon_posn <= 464) |
+        (ref_name == "ParC" &
+           codon_posn >= 56 & codon_posn <= 108) |
+        (ref_name == "ParE" &
+           codon_posn >= 365 & codon_posn <= 525)
+    ) %>%
+    mutate(ref_name =  gsub("(^.{1})", '\\L\\1',
+                            ref_name,
+                            perl = TRUE)) %>%
+    transmute(
+      gene = ref_name,
+      variant = ref_ctg_change,
+      lane = sample,
+      genus = "E. coli"
+    ),
+  # kleb
+  read_tsv(
+    here(
+      "data-raw/kleb-genomics-paper/DASIM3_ariba_qrdr_snpcalls.tsv"
+    )
+  ) %>%
+    rename(sample  = `34154_7#184`) %>%
+    filter(ref_name != "ref_name") %>%
+    mutate(sample = gsub("#", "_", sample)) %>%
+    filter(sample %in% btESBL_sequence_sample_metadata$lane) %>%
+    mutate(
+      codon_posn = str_extract(ref_ctg_change, "[0-9]+"),
+      codon_posn = as.numeric(codon_posn)
+    ) %>%
+    filter(ref_ctg_effect == "NONSYN") %>%
+    filter(
+      (ref_name == "GyrA" &
+         codon_posn >= 67 & codon_posn <= 106) |
+        (ref_name == "GyrB" &
+           codon_posn >= 426 & codon_posn <= 464) |
+        (ref_name == "ParC" &
+           codon_posn >= 56 & codon_posn <= 108) |
+        (ref_name == "ParE" &
+           codon_posn >= 365 & codon_posn <= 525)
+    ) %>%
+    mutate(ref_name =  gsub("(^.{1})", '\\L\\1',
+                            ref_name,
+                            perl = TRUE)) %>%
+    transmute(
+      gene = ref_name,
+      variant = ref_ctg_change,
+      lane = sample,
+      genus = "K. pneumoniae complex"
+    )
+) ->
+  btESBL_qrdr_mutations
+
+use_data(btESBL_qrdr_mutations, overwrite = TRUE)
+
+# CARD described QRDR mutations -----------------------
+
+btESBL_CARD_qrdr_mutations <-
+  read_csv(
+    here("data-raw/ecoli-genomics-paper/2021-09-06_CARD-QRDR-mutations.csv"))
+
+use_data(btESBL_CARD_qrdr_mutations, overwrite = TRUE)
+
+# NCBI beta-lactamase definition
+
+btESBL_NCBI_phenotypic_bl <-
+  read_tsv("https://ftp.ncbi.nlm.nih.gov/pathogen/betalactamases/Allele.tab") %>%
+  rename_with( ~ tolower(gsub(" ", "_", .x))) %>%
+  rename_with( ~ gsub("#", "", .x)) %>%
+  mutate(
+    allele_name = gsub("-", "_", allele_name),
+    class = case_when(
+      grepl("carbapenem-hydrolyzing",
+            curated_gene_product_name) ~ "Carbapenemase",
+      grepl("metallo-beta-lactamase",
+            curated_gene_product_name) ~ "Carbapenemase",
+      grepl(
+        "extended-spectrum beta-lactamase",
+        curated_gene_product_name
+      ) ~ "ESBL",
+      grepl("class C",
+            curated_gene_product_name) ~ "AmpC",
+      grepl("beta-lactamase",
+            curated_gene_product_name) ~ "Penicillinase"
+    )
+  ) %>%
+  select(allele_name, protein_accession_, nucleotide_accession_,
+         gene_name, curated_gene_product_name, class)
+
+use_data(btESBL_NCBI_phenotypic_bl, overwrite = TRUE)
 
 # core gene trees --------------------------------------------------------
 
@@ -303,7 +415,28 @@ left_join(
   relocate(accession, before = everything()) ->
   btESBL_sequence_sample_metadata
 
+#  E coli virulence determinants --------------------------------------
+
+
+vf <- read_csv(
+  here("data-raw/ecoli-genomics-paper/all_dassim_esco_vf_ariba.csv"))
+
+
+vf %>%
+  mutate(name = gsub("\\./", "", name),
+         name = gsub("/report.tsv", "", name)) %>%
+  pivot_longer(-name,
+               names_to = c( "cluster", ".value"),
+               names_sep = "\\.") %>%
+  filter(match == "yes") %>%
+  select(name, ref_seq) ->
+  btESBL_ecoli_virulence
+
+use_data(btESBL_ecoli_virulence, overwrite = TRUE)
+
+
 # add poppunk clusters --------------------
+
 
 bind_rows(
   read_csv(here(
@@ -327,6 +460,126 @@ left_join(
   btESBL_popPUNK,
   by = c("lane" = "Taxon")
 ) -> btESBL_sequence_sample_metadata
+
+# add assembly statistics --------------------------
+btESBL_sequence_sample_metadata %>%
+  left_join(
+# e coli
+rbind(read_tsv(#"~/Documents/PhD/Thesis/bookdown/chapter_7/
+  # checkm_quast/D1/transposed_report.tsv"
+  here(
+    "data-raw/ecoli-genomics-paper/QUAST_report1.tsv"
+  )) ,
+  read_tsv(#"~/Documents/PhD/Thesis/bookdown/chapter_7/
+    #checkm_quast/D220190318/transposed_report.tsv"
+    here(
+      "data-raw/ecoli-genomics-paper/QUAST_report2.tsv"
+    )),
+  read_tsv(# "~/Documents/PhD/Thesis/bookdown/chapter_7/
+    #  checkm_quast/D220190503/transposed_report.tsv"
+    here(
+      "data-raw/ecoli-genomics-paper/QUAST_report3.tsv"
+    ))) %>%
+  transmute(
+    lane = gsub("\\.contigs_spades", "",  Assembly),
+    number_of_contigs = `# contigs`,
+    N50 = N50
+  ) %>%
+  bind_rows(
+    read_tsv(
+      here(
+        "data-raw/kleb-genomics-paper/DASSIM3_QUAST_transposed_report.tsv")
+      ) %>%
+      transmute(
+        lane = gsub("\\.contigs_spades", "",  Assembly),
+        number_of_contigs = `# contigs`,
+        N50 = N50
+      )
+    ),
+by = "lane"
+) %>%
+  # add MLST calls -----------------------------------------------
+  #- e coli
+  left_join(
+    bind_rows(
+    read_csv(here("data-raw/ecoli-genomics-paper/mlst.csv")) %>%
+      mutate(ST = case_when(
+        lane %in% c(
+          # update those that were novel but now not
+          "28099_1_144",
+          "28099_1_18",
+          "28099_1_159",
+          "28099_1_249",
+          "28099_1_23",
+          "28099_1_249",
+          "28099_1_330",
+          "26141_1_141"
+        ) ~ "9847",
+        TRUE ~ ST
+      )),
+    # klebs
+    read_tsv(
+      here("data-raw/kleb-genomics-paper/DASSIM3_ariba_mlst_summary.tsv")
+      ) %>%
+      filter(ST != "ST") %>%
+      mutate(ST = gsub("\\*", "", ST),
+             lane = gsub("#","_", lane)) %>%
+      select(ST, lane)
+    ),
+    by = "lane"
+  ) %>%
+  # add e coli phylogroup ------------------------------------------
+  left_join(
+    read_csv(here("data-raw/ecoli-genomics-paper/phylogroups.csv")) %>%
+      transmute(lane = Lane,
+                ecoli_phylogroup = Phylogroup),
+    by = "lane") %>%
+  # e coli pathotype
+  left_join(
+    btESBL_ecoli_virulence %>%
+      filter(grepl("stx|ltcA|sta|eae|aatA|aggR|aaiC|ipaH|ipaD", ref_seq)) %>%
+      mutate(ref_seq = gsub("_[0-9|A-Z|a-z]*$","", ref_seq)) %>%
+      mutate(Pathotype = case_when(
+        grepl("stx", ref_seq) & grepl("eae", ref_seq) ~ "EHEC",
+        grepl("stx", ref_seq) ~ "STEC",
+        grepl("eae", ref_seq) ~ "aEPEC/EPEC",
+        grepl("aatA|aggR|aaiC", ref_seq) ~ "EAEC",
+        grepl("ltcA|sta", ref_seq) ~ "ETEC",
+        grepl("ipaH|ipaD", ref_seq) ~ "EIEC",
+        TRUE ~ NA_character_ )) %>%
+      transmute(lane = name,
+                ecoli_pathotype = Pathotype) %>%
+      unique() %>%
+      mutate(lane = gsub("#", "_", lane)),
+    by = "lane"
+  ) %>%
+  # add kleb k, o locus, virulence
+  left_join(
+    read_tsv(here("data-raw/kleb-genomics-paper/DASSIM3_kleborate.all.txt")) %>%
+      mutate(strain = gsub("\\.contigs_spades","",strain),
+             strain = gsub("#", "_", strain)) %>%
+      filter(ST != "ST") %>%
+      transmute(
+        lane = strain,
+        species = species,
+        kleb_k_locus = K_locus,
+        kleb_k_locus_confidence = K_locus_confidence ,
+        kleb_o_locus = O_locus,
+        kleb_o_locus_confidence = O_locus_confidence,
+        kleb_YbST = YbST,
+        kleb_CbST = CbST,
+        kleb_AbST = AbST,
+        kleb_SmST = SmST,
+        kleb_rmpA = rmpA,
+        kleb_rmpA2 = rmpA2),
+    by = "lane")  %>%
+  mutate(species =
+           if_else(is.na(species),
+                   "E. coli",
+                   species)
+  ) ->
+  btESBL_sequence_sample_metadata
+
 
 use_data(btESBL_sequence_sample_metadata, overwrite = TRUE)
 
@@ -394,7 +647,9 @@ snpdists.k %>%
 use_data(btESBL_snpdists_esco, overwrite = TRUE)
 use_data(btESBL_snpdists_kleb, overwrite = TRUE)
 
-# ----------------------------------------------------------------
+
+
+
 
 
 
