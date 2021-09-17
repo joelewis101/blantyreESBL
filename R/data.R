@@ -340,4 +340,77 @@
 "btESBL_snpdists_kleb"
 
 
+#' Data: metadata of 10,146 global E. coli genomes
+#'
+#' Metadata of a global collection of 10,146 E. coli genomes
+#' Taken from Horesh et al 2021
+#' See original Horesh publication for details and variable definition
+#' https://doi.org/10.1099/mgen.0.000499
+#'
+#' @format A data frame with 10,146 rows and 22 variables:
+#'
+"btESBL_ecoli_horesh_metadata"
 
+#' Data: metadata of 97 E. coli genomes from Malawi
+#'
+#' Metadata of a collection of 97 E. coli genomes selected for temporal
+#' diversity and diversity in antibiogram
+#' Taken from Musicha et al 2017
+#' For full details see original Musicha publication
+#' https://doi.org/10.1093/jac/dkx058
+#'
+#' The phylogroup and ST here were determined for this study and were not
+#' provided in the original metadata; the popPUNK cluster assignemt uses the
+#' Horesh database
+#'
+#' #' \describe{
+#'   \item{lane}{Unique sample-sequencing run ID}
+#'   \item{ID}{Unmique sample ID}
+#'   \item{Year}{Year of sample collection}
+#'   \item{Sample_type}{Type of clincial sample from which isolate originates}
+#'   \item{Age_group}{Age of patient from which sample orignated}
+#'   \item{Organism}{Organism}
+#'   \item{ST}{Multlocus sequence type as determined by ARIBA}
+#'   \item{phylogroup}{Phylogroup following Clermon scheme with in silico PCR}
+#'   \item{Cluster}{PopPUNK cluster assignment using the Horesh E. coli database}
+#'   \item{Accession}{NCBI Accession number}
+#'
+#' }
+#'
+#' @format A tidy data frame with 97 rows and 10 variables:
+#'
+"btESBL_ecoli_musicha_metadata"
+
+#' Data: popPUNK cluster assignment of study E. coli isolates using global database
+#'
+#' PopPUNK cluster assignment of study E. coli using the popPUNK database
+#' derived using a global E. coli collection as described in Horesh et al
+#' 2021; see manuscript for details
+#'
+#' @format A tidy data frame with 473 rows and 2 variables:
+#' \describe{
+#'   \item{lane}{Unique sample-sequencing run ID}
+#'   \item{Cluster}{popPUNK cluster assignment}
+#' }
+"btESBL_ecoli_global_popPUNK_clusters"
+
+#' Data: E.coli global context tree
+#'
+#' Midpoint rooted maximum likelihood core gene phylogeny for E. coli
+#' incorporating study and global context isolates (see manuscript for
+#' details)
+#'
+#' @format A "phylo" object ("ape" package)
+#'
+#'
+"btESBL_ecoli_globaltree"
+
+#' Data: K. pneumoniae complex global context tree
+#'
+#' Midpoint rooted maximum likelihood core gene phylogeny for K.
+#' pneumoniae complex incorporating study and global context isolates
+#'  (see manuscript for details)
+#'
+#' @format A "phylo" object ("ape" package)
+#'
+"btESBL_kleb_globaltree"
