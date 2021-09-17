@@ -29,7 +29,7 @@ Thomson<sup>4</sup>, Nicholas A Feasey<sup>1,2</sup>
     University of Liverpool, Liverpool, UK
 4.  Wellcome Sanger Institute, Hinxton, UK
 5.  College of Medicine, University of Malawi, Malawi
-6.  University of Lancaster, Lanaster, UK:w
+6.  University of Lancaster, Lanaster, UK
 
 ### Installing and accessing data
 

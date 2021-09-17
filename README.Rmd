@@ -33,7 +33,7 @@ Joseph M Lewis^1,2,3,4^, , Madalitso Mphasa^1^, Rachel Banda^1^,  Matthew Beale^
 3. Department of Clinical Infection, Microbiology and Immunology, University of Liverpool, Liverpool, UK
 4. Wellcome Sanger Institute, Hinxton, UK
 5. College of Medicine, University of Malawi, Malawi
-6. University of Lancaster, Lanaster, UK:w
+6. University of Lancaster, Lanaster, UK
 
 ### Installing and accessing data
 
