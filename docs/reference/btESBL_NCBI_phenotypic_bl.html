@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Data: Posterior of fitted carriage model (constant antimicrobial effect) — btESBL_model1posterior • blantyreESBL</title>
+<title>Data: NCBI phenotypic beta-lactamase classifications — btESBL_NCBI_phenotypic_bl • blantyreESBL</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,10 @@
 
 
 
-<meta property="og:title" content="Data: Posterior of fitted carriage model (constant antimicrobial effect) — btESBL_model1posterior" />
-<meta property="og:description" content="Posterior of fitted longitudinal model of ESBL colonisation incorporating
-an effect of antimicrobial exposure that is stepwise-constant and
-finsihes immediately following exposure" />
+<meta property="og:title" content="Data: NCBI phenotypic beta-lactamase classifications — btESBL_NCBI_phenotypic_bl" />
+<meta property="og:description" content="Classification of beta lactamase genes downloaded from NCBI at
+https://ftp.ncbi.nlm.nih.gov/pathogen/betalactamases/Allele.tab
+on 17 September 2021" />
 
 
 
@@ -123,26 +123,32 @@ finsihes immediately following exposure" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Data: Posterior of fitted carriage model (constant antimicrobial effect)</h1>
+    <h1>Data: NCBI phenotypic beta-lactamase classifications</h1>
     
-    <div class="hidden name"><code>btESBL_model1posterior.Rd</code></div>
+    <div class="hidden name"><code>btESBL_NCBI_phenotypic_bl.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Posterior of fitted longitudinal model of ESBL colonisation incorporating
-an effect of antimicrobial exposure that is stepwise-constant and
-finsihes immediately following exposure</p>
+    <p>Classification of beta lactamase genes downloaded from NCBI at
+https://ftp.ncbi.nlm.nih.gov/pathogen/betalactamases/Allele.tab
+on 17 September 2021</p>
     </div>
 
-    <pre class="usage"><span class='va'>btESBL_model1posterior</span></pre>
+    <pre class="usage"><span class='va'>btESBL_NCBI_phenotypic_bl</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>An S4 stanfit object (package "rstan") including model log-likelihood</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <p>A tidy data frame with 1293 rows and 4 variables:</p><dl>
+<dt>allele_name</dt><dd><p>Allele name</p></dd>
+<dt>protein_accession_</dt><dd><p>Protein accession</p></dd>
+<dt>nucleotide_accession_</dt><dd><p>nucleotide accession</p></dd>
+<dt>gene_name</dt><dd><p>Gene name</p></dd>
+<dt>curated_gene_product_name</dt><dd><p>Curated phenotype</p></dd>
+<dt>class</dt><dd><p>Inferred class of beta lactamase from phenotype</p></dd>
 
-    <p>See manuscript for interpretation of parameters etc.</p>
+</dl>
+
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
