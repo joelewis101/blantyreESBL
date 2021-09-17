@@ -3,7 +3,7 @@
 \docType{data}
 \name{btESBL_exposures}
 \alias{btESBL_exposures}
-\title{Exposures of included participants}
+\title{Data: Exposures of included participants}
 \format{
 A data frame with 1838 rows and 26 variables:
 \describe{

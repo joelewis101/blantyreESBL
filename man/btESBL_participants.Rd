@@ -3,7 +3,7 @@
 \docType{data}
 \name{btESBL_participants}
 \alias{btESBL_participants}
-\title{Characteristics of study participants.}
+\title{Data: Characteristics of study participants.}
 \format{
 A data frame with 425 rows and 32 variables:
 \describe{

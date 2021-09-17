@@ -3,7 +3,7 @@
 \docType{data}
 \name{btESBL_contigclusters}
 \alias{btESBL_contigclusters}
-\title{Contig cluster membership}
+\title{Data: Contig cluster membership}
 \format{
 A tidy data frame with 714 rows and 10 variables:
 \describe{

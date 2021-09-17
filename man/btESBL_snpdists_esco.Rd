@@ -3,7 +3,7 @@
 \docType{data}
 \name{btESBL_snpdists_esco}
 \alias{btESBL_snpdists_esco}
-\title{Pairwise SNP-distance matrix for all E. coli genomes}
+\title{data: Pairwise SNP-distance matrix for all E. coli genomes}
 \format{
 A 473 x 474 tibble.
 }

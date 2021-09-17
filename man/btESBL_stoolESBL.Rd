@@ -3,7 +3,7 @@
 \docType{data}
 \name{btESBL_stoolESBL}
 \alias{btESBL_stoolESBL}
-\title{Results of stool testing for ESBL}
+\title{Data: Results of stool testing for ESBL}
 \format{
 A data frame with 1416 rows and 9 variables:
 \describe{

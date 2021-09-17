@@ -3,7 +3,7 @@
 \docType{data}
 \name{btESBL_snpdists_kleb}
 \alias{btESBL_snpdists_kleb}
-\title{Pairwise SNP-distance matrix for all K. pneumoniae complex genomes}
+\title{Data: Pairwise SNP-distance matrix for all K. pneumoniae complex genomes}
 \format{
 A 350 x 351 tibble.
 }

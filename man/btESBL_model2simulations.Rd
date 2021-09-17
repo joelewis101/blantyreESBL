@@ -3,7 +3,7 @@
 \docType{data}
 \name{btESBL_model2simulations}
 \alias{btESBL_model2simulations}
-\title{Results of simulations from the model posterior}
+\title{Data: Results of simulations from the model posterior}
 \format{
 A data frame with 600,000 rows and 18 variables:
 \describe{

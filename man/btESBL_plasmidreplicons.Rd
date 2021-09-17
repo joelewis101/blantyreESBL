@@ -3,7 +3,7 @@
 \docType{data}
 \name{btESBL_plasmidreplicons}
 \alias{btESBL_plasmidreplicons}
-\title{Plasmid replicons identified in sequenced isolates}
+\title{Data: Plasmid replicons identified in sequenced isolates}
 \format{
 A tidy data frame with 2893 rows and 3 variables:
 \describe{

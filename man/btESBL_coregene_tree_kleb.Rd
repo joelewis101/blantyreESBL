@@ -3,7 +3,7 @@
 \docType{data}
 \name{btESBL_coregene_tree_kleb}
 \alias{btESBL_coregene_tree_kleb}
-\title{K. pneumoniae complex core gene tree}
+\title{Data: K. pneumoniae complex core gene tree}
 \format{
 A "phylo" object ("ape" package)
 }

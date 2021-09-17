@@ -3,7 +3,7 @@
 \docType{data}
 \name{btESBL_coregene_tree_esco}
 \alias{btESBL_coregene_tree_esco}
-\title{E. coli core gene tree}
+\title{Data: E. coli core gene tree}
 \format{
 A "phylo" object ("ape" package)
 }

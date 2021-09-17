@@ -3,7 +3,7 @@
 \docType{data}
 \name{btESBL_model1posterior}
 \alias{btESBL_model1posterior}
-\title{Posterior of fitted carriage model (constant antimicrobial effect)}
+\title{Data: Posterior of fitted carriage model (constant antimicrobial effect)}
 \format{
 An S4 stanfit object (package "rstan") including model log-likelihood
 }
