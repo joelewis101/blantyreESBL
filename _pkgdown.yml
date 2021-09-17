@@ -1,0 +1,28 @@
+reference:
+- title: "Participant data"
+  desc: >
+    Characteristics and exposures of study participants
+- contents:
+  - btESBL_participants
+  - btESBL_exposures
+- title: "Stool culture data"
+  desc: "Results of selective stool culture for ESBL"
+- contents:
+  - matches("stool")
+- title: "Whole genome sequence metadata and analysis"
+  desc: "Accession numbers of isolates and results of sequencing analysis"
+- contents:
+  - btESBL_sequence_sample_metadata
+  - btESBL_amrgenes
+  - btESBL_plasmidreplicons
+  - btESBL_contigclusters
+  - btESBL_coregene_tree_esco
+  - btESBL_coregene_tree_kleb
+  - btESBL_snpdists_esco
+  - btESBL_snpdists_kleb
+- title: "Results of modelling and simulations"
+  desc: "Outputs from longituinal modelling of ESBL carriage"
+- contents:
+  - btESBL_model1posterior
+  - btESBL_model2posterior
+  - btESBL_model2simulations
