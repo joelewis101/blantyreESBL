@@ -14,6 +14,7 @@ reference:
 - contents:
   - btESBL_sequence_sample_metadata
   - btESBL_amrgenes
+  - btESBL_qrdr_mutations
   - btESBL_plasmidreplicons
   - btESBL_contigclusters
   - btESBL_coregene_tree_esco
@@ -26,3 +27,11 @@ reference:
   - btESBL_model1posterior
   - btESBL_model2posterior
   - btESBL_model2simulations
+- title: "Global contextual analysis"
+  desc: "Metadata of context genomes and results of clustering study isolates with global isolates"
+- contents:
+  - btESBL_ecoli_horesh_metadata
+  - btESBL_ecoli_musicha_metadata
+  - btESBL_ecoli_global_popPUNK_clusters
+  - btESBL_ecoli_globaltree
+  - btESBL_kleb_globaltree

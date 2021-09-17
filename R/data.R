@@ -193,9 +193,55 @@
 #' \describe{
 #'   \item{lane}{Unique sample-sequencing run ID}
 #'   \item{ref_seq}{Identified AMR gene sequence}
-#'   \item{species}{Species of sample}
+#'   \item{genus}{Genus of sample (E. coli or K. pneumioniae complex)}
 #' }
 "btESBL_amrgenes"
+
+#' Data: Identfied QRDR mutations
+#'
+#' Identified quinolone resistance determinant region
+#'mutations in the samples of this study
+#'
+#' @format A tidy data frame with 23 rows and 3 variables:
+#' \describe{
+#'   \item{gene}{QDRR gene (gyrA, gyrB, parC, parE)}
+#'   \item{variant}{Identified variant}
+#'   \item{pmid}{Pubmed ID of publication describing mutation}
+#' }
+"btESBL_qrdr_mutations"
+
+#' Data: CARD described QRDR mutations
+#'
+#' Quinolone resistnce determinant region mutations that have been
+#' associated with resistance in E. coli, downloaded from the
+#' Comprehensive Antibiotic Resistance Database https://card.mcmaster.ca/
+#' on 6 September 2021
+#'
+#' @format A tidy data frame with 1293 rows and 4 variables:
+#' \describe{
+#'   \item{gene}{QDRR gene (gyrA, gyrB, parC, parE)}
+#'   \item{variant}{Identified variant}
+#'   \item{lane}{Unique sample-sequencing run ID}
+#'   \item{genus}{Genus of sample (E. coli or K. pneumioniae complex)}
+#' }
+"btESBL_qrdr_mutations"
+
+#' Data: NCBI phenotypic beta-lactamase classifications
+#'
+#' Classification of beta lactamase genes downloaded from NCBI at
+#' https://ftp.ncbi.nlm.nih.gov/pathogen/betalactamases/Allele.tab
+#' on 17 September 2021
+#'
+#' @format A tidy data frame with 1293 rows and 4 variables:
+#' \describe{
+#'   \item{allele_name}{Allele name}
+#'   \item{protein_accession_}{Protein accession}
+#'   \item{nucleotide_accession_}{nucleotide accession}
+#'   \item{gene_name}{Gene name}
+#'   \item{curated_gene_product_name}{Curated phenotype}
+#'   \item{class}{Inferred class of beta lactamase from phenotype}
+#' }
+"btESBL_NCBI_phenotypic_bl"
 
 #' Data: Contig cluster membership
 #'
@@ -236,6 +282,21 @@
 #'   \item{hosp_assoc}{Is sample community. hospital associated, or recent dc (see manuscript for details)}
 #'   \item{hospoutcomedate}{Date of discharge from hospital. NA = never admittted}
 #'   \item{Cluster}{PopPUNK cluster assignment. Prefix K = K. pneumo, E = E. coli}
+#'   \item{number_of_contigs}{Number of contigs in assembly}
+#'   \item{N50}{N50 of assembly}
+#'   \item{ecoli_phylogroup}{E. coli phylogroup from in silico PCR}
+#'   \item{ecoli_pathogroup}{E. coli pathogroup (see manuscript for details)}
+#'   \item{species}{Isolate species either from API (E. coli) or Kleborate}
+#'   \item{kleb_k_locus}{K. pnemo complex inferred K locus from Kleborate}
+#'   \item{kleb_k_locus_confidence}{Kleborate defined K locus confidence}
+#'   \item{kleb_o_locus}{K. pnemo complex inferred O locus from Kleborate}
+#'   \item{kleb_o_locus_confidence}{Kleborate defined O locus confidence}
+#'   \item{kleb_YbST}{Klebsiella YbST allele as per Kleborate}
+#'   \item{kleb_CbST}{Klebsiella CbST allele as per Kleborate}
+#'   \item{kleb_AbST}{Klebsiella AbST allele as per Kleborate}
+#'   \item{kleb_SmST}{Klebsiella SmST allele as per Kleborate}
+#'   \item{kleb_rmpA}{Klebsiella rmpA allele as per Kleborate}
+#'   \item{kleb_rmpA2}{Klebsiella rmpA2 allele as per Kleborate}
 #' }
 "btESBL_sequence_sample_metadata"
 
@@ -279,4 +340,77 @@
 "btESBL_snpdists_kleb"
 
 
+#' Data: metadata of 10,146 global E. coli genomes
+#'
+#' Metadata of a global collection of 10,146 E. coli genomes
+#' Taken from Horesh et al 2021
+#' See original Horesh publication for details and variable definition
+#' https://doi.org/10.1099/mgen.0.000499
+#'
+#' @format A data frame with 10,146 rows and 22 variables:
+#'
+"btESBL_ecoli_horesh_metadata"
 
+#' Data: metadata of 97 E. coli genomes from Malawi
+#'
+#' Metadata of a collection of 97 E. coli genomes selected for temporal
+#' diversity and diversity in antibiogram
+#' Taken from Musicha et al 2017
+#' For full details see original Musicha publication
+#' https://doi.org/10.1093/jac/dkx058
+#'
+#' The phylogroup and ST here were determined for this study and were not
+#' provided in the original metadata; the popPUNK cluster assignemt uses the
+#' Horesh database
+#'
+#' #' \describe{
+#'   \item{lane}{Unique sample-sequencing run ID}
+#'   \item{ID}{Unmique sample ID}
+#'   \item{Year}{Year of sample collection}
+#'   \item{Sample_type}{Type of clincial sample from which isolate originates}
+#'   \item{Age_group}{Age of patient from which sample orignated}
+#'   \item{Organism}{Organism}
+#'   \item{ST}{Multlocus sequence type as determined by ARIBA}
+#'   \item{phylogroup}{Phylogroup following Clermon scheme with in silico PCR}
+#'   \item{Cluster}{PopPUNK cluster assignment using the Horesh E. coli database}
+#'   \item{Accession}{NCBI Accession number}
+#'
+#' }
+#'
+#' @format A tidy data frame with 97 rows and 10 variables:
+#'
+"btESBL_ecoli_musicha_metadata"
+
+#' Data: popPUNK cluster assignment of study E. coli isolates using global database
+#'
+#' PopPUNK cluster assignment of study E. coli using the popPUNK database
+#' derived using a global E. coli collection as described in Horesh et al
+#' 2021; see manuscript for details
+#'
+#' @format A tidy data frame with 473 rows and 2 variables:
+#' \describe{
+#'   \item{lane}{Unique sample-sequencing run ID}
+#'   \item{Cluster}{popPUNK cluster assignment}
+#' }
+"btESBL_ecoli_global_popPUNK_clusters"
+
+#' Data: E.coli global context tree
+#'
+#' Midpoint rooted maximum likelihood core gene phylogeny for E. coli
+#' incorporating study and global context isolates (see manuscript for
+#' details)
+#'
+#' @format A "phylo" object ("ape" package)
+#'
+#'
+"btESBL_ecoli_globaltree"
+
+#' Data: K. pneumoniae complex global context tree
+#'
+#' Midpoint rooted maximum likelihood core gene phylogeny for K.
+#' pneumoniae complex incorporating study and global context isolates
+#'  (see manuscript for details)
+#'
+#' @format A "phylo" object ("ape" package)
+#'
+"btESBL_kleb_globaltree"

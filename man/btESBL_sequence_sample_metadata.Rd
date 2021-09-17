@@ -19,6 +19,21 @@ A tidy data frame with 676 rows and 12 variables:
 \item{hosp_assoc}{Is sample community. hospital associated, or recent dc (see manuscript for details)}
 \item{hospoutcomedate}{Date of discharge from hospital. NA = never admittted}
 \item{Cluster}{PopPUNK cluster assignment. Prefix K = K. pneumo, E = E. coli}
+\item{number_of_contigs}{Number of contigs in assembly}
+\item{N50}{N50 of assembly}
+\item{ecoli_phylogroup}{E. coli phylogroup from in silico PCR}
+\item{ecoli_pathogroup}{E. coli pathogroup (see manuscript for details)}
+\item{species}{Isolate species either from API (E. coli) or Kleborate}
+\item{kleb_k_locus}{K. pnemo complex inferred K locus from Kleborate}
+\item{kleb_k_locus_confidence}{Kleborate defined K locus confidence}
+\item{kleb_o_locus}{K. pnemo complex inferred O locus from Kleborate}
+\item{kleb_o_locus_confidence}{Kleborate defined O locus confidence}
+\item{kleb_YbST}{Klebsiella YbST allele as per Kleborate}
+\item{kleb_CbST}{Klebsiella CbST allele as per Kleborate}
+\item{kleb_AbST}{Klebsiella AbST allele as per Kleborate}
+\item{kleb_SmST}{Klebsiella SmST allele as per Kleborate}
+\item{kleb_rmpA}{Klebsiella rmpA allele as per Kleborate}
+\item{kleb_rmpA2}{Klebsiella rmpA2 allele as per Kleborate}
 }
 }
 \usage{

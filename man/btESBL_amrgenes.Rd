@@ -9,7 +9,7 @@ A tidy data frame with 10822 rows and 3 variables:
 \describe{
 \item{lane}{Unique sample-sequencing run ID}
 \item{ref_seq}{Identified AMR gene sequence}
-\item{species}{Species of sample}
+\item{genus}{Genus of sample (E. coli or K. pneumioniae complex)}
 }
 }
 \usage{
