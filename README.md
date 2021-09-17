@@ -53,7 +53,10 @@ The analysis is available as a package vignette; this can be built when
 downloading the package by typing:
 
 ``` r
-devtools::install_github("https://github.com/joelewis101/blantyreESBL", build_vignettes = TRUE, dependencies = TRUE )
+devtools::install_github(
+  "https://github.com/joelewis101/blantyreESBL", 
+  build_vignettes = TRUE, 
+  dependencies = TRUE )
 ```
 
 The `dependencies = TRUE` option will install all the packages necessary

@@ -98,7 +98,10 @@
 <p>The various data objects are described in the <a href="https://joelewis101.github.io/blantyreESBL/">pkgdown</a> site for this package, and available via R in the usual way (i.e. <code><a href="reference/btESBL_participants.html">?btESBL_participants</a></code> brings up the definitions for the <code>btESBL_participants</code> data. They are all lazy loaded so will be available for use immediately; they all start with <code>btESBL_</code> to make it easy to choose the one you want using autocomplete.</p>
 <p>The analysis is available as a package vignette; this can be built when downloading the package by typing:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"https://github.com/joelewis101/blantyreESBL"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span>, dependencies <span class="op">=</span> <span class="cn">TRUE</span> <span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span>
+  <span class="st">"https://github.com/joelewis101/blantyreESBL"</span>, 
+  build_vignettes <span class="op">=</span> <span class="cn">TRUE</span>, 
+  dependencies <span class="op">=</span> <span class="cn">TRUE</span> <span class="op">)</span></code></pre></div>
 <p>The <code>dependencies = TRUE</code> option will install all the packages necessary to run the vignette.</p>
 <p>Alternatively the source code for the vignette is <code>analysis.Rmd</code> in the <code>vignettes/</code> folder of the <a href="https://github.com/joelewis101/blantyreESBL">GitHub</a> repo or the <a href="https://joelewis101.github.io/blantyreESBL/">pkgdown</a> site for this package has a rendered version.</p>
 </div>
