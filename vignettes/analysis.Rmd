@@ -1,5 +1,5 @@
 ---
-title: "analysis"
+title: "Analysis scripts: longitudinal ESBL carriage"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{analysis}
@@ -24,26 +24,27 @@ Joseph M Lewis^1,2,3,4^, , Madalitso Mphasa^1^, Rachel Banda^1^,  Matthew Beale^
 
 This document provides the analysis code for the above manuscript.
 
-## Installing and accessing data
+### Installing and accessing data
 
-Install the package from GitHub:
+If you just want the data, then all the data to replicate the analysis are bundled with the package. To install the package from GitHub:
 
 ``` r
 install.packages("devtools")
 devtools::install_github("https://github.com/joelewis101/blantyreESBL)
 ```
 
-Or check out the source code at [GitHub](https://github.com/joelewis101/blantyreESBL)
-
-Data objects are included in the package
+The various data objects are described in the [pkgdown](https://joelewis101.github.io/blantyreESBL/) site for this package, and available via R in the usual way (i.e. `?btESBL_participants` brings up the definitions for the `btESBL_participants` data. They are all lazy loaded so will be available for use immediately; they all start with `btESBL_` to make it easy to choose the one you want using autocomplete.
 
 The analysis is available as a package vignette; this can be built when downloading the package by typing:
 
 ``` r
-devtools::install_github("https://github.com/joelewis101/blantyreESBL", build_vignettes = TRUE )
+devtools::install_github("https://github.com/joelewis101/blantyreESBL", build_vignettes = TRUE, dependencies = TRUE )
 ```
 
-Alternatively the source code for the vignette is `analysis.Rmd` in the `vignettes/` folder of this repo or the  [pkgdown](https://joelewis101.github.io/blantyreESBL/) site for this package has a rendered version, as well as variable definitions for the datasets.
+The `dependencies = TRUE` option will install all the packages necessary to run the vignette. 
+
+Alternatively the source code for the vignette is `analysis.Rmd` in the `vignettes/` folder of the [GitHub](https://github.com/joelewis101/blantyreESBL)
+ repo or the [pkgdown](https://joelewis101.github.io/blantyreESBL/) site for this package has a rendered version.
 
 ### Setup, load packages
 
@@ -55,12 +56,15 @@ knitr::opts_chunk$set(
 library(here)
 library(igraph)
 library(ggraph)
-library(tidyverse)
+#library(tidyverse)
+library(dplyr)
+library(tidyr)
 library(stringr)
 library(lubridate)
+library(purrr)
+library(forcats)
 library(glue)
 library(broom)
-library(devtools)
 library(ggsci)
 library(bayesplot)
 library(patchwork)
@@ -70,6 +74,7 @@ library(pheatmap)
 library(viridis)
 library(ggtree)
 library(kableExtra)
+#library(rstan)
 library(blantyreESBL)
 # load_all()
 
@@ -3344,4 +3349,12 @@ if (write_figs) {
          width = 6.5,
          height = 5)
 }
+```
+
+### Reproducibility: packages used
+
+```{r pkgs}
+
+sessionInfo()
+
 ```
