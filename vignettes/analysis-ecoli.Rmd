@@ -15,7 +15,6 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-library(dassimEcoli)
 library(ggtree)
 library(ape)
 library(phytools)
@@ -33,12 +32,22 @@ library(patchwork)
 library(here)
 library(scales)
 library(ggstance)
+library(blantyreESBL)
 
 write_figs <- TRUE
 
 if (write_figs) {
   if (!dir.exists(here("figures"))) {dir.create(here("figures"))}
   if (!dir.exists(here("tables"))) {dir.create(here("tables"))}
+  
+    if (!dir.exists(here("figures/ecoli-genomics"))) {
+    dir.create(here("figures/ecoli-genomics"))
+  }
+  
+  if (!dir.exists(here("tables/ecoli-genomics"))) {
+    dir.create(here("tables/ecoli-genomics"))
+    }
+  
 }
 
 ```
@@ -51,13 +60,13 @@ This document generates figures and tables for Joe's *E. coli* genomics paper.
 
 ```{r accession-table}
 
-dassimEcoli_BTEcoli.accession %>%
+btESBL_sequence_sample_metadata %>%
+  mutate(date_of_collection = data_date) %>% 
   select(accession,
          lane,
          supplier_name,
          pid,
          date_of_collection,
-         number_of_contigs,
          N50) %>%
   kbl(caption =
         "Accession numbers and assembly statistics for included samples"
@@ -66,16 +75,16 @@ dassimEcoli_BTEcoli.accession %>%
 
 if (write_figs) {
   write_csv(
-    dassimEcoli_BTEcoli.accession %>%
+    btESBL_sequence_sample_metadata %>%
+    mutate(date_of_collection = data_date) %>% 
       select(
         accession,
         lane,
          supplier_name,
          pid,
          date_of_collection,
-         number_of_contigs,
          N50),
-    here("tables/accession_numbers.csv")
+    here("tables/ecoli-genomics/accession_numbers.csv")
   )
 }
 
@@ -84,6 +93,13 @@ if (write_figs) {
 ### Phylogroup and MLST
 
 ```{r mlst-and-phylogroup, fig.height = 4, fig.width = 7, fig.cap = "FIGURE 1: Sequence types (A) and phylogroups (B) of included isolates"}
+
+btESBL_sequence_sample_metadata %>% 
+  filter(species == "E. coli") %>% 
+  mutate(Phylogroup = ecoli_phylogroup,
+         Pathotype = ecoli_pathotype) ->
+  dassimEcoli_BTEcoli.accession
+
 
 pgroup_cols <- c(hue_pal()(9)[c(1:5,7:8)], "gray")
 
@@ -119,12 +135,12 @@ dassimEcoli_BTEcoli.accession %>%
 
 if (write_figs) {
   ggsave(
-    here("figures/mlst_plot.pdf"),
+    here("figures/ecoli-genomics/mlst_plot.pdf"),
     mlst_plot,
     width = 7,
     height = 4)
   ggsave(
-    here("figures/mlst_plot.svg"),
+    here("figures/ecoli-genomics/mlst_plot.svg"),
     mlst_plot,
     width = 7,
     height = 4)
@@ -226,13 +242,13 @@ malawi_treeplot
 
 if (write_figs) {
   ggsave(
-    here("figures/malawi_treeplot.svg"),
+    here("figures/ecoli-genomics-paper/malawi_treeplot.svg"),
     malawi_treeplot,
     width = 9,
     height = 9
   )
   ggsave(
-    here("figures/malawi_treeplot.pdf"),
+    here("figures/ecoli-genomics-paper/malawi_treeplot.pdf"),
     malawi_treeplot,
     width = 9,
     height = 9
@@ -264,20 +280,21 @@ penicillinase <- "OKP|SCO|LEN|LAP"
 ampc <- "CMY"
 
 btESBL_amrgenes %>% 
-  mutate(sample = gsub("#", "_", sample)) %>% 
   semi_join(dassimEcoli_BTEcoli.accession, 
-            by = c("sample" = "lane")) %>% 
-  select(-species) %>% 
+            by = c( "lane")) %>% 
+  select(-genus) %>% 
   rename(gene = ref_seq) %>% 
   # add in QRDR mutations
   bind_rows(
-    dassimEcoli_BTEcoli.QRDRmuts %>% 
+    btESBL_qrdr_mutations %>% 
+      filter(genus == "E. coli") %>% 
+      select(-genus) %>% 
       semi_join(
-        dassimEcoli_CARD.QRDRmuts, 
+        btESBL_CARD_qrdr_mutations, 
         by = c("variant" = "variant",
-              "gene" =  "region")
+              "gene" =  "gene")
       ) %>% 
-      select(gene, sample) %>% 
+      select(gene, lane) %>% 
       unique() %>% 
       mutate(gene =
                gsub("(^.{1})", '\\U\\1',
@@ -287,7 +304,7 @@ btESBL_amrgenes %>%
   filter(!grepl("AmpH|AMPH|AmpC|MrdA|MefB", gene)) %>% 
   # add in beta-lactamases
   left_join(
-    select(dassimEcoli_NCBI.betalactamases, allele_name, class),
+    select(btESBL_NCBI_phenotypic_bl, allele_name, class),
     by = c("gene" = "allele_name")) %>% 
   mutate(class = case_when(
     str_detect(gene, quinolone) ~ "Quinolone",
@@ -354,13 +371,13 @@ amrplot
 
 if (write_figs) {
   ggsave(
-    filename = here("figures/amr_plot.pdf"),
+    filename = here("figures/ecoli-genomics/amr_plot.pdf"),
     plot = amrplot,
     width = 6,
     height = 10
   )
   ggsave(
-    filename = here("figures/amr_plot.svg"),
+    filename = here("figures/ecoli-genomics/amr_plot.svg"),
     plot = amrplot,
     width = 6,
     height = 10
@@ -384,7 +401,7 @@ amr %>%
   mutate(n_gene = length(gene)) %>% 
   arrange(desc(n_class), desc(n_gene)) %>% 
   select(-n_class, -n_gene) %>% 
-  pivot_wider(id_cols = sample,
+  pivot_wider(id_cols = lane,
               values_from = class,
               names_from = gene) %>% 
 
@@ -404,7 +421,7 @@ amr %>%
     arrange(desc(n_class), desc(n_gene)) %>% pull(class) %>% 
   unique() -> class_order
 
-rownames(amr.ariba.maptotree) <- amr.ariba.maptotree$sample
+rownames(amr.ariba.maptotree) <- amr.ariba.maptotree$lane
 
 colz = hue_pal()(13)
 names(colz) <- sort(unique(amr %>% 
@@ -414,7 +431,7 @@ names(colz) <- sort(unique(amr %>%
 ggtree(blantyreESBL::btESBL_coregene_tree_esco) %>% 
 #ggtree(tree) %>% 
     gheatmap(
-        select(amr.ariba.maptotree,-sample),
+        select(amr.ariba.maptotree,-lane),
         width = 5, 
         color = NA, 
         font.size = 3, 
@@ -436,12 +453,12 @@ malawi_tree_with_amr
 if (write_figs) {
   
   ggsave(
-    here("figures/malawi_treeplot_with_amr.pdf"),
+    here("figures/ecoli-genomics/malawi_treeplot_with_amr.pdf"),
     malawi_tree_with_amr,
     width = 12,
     height = 7)
   ggsave(
-    here("figures/malawi_treeplot_with_amr.svg"),
+    here("figures/ecoli-genomics/malawi_treeplot_with_amr.svg"),
     malawi_tree_with_amr,
     width = 12,
     height = 7)
