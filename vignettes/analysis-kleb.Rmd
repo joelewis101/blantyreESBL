@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-library(dassimKlebs)
+# library(dassimKlebs)
 library(rstatix)
 library(phytools)
 library(ggtree)
@@ -32,11 +32,28 @@ library(scales)
 library(viridis)
 library(pheatmap)
 library(ggplotify)
+library(blantyreESBL)
+library(stringr)
 
 sp_dc <- function(x, k) {
   trimws(format(round(x, k), nsmall=k))
 }
-save_figs <- FALSE
+write_figs <- TRUE
+
+if (write_figs) {
+  if (!dir.exists(here("figures"))) {dir.create(here("figures"))}
+  if (!dir.exists(here("tables"))) {dir.create(here("tables"))}
+  
+    if (!dir.exists(here("figures/kleb-genomics"))) {
+    dir.create(here("figures/kleb-genomics"))
+  }
+  
+  if (!dir.exists(here("tables/kleb-genomics"))) {
+    dir.create(here("tables/kleb-genomics"))
+    }
+  
+}
+
 
 ```
 
@@ -63,12 +80,12 @@ Joseph M Lewis^1,2,3,4^, , Madalitso Mphasa^1^, Rachel Banda^1^,  Matthew Beale^
 ```{r assembly_stats}
 # load accessions and assembly stats
 
-dassimKleb_BTKleb.diversity %>% 
-  select("Sample accession",
-         "Lane name",
-         "No. contigs",
-         "N50",
-         "Total length") %>% 
+btESBL_sequence_sample_metadata %>%
+  filter(grepl("Klebsiella", species)) %>% 
+  transmute("Sample accession" = accession,
+         "Lane name" = lane,
+         "No. contigs" = number_of_contigs,
+         "N50" = N50) %>% 
   kbl(caption = "Accession numbers and assembly statistics for included samples") %>% 
   kable_classic(full_width = FALSE)
 
@@ -78,6 +95,13 @@ dassimKleb_BTKleb.diversity %>%
 
 ```{r mlst, fig.width=8, fig.height= 11, fig.cap = "FIGURE X: Diversity of Klebsiella chromasomal sequence type (ST, A), K-type (B) and O-type (C). (D) shows cumulative prevalence for ST, K-type and O-types for all isolates in the collection as a function of the number of K-types, O-types, or STs, with each category ordered in size from largest to smallest. (E) and (F) show ST association of O-type and K-type respectively, where area of point is proportional to number of samples in the study. STs with only a single representative in the collection are excluded from plots A, B, C,E, F."}
 
+btESBL_sequence_sample_metadata %>%
+  filter(grepl("Klebsiella", species)) %>% 
+  rename_with(~ gsub("kleb_", "", .x)) %>% 
+  rename_with(~ gsub("k_locus", "K_locus", .x)) %>% 
+  rename_with(~ gsub("o_locus", "O_locus", .x))  ->
+  dassimKleb_BTKleb.diversity
+  
 dassimKleb_BTKleb.diversity %>% 
   group_by(ST) %>% 
   mutate(n = n(),
@@ -238,9 +262,16 @@ dassimKleb_BTKleb.diversity %>%
   plot_annotation(tag_levels = "A") -> stplot
 stplot
 
-if (save_figs) {
+if (write_figs) {
   ggsave(
-    filename = here("data-raw/figures/F1_stplot.svg"),
+    filename = here("figures/kleb-genomics/F1_stplot.svg"),
+    plot = stplot,
+    width = 8,
+    height = 11
+    
+  )
+  ggsave(
+    filename = here("figures/kleb-genomics/F1_stplot.pdf"),
     plot = stplot,
     width = 8,
     height = 11
@@ -267,7 +298,7 @@ dassimKleb_BTKleb.diversity %>%
   mutate(csum = cumsum(n)) %>% 
   mutate(n = paste0(n, " (", sp_dc(100*n/max(csum),1),"%)")) %>% 
   mutate(prop = paste0(csum, " (", sp_dc(100*csum /max(csum),1), "%)")) %>% 
-  select(O_locus,n,prop) %>% 
+  select(O_locus, n, prop) %>% 
   kbl(caption = "O-types of carriage isolates",
       col.names = c("O-type",
                     "n (%)",
@@ -311,10 +342,10 @@ dassimKleb_BTKleb.diversity %>%
 # what species from kleborate
 
 table(dassimKleb_BTKleb.diversity$species)
+dassimKleb_trees.BTcarriage <- btESBL_coregene_tree_kleb
 
 
 dassimKleb_BTKleb.diversity %>% 
-  rename(lane = `Lane name`) %>% 
   select(ST, lane) %>% 
   mutate(ST = paste0("ST", ST)) %>% 
   pivot_wider(id_cols = lane ,
@@ -335,7 +366,7 @@ mlst.onehot[-1] <- lapply(mlst.onehot[-1], as.factor)
 rownames(mlst.onehot) <- mlst.onehot$lane
 
 dassimKleb_BTKleb.diversity %>% 
-  rename(strain = `Lane name`) %>% 
+  rename(strain = lane) %>% 
   mutate(strain = gsub("#","_", strain)) %>% 
   select(strain, species) %>% 
   as.data.frame() ->
@@ -405,10 +436,16 @@ ggtree(treeio::tree_subset(dassimKleb_trees.BTcarriage, 210, levels_back = 0)) %
   
 dassim_trees
 
-if (save_figs) {
-ggsave(filename = here("data-raw/figures/SUP_F_dassimtrees.svg"),
+if (write_figs) {
+ggsave(filename = here("figures/kleb-genomics/SUP_F_dassimtrees.pdf"),
        plot = dassim_trees,
-       width =14,
+       width = 14,
+       height = 16
+       
+)
+ggsave(filename = here("figures/kleb-genomics/SUP_F_dassimtrees.svg"),
+       plot = dassim_trees,
+       width = 14,
        height = 16
 )
 }
@@ -419,15 +456,77 @@ ggsave(filename = here("data-raw/figures/SUP_F_dassimtrees.svg"),
 
 ```{r amr, fig.cap = "FIGURE X: Prevalence of AMR gene grouped by class", fig.height= 10, fig.width= 6}
 
+# add class ro which resistnce is conferred --------------------------------
+
+quinolone <- "Par|Gyr|Par|Qnr|Qep|Nor|GyrA|GyrB|ParC|ParE"
+tetracycline <- "Tet"
+sulphonamide <- "Sul"
+aminoglycoside <- "Str|Aad|Aac|Aph|Rmt|APH"
+streptothricin <- "Sat"
+macrolide <- "Mph|Mdf|Erm|Ere"
+fosfomycin <- "Fos"
+chloramphenicol <- "Cat|FloR|Cml"
+trimethoprim <- "Dfr"
+rifampicin <- "Arr"
+ESBL <- "SHV_12"
+penicillinase <- "OKP|SCO|LEN|LAP"
+ampc <- "CMY"
+
+btESBL_amrgenes %>% 
+  semi_join(dassimKleb_BTKleb.diversity, 
+            by = c( "lane")) %>% 
+  select(-genus) %>% 
+  rename(gene = ref_seq) %>% 
+  # add in QRDR mutations
+  bind_rows(
+    btESBL_qrdr_mutations %>% 
+      filter(genus == "K. pneumoniae complex") %>% 
+      select(-genus) %>% 
+      semi_join(
+        btESBL_CARD_qrdr_mutations, 
+        by = c("variant" = "variant",
+              "gene" =  "gene")
+      ) %>% 
+      select(gene, lane) %>% 
+      unique() %>% 
+      mutate(gene =
+               gsub("(^.{1})", '\\U\\1',
+                    gene,
+                    perl = TRUE))
+      ) %>% 
+  filter(!grepl("AmpH|AMPH|AmpC|MrdA|MefB", gene)) %>% 
+  # add in beta-lactamases
+  left_join(
+    select(btESBL_NCBI_phenotypic_bl, allele_name, class),
+    by = c("gene" = "allele_name")) %>% 
+  mutate(class = case_when(
+    str_detect(gene, quinolone) ~ "Quinolone",
+    str_detect(gene, tetracycline) ~ "Tetracycline",
+    str_detect(gene, sulphonamide) ~ "Sulphonamide",
+    str_detect(gene, aminoglycoside) ~ "Aminoglycoside",
+    str_detect(gene, streptothricin) ~ "Streptothricin",
+    str_detect(gene, macrolide) ~ "Macrolide",
+    str_detect(gene, fosfomycin) ~ "Fosfomycin",
+    str_detect(gene, chloramphenicol) ~ "Chloramphenicol",
+    str_detect(gene, rifampicin) ~ "Rifampicin",
+    str_detect(gene,trimethoprim) ~ "Trimethoprim",
+    str_detect(gene,ESBL) ~ "ESBL",
+    str_detect(gene,penicillinase) ~ "Penicillinase",
+    str_detect(gene,ampc) ~ "AmpC",
+    TRUE ~ class
+  )) %>% 
+  mutate(gene = if_else(gene == "TEM_95",
+                        "TEM_1",
+                        gene)) ->
+  dassimKleb_BTKleb.amr 
 
 # how many genes per sample
 
-
 dassimKleb_BTKleb.amr %>% 
-  group_by(name) %>% 
+  group_by(lane) %>% 
   mutate(n = n()) %>% 
   ungroup() %>% 
-  select(name, n) %>% 
+  select(lane, n) %>% 
   unique() %>% 
   summarise(
     min = min(n),
@@ -497,9 +596,15 @@ dassimKleb_BTKleb.amr %>%
   ) -> amrplot
 amrplot
 
-if (save_figs) {
+if (write_figs) {
   ggsave(
-    filename = here("data-raw/figures/F2_amr_plot.svg"),
+    filename = here("figures/kleb-genomics/F2_amr_plot.pdf"),
+    plot = amrplot,
+    width = 6,
+    height = 10
+  )
+  ggsave(
+    filename = here("figures/kleb-genomics/F2_amr_plot.svg"),
     plot = amrplot,
     width = 6,
     height = 10
@@ -518,7 +623,7 @@ if (save_figs) {
 dassimKleb_BTKleb.amr %>% 
   filter(!grepl("AmpH|Oqx|ParC|GyrA", gene)) %>% 
   select(-class) %>% 
-  pivot_wider(id_cols = name ,
+  pivot_wider(id_cols = lane ,
               names_from = gene, 
               values_from = gene,
               values_fn = length,
@@ -539,14 +644,14 @@ pheatmap(clust.amr,
          fontsize = 6)
 ) -> amr.heatmap
 
-if (save_figs) {
-ggsave(filename = here("data-raw/figures/SUP_F_amr_heatmap.svg"),
+if (write_figs) {
+ggsave(filename = here("figures/kleb-genomics/SUP_F_amr_heatmap.svg"),
        plot = amr.heatmap,
        width =9,
        height = 8
 )
 
-ggsave(filename = here("data-raw/figures/SUP_F_amr_heatmap.pdf"),
+ggsave(filename = here("figures/kleb-genomics/SUP_F_amr_heatmap.pdf"),
        plot = amr.heatmap,
        width =9,
        height = 8
@@ -564,7 +669,7 @@ ggsave(filename = here("data-raw/figures/SUP_F_amr_heatmap.pdf"),
 dassimKleb_BTKleb.amr %>% 
   filter(!gene %in% c("OqxA", "OqxB", "FosA")) %>% 
   # remove FosA as not in KpI which we are plottingh
-  mutate(name = gsub("#", "_", name),
+  mutate(lane = gsub("#", "_", lane),
          gene = gsub("_","-", gene)) %>% 
   group_by(class) %>% 
   mutate(n_class = length(class)) %>% 
@@ -573,7 +678,7 @@ dassimKleb_BTKleb.amr %>%
   mutate(n_gene = length(gene)) %>% 
   arrange(desc(n_class), desc(n_gene)) %>% 
   select(-n_class, -n_gene) %>% 
-  pivot_wider(id_cols = name,
+  pivot_wider(id_cols = lane,
               values_from = class,
               names_from = gene) %>% 
 
@@ -582,7 +687,7 @@ dassimKleb_BTKleb.amr %>%
 
 dassimKleb_BTKleb.amr %>% 
     filter(!gene %in% c("OqxA", "OqxB", "FosA")) %>% 
-    mutate(name = gsub("#", "_", name),
+    mutate(lane = gsub("#", "_", lane),
            gene = gsub("_","-", gene)) %>% 
     group_by(class) %>% 
     mutate(n_class = length(class)) %>% 
@@ -592,17 +697,17 @@ dassimKleb_BTKleb.amr %>%
     arrange(desc(n_class), desc(n_gene)) %>% pull(class) %>% 
   unique() -> class_order
 
-rownames(amr.ariba.maptotree) <- amr.ariba.maptotree$name
+rownames(amr.ariba.maptotree) <- amr.ariba.maptotree$lane
 
 colz = hue_pal()(11)
 names(colz) <- sort(unique(dassimKleb_BTKleb.amr %>% 
-                             filter(class != "Fosfomycin") %>% 
+                        #     filter(class != "Fosfomycin") %>% 
                              pull(class)))
 
 ggtree(treeio::tree_subset(dassimKleb_trees.BTcarriage, 210, levels_back = 0)) %>% 
 #ggtree(tree) %>% 
     gheatmap(
-        select(amr.ariba.maptotree,-name),
+        select(amr.ariba.maptotree,-lane),
         width = 5, 
         color = NA, 
         font.size = 3, 
@@ -622,7 +727,7 @@ ggtree(treeio::tree_subset(dassimKleb_trees.BTcarriage, 210, levels_back = 0)) %
 ggtree(dassimKleb_trees.BTcarriage) %>% 
 #ggtree(tree) %>% 
     gheatmap(
-        select(amr.ariba.maptotree,-name),
+        select(amr.ariba.maptotree,-lane),
         width = 5, 
         color = NA, 
         font.size = 3, 
@@ -642,16 +747,16 @@ ggtree(dassimKleb_trees.BTcarriage) %>%
 
 tree_amr_plt
 
-if (save_figs) {
+if (write_figs) {
   ggsave(
-    filename = here("data-raw/figures/SUP_F_amr_tree.pdf"),
+    filename = here("figures/kleb-genomics/SUP_F_amr_tree.pdf"),
     plot = tree_amr_plt,
     width = 14,
     height = 12
   )
   
   ggsave(
-    filename = here("data-raw/figures/SUP_F_amr_tree.svg"),
+    filename = here("figures/kleb-genomics/SUP_F_amr_tree.svg"),
     plot = tree_amr_plt,
     width = 14,
     height = 12
@@ -665,8 +770,8 @@ if (save_figs) {
 
 ``` {r global-tree, fig.height = 12, fig.width = 8}
 
-
-
+dassimKleb_trees.global <- btESBL_kleb_globaltree
+dassimKleb_globalKleb.metadata <- btESBL_kleb_global_metadata
 
 col <-
   c("white",
@@ -695,7 +800,7 @@ get_legend(
       hjust = 0,
       offset = 0.0015
     ) +
-    scale_fill_manual(values = col, na.translate = FALSE) +
+    scale_fill_manual(values = col[(3:5)], na.translate = FALSE) +
     theme(legend.title = element_blank())
 ) -> leg1
 
@@ -712,7 +817,7 @@ get_legend(
       hjust = 0,
       offset = 0.0015
     ) +
-    scale_fill_manual(values = col, na.translate = FALSE) +
+    scale_fill_manual(values = col[c(6,7)], na.translate = FALSE) +
     theme(legend.title = element_blank())
 ) -> leg2
   
@@ -720,7 +825,7 @@ get_legend(
 dassimKleb_globalKleb.metadata %>% 
   mutate(ESBL = if_else(ESBL != "ESBL", NA_character_, ESBL)) %>% 
   ggplot(aes(ESBL, fill = ESBL)) + geom_bar() +
-  scale_fill_manual(values = col, na.translate = FALSE) +
+  scale_fill_manual(values = col[8], na.translate = FALSE) +
   theme(legend.title = element_blank())
   ) -> leg3
 
@@ -811,9 +916,15 @@ treeplot +
 
 globaltree_plot  
 
-if (save_figs) {
+if (write_figs) {
   ggsave(
-    filename = here("data-raw/figures/F3_globaltree.svg"),
+    filename = here("figures/kleb-genomics/F3_globaltree.pdf"),
+    plot = globaltree_plot,
+    width = 8,
+    height = 12
+  )
+  ggsave(
+    filename = here("figures/kleb-genomics/F3_globaltree.svg"),
     plot = globaltree_plot,
     width = 8,
     height = 12
@@ -833,8 +944,7 @@ if (save_figs) {
 
 # 627  = ST 218
 
-ggtree(treeio::tree_subset(dassimKleb_trees.malawi, 372, levels_back = 0)) %>%
-
+ggtree(treeio::tree_subset(btESBL_kleb_malawi_allisolate_core_gene_tree, 372, levels_back = 0)) %>%
   gheatmap(
     select(dassimKleb_globalKleb.metadata, `Isolate Type`),
     width = 0.03,
@@ -883,8 +993,13 @@ malawi_tree_plot +
 
 malawi_tree_plot_final
 
-if (save_figs) {
-ggsave(filename = here("data-raw/figures/F4_malawitree.svg"),
+if (write_figs) {
+ggsave(filename = here("figures/kleb-genomics/F4_malawitree.pdf"),
+       plot = malawi_tree_plot_final,
+       width =8,
+       height = 10
+)
+ggsave(filename = here("figures/kleb-genomics/F4_malawitree.svg"),
        plot = malawi_tree_plot_final,
        width =8,
        height = 10
@@ -934,9 +1049,15 @@ dassimKleb_globalKleb.metadata %>%
 virplot
 
 
-if (save_figs) {
+if (write_figs) {
   ggsave(
-    filename = here("data-raw/figures/SUPP_FIG_virplot.svg"),
+    filename = here("figures/kleb-genomics/SUPP_FIG_virplot.pdf"),
+    plot = virplot,
+    width = 5,
+    height = 5
+  )
+  ggsave(
+    filename = here("figures/kleb-genomics/SUPP_FIG_virplot.svg"),
     plot = virplot,
     width = 5,
     height = 5
@@ -1032,16 +1153,16 @@ o_type_distn_plot + k_type_distn_plot +
 
 o_ktype_distn_plot
 
-if (save_figs) {
+if (write_figs) {
   ggsave(
-    filename = here("data-raw/figures/F5_OK_type_distn.svg"),
+    filename = here("figures/kleb-genomics/F5_OK_type_distn.svg"),
     plot =  o_ktype_distn_plot,
     width = 10,
     height = 4
   )
   
   ggsave(
-    filename = here("data-raw/figures/F5_OK_type_distn.pdf"),
+    filename = here("figures/kleb-genomics/F5_OK_type_distn.pdf"),
     plot =  o_ktype_distn_plot,
     width = 10,
     height = 4
@@ -1162,9 +1283,9 @@ dassimKleb_BTKleb.diversity %>%
 
 dassimKleb_BTKleb.amr %>% 
   filter(!gene %in% c("OqxA", "OqxB")) %>% 
-  group_by(name, class) %>%
+  group_by(lane, class) %>%
   ungroup() %>%  
-  select(name, class) %>% 
+  select(lane, class) %>% 
   unique() %>% 
   filter(!is.na(class)) %>% 
   group_by(class) %>% 
@@ -1214,3 +1335,10 @@ dassimKleb_globalKleb.metadata %>%
 
 ```
 
+### Reproducability, session info
+
+```{r sessinfo}
+
+sessionInfo()
+
+```

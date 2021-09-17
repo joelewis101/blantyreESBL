@@ -1,5 +1,5 @@
 ---
-title: "Reproducible analysis"
+title: "Reproducible analysis: E. coli genomics"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{analysis}
@@ -13,6 +13,24 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
+
+## Introduction
+
+This document generates the tables and figures for the manuscript:
+
+<br />
+
+*A genomic analysis of extended-spectrum beta-lactamase producing E. coli colonising adults in Blantyre, Malawi demonstrates unsampled diversity compared to a representative global collection*
+
+<br />
+
+Joseph M Lewis^1,2,3,4^, , Madalitso Mphasa^1^, Rachel Banda^1^,  Matthew Beale^4^, Jane Mallewa^5^, Eva Heinz^2^, Nicholas Thomson^4^, Nicholas A Feasey^1,2^
+
+1. Malawi Liverpool Wellcome Clinical Research Programme, Blantyre, Malawi
+2. Department of Clinical Sciences, Liverpool School of Tropical Medicine, Liverpool, UK
+3. Department of Clinical Infection, Microbiology and Immunology, University of Liverpool, Liverpool, UK
+4. Wellcome Sanger Institute, Hinxton, UK
+5. College of Medicine, University of Malawi, Malawi
 
 ```{r setup}
 library(ggtree)
@@ -51,10 +69,6 @@ if (write_figs) {
 }
 
 ```
-
-## Introduction
-
-This document generates figures and tables for Joe's *E. coli* genomics paper.
 
 ### Assembly stats and accession numbers
 
@@ -242,13 +256,13 @@ malawi_treeplot
 
 if (write_figs) {
   ggsave(
-    here("figures/ecoli-genomics-paper/malawi_treeplot.svg"),
+    here("figures/ecoli-genomics/malawi_treeplot.svg"),
     malawi_treeplot,
     width = 9,
     height = 9
   )
   ggsave(
-    here("figures/ecoli-genomics-paper/malawi_treeplot.pdf"),
+    here("figures/ecoli-genomics/malawi_treeplot.pdf"),
     malawi_treeplot,
     width = 9,
     height = 9
@@ -479,7 +493,8 @@ if (write_figs) {
 
 
 
-purrr::map_df(unique(grep("_", dassimEcoli_BTEcoli.accession$Cluster, value = TRUE)),
+purrr::map_df(
+  unique(grep("_", btESBL_ecoli_global_popPUNK_clusters$Cluster, value = TRUE)),
               function(x)
                 data.frame(mergeclust = x,
                            splts = strsplit(x, "_")[[1]])) %>%
@@ -488,19 +503,22 @@ purrr::map_df(unique(grep("_", dassimEcoli_BTEcoli.accession$Cluster, value = TR
 bind_rows(
   dassimEcoli_BTEcoli.accession %>%
     transmute(
-      Taxon = lane,
-      Cluster = Cluster,
+      lane = lane,
       ST = ST,
       Phylogroup = Phylogroup,
       study = "dassim",
       Country = "Malawi",
       Continent = "Africa",
-      Year = year(date_of_collection)
+      Year = year(data_date)
+    ) %>% 
+    left_join(
+      btESBL_ecoli_global_popPUNK_clusters,
+      by = "lane"
     ),
   
-  dassimEcoli_Musicha.metadata %>%
+  btESBL_ecoli_musicha_metadata %>%
     transmute(
-      Taxon = Lane,
+      lane = lane,
       Cluster = Cluster,
       ST = if_else(is.na(ST),
                    "Novel",
@@ -512,12 +530,12 @@ bind_rows(
       Year = Year
     ),
   
-  dassimEcoli_Horesh.metadata %>%
+  btESBL_ecoli_horesh_metadata %>%
     mutate(assembly_name_recode =
              gsub("\\..*$", "", Assembly_name)) %>%
     left_join(mergclust_lookup, by = c("PopPUNK" = "splts")) %>%
     transmute(
-      Taxon = gsub(
+      lane = gsub(
         "#",
         "_",
         if_else(
@@ -577,7 +595,7 @@ bind_rows(
                  ) -> df_all
 
 df_all <- as.data.frame(df_all)
-rownames(df_all) <- df_all$Taxon  
+rownames(df_all) <- df_all$lane  
 
 ```
 
@@ -597,11 +615,11 @@ country_cols <-
   c("Malawi" =  "grey15",
     "Not Malawi" = "lightgrey")
 
-dassimEcoli_globaltree -> horesh_context_tree
+btESBL_ecoli_globaltree -> horesh_context_tree
 
 popPUNK_clusts_inplots <- 
   df_all %>% 
-  filter(Taxon %in% 
+  filter(lane %in% 
            c(treeio::tree_subset(
              horesh_context_tree, 1834, levels_back = 0)$tip.label,
              treeio::tree_subset(
@@ -638,7 +656,7 @@ popPUNK_cols <- c(
 
 
 names(popPUNK_cols) <- df_all %>% 
-  filter(Taxon %in% 
+  filter(lane %in% 
            c(treeio::tree_subset(
              horesh_context_tree, 1834, levels_back = 0)$tip.label,
              treeio::tree_subset(
@@ -662,7 +680,7 @@ offset_add <- 0
     (
       (
         ggtree(horesh_context_tree, size = 0.4) %<+%
-          (select(df_all, Taxon, ST) %>%
+          (select(df_all, lane, ST) %>%
              mutate(
                ST = if_else(ST == 410,
                                  as.character("hilight"), NA_character_)
@@ -774,7 +792,7 @@ tippoint_alpha = 0.7
   ggtree(
     treeio::tree_subset(
       horesh_context_tree, 1834, levels_back = 0)
-    ) %<+% select(df_all, Taxon, cluster_recode) %>% 
+    ) %<+% select(df_all, lane, cluster_recode) %>% 
     gheatmap(
     select(df_all, Country) %>%
       mutate(Country = if_else(
@@ -852,7 +870,7 @@ offset_add <- 0.0007
   ggtree(
     treeio::tree_subset(
       horesh_context_tree, 1227, levels_back = 0)
-    ) %<+% select(df_all, Taxon, cluster_recode) %>%
+    ) %<+% select(df_all, lane, cluster_recode) %>%
     gheatmap(
       select(df_all, Country) %>%
       mutate(Country = if_else(
@@ -908,7 +926,7 @@ offset_add <- 0.0008
   ggtree(
     treeio::tree_subset(
       horesh_context_tree, 1526, levels_back = 0)
-    ) %<+% select(df_all, Taxon, cluster_recode) %>%
+    ) %<+% select(df_all, lane, cluster_recode) %>%
     gheatmap(
     select(df_all, Country) %>%
       mutate(Country = if_else(
@@ -967,12 +985,12 @@ global_tree_plot
 if (write_figs) {
   
   ggsave(
-    here("figures/global_treeplot.pdf"),
+    here("figures/ecoli-genomics/global_treeplot.pdf"),
     global_tree_plot,
     width = 9,
     height = 12)
   ggsave(
-    here("figures/global_treeplot.svg"),
+    here("figures/ecoli-genomics/global_treeplot.svg"),
     global_tree_plot,
     width = 9,
     height = 12)
@@ -1090,12 +1108,12 @@ pp_cluster_plots
 if (write_figs) {
   
   ggsave(
-    here("figures/global_poppunk_clusterplot.pdf"),
+    here("figures/ecoli-genomics/global_poppunk_clusterplot.pdf"),
     pp_cluster_plots,
     width = 6,
     height = 6)
   ggsave(
-    here("figures/global_poppunk_clusterplot.svg"),
+    here("figures/ecoli-genomics/global_poppunk_clusterplot.svg"),
     pp_cluster_plots,
     width = 6,
     height = 6)
@@ -1259,7 +1277,7 @@ if (write_figs) {
                STs_horesh = STpropstr_horesh,
                location_horesh = horesh,
                pathotype_horesh = horesh_pathotype),
-           here("tables/cluster_stats.csv")
+           here("tables/ecoli-genomics/cluster_stats.csv")
  )
    
 }
@@ -1313,7 +1331,7 @@ df_all %>%
     tot = sum(n),
     prop = n/sum(n))
 
-dassimEcoli_Horesh.metadata %>% 
+btESBL_ecoli_horesh_metadata %>% 
   mutate(clust_50orbelow =
            case_when(
              PopPUNK <= 50 ~ "top 50",
@@ -1327,10 +1345,10 @@ dassimEcoli_Horesh.metadata %>%
     prop = n/sum(n)) 
          
 amr %>% 
-  select(sample, class) %>% 
+  select(lane, class) %>% 
   unique() %>% 
   ungroup() %>% 
-  mutate(n_tot = length(unique(sample))) %>% 
+  mutate(n_tot = length(unique(lane))) %>% 
   group_by(class) %>% 
   summarise(n = n(),
             n_tot = max(n_tot),
@@ -1351,5 +1369,13 @@ amr %>%
       max = max(n)
     )
     
+
+```
+
+### Reproducibility - packages, R version and OS used
+
+```{r sysinfo}
+
+sessionInfo()
 
 ```
