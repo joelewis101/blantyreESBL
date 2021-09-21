@@ -1,5 +1,5 @@
 ---
-title: "Reproducible analysis: E. coli genomics"
+title: "Analysis scripts: E. coli genomics"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{analysis}
@@ -52,7 +52,7 @@ library(scales)
 library(ggstance)
 library(blantyreESBL)
 
-write_figs <- TRUE
+write_figs <- FALSE
 
 if (write_figs) {
   if (!dir.exists(here("figures"))) {dir.create(here("figures"))}
@@ -1371,6 +1371,111 @@ amr %>%
     
 
 ```
+
+### Plasmids
+
+```{r plasmidreplicon_prev, fig.width = 4, fig.height=4}
+
+btESBL_plasmidreplicons %>% 
+  filter(species == "E. coli") %>% 
+   mutate(ref_seq = gsub("_.+$","", ref_seq),
+         ref_seq = gsub("\\.[0-9]","", ref_seq),
+         ref_seq = case_when(
+           grepl("Col", ref_seq) ~ "Col",
+           grepl("rep", ref_seq) ~ "rep",
+           grepl("^FIA", ref_seq) ~ "IncFIA",
+           !grepl("Inc", ref_seq) ~ "Other",
+           TRUE ~ ref_seq
+          )) %>% 
+  filter(grepl("Inc", ref_seq)) %>% 
+  ggplot(aes(fct_rev(fct_infreq(ref_seq)))) +
+  geom_bar() +
+  coord_flip() +
+  theme_bw() +
+  labs(y = "Number of samples",
+       x = "Plasmid replicon") -> plasm_rep_prev
+
+if (write_figs) {
+  
+  ggsave(
+    here("figures/ecoli-genomics/ecoli_plasmid_replicon_prevalence.pdf"),
+    plasm_rep_prev,
+    width = 4,
+    height = 4)
+  ggsave(
+    here("figures/ecoli-genomics/ecoli_plasmid_replicon_prevalence.svg"),
+    plasm_rep_prev,
+    width = 4,
+    height = 4)
+  
+}
+
+```
+
+
+```{r plasm-plots, fig.width = 6, fig.height = 6, fig.cap = "Plasmid replicons mapped back to tree"}
+
+
+btESBL_plasmidreplicons %>% 
+  filter(species == "E. coli") %>% 
+   mutate(ref_seq = gsub("_.+$","", ref_seq),
+         ref_seq = gsub("\\.[0-9]","", ref_seq),
+         ref_seq = case_when(
+           grepl("Col", ref_seq) ~ "Col",
+           grepl("rep", ref_seq) ~ "rep",
+           grepl("^FIA", ref_seq) ~ "IncFIA",
+           !grepl("Inc", ref_seq) ~ "Other",
+           TRUE ~ ref_seq
+          )) %>% 
+  filter(grepl("Inc", ref_seq)) %>%  
+  arrange(fct_infreq(ref_seq)) %>% 
+  pivot_wider(id_cols = lane,
+              values_from = ref_seq,
+              names_from = ref_seq,
+              values_fn = length,
+              values_fill = 0) %>% 
+  mutate(across(where(is.numeric), ~ if_else(.x >= 1, "Present", "Absent"))) %>% 
+  as.data.frame() ->
+  btESBL_plasmidreplicons_onehot
+
+rownames(btESBL_plasmidreplicons_onehot) <- btESBL_plasmidreplicons_onehot$lane
+
+
+
+ggtree(btESBL_coregene_tree_esco) %>% 
+  gheatmap(select(btESBL_plasmidreplicons_onehot, -lane),
+           font.size = 2.5,
+           color = NA,
+           colnames_angle = 90,
+           offset = 0,
+           colnames_offset_y = 3,
+           colnames_position = "top",
+           hjust = 0) +
+  ylim(NA,550) +
+  labs(fill = "Plasmid\nReplicon") +
+  scale_fill_manual(values = c("white", "darkgrey"), 
+                     na.translate = FALSE) -> plas_replicons_map_to_tree
+  
+
+if (write_figs) {
+  
+  ggsave(
+    here("figures/ecoli-genomics/ecoli_plasmid_replicon_maptotree.pdf"),
+    plas_replicons_map_to_tree,
+    width = 4,
+    height = 4)
+  ggsave(
+    here("figures/ecoli-genomics/ecoli_plasmid_replicon_maptotree.svg"),
+    plas_replicons_map_to_tree,
+    width = 4,
+    height = 4)
+  
+}
+
+
+```
+
+
 
 ### Reproducibility - packages, R version and OS used
 
