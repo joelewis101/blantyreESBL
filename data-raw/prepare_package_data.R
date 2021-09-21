@@ -670,7 +670,195 @@ bind_rows(
 
 use_data(btESBL_plasmidreplicons, overwrite = TRUE)
 
+### ST410 data ----------------------------
+
+st410_metadata <-
+  read_tsv(here("data-raw/ecoli-genomics-paper/st410/st410.tsv"))
+
+st410_metadata %>%
+  select(
+    Uberstrain,
+    Name,
+    `Data Source(Accession No.;Sequencing Platform;Sequencing Library;Insert Size;Experiment;Status)`,
+    `Source Niche`,
+    `Source Details`,
+    Country,
+    `Collection Year`,
+    ST
+  ) %>%  separate_rows(
+    `Data Source(Accession No.;Sequencing Platform;Sequencing Library;Insert Size;Experiment;Status)`,
+    sep = ","
+  ) %>%
+  separate(
+    `Data Source(Accession No.;Sequencing Platform;Sequencing Library;Insert Size;Experiment;Status)`,
+    into = c(
+      "accession",
+      "platform",
+      "library",
+      "insert_size",
+      "experiment"
+    ),
+    sep = ";"
+  ) ->
+  btESBL_ecoli_st410_metadata
+
+use_data(btESBL_ecoli_st410_metadata, overwrite = TRUE)
+
+# st410 plasmids -----------------
+
+st410_plasm <-
+  read_csv(
+    here("data-raw/ecoli-genomics-paper/st410/st410_pf_ariba_summary.csv"))
 
 
+st410_plasm %>%
+  mutate(name = gsub("\\./", "", name),
+         name = gsub("/report.tsv", "", name),
+         name = gsub("_filtered","", name),
+         name = gsub("#","_", name)) %>%
+  pivot_longer(-name,
+               names_to= c( "cluster", ".value"),
+               names_sep = "\\.") %>%
+  filter(match == "yes") %>%
+  select(name, ref_seq) %>%
+  mutate(ref_seq = gsub("\\..*$", "", ref_seq),
+         ref_seq = gsub("_.*$","", ref_seq),
+         ref_seq = gsub("^FIA", "IncFIA", ref_seq)) ->
+  btESBL_ecoli_st410_plasmids
+
+use_data(btESBL_ecoli_st410_plasmids, overwrite = TRUE)
+
+# st410 tree -----------------------------------------------
+
+read.tree(
+  here(
+    "data-raw/ecoli-genomics-paper/st410/clean_full.filtered_pollymorphic_sites.ref_removed.snpsites.fasta.treefile")) ->
+  st410_tree
+
+midpoint.root(st410_tree) -> btESBL_ecoli_globalst410_tree
+
+use_data(btESBL_ecoli_globalst410_tree, overwrite = TRUE)
+
+# st410 amr ---------------------------------------------------
 
 
+amr.ariba410 <-
+  read_csv(
+    here(
+      "data-raw/ecoli-genomics-paper/st410/st410_ariba_srst2_summary.csv"))
+
+amr.ariba410 %>%
+  mutate(name = gsub("\\./", "", name),
+         name = gsub("/report.tsv", "", name),
+         name = gsub("_filtered", "", name),
+         name = gsub("#","_", name)) %>%
+  pivot_longer(-name,
+               names_to= c( "cluster", ".value"),
+               names_sep = "\\.") %>%
+  mutate(gene = sapply(str_split(ref_seq, "__"), function(x) x[3])) %>%
+  filter(match == "yes") %>%
+  mutate(gene = case_when(
+    gene == "TEM_95" ~ "TEM_1",
+    TRUE ~ gene
+  )) %>%
+  select(name, gene) ->
+  btESBL_ecoli_st410_amr
+
+use_data(btESBL_ecoli_st410_amr, overwrite = TRUE)
+
+### st167
+
+
+st167_metadata <-
+  read_tsv(here("data-raw/ecoli-genomics-paper/st167/st167.tsv"))
+
+st167_metadata %>%
+  select(
+    Uberstrain,
+    Name,
+    `Data Source(Accession No.;Sequencing Platform;Sequencing Library;Insert Size;Experiment;Status)`,
+    `Source Niche`,
+    `Source Details`,
+    Country,
+    `Collection Year`,
+    ST
+  ) %>%  separate_rows(
+    `Data Source(Accession No.;Sequencing Platform;Sequencing Library;Insert Size;Experiment;Status)`,
+    sep = ","
+  ) %>%
+  separate(
+    `Data Source(Accession No.;Sequencing Platform;Sequencing Library;Insert Size;Experiment;Status)`,
+    into = c(
+      "accession",
+      "platform",
+      "library",
+      "insert_size",
+      "experiment"
+    ),
+    sep = ";"
+  ) ->
+  btESBL_ecoli_st167_metadata
+
+use_data(btESBL_ecoli_st167_metadata, overwrite = TRUE)
+
+# st167 plasmids -----------------
+
+st167_plasm <-
+  read_csv(
+    here("data-raw/ecoli-genomics-paper/st167/st167_pf_ariba_summary.csv"))
+
+
+st167_plasm %>%
+  mutate(name = gsub("\\./", "", name),
+         name = gsub("/report.tsv", "", name),
+         name = gsub("_filtered","", name),
+         name = gsub("#","_", name)) %>%
+  pivot_longer(-name,
+               names_to= c( "cluster", ".value"),
+               names_sep = "\\.") %>%
+  filter(match == "yes") %>%
+  select(name, ref_seq) %>%
+  mutate(ref_seq = gsub("\\..*$", "", ref_seq),
+         ref_seq = gsub("_.*$","", ref_seq),
+         ref_seq = gsub("^FIA", "IncFIA", ref_seq)) ->
+  btESBL_ecoli_st167_plasmids
+
+use_data(btESBL_ecoli_st167_plasmids, overwrite = TRUE)
+
+# st167 tree -----------------------------------------------
+
+read.tree(
+  here(
+    "data-raw/ecoli-genomics-paper/st167/clean.full.filtered_polymorphic_sites.ref_removed.snpsites.fasta.treefile")) ->
+  st167_tree
+
+midpoint.root(st167_tree) -> btESBL_ecoli_globalst167_tree
+
+use_data(btESBL_ecoli_globalst167_tree, overwrite = TRUE)
+
+# st167 amr ---------------------------------------------------
+
+
+amr.ariba167 <-
+  read_csv(
+    here(
+      "data-raw/ecoli-genomics-paper/st167/st167_ariba_srst2_summary.csv"))
+
+amr.ariba167 %>%
+  mutate(name = gsub("\\./", "", name),
+         name = gsub("/report.tsv", "", name),
+         name = gsub("_filtered", "", name),
+         name = gsub("#","_", name)) %>%
+  pivot_longer(-name,
+               names_to= c( "cluster", ".value"),
+               names_sep = "\\.") %>%
+  mutate(gene = sapply(str_split(ref_seq, "__"), function(x) x[3])) %>%
+  filter(match == "yes") %>%
+  mutate(gene = case_when(
+    gene == "TEM_95" ~ "TEM_1",
+    TRUE ~ gene
+  )) %>%
+  select(name, gene) ->
+  btESBL_ecoli_st167_amr
+
+use_data(btESBL_ecoli_st167_amr, overwrite = TRUE)
