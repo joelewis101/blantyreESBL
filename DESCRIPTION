@@ -35,7 +35,18 @@ Suggests:
     pheatmap,
     viridis,
     ggtree,
-    kableExtra
+    kableExtra,
+    rstatix,
+    phytools,
+    ape,
+    cowplot,
+    ggpubr,
+    scales,
+    pheatmap,
+    readr,
+    ggplot2,
+    ggnewscale,
+    ggstance
 VignetteBuilder: knitr
 Depends: 
     R (>= 2.10)
