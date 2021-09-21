@@ -171,7 +171,9 @@ klebs.plasm %>%
   select(name, ref_seq) %>%
   mutate(species = "K. pneumoniae")
 ) %>%
-  rename("sample" = "name") -> btESBL_plasmidreplicons
+  rename("lane" = "name") %>%
+  mutate(lane = gsub("#","_", lane)) ->
+  btESBL_plasmidreplicons
 
 
 use_data(btESBL_plasmidreplicons, overwrite = TRUE)
