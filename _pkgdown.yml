@@ -34,4 +34,6 @@ reference:
   - btESBL_ecoli_musicha_metadata
   - btESBL_ecoli_global_popPUNK_clusters
   - btESBL_ecoli_globaltree
+  - btESBL_kleb_global_metadata
   - btESBL_kleb_globaltree
+  - btESBL_kleb_malawi_allisolate_core_gene_tree

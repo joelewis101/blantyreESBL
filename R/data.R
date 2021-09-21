@@ -414,3 +414,63 @@
 #' @format A "phylo" object ("ape" package)
 #'
 "btESBL_kleb_globaltree"
+
+
+#' Data: metadata of 682 global K. pneumoniae complex genomes
+#'
+#' Metadata of a global collection of 682 K. pneumoniae complex genomes.
+#' 66 genomes from kenya from the Henson et al
+#' https://doi.org/10.1016/j.ijmm.2017.07.006
+#'
+#' 72 genomes fro Malawi described in Musicha et al
+#' https://doi.org/10.1093/jac/dkz032
+#'
+#' 100 genomies from Malawi as described in Cornick et al
+#' https://doi.org/10.1101/2020.08.06.236117
+#'
+#' 288 global genomes from Holt et al
+#'https://doi.org/10.1073/pnas.1501049112
+#'
+#'@format A dataframe with 682 rows and 23 variables
+#' \describe{
+#'   \item{name}{unique identifier}
+#'   \item{ESBL}{ESBL gene present? ESBL= yes, 0 = no}
+#'   \item{Sample accession}{NCBI accession number}
+#'   \item{study}{study sample was taken from}
+#'   \item{Sample Source}{Source of sample}
+#'   \item{Isolate Type}{For human samples, are they carriage or infecting?}
+#'   \item{location}{Lcoation (global, Kenyan, Malawian)}
+#'   \item{ST}{Multilocus sequence type as determined by ARIBA}
+#'   \item{K_locus}{K. pnemo complex inferred K locus from Kleborate}
+#'   \item{K_locus_confidence}{Kleborate defined K locus confidence}
+#'   \item{O_locus}{K. pnemo complex inferred O locus from Kleborate}
+#'   \item{O_locus_confidence}{Kleborate defined O locus confidence}
+#'   \item{YbST}{Klebsiella YbST allele as per Kleborate}
+#'   \item{CbST}{Klebsiella CbST allele as per Kleborate}
+#'   \item{AbST}{Klebsiella AbST allele as per Kleborate}
+#'   \item{SmST}{Klebsiella SmST allele as per Kleborate}
+#'   \item{rmpA}{Klebsiella rmpA allele as per Kleborate}
+#'   \item{rmpA2}{Klebsiella rmpA2 allele as per Kleborate}
+#'   \item{ybt}{Presence of yersiniabactin virulence locus (0=absent,1=present)}
+#'   \item{clb}{Presence of colibactin virulence locus (0=absent,1=present)}
+#'   \item{iuc}{Presence of aerobactin virulence locus (0=absent,1=present)}
+#'   \item{iro}{Presence of salmochelin virulence locus (0=absent,1=present)}
+#'   \item{Malawi}{Was sample collected in Malawi (0=no,1=yes)}
+#'
+#' }
+#'
+#' @format A tidy data frame with 97 rows and 10 variables:
+#'
+"btESBL_kleb_global_metadata"
+
+#' Data: K. pneumoniae complex core gene tree of Malawian carriage and invasive isolates
+#'
+#' Midpoint rooted maximum likelihood core gene phylogeny for K.
+#' pneumoniae complex incorporating all Malawian isolates
+#'  (see manuscript for details)
+#'
+#' @format A "phylo" object ("ape" package)
+#'
+"btESBL_kleb_malawi_allisolate_core_gene_tree"
+
+
