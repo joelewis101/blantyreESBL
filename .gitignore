@@ -4,3 +4,5 @@
 inst/doc
 figures/
 tables/
+.DS_store
+data-raw/.DS_store
