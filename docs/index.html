@@ -54,13 +54,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/analysis-ecoli.html">Reproducible analysis: E. coli genomics</a>
+      <a href="articles/analysis-ecoli.html">Analysis scripts: E. coli genomics</a>
     </li>
     <li>
-      <a href="articles/analysis-kleb.html">Reproducible analysis scripts</a>
+      <a href="articles/analysis-kleb.html">Analysis scripts: K. pneumoniae complex genomics</a>
     </li>
     <li>
-      <a href="articles/analysis.html">Analysis scripts: longitudinal ESBL carriage</a>
+      <a href="articles/analysis.html">Analysis scripts: longitudinal ESBL carriage dynamics</a>
+    </li>
+    <li>
+      <a href="articles/fitting-stan-models.html">Fitting and simulating from Stan models</a>
     </li>
   </ul>
 </li>
@@ -82,19 +85,13 @@
 <a href="#blantyreesbl" class="anchor"></a>blantyreESBL</h1></div>
 <!-- badges: start -->
 <!-- badges: end -->
-<p>The blantyreESBL R package contains data and code to replicate the analysis of the manuscript:</p>
-<p><br></p>
-<p><em>Dynamics of gut mucosal colonisation with extended spectrum beta-lactamase producing Enterobacterales in Malawi</em></p>
-<p><br></p>
-<p>Joseph M Lewis<sup>1,2,3,4</sup>, , Madalitso Mphasa<sup>1</sup>, Rachel Banda<sup>1</sup>, Matthew Beale<sup>4</sup>, Eva Heinz<sup>2</sup>, Jane Mallewa<sup>5</sup>, Christopher Jewell<sup>6</sup>, Nicholas R Thomson<sup>4</sup>, Nicholas A Feasey<sup>1,2</sup></p>
-<ol>
-<li>Malawi Liverpool Wellcome Clinical Research Programme, Blantyre, Malawi</li>
-<li>Department of Clinical Sciences, Liverpool School of Tropical Medicine, Liverpool, UK</li>
-<li>Department of Clinical Infection, Microbiology and Immunology, University of Liverpool, Liverpool, UK</li>
-<li>Wellcome Sanger Institute, Hinxton, UK</li>
-<li>College of Medicine, University of Malawi, Malawi</li>
-<li>University of Lancaster, Lanaster, UK</li>
-</ol>
+<p>The blantyreESBL R package is a repository for data generated as part of a study into carriage of resistant bacteria in Blantyre, Malawi. It also includes reproducible analysis script for three manuscripts arising from the study:</p>
+<p><strong>Dynamics of gut mucosal colonisation with extended spectrum beta-lactamase producing Enterobacterales in Malawi</strong></p>
+<p>Joseph M Lewis<sup>1,2,3,4</sup>, , Madalitso Mphasa<sup>1</sup>, Rachel Banda<sup>1</sup>, Matthew Beale<sup>4</sup>, Eva Heinz<sup>2</sup>, Jane Mallewa<sup>5</sup>, Christopher Jewell<sup>6</sup>, Nicholas R Thomson<sup>4,7</sup>, Nicholas A Feasey<sup>1,2</sup></p>
+<p><strong>Genomic analysis of extended-spectrum beta-lactamase (ESBL) producing Escherichia coli colonising adults in Blantyre, Malawi reveals unknown diversity</strong></p>
+<p>Joseph M Lewis<sup>1,2,3,4</sup>, , Madalitso Mphasa<sup>1</sup>, Rachel Banda<sup>1</sup>, Matthew Beale<sup>4</sup>, Jane Mallewa<sup>5</sup>, Adam P Roberts<sup>2</sup>, Eva Heinz<sup>2</sup>, Nicholas Thomson<sup>4,7</sup>, Nicholas A Feasey<sup>1,2</sup></p>
+<p><strong>Genomic and antigenic diversity of carried <em>Klebsiella pneumoniae</em> isolates mirrors that of invasive isolates in Blantyre, Malawi</strong></p>
+<p>Joseph M Lewis<sup>1,2,3,4</sup>, , Madalitso Mphasa<sup>1</sup>, Rachel Banda<sup>1</sup>, Matthew Beale<sup>4</sup>, Jane Mallewa<sup>5</sup>, Eva Heinz<sup>2</sup>, Nicholas Thomson<sup>4,7</sup>, Nicholas A Feasey<sup>1,2</sup></p>
 <div id="installing-and-accessing-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#installing-and-accessing-data" class="anchor"></a>Installing and accessing data</h3>
@@ -102,14 +99,36 @@
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"devtools"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"https://github.com/joelewis101/blantyreESBL)</span></span></code></pre></div>
 <p>The various data objects are described in the <a href="https://joelewis101.github.io/blantyreESBL/">pkgdown</a> site for this package, and available via R in the usual way (i.e. <code><a href="reference/btESBL_participants.html">?btESBL_participants</a></code> brings up the definitions for the <code>btESBL_participants</code> data. They are all lazy loaded so will be available for use immediately; they all start with <code>btESBL_</code> to make it easy to choose the one you want using autocomplete.</p>
-<p>The analysis is available as a package vignette; this can be built when downloading the package by typing:</p>
+</div>
+<div id="analysis-scripts" class="section level3">
+<h3 class="hasAnchor">
+<a href="#analysis-scripts" class="anchor"></a>Analysis scripts</h3>
+<p>The analysis script to reproduce tables and figures for each manuscript is available as package vignettes; these can be built when downloading the package by running:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span>
   <span class="st">"https://github.com/joelewis101/blantyreESBL"</span>, 
   build_vignettes <span class="op">=</span> <span class="cn">TRUE</span>, 
   dependencies <span class="op">=</span> <span class="cn">TRUE</span> <span class="op">)</span></code></pre></div>
 <p>The <code>dependencies = TRUE</code> option will install all the packages necessary to run the vignette.</p>
-<p>Alternatively the source code for the vignette is <code>analysis.Rmd</code> in the <code>vignettes/</code> folder of the <a href="https://github.com/joelewis101/blantyreESBL">GitHub</a> repo or the <a href="https://joelewis101.github.io/blantyreESBL/">pkgdown</a> site for this package has a rendered version.</p>
+<p>Alternatively the source code for the vignettes are <code>analysis.Rmd</code> <code>analysis-ecoli.Rmd</code> and <code>analysis-kleb.Rmd</code>in the <code>vignettes/</code> folder of the <a href="https://github.com/joelewis101/blantyreESBL">GitHub</a> repo or the <a href="https://joelewis101.github.io/blantyreESBL/">pkgdown</a> site for this package has a rendered version of each vignette.</p>
+</div>
+<div id="running-stan-models" class="section level3">
+<h3 class="hasAnchor">
+<a href="#running-stan-models" class="anchor"></a>Running Stan models</h3>
+<p>The longitudinal modelling paper uses models fit with Stan, the probabilistic programming language, via the <em>rstan</em> R package. Unlike the rest if the vignettes (which run the analysis as they are built) the Stan models are not fit as part of the package vignettes as they take a long time to fit. The outputs of the models are available as data objects and a vignette provides instructions on how to fit and simulate from the posterior. The Stan code is available as .stan files in the package directory - see vignette for how to locate it.</p>
+</div>
+<div id="author-affiliations" class="section level3">
+<h3 class="hasAnchor">
+<a href="#author-affiliations" class="anchor"></a>Author affiliations</h3>
+<ol>
+<li>Malawi Liverpool Wellcome Clinical Research Programme, Blantyre, Malawi</li>
+<li>Department of Clinical Sciences, Liverpool School of Tropical Medicine, Liverpool, UK</li>
+<li>Department of Clinical Infection, Microbiology and Immunology, University of Liverpool, Liverpool, UK</li>
+<li>Wellcome Sanger Institute, Hinxton, UK</li>
+<li>College of Medicine, University of Malawi, Malawi</li>
+<li>University of Lancaster, Lancaster, UK</li>
+<li>London School of Tropical Medicine and Hygiene, London, UK</li>
+</ol>
 </div>
 </div>
   </div>
