@@ -405,7 +405,7 @@
 #'
 "btESBL_ecoli_globaltree"
 
-#' Data: K. pneumoniae complex global context tree
+#' Data: K. pneumoniae complex global context phylogeny
 #'
 #' Midpoint rooted maximum likelihood core gene phylogeny for K.
 #' pneumoniae complex incorporating study and global context isolates
@@ -472,5 +472,159 @@
 #' @format A "phylo" object ("ape" package)
 #'
 "btESBL_kleb_malawi_allisolate_core_gene_tree"
+
+#' Data: E. coli ST167 global phylogeny
+#'
+#' Midpoint rooted maximum likelihood core gene phylogeny for E. coli
+#' incorporating all ST167 study isolates and all ST167 E. coli
+#' downloaded from Enterobase on 1st March 2021 using multiple
+#' sequence alignment from mapping to reference.
+#'  (see manuscript for details)
+#'
+#' @format A "phylo" object ("ape" package)
+#'
+"btESBL_ecoli_globalst167_tree"
+
+#' Data: E. coli ST410 global phylogeny
+#'
+#' Midpoint rooted maximum likelihood phylogeny for E. coli
+#' incorporating all ST410 study isolates and all ST410 E. coli
+#' downloaded from Enterobase on 1st March 2021 using multiple
+#' sequence alignment from mapping to reference.
+#'  (see manuscript for details)
+#'
+#' @format A "phylo" object ("ape" package)
+#'
+"btESBL_ecoli_globalst410_tree"
+
+#' Data: metadata of global E. coli ST410 isolates
+#'
+#' Metadata of a collection of 1230 E. coli ST410 genomes
+#' downloaded from Enterobase on 1st March 2021
+#'@format A dataframe with 1230 rows and 12 variables
+#'\describe{
+#'   \item{Uberstrain}{Uberstrain as defined by Enterobase}
+#'   \item{Name}{Sample ID}
+#'   \item{accession}{Sample accession}
+#'   \item{platform}{Sequencing platform}
+#'   \item{library}{library as defined by Enterobase}
+#'   \item{insert_size}{insert size}
+#'   \item{Experiment}{Experiment accession number}
+#'   \item{Source Niche}{Source niche as defined by Enterobase e.g. human , animal}
+#'   \item{Source Details}{Source details as defined by Enterobase e.g. species}
+#'   \item{Country}{Country of sample collection}
+#'   \item{Collection Year}{Year of sample colllection}
+#'   \item{ST}{Multilocus sequence type}
+#' }
+#'
+#'
+"btESBL_ecoli_st410_metadata"
+
+
+#' Data: metadata of global E. coli ST167 isolates
+#'
+#' Metadata of a collection of 1230 E. coli ST167 genomes
+#' downloaded from Enterobase on 1st March 2021
+#'@format A dataframe with 1230 rows and 12 variables
+#'\describe{
+#'   \item{Uberstrain}{Uberstrain as defined by Enterobase}
+#'   \item{Name}{Sample ID}
+#'   \item{accession}{Sample accession}
+#'   \item{platform}{Sequencing platform}
+#'   \item{library}{library as defined by Enterobase}
+#'   \item{insert_size}{insert size}
+#'   \item{Experiment}{Experiment accession number}
+#'   \item{Source Niche}{Source niche as defined by Enterobase e.g. human , animal}
+#'   \item{Source Details}{Source details as defined by Enterobase e.g. species}
+#'   \item{Country}{Country of sample collection}
+#'   \item{Collection Year}{Year of sample colllection}
+#'   \item{ST}{Multilocus sequence type}
+#' }
+#'
+#'
+"btESBL_ecoli_st167_metadata"
+
+
+#' Data: AMR genes identified in global ST167 isolates
+#'
+#' Identified AMR genes using ARIBA and the SRST database.
+#' See manuscript for details
+#'
+#' @format A tidy data frame with 5494 rows and 2 variables:
+#' \describe{
+#'   \item{name}{Unique sample-sequencing run ID or accession}
+#'   \item{gene}{Identified AMR gene sequence}
+#' }
+"btESBL_ecoli_st167_amr"
+
+
+#' Data: AMR genes identified in global ST410 isolates
+#'
+#' Identified AMR genes using ARIBA and the SRST database.
+#' See manuscript for details
+#'
+#' @format A tidy data frame with 7704 rows and 2 variables:
+#' \describe{
+#'   \item{name}{Unique sample-sequencing run ID or accession}
+#'   \item{gene}{Identified AMR gene sequence}
+#' }
+"btESBL_ecoli_st410_amr"
+
+#' Data: Plasmid replicons identified in global ST167 isolates
+#'
+#' Identified plasmid replcions using ARIBA and the PlasmidFinder database.
+#' See manuscript for details
+#'
+#' @format A tidy data frame with 1838 rows and 2 variables:
+#' \describe{
+#'   \item{name}{Unique sample-sequencing run ID or accession}
+#'   \item{ref_seq}{Identified Plasmid replicon}
+#' }
+"btESBL_ecoli_st167_plasmids"
+
+
+#' Data: Plasmid replicons identified in global ST410 isolates
+#'
+#' Identified plasmid replcions using ARIBA and the PlasmidFinder database.
+#' See manuscript for details
+#'
+#' @format A tidy data frame with 3308 rows and 2 variables:
+#' \describe{
+#'   \item{name}{Unique sample-sequencing run ID or accession}
+#'   \item{ref_seq}{Identified Plasmid replicon}
+#' }
+"btESBL_ecoli_st410_plasmids"
+
+#' Data: Covariate data to pass to Stan longitudinal carriage model (exponential decay model)
+#'
+#' See vignette for details. Each row encodes two ESBL observations a time
+#' t apart and the covariate values in this time period
+#'
+#' These data are set up to fit a model where the effect of antimicrobial
+#' exposure has a time-varying exponential decay effect, and hospitalisation
+#' has a time-varying stepwise constant effect
+#'
+#' @format A named list of seven items.
+#' \describe{
+#'   \item{N}{Number of rows of data}
+#'   \item{t}{vector of length n; Time between ESBL observations for that row}
+#'   \item{n_covs}{vector of length 3 Number of (non time varying,
+#'    stepwise constant, exponential decay) covariates to include in model}
+#'   \item{covs_type}{integer vector length(n_covs).
+#'   Each position encodes the type of variable
+#'   in the order they are presented in covs_mat
+#'   3 = time varying with exponential decay of effect
+#'   2 = time varying with piecewise constant
+#'   1 = non time varying}
+#'   \item{start_state}{Matrix with N rows and two columns
+#'   Each row is start state for that time period in format (ESBL-, ESBL+)
+#'   ie esbl positive coded as [0,1] and ESBL negative coded as [1,0]}
+#'   \item{end_state}{Vector of length N, end state for that time period
+#'   1 = ESBL+, 0= ESBL-}
+#'   \item{covs_mat}{Covariate values ofr each included covariate - see vignette
+#'   for coding}
+#' }
+"btESBL_stanmodeldata"
+
 
 
