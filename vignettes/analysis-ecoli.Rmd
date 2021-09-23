@@ -1637,12 +1637,14 @@ rownames(st410_plasm_onehot) <- st410_plasm_onehot$name
     color = "steelblue"
   )  -> st410_globaltree_plot
 
+if (write_figs) {
+
 ggsave(here("figures/ecoli-genomics/st410_globaltreeplot.svg"),
        st410_globaltree_plot, width = 10, height = 10)
 
 ggsave(here("figures/ecoli-genomics/st410_globaltreeplot.pdf"),
        st410_globaltree_plot, width = 10, height = 10)
-
+}
 st410_globaltree_plot
 
 ```
