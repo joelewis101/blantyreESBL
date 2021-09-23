@@ -6,30 +6,35 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The blantyreESBL R package contains data and code to replicate the
-analysis of the manuscript:
+The blantyreESBL R package is a repository for data generated as part of
+a study into carriage of resistant bacteria in Blantyre, Malawi. It also
+includes reproducible analysis script for three manuscripts arising from
+the study:
 
-<br />
-
-*Dynamics of gut mucosal colonisation with extended spectrum
-beta-lactamase producing Enterobacterales in Malawi*
-
-<br />
+**Dynamics of gut mucosal colonisation with extended spectrum
+beta-lactamase producing Enterobacterales in Malawi**
 
 Joseph M Lewis<sup>1,2,3,4</sup>, , Madalitso Mphasa<sup>1</sup>, Rachel
 Banda<sup>1</sup>, Matthew Beale<sup>4</sup>, Eva Heinz<sup>2</sup>,
 Jane Mallewa<sup>5</sup>, Christopher Jewell<sup>6</sup>, Nicholas R
-Thomson<sup>4</sup>, Nicholas A Feasey<sup>1,2</sup>
+Thomson<sup>4,7</sup>, Nicholas A Feasey<sup>1,2</sup>
 
-1.  Malawi Liverpool Wellcome Clinical Research Programme, Blantyre,
-    Malawi
-2.  Department of Clinical Sciences, Liverpool School of Tropical
-    Medicine, Liverpool, UK
-3.  Department of Clinical Infection, Microbiology and Immunology,
-    University of Liverpool, Liverpool, UK
-4.  Wellcome Sanger Institute, Hinxton, UK
-5.  College of Medicine, University of Malawi, Malawi
-6.  University of Lancaster, Lanaster, UK
+**Genomic analysis of extended-spectrum beta-lactamase (ESBL) producing
+Escherichia coli colonising adults in Blantyre, Malawi reveals unknown
+diversity**
+
+Joseph M Lewis<sup>1,2,3,4</sup>, , Madalitso Mphasa<sup>1</sup>, Rachel
+Banda<sup>1</sup>, Matthew Beale<sup>4</sup>, Jane Mallewa<sup>5</sup>,
+Adam P Roberts<sup>2</sup>, Eva Heinz<sup>2</sup>, Nicholas
+Thomson<sup>4,7</sup>, Nicholas A Feasey<sup>1,2</sup>
+
+**Genomic and antigenic diversity of carried *Klebsiella pneumoniae*
+isolates mirrors that of invasive isolates in Blantyre, Malawi**
+
+Joseph M Lewis<sup>1,2,3,4</sup>, , Madalitso Mphasa<sup>1</sup>, Rachel
+Banda<sup>1</sup>, Matthew Beale<sup>4</sup>, Jane Mallewa<sup>5</sup>,
+Eva Heinz<sup>2</sup>, Nicholas Thomson<sup>4,7</sup>, Nicholas A
+Feasey<sup>1,2</sup>
 
 ### Installing and accessing data
 
@@ -49,8 +54,11 @@ package, and available via R in the usual way
 available for use immediately; they all start with `btESBL_` to make it
 easy to choose the one you want using autocomplete.
 
-The analysis is available as a package vignette; this can be built when
-downloading the package by typing:
+### Analysis scripts
+
+The analysis script to reproduce tables and figures for each manuscript
+is available as package vignettes; these can be built when downloading
+the package by running:
 
 ``` r
 devtools::install_github(
@@ -62,8 +70,32 @@ devtools::install_github(
 The `dependencies = TRUE` option will install all the packages necessary
 to run the vignette.
 
-Alternatively the source code for the vignette is `analysis.Rmd` in the
-`vignettes/` folder of the
-[GitHub](https://github.com/joelewis101/blantyreESBL) repo or the
+Alternatively the source code for the vignettes are `analysis.Rmd`
+`analysis-ecoli.Rmd` and `analysis-kleb.Rmd`in the `vignettes/` folder
+of the [GitHub](https://github.com/joelewis101/blantyreESBL) repo or the
 [pkgdown](https://joelewis101.github.io/blantyreESBL/) site for this
-package has a rendered version.
+package has a rendered version of each vignette.
+
+### Running Stan models
+
+The longitudinal modelling paper uses models fit with Stan, the
+probabilistic programming language, via the *rstan* R package. Unlike
+the rest if the vignettes (which run the analysis as they are built) the
+Stan models are not fit as part of the package vignettes as they take a
+long time to fit. The outputs of the models are available as data
+objects and a vignette provides instructions on how to fit and simulate
+from the posterior. The Stan code is available as .stan files in the
+package directory - see vignette for how to locate it.
+
+### Author affiliations
+
+1.  Malawi Liverpool Wellcome Clinical Research Programme, Blantyre,
+    Malawi
+2.  Department of Clinical Sciences, Liverpool School of Tropical
+    Medicine, Liverpool, UK
+3.  Department of Clinical Infection, Microbiology and Immunology,
+    University of Liverpool, Liverpool, UK
+4.  Wellcome Sanger Institute, Hinxton, UK
+5.  College of Medicine, University of Malawi, Malawi
+6.  University of Lancaster, Lancaster, UK
+7.  London School of Tropical Medicine and Hygiene, London, UK
