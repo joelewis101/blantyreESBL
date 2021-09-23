@@ -107,7 +107,11 @@ readRDS("data-raw/stan_data_m2.rds") ->
 
 use_data(btESBL_stanmodeldata , overwrite = TRUE)
 
+read_csv("/Users/joelewis/Documents/PhD/Thesis/bookdown/data/stan_df.csv") %>%
+  select(-`...1`) ->
+  btESBL_modeldata
 
+use_data(btESBL_modeldata, overwrite = TRUE)
 
 readRDS("/Users/joelewis/Documents/PhD/Thesis/bookdown/chapter_9/stan_models/model_2/stanfit_m2.rds") ->
   btESBL_model2posterior
