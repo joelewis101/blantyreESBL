@@ -16,11 +16,12 @@ vignette: >
 Joseph M Lewis^1,2,3,4^, , Madalitso Mphasa^1^, Rachel Banda^1^,  Matthew Beale^4^, Eva Heinz^2^, Jane Mallewa^5^, Christopher Jewell^6^, Nicholas R Thomson^4^, Nicholas A Feasey^1,2^
 
 1. Malawi Liverpool Wellcome Clinical Research Programme, Blantyre, Malawi
-2. Department of Clinical Sciences, Liverpool School of Tropical Medicine, Liverpool, UK
+2. Liverpool School of Tropical Medicine, Liverpool, UK
 3. Department of Clinical Infection, Microbiology and Immunology, University of Liverpool, Liverpool, UK
 4. Wellcome Sanger Institute, Hinxton, UK
 5. College of Medicine, University of Malawi, Malawi
 6. University of Lancaster, Lanaster, UK
+7. London School of Tropical Medicine and Hygiene, London, UK 
 
 This document provides the analysis code for the above manuscript.
 
@@ -41,10 +42,12 @@ The analysis is available as a package vignette; this can be built when download
 devtools::install_github("https://github.com/joelewis101/blantyreESBL", build_vignettes = TRUE, dependencies = TRUE )
 ```
 
-The `dependencies = TRUE` option will install all the packages necessary to run the vignette. 
+The `dependencies = TRUE` option will install all the packages necessary to run the vignettes. 
 
 Alternatively the source code for the vignette is `analysis.Rmd` in the `vignettes/` folder of the [GitHub](https://github.com/joelewis101/blantyreESBL)
  repo or the [pkgdown](https://joelewis101.github.io/blantyreESBL/) site for this package has a rendered version.
+
+### Filling
 
 ### Setup, load packages
 
