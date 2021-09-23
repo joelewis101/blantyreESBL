@@ -102,25 +102,12 @@ use_data(btESBL_stoolorgs, overwrite = TRUE)
 
 # stan_data
 
-read_csv("/Users/joelewis/Documents/PhD/Thesis/bookdown/data/stan_df.csv") ->
-  btESBL_modeldata
+readRDS("data-raw/stan_data_m2.rds") ->
+  btESBL_stanmodeldata
 
-btESBL_modeldata %>%
-  select(-X1) -> btESBL_modeldata
+use_data(btESBL_stanmodeldata , overwrite = TRUE)
 
-use_data(btESBL_modeldata)
 
-# stan models ----------------------------------------------
-
-readRDS("/Users/joelewis/Documents/PhD/Thesis/bookdown/chapter_9/stan_models/model_2/stan_data_m2.rds") ->
-  btESBL_model2data
-
-use_data(btESBL_model2data, overwrite = TRUE)
-
-readRDS("/Users/joelewis/Documents/PhD/Thesis/bookdown/chapter_9/stan_models/model_1/stan_data_m1.rds") ->
-  btESBL_model1data
-
-use_data(btESBL_model1data, overwrite = TRUE)
 
 readRDS("/Users/joelewis/Documents/PhD/Thesis/bookdown/chapter_9/stan_models/model_2/stanfit_m2.rds") ->
   btESBL_model2posterior
@@ -737,6 +724,9 @@ read.tree(
 
 midpoint.root(st410_tree) -> btESBL_ecoli_globalst410_tree
 
+btESBL_ecoli_globalst410_tree$tip.label <-
+  gsub("_filtered", "", btESBL_ecoli_globalst410_tree$tip.label)
+
 use_data(btESBL_ecoli_globalst410_tree, overwrite = TRUE)
 
 # st410 amr ---------------------------------------------------
@@ -831,6 +821,8 @@ read.tree(
   here(
     "data-raw/ecoli-genomics-paper/st167/clean.full.filtered_polymorphic_sites.ref_removed.snpsites.fasta.treefile")) ->
   st167_tree
+
+st167_tree$tip.label <- gsub("_filtered","", st167_tree$tip.label)
 
 midpoint.root(st167_tree) -> btESBL_ecoli_globalst167_tree
 
