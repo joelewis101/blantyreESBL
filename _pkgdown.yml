@@ -45,7 +45,7 @@ reference:
   - btESBL_ecoli_st167_metadata
   - btESBL_ecoli_st167_amr
   - btESBL_ecoli_st167_plasmids
-  - title: "Global E. coli ST167 contextual analysis"
+- title: "Global E. coli ST167 contextual analysis"
   desc: "Metadata of global ST167 isolates and results of contextual genomic analysis"
 - contents:
   - btESBL_ecoli_globalst410_tree
