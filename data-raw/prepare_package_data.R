@@ -102,25 +102,12 @@ use_data(btESBL_stoolorgs, overwrite = TRUE)
 
 # stan_data
 
-read_csv("/Users/joelewis/Documents/PhD/Thesis/bookdown/data/stan_df.csv") ->
-  btESBL_modeldata
+readRDS("data-raw/stan_data_m2.rds") ->
+  btESBL_stanmodeldata
 
-btESBL_modeldata %>%
-  select(-X1) -> btESBL_modeldata
+use_data(btESBL_stanmodeldata , overwrite = TRUE)
 
-use_data(btESBL_modeldata)
 
-# stan models ----------------------------------------------
-
-readRDS("/Users/joelewis/Documents/PhD/Thesis/bookdown/chapter_9/stan_models/model_2/stan_data_m2.rds") ->
-  btESBL_model2data
-
-use_data(btESBL_model2data, overwrite = TRUE)
-
-readRDS("/Users/joelewis/Documents/PhD/Thesis/bookdown/chapter_9/stan_models/model_1/stan_data_m1.rds") ->
-  btESBL_model1data
-
-use_data(btESBL_model1data, overwrite = TRUE)
 
 readRDS("/Users/joelewis/Documents/PhD/Thesis/bookdown/chapter_9/stan_models/model_2/stanfit_m2.rds") ->
   btESBL_model2posterior
@@ -141,40 +128,7 @@ btESBL_model2simulations %>%
 
 use_data(btESBL_model2simulations, overwrite = TRUE)
 
-# plasmid replicons
 
-esco.plasm <- read_csv(here("data-raw/plasmids/esco-plasmidfinder-summ.csv"))
-klebs.plasm <- read_csv("data-raw/plasmids/klebs-plasmidfinder-summary.csv")
-
-dassim.klebs <- read_lines(here("data-raw/included_lanes/kleb_lanes_retained_following_qc.txt"))
-
-bind_rows(
-
-esco.plasm %>%
-  pivot_longer(-name,
-               names_to = c("cluster_name", ".value"),
-               names_sep = "\\.") %>%
-  mutate(name = gsub("\\./","", name),
-         name = gsub("/report\\.tsv","",name)) %>%
-  filter(match == "yes") %>%
-  select(name, ref_seq) %>%
-  mutate(species = "E. coli"),
-
-klebs.plasm %>%
-  mutate(name = gsub("\\./","", name),
-         name = gsub("/report\\.tsv","",name)) %>%
-  filter(name %in% dassim.klebs) %>%
-  pivot_longer(-name,
-               names_to = c("cluster_name", ".value"),
-               names_sep = "\\.") %>%
-  filter(match == "yes") %>%
-  select(name, ref_seq) %>%
-  mutate(species = "K. pneumoniae")
-) %>%
-  rename("sample" = "name") -> btESBL_plasmidreplicons
-
-
-use_data(btESBL_plasmidreplicons, overwrite = TRUE)
 
 # amr genes ---------------------------------------------------------
 
@@ -648,65 +602,146 @@ use_data(btESBL_snpdists_esco, overwrite = TRUE)
 use_data(btESBL_snpdists_kleb, overwrite = TRUE)
 
 
-# add global context data
+# plasmid replicons --------------------------------
 
-read_csv(here("data-raw/ecoli-genomics-paper/popPUNK_clusters.csv")) %>%
-  transmute(
-    lane = gsub("#","_",
-                 gsub("\\..*$","", Taxon)),
-    Cluster = Cluster) %>%
-  semi_join(btESBL_sequence_sample_metadata,
-            by = "lane") ->
-  btESBL_ecoli_global_popPUNK_clusters
-
-use_data(btESBL_ecoli_global_popPUNK_clusters,overwrite = TRUE)
+esco.plasm1 <-
+  read_csv(here("data-raw/plasmids/D1ariba_plasmidfinder_clustsmall.csv"))
+esco.plasm2 <-
+  read_csv(here("data-raw/plasmids/D2ariba_plasmidfinder_summary.csv"))
 
 
+klebs.plasm <- read_csv("data-raw/plasmids/klebs-plasmidfinder-summary.csv")
 
-read_csv("data-raw/ecoli-genomics-paper/F1_genome_metadata.csv") ->
-  btESBL_ecoli_horesh_metadata
+dassim.klebs <- read_lines(here("data-raw/included_lanes/kleb_lanes_retained_following_qc.txt"))
 
-use_data(btESBL_ecoli_horesh_metadata, overwrite = TRUE)
 
-# TODO - merge in accessions
+bind_rows(
 
-read_csv(here("data-raw/ecoli-genomics-paper/musicha_Ecoli_MetaData.csv")) %>%
-  mutate(Lane = gsub("#", "_", Lane)) %>%
-  left_join(
-    left_join(read_csv(here( "data-raw/ecoli-genomics-paper/musicha_mlst.csv" )),
-              read_csv( here( "data-raw/ecoli-genomics-paper/musicha_pgroup.csv" )),
-              by = c("lane" = "V1")) %>%
-      select(lane, ST, phylogroup) %>%
-      left_join(
-        read_csv(here( "data-raw/ecoli-genomics-paper/popPUNK_clusters.csv" )) %>%
-          mutate(Taxon = gsub(
-            "#", "_",
-            gsub("\\..*$", "", Taxon))),
-        by = c("lane" = "Taxon")),
-    by = c("Lane" = "lane")
+  esco.plasm1 %>%
+    mutate(name = gsub("\\./","", name),
+           name = gsub("_1\\..+$","", name),
+           name = gsub("#","_", name)) %>%
+    pivot_longer(-name,
+                 names_to = c("cluster_name", ".value"),
+                 names_sep = "\\.") %>%
+    filter(match == "yes") %>%
+    select(name, ref_seq) %>%
+    mutate(species = "E. coli") %>%
+    filter(name %in% btESBL_coregene_tree_esco$tip.label),
+  esco.plasm2 %>%
+    mutate(name = gsub("\\./","", name),
+           name = gsub("/report.tsv","", name),
+           name = gsub("#","_", name)) %>%
+    pivot_longer(-name,
+                 names_to = c("cluster_name", ".value"),
+                 names_sep = "\\.") %>%
+    filter(match == "yes") %>%
+    select(name, ref_seq) %>%
+    mutate(species = "E. coli") %>%
+    filter(name %in% btESBL_coregene_tree_esco$tip.label),
+
+  klebs.plasm %>%
+    mutate(name = gsub("\\./","", name),
+           name = gsub("/report\\.tsv","",name),
+           name = gsub("#","_", name)) %>%
+    filter(name %in% dassim.klebs) %>%
+    pivot_longer(-name,
+                 names_to = c("cluster_name", ".value"),
+                 names_sep = "\\.") %>%
+    filter(match == "yes") %>%
+    select(name, ref_seq) %>%
+    mutate(species = "K. pneumoniae")
+) %>%
+  rename("lane" = "name") -> btESBL_plasmidreplicons
+
+
+use_data(btESBL_plasmidreplicons, overwrite = TRUE)
+
+### ST410 data ----------------------------
+
+st410_metadata <-
+  read_tsv(here("data-raw/ecoli-genomics-paper/st410/st410.tsv"))
+
+st410_metadata %>%
+  select(
+    Uberstrain,
+    Name,
+    `Data Source(Accession No.;Sequencing Platform;Sequencing Library;Insert Size;Experiment;Status)`,
+    `Source Niche`,
+    `Source Details`,
+    Country,
+    `Collection Year`,
+    ST
+  ) %>%  separate_rows(
+    `Data Source(Accession No.;Sequencing Platform;Sequencing Library;Insert Size;Experiment;Status)`,
+    sep = ","
   ) %>%
-  left_join(
-    read_csv("data-raw/ecoli-genomics-paper/musicha_accession.csv") %>%
-      transmute(Accession = `Lane accession`,
-                Lane = gsub("#","_", `Lane name`)),
-    by = "Lane") %>%
-  rename(lane = Lane) ->
-  btESBL_ecoli_musicha_metadata
+  separate(
+    `Data Source(Accession No.;Sequencing Platform;Sequencing Library;Insert Size;Experiment;Status)`,
+    into = c(
+      "accession",
+      "platform",
+      "library",
+      "insert_size",
+      "experiment"
+    ),
+    sep = ";"
+  ) ->
+  btESBL_ecoli_st410_metadata
+
+use_data(btESBL_ecoli_st410_metadata, overwrite = TRUE)
+
+# st410 plasmids -----------------
+
+st410_plasm <-
+  read_csv(
+    here("data-raw/ecoli-genomics-paper/st410/st410_pf_ariba_summary.csv"))
 
 
-use_data(btESBL_ecoli_musicha_metadata, overwrite = TRUE)
-
-# kleb global metadata
-
-
-# load and clean global AMR - aim: ESBL vs not
-
-amr.global <- read_csv(
-  here("data-raw/kleb-genomics-paper/GLOBAL_ariba_amr.csv"))
-
-amr.global %>%
+st410_plasm %>%
   mutate(name = gsub("\\./", "", name),
-         name = gsub("/report.tsv", "", name)) %>%
+         name = gsub("/report.tsv", "", name),
+         name = gsub("_filtered","", name),
+         name = gsub("#","_", name)) %>%
+  pivot_longer(-name,
+               names_to= c( "cluster", ".value"),
+               names_sep = "\\.") %>%
+  filter(match == "yes") %>%
+  select(name, ref_seq) %>%
+  mutate(ref_seq = gsub("\\..*$", "", ref_seq),
+         ref_seq = gsub("_.*$","", ref_seq),
+         ref_seq = gsub("^FIA", "IncFIA", ref_seq)) ->
+  btESBL_ecoli_st410_plasmids
+
+use_data(btESBL_ecoli_st410_plasmids, overwrite = TRUE)
+
+# st410 tree -----------------------------------------------
+
+read.tree(
+  here(
+    "data-raw/ecoli-genomics-paper/st410/clean_full.filtered_pollymorphic_sites.ref_removed.snpsites.fasta.treefile")) ->
+  st410_tree
+
+midpoint.root(st410_tree) -> btESBL_ecoli_globalst410_tree
+
+btESBL_ecoli_globalst410_tree$tip.label <-
+  gsub("_filtered", "", btESBL_ecoli_globalst410_tree$tip.label)
+
+use_data(btESBL_ecoli_globalst410_tree, overwrite = TRUE)
+
+# st410 amr ---------------------------------------------------
+
+
+amr.ariba410 <-
+  read_csv(
+    here(
+      "data-raw/ecoli-genomics-paper/st410/st410_ariba_srst2_summary.csv"))
+
+amr.ariba410 %>%
+  mutate(name = gsub("\\./", "", name),
+         name = gsub("/report.tsv", "", name),
+         name = gsub("_filtered", "", name),
+         name = gsub("#","_", name)) %>%
   pivot_longer(-name,
                names_to= c( "cluster", ".value"),
                names_sep = "\\.") %>%
@@ -716,238 +751,106 @@ amr.global %>%
     gene == "TEM_95" ~ "TEM_1",
     TRUE ~ gene
   )) %>%
-  select(name, gene) %>%
-  pivot_wider(names_from = gene,
-              values_from = gene,
-              values_fn = length,
-              values_fill = 0) ->
-  amr.global
+  select(name, gene) ->
+  btESBL_ecoli_st410_amr
 
-amr.global %>%
-  pivot_longer(-name, names_to = "gene") %>%
-  filter(value == 1)  %>%
-  left_join(
-    select(btESBL_NCBI_phenotypic_bl, allele_name, class),
-            by = c("gene" = "allele_name")) %>%
-  mutate(class = case_when(
-    gene == "SHV_12" ~ "ESBL",
-    TRUE ~ class)
+use_data(btESBL_ecoli_st410_amr, overwrite = TRUE)
+
+### st167
+
+
+st167_metadata <-
+  read_tsv(here("data-raw/ecoli-genomics-paper/st167/st167.tsv"))
+
+st167_metadata %>%
+  select(
+    Uberstrain,
+    Name,
+    `Data Source(Accession No.;Sequencing Platform;Sequencing Library;Insert Size;Experiment;Status)`,
+    `Source Niche`,
+    `Source Details`,
+    Country,
+    `Collection Year`,
+    ST
+  ) %>%  separate_rows(
+    `Data Source(Accession No.;Sequencing Platform;Sequencing Library;Insert Size;Experiment;Status)`,
+    sep = ","
   ) %>%
-  group_by(name) %>%
-  summarise(ESBL =
-              case_when(
-                any(class == "ESBL") ~ "ESBL",
-                TRUE ~ "0"
-              )
-  ) %>%
-  # add accesssion
-  left_join(
-    bind_rows(
-      read_csv(
-        here("data-raw/kleb-genomics-paper/context_genomes/global_accession.csv")),
-      read_csv(
-        here("data-raw/kleb-genomics-paper/context_genomes/malawi_accession.csv"))
-    ) %>%
-      select(`Lane name`,
-             `Sample accession`),
-    by = c("name" = "Lane name")
-  )  -> metadata_global
+  separate(
+    `Data Source(Accession No.;Sequencing Platform;Sequencing Library;Insert Size;Experiment;Status)`,
+    into = c(
+      "accession",
+      "platform",
+      "library",
+      "insert_size",
+      "experiment"
+    ),
+    sep = ";"
+  ) ->
+  btESBL_ecoli_st167_metadata
 
+use_data(btESBL_ecoli_st167_metadata, overwrite = TRUE)
 
+# st167 plasmids -----------------
 
-# merge in other data
-
-
-musicha <- read_lines(
-  here("data-raw/kleb-genomics-paper/context_genomes/musicha_klebs_list.txt"))
-cornick <- read_lines(
-  here("data-raw/kleb-genomics-paper/context_genomes/chathinka_kleb_lanes.txt"))
-global <- read_lines(
-  here("data-raw/kleb-genomics-paper/context_genomes/global_context_lanes.txt"))
-kenya <- read_lines(
-  here("data-raw/kleb-genomics-paper/context_genomes/kenya_lanes.txt"))
-
-
-metadata_global %>%
-  mutate(study =
-           case_when(
-             name %in% musicha ~ "musciha",
-             name %in% cornick ~ "cornick",
-             name %in% kenya ~ "kenya",
-             name %in% global ~ "global",
-             TRUE ~ "DASSIM"
-           )) -> metadata_global
-
-holt_metadata <-
+st167_plasm <-
   read_csv(
-    here("data-raw/kleb-genomics-paper/context_genomes/holt_global_kleb_metadata.csv"))
-
-holt_metadata %>%
-  filter(!grepl("Kleb", File_ID)) %>%
-  mutate(Infection_status =
-           case_when(Source_Host == "Human" &
-                       is.na(Infection_status) &
-                       Sample_note %in% c(
-                         "blood",
-                         "sputum",
-                         "urine",
-                         "pus",
-                         "bronchial alveolar lavage") ~ "Human_invasive",
-                     Source_Host == "Human" &
-                       is.na(Infection_status) &
-                       Clinical_note == "Carriage" ~ "Human_carriage",
-                     Source_Host == "Human" &
-                       is.na(Infection_status) ~ "Unknown",
-                     TRUE ~ Infection_status),
-         sample_source = case_when(
-           Source_Host == "Environmental" ~ "Environmental",
-           Source_Host != "Human" ~ "Animal",
-           TRUE ~ "Human"),
-         isolate_type = case_when(
-           Source_Host == "Human" &
-             Infection_status == "Human_carriage" ~ "Carriage",
-           Source_Host == "Human" &
-             Infection_status %in% c(
-               "Human_infection",
-               "Human_invasive") ~ "Infection",
-           Source_Host == "Human"  ~ NA_character_,
-           TRUE ~ NA_character_)) ->holt_metadata
-
-musicha_metadata <-
-  read_csv(here(
-    "data-raw/kleb-genomics-paper/context_genomes/musciha_sample_metadata.csv"))
-
-musicha_metadata %>%
-  mutate(sample_source = "Human",
-         isolate_type = case_when(
-           Source == "RS" ~ "Carriage",
-           TRUE~ "Infection")) -> musicha_metadata
-
-left_join(
-  metadata_global %>%
-    mutate(name = gsub("#","_", name)),
-  bind_rows(
-    select(holt_metadata, File_ID,sample_source,isolate_type),
-    select(musicha_metadata, File_ID,sample_source,isolate_type)
-  ) %>%
-    mutate(File_ID = gsub("#","_", File_ID)),
-  by = c("name" = "File_ID")) %>%
-  mutate(location =
-           case_when(study %in% c(
-             "musciha",
-             "cornick",
-             "DASSIM") ~ "Malawi",
-             study == "kenya" ~ "Kenya",
-             TRUE ~ "Global"),
-         isolate_type =
-           case_when(
-             study %in% c("musicha","cornick", "kenya") ~ "Infection",
-             study == "DASSIM" ~ "Carriage",
-             TRUE ~ isolate_type),
-         sample_source = case_when(
-           study %in% c("musicha","cornick", "DASSIM","kenya") ~ "Human",
-           TRUE ~ sample_source)
-  ) %>%
-  rename("Sample Source" = sample_source,
-         "Isolate Type" = isolate_type) ->
-  metadata_global
-
-metadata_global %>%
-  left_join(
-
-    bind_rows(
-      btESBL_sequence_sample_metadata %>%
-        transmute(
-          strain = lane,
-          ST = ST,
-          YbST = kleb_YbST,
-          CbST = kleb_CbST,
-          AbST = kleb_AbST,
-          SmST = kleb_SmST,
-          rmpA = kleb_rmpA,
-          rmpA2 = kleb_rmpA2,
-          O_locus = kleb_o_locus,
-          K_locus = kleb_k_locus,
-          K_locus_confidence = kleb_k_locus_confidence,
-          O_locus_confidence = kleb_o_locus_confidence
-        ) %>%
-        mutate(strain = gsub("#", "_", strain),
-               ST = paste0("ST",ST)),
-      read_tsv(
-        here(
-          "data-raw/kleb-genomics-paper/MALAWI_all_malawi_context_assemblies_kleborate_output.txt"
-        )
-      ) %>%
-        mutate(strain = gsub("\\.contigs_velvet", "", strain)) %>%
-        filter(ST != "ST") %>%
-        select(
-          strain,
-          ST,
-          K_locus,
-          K_locus_confidence,
-          O_locus,
-          O_locus_confidence,
-          YbST,
-          CbST,
-          AbST,
-          SmST,
-          rmpA,
-          rmpA2
-        ) %>%
-        mutate(ST = gsub("-.*$","", ST))
-    ) %>%
-      mutate(
-        strain = gsub("#", "_", strain),
-        ybt = if_else(YbST != "0", "1", "0"),
-        clb = if_else(CbST != "0", "1", "0"),
-        iuc = if_else(AbST != "0", "1", "0"),
-        iro = if_else(SmST != "0", "1", "0"),
-        rmpA = if_else(rmpA != "-", "1", "0"),
-        rmpA2 = if_else(rmpA2 != "-", "1", "0"))
-    ,
-    by = c("name" = "strain")
-  ) -> metadata_global
+    here("data-raw/ecoli-genomics-paper/st167/st167_pf_ariba_summary.csv"))
 
 
-metadata_global <- as.data.frame(metadata_global)
-rownames(metadata_global) <- metadata_global$name
-metadata_global$Malawi <- ifelse(metadata_global$location == "Malawi","1","0")
+st167_plasm %>%
+  mutate(name = gsub("\\./", "", name),
+         name = gsub("/report.tsv", "", name),
+         name = gsub("_filtered","", name),
+         name = gsub("#","_", name)) %>%
+  pivot_longer(-name,
+               names_to= c( "cluster", ".value"),
+               names_sep = "\\.") %>%
+  filter(match == "yes") %>%
+  select(name, ref_seq) %>%
+  mutate(ref_seq = gsub("\\..*$", "", ref_seq),
+         ref_seq = gsub("_.*$","", ref_seq),
+         ref_seq = gsub("^FIA", "IncFIA", ref_seq)) ->
+  btESBL_ecoli_st167_plasmids
 
-metadata_global$ESBL <- as.character(metadata_global$ESBL)
+use_data(btESBL_ecoli_st167_plasmids, overwrite = TRUE)
 
-btESBL_kleb_global_metadata <- metadata_global
+# st167 tree -----------------------------------------------
 
+read.tree(
+  here(
+    "data-raw/ecoli-genomics-paper/st167/clean.full.filtered_polymorphic_sites.ref_removed.snpsites.fasta.treefile")) ->
+  st167_tree
 
-use_data(btESBL_kleb_global_metadata, overwrite = TRUE)
+st167_tree$tip.label <- gsub("_filtered","", st167_tree$tip.label)
 
-# global E. coli tree -----------------------
+midpoint.root(st167_tree) -> btESBL_ecoli_globalst167_tree
 
-ape::read.tree(
-  here("data-raw/ecoli-genomics-paper/IQTREE_globaltree.treefile")) ->
-  btESBL_ecoli_globaltree
+use_data(btESBL_ecoli_globalst167_tree, overwrite = TRUE)
 
-phytools::midpoint.root(btESBL_ecoli_globaltree) ->
-  btESBL_ecoli_globaltree
-
-use_data(btESBL_ecoli_globaltree, overwrite = TRUE)
-
-# global klebtree -----------------
+# st167 amr ---------------------------------------------------
 
 
+amr.ariba167 <-
+  read_csv(
+    here(
+      "data-raw/ecoli-genomics-paper/st167/st167_ariba_srst2_summary.csv"))
 
-dassimKleb_trees.global <-
-  read.tree(
-    here("data-raw/kleb-genomics-paper/GLOBAL_core_gene_alignment_snp_sites.fa.treefile"))
-midpoint.root(dassimKleb_trees.global) -> btESBL_kleb_globaltree
+amr.ariba167 %>%
+  mutate(name = gsub("\\./", "", name),
+         name = gsub("/report.tsv", "", name),
+         name = gsub("_filtered", "", name),
+         name = gsub("#","_", name)) %>%
+  pivot_longer(-name,
+               names_to= c( "cluster", ".value"),
+               names_sep = "\\.") %>%
+  mutate(gene = sapply(str_split(ref_seq, "__"), function(x) x[3])) %>%
+  filter(match == "yes") %>%
+  mutate(gene = case_when(
+    gene == "TEM_95" ~ "TEM_1",
+    TRUE ~ gene
+  )) %>%
+  select(name, gene) ->
+  btESBL_ecoli_st167_amr
 
-use_data(btESBL_kleb_globaltree, overwrite = TRUE)
-
-#### malawi tree ---------------------------------------------
-
-btESBL_kleb_malawi_allisolate_core_gene_tree <-
-  read.tree(
-    here("data-raw/kleb-genomics-paper/MALAWI_core_gene_alignment_snp_sites.fa.treefile")
-  )
-midpoint.root(btESBL_kleb_malawi_allisolate_core_gene_tree) ->
-  btESBL_kleb_malawi_allisolate_core_gene_tree
-use_data(btESBL_kleb_malawi_allisolate_core_gene_tree, overwrite = TRUE)
+use_data(btESBL_ecoli_st167_amr, overwrite = TRUE)

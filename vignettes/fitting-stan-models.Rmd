@@ -1,0 +1,133 @@
+---
+title: "Fitting and simulating from Stan models"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{fitting-stan-models}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(blantyreESBL)
+```
+
+### Introduction
+
+This document provides instructions on how to locate the Stan code for the models used in the publication:
+
+<br />
+
+*Dynamics of gut mucosal colonisation with extended spectrum beta-lactamase producing Enterobacterales in Malawi*
+
+<br />
+
+Joseph M Lewis^1,2,3,4^, , Madalitso Mphasa^1^, Rachel Banda^1^,  Matthew Beale^4^, Eva Heinz^2^, Jane Mallewa^5^, Christopher Jewell^6^, Nicholas R Thomson^4^, Nicholas A Feasey^1,2^
+
+1. Malawi Liverpool Wellcome Clinical Research Programme, Blantyre, Malawi
+2. Liverpool School of Tropical Medicine, Liverpool, UK
+3. Department of Clinical Infection, Microbiology and Immunology, University of Liverpool, Liverpool, UK
+4. Wellcome Sanger Institute, Hinxton, UK
+5. College of Medicine, University of Malawi, Malawi
+6. University of Lancaster, Lanaster, UK
+7. London School of Tropical Medicine and Hygiene, London, UK 
+
+### Locating Stan code
+
+The stan model has the filename `ESBLmod_finalV1.0_rk45.stan` are present in the extdata/ directory of the installed package, which can be located with the following command:
+
+```{r}
+system.file("extdata", 
+            "ESBLmod_finalV1.0_rk45.stan", 
+            package = "blantyreESBL")
+
+```
+
+### Model specification
+
+The model can include covariates that are:
+
+* Non time varying
+* Time varying with stepwise constant effect (equivalent to the models fitted by the R package _msm_)
+* Time varying with exponential decay following exposure
+
+See the manuscript for details
+
+### Passing data to the model
+
+The model expects the following data as input; each item is passed as a named item in a list to the rstan `stan` command to fit the model. Each 
+
+* N [integer]
+    * Number of rows of data, each row consisting of two ESBL observations separated by a time t for one patient. Each patient can have multiple rows of data.
+
+* n_covs [integer vector of length 3]
+    * This specifies the number of covariates to be fitted in the model.
+    * It should be formatted: [number of nontimevarying covariates, number of stepwise constant covariates, number of exp decay covariates ]
+
+* covs_type [integer vector of length(number of covariates)] 
+    * Each position encodes the type of variable in the order they are presented in covs_mat (all the exp decay variables must always go first):
+        * 3 = time varying with exponential decay of effect
+        * 2 = time varying with piecewise constant
+        * 1 = non time varying
+
+* t [integer vector of length N]
+    * Time separating beginning and end ESBL observations for each row of data
+
+* cov_mat [real matrix with 3*(number of covariate) columns and N rows]
+    * Start and stop times of covariates, ordered as per covs_type
+    * Each covariate needs three columns, in this order
+        * start_time: time that covariate exposure started
+            * if there is no exposure in this row, code as -999
+        * stop time: time that covariate exposure stopped
+            * if there is no exposure in this row, code as -999
+        * prev_stop time: 
+            * if covariate has exp. decay, this is the previous stop time (before current row e.g. -10 for 10 days ago)
+            * If no previous exposure, code as 999
+            * If non time varying exposure, code as 999 = present, -999 absent
+
+* start state [ matrix with N rows and two columns ]
+    * each row is start state for that time period in format (ESBL-, ESBL+) ie esbl positive coded as [0,1] and ESBL negative coded as [1,0]
+
+* end state: [integer] 
+    * final state; ESBL+ = 1, ESBL- = 0
+    
+The included data `btESBL_stanmodeldata` is set up to fit the model used in the manuscript. 
+
+### Fitting the model
+
+The following code (not run in this vignette) will fit the model as in the manuscript:
+
+```{r stanmodel-fit, eval = FALSE}
+library(rstan)
+library(blantyreESBL)
+
+stan(
+  file = system.file("extdata", 
+                     "ESBLmod_finalV1.0_rk45.stan", 
+                     package = "blantyreESBL")
+  data = btESBL_stanmodeldata,
+  warmup = 500,
+  iter = 1000,
+  chains = 4
+) -> stanfit
+
+```
+
+### Simulating from the model
+
+The script `simulate_from_posterior.R` will generate the simulations used in the analysis. It is included in the package install and again can be located by: 
+
+```{r stanmodel-simulate}
+
+system.file("extdata", 
+            "simulate_from_posterior.R", 
+            package = "blantyreESBL")
+
+```
+

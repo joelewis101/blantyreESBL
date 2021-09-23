@@ -5,6 +5,7 @@ reference:
 - contents:
   - btESBL_participants
   - btESBL_exposures
+  - btESBL_stanmodeldata
 - title: "Stool culture data"
   desc: "Results of selective stool culture for ESBL"
 - contents:
@@ -34,4 +35,22 @@ reference:
   - btESBL_ecoli_musicha_metadata
   - btESBL_ecoli_global_popPUNK_clusters
   - btESBL_ecoli_globaltree
+  - btESBL_kleb_global_metadata
   - btESBL_kleb_globaltree
+  - btESBL_kleb_malawi_allisolate_core_gene_tree
+- title: "Global E. coli ST410 contextual analysis"
+  desc: "Metadata of global ST410 isolates and results of contextual genomic analysis"
+- contents:
+  - btESBL_ecoli_globalst167_tree
+  - btESBL_ecoli_st167_metadata
+  - btESBL_ecoli_st167_amr
+  - btESBL_ecoli_st167_plasmids
+  - title: "Global E. coli ST167 contextual analysis"
+  desc: "Metadata of global ST167 isolates and results of contextual genomic analysis"
+- contents:
+  - btESBL_ecoli_globalst410_tree
+  - btESBL_ecoli_st410_metadata
+  - btESBL_ecoli_st410_amr
+  - btESBL_ecoli_st410_plasmids
+
+
