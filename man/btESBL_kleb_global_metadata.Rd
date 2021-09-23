@@ -32,8 +32,6 @@ A dataframe with 682 rows and 23 variables
 \item{Malawi}{Was sample collected in Malawi (0=no,1=yes)}
 
 }
-
-A tidy data frame with 97 rows and 10 variables:
 }
 \usage{
 btESBL_kleb_global_metadata

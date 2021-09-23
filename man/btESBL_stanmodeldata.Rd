@@ -3,27 +3,17 @@
 \docType{data}
 \name{btESBL_stanmodeldata}
 \alias{btESBL_stanmodeldata}
-\title{Data: Covariate data to pass to Stan longitudinal carriage model (exponential decay model)}
+\title{Data: Covariate data to pass to Stan longitudinal carriage model}
 \format{
 A named list of seven items.
 \describe{
 \item{N}{Number of rows of data}
-\item{t}{vector of length n; Time between ESBL observations for that row}
-\item{n_covs}{vector of length 3 Number of (non time varying,
-stepwise constant, exponential decay) covariates to include in model}
-\item{covs_type}{integer vector length(n_covs).
-Each position encodes the type of variable
-in the order they are presented in covs_mat
-3 = time varying with exponential decay of effect
-2 = time varying with piecewise constant
-1 = non time varying}
-\item{start_state}{Matrix with N rows and two columns
-Each row is start state for that time period in format (ESBL-, ESBL+)
-ie esbl positive coded as \link{0,1} and ESBL negative coded as \link{1,0}}
-\item{end_state}{Vector of length N, end state for that time period
-1 = ESBL+, 0= ESBL-}
-\item{covs_mat}{Covariate values ofr each included covariate - see vignette
-for coding}
+\item{t}{vector of length n, Time between ESBL observations for that row}
+\item{n_covs}{Number of covariates to include in model}
+\item{covs_type}{define types of covariates}
+\item{start_state}{Starting state for row ESBL present absent}
+\item{end_state}{End state for that time period}
+\item{covs_mat}{Covariate values ofr each included covariate}
 }
 }
 \usage{
