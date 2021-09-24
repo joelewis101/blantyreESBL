@@ -2,18 +2,19 @@ library(rstan)
 library(blantyreESBL)
 library(deSolve)
 library(dplyr)
+library(here)
 
 ## simulations of different scenarios from teh posterior of the sitted models
 
 fit_mod2 <- btESBL_model2posterior
 
-p.params <- rstan::extract(fit_mod2)
-p.params[1:5] -> p.params
-as.data.frame(p.params) -> p.params
 
 
 
-# Make stan functions available
+
+# Make stan functions available to take advantage of the C++ code
+# to quickly calculate the values of the time varying covariates
+#  that's the function return_time_varying_coefs_exp_flat()
 
 expose_stan_functions(file = system.file("extdata",
                                          "ESBLmod_finalV1.0_rk45.stan",
@@ -24,11 +25,10 @@ expose_stan_functions(file = system.file("extdata",
 
 ode_finalstateprob <- function(t, state, parameters) {
   coefs <-
-    return_time_varying_coefs_exp_flat (parameters$cov_mat,
+    return_time_varying_coefs_exp_flat(parameters$cov_mat,
                                         t,
                                         parameters$covs_type,
                                         parameters$gammas)
-  # print(coefs)
 
   dp0 <-
     -(parameters$lambda * state[[1]] * exp(sum(parameters$betas * coefs)))   +
@@ -38,6 +38,8 @@ ode_finalstateprob <- function(t, state, parameters) {
     (parameters$mu * state[[2]] * exp(sum(parameters$alphas * coefs)))
   return(list(c(dp0, dp1)))
 }
+
+# function to solve differential state equations for each posterior draw
 
 iterate_over_posterior_parms <- function(p.params, t, cov_mat, states, pid) {
   purrr::pmap(p.params, ~ode(y = states, t = t, func = ode_finalstateprob,
@@ -56,7 +58,7 @@ iterate_over_posterior_parms <- function(p.params, t, cov_mat, states, pid) {
 
 day_cut <- 1
 
-# get the posterior parameters to use
+# get the posterior parameters to use from the fitted model
 
 rstan::extract(fit_mod2,
                pars = c("alphas", "betas", "gammas", "lambda", "mu")) ->
@@ -69,12 +71,12 @@ as.data.frame(p.params) -> p.params
 
 t <- seq(1,100,day_cut)
 
-sim.df <- data.frame(pid = c(1:3),
-                     start_state = rep(1,3),
-                     abx_cpt = rep(0,3),
-                     tb_start = rep(-999,3),
-                     hosp_days = rep(7, 3),
-                     abx_days = c(0,2,7))
+sim.df <- data.frame(pid = c(1:6),
+                     start_state = rep(c(0,1),3),
+                     abx_cpt = rep(0,6),
+                     tb_start = rep(-999,6),
+                     hosp_days = rep(7, 6),
+                     abx_days = c(0,0,2,2,7,7))
 
 sim.df$p0 <- as.numeric(sim.df$start_state == 0)
 sim.df$p1 <- as.numeric(sim.df$start_state == 1)
@@ -95,11 +97,10 @@ sim.df$hosp_start[sim.df$hosp_days == 1] <- -999
 sim.df$hosp_stop[sim.df$hosp_days == 1] <- -999
 sim.df$hosp_days[sim.df$hosp_days == 1] <- 0
 sim.df$hosp_days[sim.df$hosp_days == 1] <- 0
-sim.df$p0 <- 0.5
-sim.df$p1 <- 0.5
 
 
-# iterate over posterior to solve odes
+
+# iterate over posterior to solve odes to get states at time t
 
 purrr::pmap(sim.df[,c( "p0", "p1","abx_start", "abx_stop", "prev_abx",
               "hosp_start", "hosp_stop", "prev_hosp","pid")],
@@ -116,8 +117,54 @@ outsum <- df.out %>%
                    lq = quantile(`2`, 0.025)[[1]],
                    uq = quantile(`2`, 0.975)[[1]])
 
-# generate final df
+# overall estimated prevalance is a weighted mean of those in state one at
+# t = 0 and those is state two
+# ie for 0.5 at start, p0 + p1 /2
+# make this df
 
-btESBL_model2simulations <-
-  left_join (df.out, sim.df, by = "pid")
-#write_csv(out.sim.df, "csimulations2.csv")
+left_join(
+  df.out %>%
+    filter(pid %in% c(1, 3, 5)) %>%
+    transmute(
+      pid = pid,
+      draw = draw,
+      time = time,
+      pr_esbl_pos_t0esblneg = `2`
+    ),
+  df.out %>%
+    filter(pid %in% c(2, 4, 6)) %>%
+    transmute(
+      pid = case_when(
+        pid == 2 ~ 1,
+        pid == 4 ~ 3,
+        pid == 6 ~ 5),
+      draw = draw,
+      time = time,
+      pr_esbl_pos_t0esblpos = `2`
+    ),
+  by = c("pid", "draw", "time")
+) %>%
+  mutate(pr_esbl_pos =
+           (pr_esbl_pos_t0esblneg + pr_esbl_pos_t0esblpos) /2
+  ) %>%
+  # link back in the metadata
+  left_join(
+    sim.df %>%
+      select(pid,
+             hosp_days,
+             abx_days),
+    by = "pid"
+  ) %>%
+  rename(sim_run = pid) ->
+  btESBL_model2simulations
+
+
+saveRDS(btESBL_model2simulations, here("data-raw/btESBL_model2simulations.rda"))
+
+btESBL_model2simulations %>%
+  mutate(sim_run = case_when(
+    pid %in% c(1,2) ~ 1,
+    pid %in% c(3,4) ~ 2,
+    pid %in% c(5,6) ~ 3)) ->
+      btESBL_model2simulations
+

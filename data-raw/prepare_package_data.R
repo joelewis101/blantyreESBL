@@ -125,10 +125,9 @@ use_data(btESBL_model1posterior, overwrite = TRUE)
 
 # simulations from posterior
 
-btESBL_model2simulations <- read_csv("~/Documents/PhD/Thesis/bookdown/chapter_9/simulations2.csv")
+btESBL_model2simulations <-
+  readRDS(here("data-raw/btESBL_model2simulations.rda"))
 
-btESBL_model2simulations %>%
-  select(-c(pid, start_state, abx_cpt, tb_start))
 
 use_data(btESBL_model2simulations, overwrite = TRUE)
 

@@ -40,7 +40,7 @@ Joseph M Lewis^1,2,3,4^, , Madalitso Mphasa^1^, Rachel Banda^1^,  Matthew Beale^
 
 ### Locating Stan code
 
-The stan model has the filename `ESBLmod_finalV1.0_rk45.stan` are present in the extdata/ directory of the installed package, which can be located with the following command:
+The stan model has the filename `ESBLmod_finalV1.0_rk45.stan` are present in the `extdata/ directory of the installed package, which can be located with the following command:
 
 ```{r}
 system.file("extdata", 
@@ -131,3 +131,4 @@ system.file("extdata",
 
 ```
 
+Or it is located (along withe stan model) in the `inst/extdata/` folder on the github repo. 
