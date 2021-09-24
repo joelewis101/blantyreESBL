@@ -3,7 +3,7 @@
 \docType{data}
 \name{btESBL_stanmodeldata}
 \alias{btESBL_stanmodeldata}
-\title{Data: Covariate data to pass to Stan longitudinal carriage model}
+\title{Data: Covariate data to pass to Stan longitudinal carriage model in list format}
 \format{
 A named list of seven items.
 \describe{

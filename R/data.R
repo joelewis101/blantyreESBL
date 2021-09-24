@@ -153,19 +153,14 @@
 #'
 #' @format A data frame with 600,000 rows and 18 variables:
 #' \describe{
-#'   \item{time}{Number of days post enrollment}
-#'   \item{1}{Probability of being ESBL non-colonised at current time}
-#'   \item{0}{Probability of being ESBL colonised at current time}
+#'   \item{sim_run}{Simulation run ID}
 #'   \item{draw}{Unique ID of draw from posterior (1,2...1000)}
+#'   \item{time}{Time t in days}
 #'   \item{hosp_days}{Number of days of hospitalisation}
 #'   \item{abx_days}{Number of days of antimicrobial exposure}
-#'   \item{p0}{Probability at time 0 of being uncolonised}
-#'   \item{p1}{Probability at time 0 of being colonised}
-#'   \item{abx_start}{Time of antimicrobial exposure start}
-#'   \item{abx_stop}{Time of antimicrobial exposure stop}
-#'   \item{prev_abx}{Time of cessation of prev antimicrobial exposure (999=none)}
-#'   \item{hosp_start}{Time of hospitalisation start}
-#'   \item{hosp_stop}{Time of hospitalisation stop}
+#'   \item{pr_esbl_pos_t0esblneg}{Probability of ESBL colonisation at time t conditional on no colonisation at time 0}
+#'   \item{pr_esbl_pos_t0esblpos}{Probability of ESBL colonisation at time t conditional on colonisation at time 0}
+#'   \item{pr_esbl_pos}{Overall estimated prevalence of ESBL colonisation at time t assuming initial prevalence 0.5}
 #'   \item{prev_hosp}{Time of cessation of prev hospitalisation (999=none)}
 #' }
 "btESBL_model2simulations"
@@ -582,7 +577,7 @@
 #' }
 "btESBL_ecoli_st410_plasmids"
 
-#' Data: Covariate data to pass to Stan longitudinal carriage model
+#' Data: Covariate data to pass to Stan longitudinal carriage model in list format
 #'
 #' See vignette for details. Each row encodes two ESBL observations a time
 #' t apart and the covariate values in this time period
@@ -603,5 +598,16 @@
 #' }
 "btESBL_stanmodeldata"
 
+#' Data: Covariate data to pass to Stan longitudinal carriage model in dataframe format
+#'
+#' See vignette for details. Each row encodes two ESBL observations a time
+#' t apart and the covariate values in this time period
+#'
+#' These data are set up to fit a model where the effect of antimicrobial
+#' exposure has a time-varying exponential decay effect, and hospitalisation
+#' has a time-varying stepwise constant effect
+#'
+#' @format The data from btESBL_stanmodeldata in dataframe format
+"btESBL_modeldata"
 
 

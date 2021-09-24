@@ -2,19 +2,17 @@ library(rstan)
 library(blantyreESBL)
 library(deSolve)
 library(dplyr)
-library(here)
+#needed to save
+#library(here)
 
-## simulations of different scenarios from teh posterior of the sitted models
+## simulations of different scenarios from the posterior of the fitted models
 
 fit_mod2 <- btESBL_model2posterior
 
 
-
-
-
 # Make stan functions available to take advantage of the C++ code
 # to quickly calculate the values of the time varying covariates
-#  that's the function return_time_varying_coefs_exp_flat()
+# that's the function return_time_varying_coefs_exp_flat()
 
 expose_stan_functions(file = system.file("extdata",
                                          "ESBLmod_finalV1.0_rk45.stan",
@@ -111,12 +109,6 @@ purrr::pmap(sim.df[,c( "p0", "p1","abx_start", "abx_stop", "prev_abx",
 
 do.call(rbind, df.out) -> df.out
 
-outsum <- df.out %>%
-  group_by(time, pid) %>%
-  dplyr::summarise(median = median(`2`),
-                   lq = quantile(`2`, 0.025)[[1]],
-                   uq = quantile(`2`, 0.975)[[1]])
-
 # overall estimated prevalance is a weighted mean of those in state one at
 # t = 0 and those is state two
 # ie for 0.5 at start, p0 + p1 /2
@@ -145,7 +137,7 @@ left_join(
   by = c("pid", "draw", "time")
 ) %>%
   mutate(pr_esbl_pos =
-           (pr_esbl_pos_t0esblneg + pr_esbl_pos_t0esblpos) /2
+           (pr_esbl_pos_t0esblneg + pr_esbl_pos_t0esblpos) / 2
   ) %>%
   # link back in the metadata
   left_join(
@@ -158,13 +150,7 @@ left_join(
   rename(sim_run = pid) ->
   btESBL_model2simulations
 
+# if you want to save
+# saveRDS(btESBL_model2simulations, here("data-raw/btESBL_model2simulations.rda"))
 
-saveRDS(btESBL_model2simulations, here("data-raw/btESBL_model2simulations.rda"))
-
-btESBL_model2simulations %>%
-  mutate(sim_run = case_when(
-    pid %in% c(1,2) ~ 1,
-    pid %in% c(3,4) ~ 2,
-    pid %in% c(5,6) ~ 3)) ->
-      btESBL_model2simulations
 

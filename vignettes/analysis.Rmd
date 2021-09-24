@@ -350,7 +350,7 @@ t1 %>%
           "Total (n = 425)"
         ), 
       escape = FALSE,
-      caption = "TABLE 1: Baseline characteristics of included participants") %>% 
+      caption = "Baseline characteristics of included participants") %>% 
   kable_classic(full_width = F) %>% 
   pack_rows(index = groupvar) %>% 
   row_spec(indentrows, italic = TRUE  ) %>% 
@@ -369,7 +369,7 @@ t1 %>%
 
 ### Exposures
 
-```{r exp, fig.cap="Supplementary figure 1: Exposures during study period. Panels show proportion of participants in each arm of the study who are hospitalised of exposed to antimicrobials on a given day", fig.width=8, fig.height = 5}
+```{r exp, fig.cap="Exposures during study period. Panels show proportion of participants in each arm of the study who are hospitalised of exposed to antimicrobials on a given day", fig.width=8, fig.height = 5}
 
  c("Amoxicillin" = "amoxy",
   "Gentamicin" = "genta",
@@ -520,7 +520,7 @@ btESBL_exposures %>%
   arrange(desc(n.p_1), desc(name)) %>% 
   kable(
     col.names = c("Exposure", rep(c("Sepsis", "Inpatient", "Community"),3)),
-    caption = "SUPPLEMENTARY TABLE 1:Antimicrobial and hospital exposure stratified by arm") %>%
+    caption = "Antimicrobial and hospital exposure stratified by arm") %>%
   kable_classic(full_width = FALSE) %>%
   #row_spec(1, bold = TRUE) %>% 
   pack_rows("Exposures", 2, 23) %>% 
@@ -596,7 +596,7 @@ left_join(
       kable(col.names = c("Visit", rep(
         c("n", "ESBL", "E. coli", "K. pneumo"), 3
       )),
-      caption = "SUPPLEMENTARY TABLE 2:ESBL, E. coli and K. pneumoniae prevalence in stool at study visits, stratified by study arm.") %>%
+      caption = "ESBL, E. coli and K. pneumoniae prevalence in stool at study visits, stratified by study arm.") %>%
       kable_classic(full_width = FALSE) %>%
       add_header_above(c(
         " " = 1,
@@ -608,7 +608,7 @@ left_join(
 ```
 
 
-```{r esbl-prev-plot, fig.cap = "SUPPLEMENTARY FIGURE 2: ESBL prevalence as a function of time, stratified by study arm: sepsis patients exposed to antimicrobials and admitted to hospital; inpatients admitted to hospital but without antimicrobial exposure; and community members not admitted to hospital and without antimicrobial exposure. Non-sepsis inpatients are censored on first antimicrobial exposure and community members censored on antimicrobial expoure or hospitalisation. Smoothed prevalence is estimated from fitting a LOESS nonparametric regression line with span parameter 0.8.", fig.height=3, fig.width = 6 }
+```{r esbl-prev-plot, fig.cap = "ESBL prevalence as a function of time, stratified by study arm: sepsis patients exposed to antimicrobials and admitted to hospital; inpatients admitted to hospital but without antimicrobial exposure; and community members not admitted to hospital and without antimicrobial exposure. Non-sepsis inpatients are censored on first antimicrobial exposure and community members censored on antimicrobial expoure or hospitalisation. Smoothed prevalence is estimated from fitting a LOESS nonparametric regression line with span parameter 0.8.", fig.height=3, fig.width = 6 }
 fills = c("#A25050","#6497b1","#7cb9b9")
 
 
@@ -678,7 +678,7 @@ ggplot(aes(t, as.numeric(ESBL == "Positive"),
 ```
 ### Timing of sample collection
 
-```{r sample_timing, fig.cap = "SUPPLEMENTARY FIGURE X: Timing of sample collection showing long tails around sample collection time.", fig.height = 4, fig.width= 6 }
+```{r sample_timing, fig.cap = "Timing of sample collection showing long tails around sample collection time.", fig.height = 4, fig.width= 6 }
 btESBL_stoolESBL %>%
   filter(visit != 0) %>% 
   mutate(visit = paste0("Visit ", visit)) %>% 
@@ -709,7 +709,7 @@ if (write_figs) {
 
 ### Species plot
 
-```{r ESBLspecies}
+```{r ESBLspecies, fig.width=6, fig.height =4, fig.cap = "Species cultured from stool."}
 
 btESBL_stoolorgs %>% 
   mutate(
@@ -874,7 +874,7 @@ log_regESBL %>%
                         "p-value", 
                         "aOR (95\\% CI)",
                         "p-value"),
-      caption = "TABLE 2: Univariable and multivariable associations of ESBL colonisation at enrolment") %>% 
+      caption = "Univariable and multivariable associations of ESBL colonisation at enrolment") %>% 
         kable_classic(full_width = FALSE) %>%
       column_spec(2:3, bold = log_regESBL$p.value_uv < 0.05) %>% 
   column_spec(4:5, bold = log_regESBL$p.value_mv < 0.05) %>% 
@@ -894,7 +894,7 @@ log_regESBL %>%
 
 Describe carriage prevalence; plot model parameters; plot predicted prevalence.
 
-```{r markov-model-panel-plot, fig.cap = "FIGURE 1: Determinants of ESBL-E carriage. A: Prevalence of ESBL-E carriage stratified by study arm. Inpatients without sepsis are censored at first antimicrobial exposure and community members censored at first antimicrobial exposure or hospital admission. Estimated prevalence and 95% confience intervals derived from a nonparametric LOESS regression with span parameter 0.8. B: Simulated probability of ESBL colonisation generated from the posterior parameter estimates of the fitted model with a starting probability of colonisation of 0.5 and seven days of hospitalisation with either seven, two, or no days antimicrobial exposure. In this model, truncated courses of antimicrobials havelittle effect on reducing ESBL-E carriage. C-E: Density plots of parameter estimates form fitted model with median (line) and 95% credible intervals (shading) shown. A: log hazard ratios of ESBL-E gain and loss for hospialisation and antimicrobial exposure: hospitalisation acts to acts to increase both acquisition and loss of ESBL-E whereas antmicrobial exposure acts to prevent loss. D: mean time in state for uncolonised and colonised states. E: Half life of decay of effecr of antimicrobials, showing that the effect of antimicrobials, in this model, acts for many days after exposure has finished.", fig.width = 12, fig.height=6  }
+```{r markov-model-panel-plot, fig.cap = "Determinants of ESBL-E carriage. A: Prevalence of ESBL-E carriage stratified by study arm. Inpatients without sepsis are censored at first antimicrobial exposure and community members censored at first antimicrobial exposure or hospital admission. Estimated prevalence and 95% confience intervals derived from a nonparametric LOESS regression with span parameter 0.8. B: Simulated probability of ESBL colonisation generated from the posterior parameter estimates of the fitted model with a starting probability of colonisation of 0.5 and seven days of hospitalisation with either seven, two, or no days antimicrobial exposure. In this model, truncated courses of antimicrobials havelittle effect on reducing ESBL-E carriage. C-E: Density plots of parameter estimates form fitted model with median (line) and 95% credible intervals (shading) shown. A: log hazard ratios of ESBL-E gain and loss for hospialisation and antimicrobial exposure: hospitalisation acts to acts to increase both acquisition and loss of ESBL-E whereas antmicrobial exposure acts to prevent loss. D: mean time in state for uncolonised and colonised states. E: Half life of decay of effecr of antimicrobials, showing that the effect of antimicrobials, in this model, acts for many days after exposure has finished.", fig.width = 12, fig.height=6  }
 
 inv <- function(x) {
   return(1/x)
@@ -990,13 +990,14 @@ mcmc_areas(
 #cols2 = c("#ffcc80", "#a25079","#660066")
 
 btESBL_model2simulations %>%
-    group_by(time, abx_stop) %>%
+  mutate(abx_days = as.factor(abx_days)) %>% 
+    group_by(time, abx_days) %>%
     summarise(
-        median = median(`2`),
-        lq = quantile(`2`, 0.025)[[1]],
-        uq = quantile(`2`, 0.975)[[1]]
+        median = median(pr_esbl_pos),
+        lq = quantile(pr_esbl_pos, 0.025)[[1]],
+        uq = quantile(pr_esbl_pos, 0.975)[[1]]
     ) %>%
-    mutate(abx_stop = paste0(as.character(abx_stop), 
+    mutate(abx_stop = paste0(as.character(abx_days), 
                              " days \nantimicrobials")) %>%
     ggplot(aes(
         time,
@@ -1044,7 +1045,7 @@ if (write_figs) {
 
 Stepwise constant vs exponential decay.
 
-```{r compare-models-plot, fig.cap = "SUPPLEMENTARY FIGURE X: Model comparisons for models with and without an exponentially dcaying effect of antmicrobials. A-B: Parameter estimates from stepwise-constant covariate model. C-E: parameter estimates from model with exponentially-decaying effect of antinicrobial exposure. F: Posterior predictive checks of modelsm comparing model with piecewise-constant covariates (model 1) to exponentially decaying effect of antimicrobial exposure (model 2). Dashed lines show actual ESBL-E prevalence across three study arms; probability density of predicted prevalence from the two models show that model 1 tends to underestimate ESBL-E prevalence in the antimicrobial-exposed, compared to model 2.", fig.width= 11, fig.height = 8}
+```{r compare-models-plot, fig.cap = "Model comparisons for models with and without an exponentially dcaying effect of antmicrobials. A-B: Parameter estimates from stepwise-constant covariate model. C-E: parameter estimates from model with exponentially-decaying effect of antinicrobial exposure. F: Posterior predictive checks of modelsm comparing model with piecewise-constant covariates (model 1) to exponentially decaying effect of antimicrobial exposure (model 2). Dashed lines show actual ESBL-E prevalence across three study arms; probability density of predicted prevalence from the two models show that model 1 tends to underestimate ESBL-E prevalence in the antimicrobial-exposed, compared to model 2.", fig.width= 11, fig.height = 8}
 # to
 
 # parameter estimates from model 1 and 2
@@ -1346,7 +1347,7 @@ if (write_figs) {
 
 ### Contig cluster basic statistics
 
-```{r contig-cluster-stats, fig.cap = "SUPPLEMENTARY FIGURE XXX: Size, representative cluster length, distribution of coverage and sequence identity of ESBL-contig clusters", fig.width=9, fig.height=7}
+```{r contig-cluster-stats, fig.cap = "Size, representative cluster length, distribution of coverage and sequence identity of ESBL-contig clusters", fig.width=9, fig.height=7}
 
 btESBL_contigclusters %>%
     group_by(clstr_name) %>% 
@@ -1398,7 +1399,7 @@ if (write_figs) {
 
 ### popPUNK clusters mapped to phylogeny
 
-```{r popPUNK+map_to_phylogeny, fig.width= 12, fig.height=10, fig.cap = "SUPPLEMENTARY FIGURE XXX: popPUNK clusters mapped to core gene maximum-likelihood phylogeny"}
+```{r popPUNK+map_to_phylogeny, fig.width= 12, fig.height=10, fig.cap = "PopPUNK clusters mapped to core gene maximum-likelihood phylogeny"}
 
 btESBL_sequence_sample_metadata %>% 
   select(lane, Cluster) %>% 
@@ -2623,7 +2624,7 @@ btESBL_sequence_sample_metadata %>%
 
 ### SNP cutoff sensitivity analysis
 
-```{r snp-cutoff-sens-analysis, fig.width = 9, fig.height = 4, fig.cap = "SUPPLEMENTARY FIGURE: Sensitivity analysis showing proportion of within-participant sample pairs that contain E. coli (A) or K. pneumoniae (B) that are within a given SNP distance."}
+```{r snp-cutoff-sens-analysis, fig.width = 9, fig.height = 4, fig.cap = "Sensitivity analysis showing proportion of within-participant sample pairs that contain E. coli (A) or K. pneumoniae (B) that are within a given SNP distance."}
 
 # sensitivity analysis of snp cutoffs
 
@@ -2877,7 +2878,7 @@ ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_
 
 ```
 
-```{r snp-network-sens-analysis, fig.width = 13.2, fig.height = 12, fig.cap = "SUPPLEMENTARY FIGURE: Sensitivity analysis of network plot of putative transmission clusters for E. coli, allowing the definition of a SNP-cluster to vary from 0 (A), to 3 (B), 7 (C), or 10 (D). Points are samples, coloured by place of isolation (in-hospital [black], community [white], or up to 120 days post-discharge [grey]). Red lines link samples that are within a single participant. Blue lines link samples that are differ by the given SNP threshold."}
+```{r snp-network-sens-analysis, fig.width = 13.2, fig.height = 12, fig.cap = "Sensitivity analysis of network plot of putative transmission clusters for E. coli, allowing the definition of a SNP-cluster to vary from 0 (A), to 3 (B), 7 (C), or 10 (D). Points are samples, coloured by place of isolation (in-hospital [black], community [white], or up to 120 days post-discharge [grey]). Red lines link samples that are within a single participant. Blue lines link samples that are differ by the given SNP threshold."}
 
 # 
 # ## snp network
@@ -3248,7 +3249,7 @@ if (write_figs) {
 }
 ```
 
-```{r snp-network-sens-analysis_kleb, fig.width = 13.2, fig.height = 12, fig.cap = "SUPPLEMENTARY FIGURE: Sensitivity analysis of network plot of putative transmission clusters for E. coli, allowing the definition of a SNP-cluster to vary from 0 (A), to 3 (B), 7 (C), or 10 (D). Points are samples, coloured by place of isolation (in-hospital [black], community [white], or up to 120 days post-discharge [grey]). Red lines link samples that are within a single participant. Blue lines link samples that are differ by the given SNP threshold."}
+```{r snp-network-sens-analysis_kleb, fig.width = 13.2, fig.height = 12, fig.cap = "Sensitivity analysis of network plot of putative transmission clusters for E. coli, allowing the definition of a SNP-cluster to vary from 0 (A), to 3 (B), 7 (C), or 10 (D). Points are samples, coloured by place of isolation (in-hospital [black], community [white], or up to 120 days post-discharge [grey]). Red lines link samples that are within a single participant. Blue lines link samples that are differ by the given SNP threshold."}
 
 kleb_snp_clusters_sens_analysis_plot
 
