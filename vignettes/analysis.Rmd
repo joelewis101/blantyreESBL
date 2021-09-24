@@ -7,6 +7,17 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+
+This document contains reproducing analysis code which generates the tables and figures for the manuscript:
+
 <br />
 
 *Dynamics of gut mucosal colonisation with extended spectrum beta-lactamase producing Enterobacterales in Malawi*
@@ -22,8 +33,6 @@ Joseph M Lewis^1,2,3,4^, , Madalitso Mphasa^1^, Rachel Banda^1^,  Matthew Beale^
 5. College of Medicine, University of Malawi, Malawi
 6. University of Lancaster, Lanaster, UK
 7. London School of Tropical Medicine and Hygiene, London, UK 
-
-This document provides the analysis code for the above manuscript.
 
 ### Installing and accessing data
 
@@ -47,7 +56,6 @@ The `dependencies = TRUE` option will install all the packages necessary to run 
 Alternatively the source code for the vignette is `analysis.Rmd` in the `vignettes/` folder of the [GitHub](https://github.com/joelewis101/blantyreESBL)
  repo or the [pkgdown](https://joelewis101.github.io/blantyreESBL/) site for this package has a rendered version.
 
-### Filling
 
 ### Setup, load packages
 
@@ -2274,7 +2282,7 @@ if (write_figs) {
 
 ### Construct and fit SNP-clusters
 
-```{r snp-clusts, fig.width = 13.2, fig.height = 6}
+```{r snp-clusts, fig.width = 13.2, fig.height = 7.5, fig.cap = "Network plot of SNP-clusters (i.e. putative transmission clusters) for E. coli (A) and K. pneumoniae (B) showing that putative transmission clusters are not purely hospital associated. Points are samples, coloured by place of isolation (in-hospital [black], community [white], or up to 120 days post-discharge [grey]). Red lines link samples that are within a single participant. Blue lines link samples that are differ by five or fewer SNPs. The plot shows that most samples are not members of a SNP-cluster; that most SNP clusters are made up of samples from different participants (rather than multiple samples from the same participant); and that SNP-clusters are not strongly hospital-associated (i.e. they contain black, white, and grey points)."}
 
 
 make_cluster_pairwise_comparison_df <- function(pairwise_snp_df,
@@ -2448,11 +2456,15 @@ edges.e %>%
 
 gr.e <- graph_from_data_frame(edges.e, directed = FALSE, vertices = vertices.e)
 
-ggraph(gr.e, layout = "fr") + geom_edge_fan(aes(color = type), width = 1) + 
+ggraph(gr.e, layout = "fr") + 
+  geom_edge_fan(aes(color = type), width = 1) + 
   geom_node_point(aes(fill = hosp_assoc), shape = 21, size = 3) + 
   #  facet_edges(~ type) + 
   theme_void() + scale_fill_manual(values = c("white","black","grey")) + 
-  theme(legend.title = element_blank()) -> 
+  theme(legend.title = element_blank(), legend.position = "bottom",
+        legend.text = element_text(size = 16)) +
+  guides(edge_colour=guide_legend(ncol=1),
+         fill=guide_legend(ncol=1)) -> 
   snp_network_plot.esco
 
 # kleb
@@ -2526,17 +2538,24 @@ edges.k %>%
 
 gr.k <- graph_from_data_frame(edges.k, directed = FALSE, vertices = vertices.k)
 
-ggraph(gr.k, layout = "fr") + geom_edge_fan(aes(color = type), width =1) + 
-  geom_node_point(aes(fill = hosp_assoc), shape = 21, size = 3) + 
-  #  facet_edges(~ type) + 
-  theme_void() + scale_fill_manual(values = c("white","black","grey")) + 
-  theme(legend.title = element_blank())  -> 
+ggraph(gr.k, layout = "fr") + geom_edge_fan(aes(color = type), width = 1) +
+  geom_node_point(aes(fill = hosp_assoc), shape = 21, size = 3) +
+  #  facet_edges(~ type) +
+  theme_void() + scale_fill_manual(values = c("white", "black", "grey")) +
+  theme(
+    legend.title = element_blank(),
+    legend.position = "bottom",
+    legend.text = element_text(size = 16)
+  ) +
+  guides(edge_colour = guide_legend(ncol = 1),
+         fill = guide_legend(ncol = 1))  ->
   snp_network_plot.kleb
 
 
 (snp_network_plot.esco + 
   snp_network_plot.kleb) + plot_layout(guides = "collect") +  
-  plot_annotation(tag_levels = "A") -> snp_networks
+  plot_annotation(tag_levels = "A") & theme(legend.position = 'bottom') ->
+  snp_networks
 snp_networks
 
 
@@ -2544,11 +2563,11 @@ if (write_figs) {
   ggsave(here("figures/long-modelling/F4snp_networks.pdf"),
          snp_networks,
          width = 13.2,
-         height = 6)
+         height = 7.5)
   ggsave(here("figures/long-modelling/F4snp_networks.svg"),
          snp_networks,
          width = 13.2, 
-         height = 6)
+         height = 7.5)
 }
 ```
 
@@ -2768,8 +2787,8 @@ samples %>%
     by = c("lab_id.x", "lab_id.y")
   ) -> samples
 
-samples%>%
-  filter(pid.x == pid.y)-> pairwise_within
+samples %>%
+  filter(pid.x == pid.y) -> pairwise_within
 
 
 pairwise_within %>%
@@ -2872,90 +2891,18 @@ kleb.long %>%
 a + b + plot_annotation(tag_levels = "A") + 
 plot_layout(guides = "collect") -> sens_analysis_within_snpdist
 
+if (write_figs) {
+
 ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/SUPP_FIG_sens_analysis_snpdist_autocorrelation.svg", sens_analysis_within_snpdist, width = 9, height = 4)
 
 ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/SUPP_FIG_sens_analysis_snpdist_autocorrelation.pdf", sens_analysis_within_snpdist, width = 9, height = 4)
 
+}
 ```
 
 ```{r snp-network-sens-analysis, fig.width = 13.2, fig.height = 12, fig.cap = "Sensitivity analysis of network plot of putative transmission clusters for E. coli, allowing the definition of a SNP-cluster to vary from 0 (A), to 3 (B), 7 (C), or 10 (D). Points are samples, coloured by place of isolation (in-hospital [black], community [white], or up to 120 days post-discharge [grey]). Red lines link samples that are within a single participant. Blue lines link samples that are differ by the given SNP threshold."}
 
-# 
-# ## snp network
-# 
-# make_cluster_pairwise_comparison_df <- function(pairwise_snp_df,
-#                                                 metadata_df,
-#                                                 cut_tree_vect,
-#                                                 n) {
-#   cluster_samples <- names(cut_tree_vect[cut_tree_vect == n])
-#   pairwise_snp_df <- as.data.frame(pairwise_snp_df)
-#   rownames(pairwise_snp_df) <- pairwise_snp_df$sample
-#   pairwise_snp_df[cluster_samples, c("sample", cluster_samples)] %>%
-#     pivot_longer(-sample) %>%
-#     filter(sample != name) -> d
-# 
-#   d[!duplicated(apply(d[1:2], 1, sort), MARGIN = 2), ] -> d
-#   names(d) <- c("sample.x", "sample.y", "snpdist")
-#   d$sample.x <- gsub("#", "_", d$sample.x)
-#   d$sample.y <- gsub("#", "_", d$sample.y)
-# 
-# 
-#   left_join(
-#     d,
-#     select(
-#       metadata_df,
-#       lane,
-#       pid,
-#       arm,
-#       visit,
-#       enroll_date,
-#       hospoutcomedate,
-#       data_date
-#     ),
-#     by = c("sample.x" = "lane")
-#   ) %>%
-#     left_join(
-#       select(
-#         metadata_df,
-#         lane,
-#         pid,
-#         arm,
-#         visit,
-#         enroll_date,
-#         hospoutcomedate,
-#         data_date
-#       ),
-#       by = c("sample.y" = "lane")
-#     ) -> d
-#   d$pair <- paste0(d$sample.x, "-", d$sample.y)
-#   d$cluster_number <- n
-#   d$cluster_name <- n
-#   d %>%
-#     mutate(type = case_when(pid.x == pid.y ~ "within",
-#                             TRUE ~ "between")) ->   d
-#   return(d)
-# 
-# }
-# 
-# 
-# make_all_clusters_pairwise_comparison_df  <-
-#   function(pairwise_snp_df,
-#            metadata_df,
-#            cut_tree_vect) {
-#     out <- list()
-#     for (i in 1:max(cut_tree_vect)) {
-#       #    print(i)
-#       #  print(i)
-#       make_cluster_pairwise_comparison_df(pairwise_snp_df,
-#                                           metadata_df,
-#                                           cut_tree_vect,
-#                                           i) -> out[[i]]
-# 
-#     }
-#     return(do.call(rbind, out))
-# 
-# 
-#   }
+
 
 #### start plots -------------
 

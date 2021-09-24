@@ -92,6 +92,10 @@
 
     
     
+<div id="introduction" class="section level2">
+<h2 class="hasAnchor">
+<a href="#introduction" class="anchor"></a>Introduction</h2>
+<p>This document contains reproducing analysis code which generates the tables and figures for the manuscript:</p>
 <p><br></p>
 <p><em>Dynamics of gut mucosal colonisation with extended spectrum beta-lactamase producing Enterobacterales in Malawi</em></p>
 <p><br></p>
@@ -105,7 +109,6 @@
 <li>University of Lancaster, Lanaster, UK</li>
 <li>London School of Tropical Medicine and Hygiene, London, UK</li>
 </ol>
-<p>This document provides the analysis code for the above manuscript.</p>
 <div id="installing-and-accessing-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#installing-and-accessing-data" class="anchor"></a>Installing and accessing data</h3>
@@ -118,10 +121,6 @@
 <code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"https://github.com/joelewis101/blantyreESBL"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span>, dependencies <span class="op">=</span> <span class="cn">TRUE</span> <span class="op">)</span></code></pre></div>
 <p>The <code>dependencies = TRUE</code> option will install all the packages necessary to run the vignettes.</p>
 <p>Alternatively the source code for the vignette is <code>analysis.Rmd</code> in the <code>vignettes/</code> folder of the <a href="https://github.com/joelewis101/blantyreESBL">GitHub</a> repo or the <a href="https://joelewis101.github.io/blantyreESBL/">pkgdown</a> site for this package has a rendered version.</p>
-</div>
-<div id="filling" class="section level3">
-<h3 class="hasAnchor">
-<a href="#filling" class="anchor"></a>Filling</h3>
 </div>
 <div id="setup-load-packages" class="section level3">
 <h3 class="hasAnchor">
@@ -446,7 +445,7 @@ Male
 40/100 (40%)
 </td>
 <td style="text-align:left;">
-0.159
+0.173
 </td>
 <td style="text-align:left;">
 205/425 (48%)
@@ -534,7 +533,7 @@ Current CPT
 7/18 (39%)
 </td>
 <td style="text-align:left;">
-0.011
+0.009
 </td>
 <td style="text-align:left;">
 110/171 (64%)
@@ -554,7 +553,7 @@ Current ART
 18/18 (100%)
 </td>
 <td style="text-align:left;">
-0.082
+0.072
 </td>
 <td style="text-align:left;">
 144/173 (83%)
@@ -574,7 +573,7 @@ ART regimen: EFV/3TC/TDF
 17/18 (94%)
 </td>
 <td style="text-align:left;">
-0.647
+0.652
 </td>
 <td style="text-align:left;">
 135/144 (94%)
@@ -659,7 +658,7 @@ Current TB treatment
 4/100 (4%)
 </td>
 <td style="text-align:left;">
-0.086
+0.089
 </td>
 <td style="text-align:left;">
 14/425 (3%)
@@ -820,7 +819,7 @@ Electricty in house
 58/100 (58%)
 </td>
 <td style="text-align:left;">
-0.042
+0.037
 </td>
 <td style="text-align:left;">
 218/425 (51%)
@@ -840,7 +839,7 @@ Flush toilet<sup>‡</sup>
 1/100 (1%)
 </td>
 <td style="text-align:left;">
-0.110
+0.116
 </td>
 <td style="text-align:left;">
 20/425 (5%)
@@ -860,7 +859,7 @@ Protected water source<sup>§</sup>
 98/100 (98%)
 </td>
 <td style="text-align:left;">
-0.133
+0.134
 </td>
 <td style="text-align:left;">
 406/425 (96%)
@@ -880,7 +879,7 @@ Treat drinking water with chlorine
 0/100 (0%)
 </td>
 <td style="text-align:left;">
-0.005
+0.003
 </td>
 <td style="text-align:left;">
 24/425 (6%)
@@ -4684,11 +4683,15 @@ Within participant correlation of organism, lineage, mobile genetic element (MGE
 
 <span class="va">gr.e</span> <span class="op">&lt;-</span> <span class="fu">graph_from_data_frame</span><span class="op">(</span><span class="va">edges.e</span>, directed <span class="op">=</span> <span class="cn">FALSE</span>, vertices <span class="op">=</span> <span class="va">vertices.e</span><span class="op">)</span>
 
-<span class="fu">ggraph</span><span class="op">(</span><span class="va">gr.e</span>, layout <span class="op">=</span> <span class="st">"fr"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_edge_fan</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>color <span class="op">=</span> <span class="va">type</span><span class="op">)</span>, width <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span> 
+<span class="fu">ggraph</span><span class="op">(</span><span class="va">gr.e</span>, layout <span class="op">=</span> <span class="st">"fr"</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu">geom_edge_fan</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>color <span class="op">=</span> <span class="va">type</span><span class="op">)</span>, width <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu">geom_node_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>fill <span class="op">=</span> <span class="va">hosp_assoc</span><span class="op">)</span>, shape <span class="op">=</span> <span class="fl">21</span>, size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span> 
   <span class="co">#  facet_edges(~ type) + </span>
   <span class="fu">theme_void</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">scale_fill_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"white"</span>,<span class="st">"black"</span>,<span class="st">"grey"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu">theme</span><span class="op">(</span>legend.title <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">-&gt;</span> 
+  <span class="fu">theme</span><span class="op">(</span>legend.title <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span>, legend.position <span class="op">=</span> <span class="st">"bottom"</span>,
+        legend.text <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">guides</span><span class="op">(</span>edge_colour<span class="op">=</span><span class="fu">guide_legend</span><span class="op">(</span>ncol<span class="op">=</span><span class="fl">1</span><span class="op">)</span>,
+         fill<span class="op">=</span><span class="fu">guide_legend</span><span class="op">(</span>ncol<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">-&gt;</span> 
   <span class="va">snp_network_plot.esco</span>
 
 <span class="co"># kleb</span>
@@ -4762,19 +4765,30 @@ Within participant correlation of organism, lineage, mobile genetic element (MGE
 
 <span class="va">gr.k</span> <span class="op">&lt;-</span> <span class="fu">graph_from_data_frame</span><span class="op">(</span><span class="va">edges.k</span>, directed <span class="op">=</span> <span class="cn">FALSE</span>, vertices <span class="op">=</span> <span class="va">vertices.k</span><span class="op">)</span>
 
-<span class="fu">ggraph</span><span class="op">(</span><span class="va">gr.k</span>, layout <span class="op">=</span> <span class="st">"fr"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_edge_fan</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>color <span class="op">=</span> <span class="va">type</span><span class="op">)</span>, width <span class="op">=</span><span class="fl">1</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu">geom_node_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>fill <span class="op">=</span> <span class="va">hosp_assoc</span><span class="op">)</span>, shape <span class="op">=</span> <span class="fl">21</span>, size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="co">#  facet_edges(~ type) + </span>
-  <span class="fu">theme_void</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">scale_fill_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"white"</span>,<span class="st">"black"</span>,<span class="st">"grey"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu">theme</span><span class="op">(</span>legend.title <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>  <span class="op">-&gt;</span> 
+<span class="fu">ggraph</span><span class="op">(</span><span class="va">gr.k</span>, layout <span class="op">=</span> <span class="st">"fr"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_edge_fan</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>color <span class="op">=</span> <span class="va">type</span><span class="op">)</span>, width <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_node_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>fill <span class="op">=</span> <span class="va">hosp_assoc</span><span class="op">)</span>, shape <span class="op">=</span> <span class="fl">21</span>, size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span>
+  <span class="co">#  facet_edges(~ type) +</span>
+  <span class="fu">theme_void</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">scale_fill_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"white"</span>, <span class="st">"black"</span>, <span class="st">"grey"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">theme</span><span class="op">(</span>
+    legend.title <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span>,
+    legend.position <span class="op">=</span> <span class="st">"bottom"</span>,
+    legend.text <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>
+  <span class="op">)</span> <span class="op">+</span>
+  <span class="fu">guides</span><span class="op">(</span>edge_colour <span class="op">=</span> <span class="fu">guide_legend</span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,
+         fill <span class="op">=</span> <span class="fu">guide_legend</span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>  <span class="op">-&gt;</span>
   <span class="va">snp_network_plot.kleb</span>
 
 
 <span class="op">(</span><span class="va">snp_network_plot.esco</span> <span class="op">+</span> 
   <span class="va">snp_network_plot.kleb</span><span class="op">)</span> <span class="op">+</span> <span class="fu">plot_layout</span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"collect"</span><span class="op">)</span> <span class="op">+</span>  
-  <span class="fu">plot_annotation</span><span class="op">(</span>tag_levels <span class="op">=</span> <span class="st">"A"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">snp_networks</span>
+  <span class="fu">plot_annotation</span><span class="op">(</span>tag_levels <span class="op">=</span> <span class="st">"A"</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">'bottom'</span><span class="op">)</span> <span class="op">-&gt;</span>
+  <span class="va">snp_networks</span>
 <span class="va">snp_networks</span></code></pre></div>
-<p><img src="analysis_files/figure-html/snp-clusts-1.png" width="1267.2"></p>
+<div class="figure">
+<img src="analysis_files/figure-html/snp-clusts-1.png" alt="Network plot of SNP-clusters (i.e. putative transmission clusters) for E. coli (A) and K. pneumoniae (B) showing that putative transmission clusters are not purely hospital associated. Points are samples, coloured by place of isolation (in-hospital [black], community [white], or up to 120 days post-discharge [grey]). Red lines link samples that are within a single participant. Blue lines link samples that are differ by five or fewer SNPs. The plot shows that most samples are not members of a SNP-cluster; that most SNP clusters are made up of samples from different participants (rather than multiple samples from the same participant); and that SNP-clusters are not strongly hospital-associated (i.e. they contain black, white, and grey points)." width="1267.2"><p class="caption">
+Network plot of SNP-clusters (i.e. putative transmission clusters) for E. coli (A) and K. pneumoniae (B) showing that putative transmission clusters are not purely hospital associated. Points are samples, coloured by place of isolation (in-hospital [black], community [white], or up to 120 days post-discharge [grey]). Red lines link samples that are within a single participant. Blue lines link samples that are differ by five or fewer SNPs. The plot shows that most samples are not members of a SNP-cluster; that most SNP clusters are made up of samples from different participants (rather than multiple samples from the same participant); and that SNP-clusters are not strongly hospital-associated (i.e. they contain black, white, and grey points).
+</p>
+</div>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 
@@ -4782,11 +4796,11 @@ Within participant correlation of organism, lineage, mobile genetic element (MGE
   <span class="fu">ggsave</span><span class="op">(</span><span class="fu">here</span><span class="op">(</span><span class="st">"figures/long-modelling/F4snp_networks.pdf"</span><span class="op">)</span>,
          <span class="va">snp_networks</span>,
          width <span class="op">=</span> <span class="fl">13.2</span>,
-         height <span class="op">=</span> <span class="fl">6</span><span class="op">)</span>
+         height <span class="op">=</span> <span class="fl">7.5</span><span class="op">)</span>
   <span class="fu">ggsave</span><span class="op">(</span><span class="fu">here</span><span class="op">(</span><span class="st">"figures/long-modelling/F4snp_networks.svg"</span><span class="op">)</span>,
          <span class="va">snp_networks</span>,
          width <span class="op">=</span> <span class="fl">13.2</span>, 
-         height <span class="op">=</span> <span class="fl">6</span><span class="op">)</span>
+         height <span class="op">=</span> <span class="fl">7.5</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
 </div>
 <div id="misc-snp-cluster-stats" class="section level3">
@@ -5024,8 +5038,8 @@ Within participant correlation of organism, lineage, mobile genetic element (MGE
     by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"lab_id.x"</span>, <span class="st">"lab_id.y"</span><span class="op">)</span>
   <span class="op">)</span> <span class="op">-&gt;</span> <span class="va">samples</span>
 
-<span class="va">samples</span><span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">pid.x</span> <span class="op">==</span> <span class="va">pid.y</span><span class="op">)</span><span class="op">-&gt;</span> <span class="va">pairwise_within</span>
+<span class="va">samples</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">pid.x</span> <span class="op">==</span> <span class="va">pid.y</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">pairwise_within</span>
 
 
 <span class="va">pairwise_within</span> <span class="op">%&gt;%</span>
@@ -5128,91 +5142,16 @@ Within participant correlation of organism, lineage, mobile genetic element (MGE
 <span class="va">a</span> <span class="op">+</span> <span class="va">b</span> <span class="op">+</span> <span class="fu">plot_annotation</span><span class="op">(</span>tag_levels <span class="op">=</span> <span class="st">"A"</span><span class="op">)</span> <span class="op">+</span> 
 <span class="fu">plot_layout</span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"collect"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">sens_analysis_within_snpdist</span>
 
+<span class="kw">if</span> <span class="op">(</span><span class="va">write_figs</span><span class="op">)</span> <span class="op">{</span>
+
 <span class="fu">ggsave</span><span class="op">(</span><span class="st">"~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/SUPP_FIG_sens_analysis_snpdist_autocorrelation.svg"</span>, <span class="va">sens_analysis_within_snpdist</span>, width <span class="op">=</span> <span class="fl">9</span>, height <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>
-<span class="co">#&gt; `geom_smooth()` using method = 'loess' and formula 'y ~ x'</span>
-<span class="co">#&gt; `geom_smooth()` using method = 'loess' and formula 'y ~ x'</span>
 
 <span class="fu">ggsave</span><span class="op">(</span><span class="st">"~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/SUPP_FIG_sens_analysis_snpdist_autocorrelation.pdf"</span>, <span class="va">sens_analysis_within_snpdist</span>, width <span class="op">=</span> <span class="fl">9</span>, height <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>
-<span class="co">#&gt; `geom_smooth()` using method = 'loess' and formula 'y ~ x'</span>
-<span class="co">#&gt; `geom_smooth()` using method = 'loess' and formula 'y ~ x'</span></code></pre></div>
+
+<span class="op">}</span></code></pre></div>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
-<span class="co"># </span>
-<span class="co"># ## snp network</span>
-<span class="co"># </span>
-<span class="co"># make_cluster_pairwise_comparison_df &lt;- function(pairwise_snp_df,</span>
-<span class="co">#                                                 metadata_df,</span>
-<span class="co">#                                                 cut_tree_vect,</span>
-<span class="co">#                                                 n) {</span>
-<span class="co">#   cluster_samples &lt;- names(cut_tree_vect[cut_tree_vect == n])</span>
-<span class="co">#   pairwise_snp_df &lt;- as.data.frame(pairwise_snp_df)</span>
-<span class="co">#   rownames(pairwise_snp_df) &lt;- pairwise_snp_df$sample</span>
-<span class="co">#   pairwise_snp_df[cluster_samples, c("sample", cluster_samples)] %&gt;%</span>
-<span class="co">#     pivot_longer(-sample) %&gt;%</span>
-<span class="co">#     filter(sample != name) -&gt; d</span>
-<span class="co"># </span>
-<span class="co">#   d[!duplicated(apply(d[1:2], 1, sort), MARGIN = 2), ] -&gt; d</span>
-<span class="co">#   names(d) &lt;- c("sample.x", "sample.y", "snpdist")</span>
-<span class="co">#   d$sample.x &lt;- gsub("#", "_", d$sample.x)</span>
-<span class="co">#   d$sample.y &lt;- gsub("#", "_", d$sample.y)</span>
-<span class="co"># </span>
-<span class="co"># </span>
-<span class="co">#   left_join(</span>
-<span class="co">#     d,</span>
-<span class="co">#     select(</span>
-<span class="co">#       metadata_df,</span>
-<span class="co">#       lane,</span>
-<span class="co">#       pid,</span>
-<span class="co">#       arm,</span>
-<span class="co">#       visit,</span>
-<span class="co">#       enroll_date,</span>
-<span class="co">#       hospoutcomedate,</span>
-<span class="co">#       data_date</span>
-<span class="co">#     ),</span>
-<span class="co">#     by = c("sample.x" = "lane")</span>
-<span class="co">#   ) %&gt;%</span>
-<span class="co">#     left_join(</span>
-<span class="co">#       select(</span>
-<span class="co">#         metadata_df,</span>
-<span class="co">#         lane,</span>
-<span class="co">#         pid,</span>
-<span class="co">#         arm,</span>
-<span class="co">#         visit,</span>
-<span class="co">#         enroll_date,</span>
-<span class="co">#         hospoutcomedate,</span>
-<span class="co">#         data_date</span>
-<span class="co">#       ),</span>
-<span class="co">#       by = c("sample.y" = "lane")</span>
-<span class="co">#     ) -&gt; d</span>
-<span class="co">#   d$pair &lt;- paste0(d$sample.x, "-", d$sample.y)</span>
-<span class="co">#   d$cluster_number &lt;- n</span>
-<span class="co">#   d$cluster_name &lt;- n</span>
-<span class="co">#   d %&gt;%</span>
-<span class="co">#     mutate(type = case_when(pid.x == pid.y ~ "within",</span>
-<span class="co">#                             TRUE ~ "between")) -&gt;   d</span>
-<span class="co">#   return(d)</span>
-<span class="co"># </span>
-<span class="co"># }</span>
-<span class="co"># </span>
-<span class="co"># </span>
-<span class="co"># make_all_clusters_pairwise_comparison_df  &lt;-</span>
-<span class="co">#   function(pairwise_snp_df,</span>
-<span class="co">#            metadata_df,</span>
-<span class="co">#            cut_tree_vect) {</span>
-<span class="co">#     out &lt;- list()</span>
-<span class="co">#     for (i in 1:max(cut_tree_vect)) {</span>
-<span class="co">#       #    print(i)</span>
-<span class="co">#       #  print(i)</span>
-<span class="co">#       make_cluster_pairwise_comparison_df(pairwise_snp_df,</span>
-<span class="co">#                                           metadata_df,</span>
-<span class="co">#                                           cut_tree_vect,</span>
-<span class="co">#                                           i) -&gt; out[[i]]</span>
-<span class="co"># </span>
-<span class="co">#     }</span>
-<span class="co">#     return(do.call(rbind, out))</span>
-<span class="co"># </span>
-<span class="co"># </span>
-<span class="co">#   }</span>
+
 
 <span class="co">#### start plots -------------</span>
 
@@ -5692,11 +5631,14 @@ Pairs plots of posterior of final model showing nonidentifiability of gain and l
 <span class="co">#&gt; [94] gridGraphics_0.5-1   textshaping_0.3.5    RcppParallel_5.1.4  </span>
 <span class="co">#&gt; [97] stats4_4.1.1         munsell_0.5.0        bslib_0.2.5.1</span></code></pre></div>
 </div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-      </div>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
+</div>
 
 </div>
 
