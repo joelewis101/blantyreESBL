@@ -369,7 +369,7 @@
           <span class="st">"Total (n = 425)"</span>
         <span class="op">)</span>, 
       escape <span class="op">=</span> <span class="cn">FALSE</span>,
-      caption <span class="op">=</span> <span class="st">"TABLE 1: Baseline characteristics of included participants"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+      caption <span class="op">=</span> <span class="st">"Baseline characteristics of included participants"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_classic.html">kable_classic</a></span><span class="op">(</span>full_width <span class="op">=</span> <span class="cn">F</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/group_rows.html">pack_rows</a></span><span class="op">(</span>index <span class="op">=</span> <span class="va">groupvar</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/row_spec.html">row_spec</a></span><span class="op">(</span><span class="va">indentrows</span>, italic <span class="op">=</span> <span class="cn">TRUE</span>  <span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -384,7 +384,7 @@
   <span class="op">)</span></code></pre></div>
 <table class="table  lightable-classic">
 <caption>
-TABLE 1: Baseline characteristics of included participants
+Baseline characteristics of included participants
 </caption>
 <thead><tr>
 <th style="text-align:left;">
@@ -446,7 +446,7 @@ Male
 40/100 (40%)
 </td>
 <td style="text-align:left;">
-0.172
+0.185
 </td>
 <td style="text-align:left;">
 205/425 (48%)
@@ -534,7 +534,7 @@ Current CPT
 7/18 (39%)
 </td>
 <td style="text-align:left;">
-0.014
+0.009
 </td>
 <td style="text-align:left;">
 110/171 (64%)
@@ -554,7 +554,7 @@ Current ART
 18/18 (100%)
 </td>
 <td style="text-align:left;">
-0.084
+0.078
 </td>
 <td style="text-align:left;">
 144/173 (83%)
@@ -574,7 +574,7 @@ ART regimen: EFV/3TC/TDF
 17/18 (94%)
 </td>
 <td style="text-align:left;">
-0.631
+0.626
 </td>
 <td style="text-align:left;">
 135/144 (94%)
@@ -659,7 +659,7 @@ Current TB treatment
 4/100 (4%)
 </td>
 <td style="text-align:left;">
-0.071
+0.096
 </td>
 <td style="text-align:left;">
 14/425 (3%)
@@ -820,7 +820,7 @@ Electricty in house
 58/100 (58%)
 </td>
 <td style="text-align:left;">
-0.049
+0.040
 </td>
 <td style="text-align:left;">
 218/425 (51%)
@@ -840,7 +840,7 @@ Flush toilet<sup>‡</sup>
 1/100 (1%)
 </td>
 <td style="text-align:left;">
-0.121
+0.125
 </td>
 <td style="text-align:left;">
 20/425 (5%)
@@ -860,7 +860,7 @@ Protected water source<sup>§</sup>
 98/100 (98%)
 </td>
 <td style="text-align:left;">
-0.131
+0.128
 </td>
 <td style="text-align:left;">
 406/425 (96%)
@@ -880,7 +880,7 @@ Treat drinking water with chlorine
 0/100 (0%)
 </td>
 <td style="text-align:left;">
-0.006
+0.001
 </td>
 <td style="text-align:left;">
 24/425 (6%)
@@ -1023,8 +1023,8 @@ Treat drinking water with chlorine
 <span class="va">exp_plot</span>
 <span class="co">#&gt; Warning: Removed 3042 row(s) containing missing values (geom_path).</span></code></pre></div>
 <div class="figure">
-<img src="analysis_files/figure-html/exp-1.png" alt="Supplementary figure 1: Exposures during study period. Panels show proportion of participants in each arm of the study who are hospitalised of exposed to antimicrobials on a given day" width="768"><p class="caption">
-Supplementary figure 1: Exposures during study period. Panels show proportion of participants in each arm of the study who are hospitalised of exposed to antimicrobials on a given day
+<img src="analysis_files/figure-html/exp-1.png" alt="Exposures during study period. Panels show proportion of participants in each arm of the study who are hospitalised of exposed to antimicrobials on a given day" width="768"><p class="caption">
+Exposures during study period. Panels show proportion of participants in each arm of the study who are hospitalised of exposed to antimicrobials on a given day
 </p>
 </div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -1078,7 +1078,7 @@ Supplementary figure 1: Exposures during study period. Panels show proportion of
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html">desc</a></span><span class="op">(</span><span class="va">n.p_1</span><span class="op">)</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html">desc</a></span><span class="op">(</span><span class="va">name</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>
     col.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Exposure"</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Sepsis"</span>, <span class="st">"Inpatient"</span>, <span class="st">"Community"</span><span class="op">)</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span>,
-    caption <span class="op">=</span> <span class="st">"SUPPLEMENTARY TABLE 1:Antimicrobial and hospital exposure stratified by arm"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    caption <span class="op">=</span> <span class="st">"Antimicrobial and hospital exposure stratified by arm"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_classic.html">kable_classic</a></span><span class="op">(</span>full_width <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="co">#row_spec(1, bold = TRUE) %&gt;% </span>
   <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/group_rows.html">pack_rows</a></span><span class="op">(</span><span class="st">"Exposures"</span>, <span class="fl">2</span>, <span class="fl">23</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -1090,7 +1090,7 @@ Supplementary figure 1: Exposures during study period. Panels show proportion of
 <span class="co">#&gt; `summarise()` has grouped output by 'arm'. You can override using the `.groups` argument.</span></code></pre></div>
 <table class="table  lightable-classic">
 <caption>
-SUPPLEMENTARY TABLE 1:Antimicrobial and hospital exposure stratified by arm
+Antimicrobial and hospital exposure stratified by arm
 </caption>
 <thead>
 <tr>
@@ -1966,7 +1966,7 @@ Chloramphenicol
       <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>col.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Visit"</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span>
         <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"n"</span>, <span class="st">"ESBL"</span>, <span class="st">"E. coli"</span>, <span class="st">"K. pneumo"</span><span class="op">)</span>, <span class="fl">3</span>
       <span class="op">)</span><span class="op">)</span>,
-      caption <span class="op">=</span> <span class="st">"SUPPLEMENTARY TABLE 2:ESBL, E. coli and K. pneumoniae prevalence in stool at study visits, stratified by study arm."</span><span class="op">)</span> <span class="op">%&gt;%</span>
+      caption <span class="op">=</span> <span class="st">"ESBL, E. coli and K. pneumoniae prevalence in stool at study visits, stratified by study arm."</span><span class="op">)</span> <span class="op">%&gt;%</span>
       <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_classic.html">kable_classic</a></span><span class="op">(</span>full_width <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">%&gt;%</span>
       <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/add_header_above.html">add_header_above</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
         <span class="st">" "</span> <span class="op">=</span> <span class="fl">1</span>,
@@ -1980,7 +1980,7 @@ Chloramphenicol
 <span class="co">#&gt; Joining, by = c("arm", "visit")</span></code></pre></div>
 <table class="table  lightable-classic">
 <caption>
-SUPPLEMENTARY TABLE 2:ESBL, E. coli and K. pneumoniae prevalence in stool at study visits, stratified by study arm.
+ESBL, E. coli and K. pneumoniae prevalence in stool at study visits, stratified by study arm.
 </caption>
 <thead>
 <tr>
@@ -2343,8 +2343,8 @@ Day 180
 <span class="co">#&gt; Warning: Removed 7 rows containing non-finite values (stat_bin).</span>
 <span class="co">#&gt; Warning: Removed 8 rows containing missing values (geom_bar).</span></code></pre></div>
 <div class="figure">
-<img src="analysis_files/figure-html/sample_timing-1.png" alt="SUPPLEMENTARY FIGURE X: Timing of sample collection showing long tails around sample collection time." width="576"><p class="caption">
-SUPPLEMENTARY FIGURE X: Timing of sample collection showing long tails around sample collection time.
+<img src="analysis_files/figure-html/sample_timing-1.png" alt="Timing of sample collection showing long tails around sample collection time." width="576"><p class="caption">
+Timing of sample collection showing long tails around sample collection time.
 </p>
 </div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -2380,7 +2380,11 @@ SUPPLEMENTARY FIGURE X: Timing of sample collection showing long tails around sa
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">stool_spec</span>
 
 <span class="va">stool_spec</span></code></pre></div>
-<p><img src="analysis_files/figure-html/ESBLspecies-1.png" width="700"></p>
+<div class="figure">
+<img src="analysis_files/figure-html/ESBLspecies-1.png" alt="Species cultured from stool." width="576"><p class="caption">
+Species cultured from stool.
+</p>
+</div>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="kw">if</span> <span class="op">(</span><span class="va">write_figs</span><span class="op">)</span> <span class="op">{</span>
@@ -2530,7 +2534,7 @@ SUPPLEMENTARY FIGURE X: Timing of sample collection showing long tails around sa
                         <span class="st">"p-value"</span>, 
                         <span class="st">"aOR (95\\% CI)"</span>,
                         <span class="st">"p-value"</span><span class="op">)</span>,
-      caption <span class="op">=</span> <span class="st">"TABLE 2: Univariable and multivariable associations of ESBL colonisation at enrolment"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+      caption <span class="op">=</span> <span class="st">"Univariable and multivariable associations of ESBL colonisation at enrolment"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
         <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_classic.html">kable_classic</a></span><span class="op">(</span>full_width <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">%&gt;%</span>
       <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/column_spec.html">column_spec</a></span><span class="op">(</span><span class="fl">2</span><span class="op">:</span><span class="fl">3</span>, bold <span class="op">=</span> <span class="va">log_regESBL</span><span class="op">$</span><span class="va">p.value_uv</span> <span class="op">&lt;</span> <span class="fl">0.05</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/column_spec.html">column_spec</a></span><span class="op">(</span><span class="fl">4</span><span class="op">:</span><span class="fl">5</span>, bold <span class="op">=</span> <span class="va">log_regESBL</span><span class="op">$</span><span class="va">p.value_mv</span> <span class="op">&lt;</span> <span class="fl">0.05</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -2544,7 +2548,7 @@ SUPPLEMENTARY FIGURE X: Timing of sample collection showing long tails around sa
   <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/footnote.html">footnote</a></span><span class="op">(</span>general <span class="op">=</span> <span class="st">"CPT = Cotrimoxazole preventative therapy, ART = antiretroviral therapy, TB = tuberculosis. Entries in bold are those for which 95% confidence intervals do not cross 1."</span>, symbol <span class="op">=</span> <span class="st">"Antibiotics includes TB therapy but excludes CPT."</span><span class="op">)</span> </code></pre></div>
 <table class="table  lightable-classic">
 <caption>
-TABLE 2: Univariable and multivariable associations of ESBL colonisation at enrolment
+Univariable and multivariable associations of ESBL colonisation at enrolment
 </caption>
 <thead>
 <tr>
@@ -3046,13 +3050,14 @@ Rainy season (vs. dry)
 <span class="co">#cols2 = c("#ffcc80", "#a25079","#660066")</span>
 
 <span class="va">btESBL_model2simulations</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">abx_stop</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>abx_days <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">abx_days</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">abx_days</span><span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>
-        median <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">`2`</span><span class="op">)</span>,
-        lq <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">`2`</span>, <span class="fl">0.025</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,
-        uq <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">`2`</span>, <span class="fl">0.975</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
+        median <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">pr_esbl_pos</span><span class="op">)</span>,
+        lq <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">pr_esbl_pos</span>, <span class="fl">0.025</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,
+        uq <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">pr_esbl_pos</span>, <span class="fl">0.975</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
     <span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>abx_stop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="va">abx_stop</span><span class="op">)</span>, 
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>abx_stop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="va">abx_days</span><span class="op">)</span>, 
                              <span class="st">" days \nantimicrobials"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>
         <span class="va">time</span>,
@@ -3087,8 +3092,8 @@ Rainy season (vs. dry)
 <span class="va">markov_panel_plot</span>
 <span class="co">#&gt; `geom_smooth()` using method = 'loess' and formula 'y ~ x'</span></code></pre></div>
 <div class="figure">
-<img src="analysis_files/figure-html/markov-model-panel-plot-1.png" alt="FIGURE 1: Determinants of ESBL-E carriage. A: Prevalence of ESBL-E carriage stratified by study arm. Inpatients without sepsis are censored at first antimicrobial exposure and community members censored at first antimicrobial exposure or hospital admission. Estimated prevalence and 95% confience intervals derived from a nonparametric LOESS regression with span parameter 0.8. B: Simulated probability of ESBL colonisation generated from the posterior parameter estimates of the fitted model with a starting probability of colonisation of 0.5 and seven days of hospitalisation with either seven, two, or no days antimicrobial exposure. In this model, truncated courses of antimicrobials havelittle effect on reducing ESBL-E carriage. C-E: Density plots of parameter estimates form fitted model with median (line) and 95% credible intervals (shading) shown. A: log hazard ratios of ESBL-E gain and loss for hospialisation and antimicrobial exposure: hospitalisation acts to acts to increase both acquisition and loss of ESBL-E whereas antmicrobial exposure acts to prevent loss. D: mean time in state for uncolonised and colonised states. E: Half life of decay of effecr of antimicrobials, showing that the effect of antimicrobials, in this model, acts for many days after exposure has finished." width="1152"><p class="caption">
-FIGURE 1: Determinants of ESBL-E carriage. A: Prevalence of ESBL-E carriage stratified by study arm. Inpatients without sepsis are censored at first antimicrobial exposure and community members censored at first antimicrobial exposure or hospital admission. Estimated prevalence and 95% confience intervals derived from a nonparametric LOESS regression with span parameter 0.8. B: Simulated probability of ESBL colonisation generated from the posterior parameter estimates of the fitted model with a starting probability of colonisation of 0.5 and seven days of hospitalisation with either seven, two, or no days antimicrobial exposure. In this model, truncated courses of antimicrobials havelittle effect on reducing ESBL-E carriage. C-E: Density plots of parameter estimates form fitted model with median (line) and 95% credible intervals (shading) shown. A: log hazard ratios of ESBL-E gain and loss for hospialisation and antimicrobial exposure: hospitalisation acts to acts to increase both acquisition and loss of ESBL-E whereas antmicrobial exposure acts to prevent loss. D: mean time in state for uncolonised and colonised states. E: Half life of decay of effecr of antimicrobials, showing that the effect of antimicrobials, in this model, acts for many days after exposure has finished.
+<img src="analysis_files/figure-html/markov-model-panel-plot-1.png" alt="Determinants of ESBL-E carriage. A: Prevalence of ESBL-E carriage stratified by study arm. Inpatients without sepsis are censored at first antimicrobial exposure and community members censored at first antimicrobial exposure or hospital admission. Estimated prevalence and 95% confience intervals derived from a nonparametric LOESS regression with span parameter 0.8. B: Simulated probability of ESBL colonisation generated from the posterior parameter estimates of the fitted model with a starting probability of colonisation of 0.5 and seven days of hospitalisation with either seven, two, or no days antimicrobial exposure. In this model, truncated courses of antimicrobials havelittle effect on reducing ESBL-E carriage. C-E: Density plots of parameter estimates form fitted model with median (line) and 95% credible intervals (shading) shown. A: log hazard ratios of ESBL-E gain and loss for hospialisation and antimicrobial exposure: hospitalisation acts to acts to increase both acquisition and loss of ESBL-E whereas antmicrobial exposure acts to prevent loss. D: mean time in state for uncolonised and colonised states. E: Half life of decay of effecr of antimicrobials, showing that the effect of antimicrobials, in this model, acts for many days after exposure has finished." width="1152"><p class="caption">
+Determinants of ESBL-E carriage. A: Prevalence of ESBL-E carriage stratified by study arm. Inpatients without sepsis are censored at first antimicrobial exposure and community members censored at first antimicrobial exposure or hospital admission. Estimated prevalence and 95% confience intervals derived from a nonparametric LOESS regression with span parameter 0.8. B: Simulated probability of ESBL colonisation generated from the posterior parameter estimates of the fitted model with a starting probability of colonisation of 0.5 and seven days of hospitalisation with either seven, two, or no days antimicrobial exposure. In this model, truncated courses of antimicrobials havelittle effect on reducing ESBL-E carriage. C-E: Density plots of parameter estimates form fitted model with median (line) and 95% credible intervals (shading) shown. A: log hazard ratios of ESBL-E gain and loss for hospialisation and antimicrobial exposure: hospitalisation acts to acts to increase both acquisition and loss of ESBL-E whereas antmicrobial exposure acts to prevent loss. D: mean time in state for uncolonised and colonised states. E: Half life of decay of effecr of antimicrobials, showing that the effect of antimicrobials, in this model, acts for many days after exposure has finished.
 </p>
 </div>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
@@ -3218,8 +3223,8 @@ FIGURE 1: Determinants of ESBL-E carriage. A: Prevalence of ESBL-E carriage stra
 
 <span class="va">model_comp_plot</span></code></pre></div>
 <div class="figure">
-<img src="analysis_files/figure-html/compare-models-plot-1.png" alt="SUPPLEMENTARY FIGURE X: Model comparisons for models with and without an exponentially dcaying effect of antmicrobials. A-B: Parameter estimates from stepwise-constant covariate model. C-E: parameter estimates from model with exponentially-decaying effect of antinicrobial exposure. F: Posterior predictive checks of modelsm comparing model with piecewise-constant covariates (model 1) to exponentially decaying effect of antimicrobial exposure (model 2). Dashed lines show actual ESBL-E prevalence across three study arms; probability density of predicted prevalence from the two models show that model 1 tends to underestimate ESBL-E prevalence in the antimicrobial-exposed, compared to model 2." width="1056"><p class="caption">
-SUPPLEMENTARY FIGURE X: Model comparisons for models with and without an exponentially dcaying effect of antmicrobials. A-B: Parameter estimates from stepwise-constant covariate model. C-E: parameter estimates from model with exponentially-decaying effect of antinicrobial exposure. F: Posterior predictive checks of modelsm comparing model with piecewise-constant covariates (model 1) to exponentially decaying effect of antimicrobial exposure (model 2). Dashed lines show actual ESBL-E prevalence across three study arms; probability density of predicted prevalence from the two models show that model 1 tends to underestimate ESBL-E prevalence in the antimicrobial-exposed, compared to model 2.
+<img src="analysis_files/figure-html/compare-models-plot-1.png" alt="Model comparisons for models with and without an exponentially dcaying effect of antmicrobials. A-B: Parameter estimates from stepwise-constant covariate model. C-E: parameter estimates from model with exponentially-decaying effect of antinicrobial exposure. F: Posterior predictive checks of modelsm comparing model with piecewise-constant covariates (model 1) to exponentially decaying effect of antimicrobial exposure (model 2). Dashed lines show actual ESBL-E prevalence across three study arms; probability density of predicted prevalence from the two models show that model 1 tends to underestimate ESBL-E prevalence in the antimicrobial-exposed, compared to model 2." width="1056"><p class="caption">
+Model comparisons for models with and without an exponentially dcaying effect of antmicrobials. A-B: Parameter estimates from stepwise-constant covariate model. C-E: parameter estimates from model with exponentially-decaying effect of antinicrobial exposure. F: Posterior predictive checks of modelsm comparing model with piecewise-constant covariates (model 1) to exponentially decaying effect of antimicrobial exposure (model 2). Dashed lines show actual ESBL-E prevalence across three study arms; probability density of predicted prevalence from the two models show that model 1 tends to underestimate ESBL-E prevalence in the antimicrobial-exposed, compared to model 2.
 </p>
 </div>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
@@ -3568,8 +3573,8 @@ Distribution of contig-clusters between and within genera. (A) shows distributio
 
 <span class="va">esbl_contig_stats</span></code></pre></div>
 <div class="figure">
-<img src="analysis_files/figure-html/contig-cluster-stats-1.png" alt="SUPPLEMENTARY FIGURE XXX: Size, representative cluster length, distribution of coverage and sequence identity of ESBL-contig clusters" width="864"><p class="caption">
-SUPPLEMENTARY FIGURE XXX: Size, representative cluster length, distribution of coverage and sequence identity of ESBL-contig clusters
+<img src="analysis_files/figure-html/contig-cluster-stats-1.png" alt="Size, representative cluster length, distribution of coverage and sequence identity of ESBL-contig clusters" width="864"><p class="caption">
+Size, representative cluster length, distribution of coverage and sequence identity of ESBL-contig clusters
 </p>
 </div>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
@@ -3690,8 +3695,8 @@ SUPPLEMENTARY FIGURE XXX: Size, representative cluster length, distribution of c
 <span class="op">}</span>
 <span class="va">pp.maptotree</span></code></pre></div>
 <div class="figure">
-<img src="analysis_files/figure-html/popPUNK+map_to_phylogeny-1.png" alt="SUPPLEMENTARY FIGURE XXX: popPUNK clusters mapped to core gene maximum-likelihood phylogeny" width="1152"><p class="caption">
-SUPPLEMENTARY FIGURE XXX: popPUNK clusters mapped to core gene maximum-likelihood phylogeny
+<img src="analysis_files/figure-html/popPUNK+map_to_phylogeny-1.png" alt="PopPUNK clusters mapped to core gene maximum-likelihood phylogeny" width="1152"><p class="caption">
+PopPUNK clusters mapped to core gene maximum-likelihood phylogeny
 </p>
 </div>
 </div>
@@ -5492,8 +5497,8 @@ Within participant correlation of organism, lineage, mobile genetic element (MGE
 
 <span class="va">esco_snp_clusters_sens_analysis_plot</span></code></pre></div>
 <div class="figure">
-<img src="analysis_files/figure-html/snp-network-sens-analysis-1.png" alt="SUPPLEMENTARY FIGURE: Sensitivity analysis of network plot of putative transmission clusters for E. coli, allowing the definition of a SNP-cluster to vary from 0 (A), to 3 (B), 7 (C), or 10 (D). Points are samples, coloured by place of isolation (in-hospital [black], community [white], or up to 120 days post-discharge [grey]). Red lines link samples that are within a single participant. Blue lines link samples that are differ by the given SNP threshold." width="1267.2"><p class="caption">
-SUPPLEMENTARY FIGURE: Sensitivity analysis of network plot of putative transmission clusters for E. coli, allowing the definition of a SNP-cluster to vary from 0 (A), to 3 (B), 7 (C), or 10 (D). Points are samples, coloured by place of isolation (in-hospital [black], community [white], or up to 120 days post-discharge [grey]). Red lines link samples that are within a single participant. Blue lines link samples that are differ by the given SNP threshold.
+<img src="analysis_files/figure-html/snp-network-sens-analysis-1.png" alt="Sensitivity analysis of network plot of putative transmission clusters for E. coli, allowing the definition of a SNP-cluster to vary from 0 (A), to 3 (B), 7 (C), or 10 (D). Points are samples, coloured by place of isolation (in-hospital [black], community [white], or up to 120 days post-discharge [grey]). Red lines link samples that are within a single participant. Blue lines link samples that are differ by the given SNP threshold." width="1267.2"><p class="caption">
+Sensitivity analysis of network plot of putative transmission clusters for E. coli, allowing the definition of a SNP-cluster to vary from 0 (A), to 3 (B), 7 (C), or 10 (D). Points are samples, coloured by place of isolation (in-hospital [black], community [white], or up to 120 days post-discharge [grey]). Red lines link samples that are within a single participant. Blue lines link samples that are differ by the given SNP threshold.
 </p>
 </div>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
@@ -5513,8 +5518,8 @@ SUPPLEMENTARY FIGURE: Sensitivity analysis of network plot of putative transmiss
 <code class="sourceCode R">
 <span class="va">kleb_snp_clusters_sens_analysis_plot</span></code></pre></div>
 <div class="figure">
-<img src="analysis_files/figure-html/snp-network-sens-analysis_kleb-1.png" alt="SUPPLEMENTARY FIGURE: Sensitivity analysis of network plot of putative transmission clusters for E. coli, allowing the definition of a SNP-cluster to vary from 0 (A), to 3 (B), 7 (C), or 10 (D). Points are samples, coloured by place of isolation (in-hospital [black], community [white], or up to 120 days post-discharge [grey]). Red lines link samples that are within a single participant. Blue lines link samples that are differ by the given SNP threshold." width="1267.2"><p class="caption">
-SUPPLEMENTARY FIGURE: Sensitivity analysis of network plot of putative transmission clusters for E. coli, allowing the definition of a SNP-cluster to vary from 0 (A), to 3 (B), 7 (C), or 10 (D). Points are samples, coloured by place of isolation (in-hospital [black], community [white], or up to 120 days post-discharge [grey]). Red lines link samples that are within a single participant. Blue lines link samples that are differ by the given SNP threshold.
+<img src="analysis_files/figure-html/snp-network-sens-analysis_kleb-1.png" alt="Sensitivity analysis of network plot of putative transmission clusters for E. coli, allowing the definition of a SNP-cluster to vary from 0 (A), to 3 (B), 7 (C), or 10 (D). Points are samples, coloured by place of isolation (in-hospital [black], community [white], or up to 120 days post-discharge [grey]). Red lines link samples that are within a single participant. Blue lines link samples that are differ by the given SNP threshold." width="1267.2"><p class="caption">
+Sensitivity analysis of network plot of putative transmission clusters for E. coli, allowing the definition of a SNP-cluster to vary from 0 (A), to 3 (B), 7 (C), or 10 (D). Points are samples, coloured by place of isolation (in-hospital [black], community [white], or up to 120 days post-discharge [grey]). Red lines link samples that are within a single participant. Blue lines link samples that are differ by the given SNP threshold.
 </p>
 </div>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">

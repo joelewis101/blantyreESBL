@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Data: Covariate data to pass to Stan longitudinal carriage model in list format — btESBL_stanmodeldata • blantyreESBL</title>
+<title>Data: Covariate data to pass to Stan longitudinal carriage model in dataframe format — btESBL_modeldata • blantyreESBL</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Data: Covariate data to pass to Stan longitudinal carriage model in list format — btESBL_stanmodeldata" />
+<meta property="og:title" content="Data: Covariate data to pass to Stan longitudinal carriage model in dataframe format — btESBL_modeldata" />
 <meta property="og:description" content="See vignette for details. Each row encodes two ESBL observations a time
 t apart and the covariate values in this time period" />
 
@@ -125,9 +125,9 @@ t apart and the covariate values in this time period" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Data: Covariate data to pass to Stan longitudinal carriage model in list format</h1>
+    <h1>Data: Covariate data to pass to Stan longitudinal carriage model in dataframe format</h1>
     
-    <div class="hidden name"><code>btESBL_stanmodeldata.Rd</code></div>
+    <div class="hidden name"><code>btESBL_modeldata.Rd</code></div>
     </div>
 
     <div class="ref-description">
@@ -135,22 +135,12 @@ t apart and the covariate values in this time period" />
 t apart and the covariate values in this time period</p>
     </div>
 
-    <pre class="usage"><span class='va'>btESBL_stanmodeldata</span></pre>
+    <pre class="usage"><span class='va'>btESBL_modeldata</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A named list of seven items.</p><dl>
-<dt>N</dt><dd><p>Number of rows of data</p></dd>
-<dt>t</dt><dd><p>vector of length n, Time between ESBL observations for that row</p></dd>
-<dt>n_covs</dt><dd><p>Number of covariates to include in model</p></dd>
-<dt>covs_type</dt><dd><p>define types of covariates</p></dd>
-<dt>start_state</dt><dd><p>Starting state for row ESBL present absent</p></dd>
-<dt>end_state</dt><dd><p>End state for that time period</p></dd>
-<dt>covs_mat</dt><dd><p>Covariate values ofr each included covariate</p></dd>
-
-</dl>
-
+    <p>The data from btESBL_stanmodeldata in dataframe format</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>These data are set up to fit a model where the effect of antimicrobial

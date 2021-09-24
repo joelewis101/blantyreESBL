@@ -147,19 +147,14 @@ a time t later</p>
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
     <p>A data frame with 600,000 rows and 18 variables:</p><dl>
-<dt>time</dt><dd><p>Number of days post enrollment</p></dd>
-<dt>1</dt><dd><p>Probability of being ESBL non-colonised at current time</p></dd>
-<dt>0</dt><dd><p>Probability of being ESBL colonised at current time</p></dd>
+<dt>sim_run</dt><dd><p>Simulation run ID</p></dd>
 <dt>draw</dt><dd><p>Unique ID of draw from posterior (1,2...1000)</p></dd>
+<dt>time</dt><dd><p>Time t in days</p></dd>
 <dt>hosp_days</dt><dd><p>Number of days of hospitalisation</p></dd>
 <dt>abx_days</dt><dd><p>Number of days of antimicrobial exposure</p></dd>
-<dt>p0</dt><dd><p>Probability at time 0 of being uncolonised</p></dd>
-<dt>p1</dt><dd><p>Probability at time 0 of being colonised</p></dd>
-<dt>abx_start</dt><dd><p>Time of antimicrobial exposure start</p></dd>
-<dt>abx_stop</dt><dd><p>Time of antimicrobial exposure stop</p></dd>
-<dt>prev_abx</dt><dd><p>Time of cessation of prev antimicrobial exposure (999=none)</p></dd>
-<dt>hosp_start</dt><dd><p>Time of hospitalisation start</p></dd>
-<dt>hosp_stop</dt><dd><p>Time of hospitalisation stop</p></dd>
+<dt>pr_esbl_pos_t0esblneg</dt><dd><p>Probability of ESBL colonisation at time t conditional on no colonisation at time 0</p></dd>
+<dt>pr_esbl_pos_t0esblpos</dt><dd><p>Probability of ESBL colonisation at time t conditional on colonisation at time 0</p></dd>
+<dt>pr_esbl_pos</dt><dd><p>Overall estimated prevalence of ESBL colonisation at time t assuming initial prevalence 0.5</p></dd>
 <dt>prev_hosp</dt><dd><p>Time of cessation of prev hospitalisation (999=none)</p></dd>
 
 </dl>
