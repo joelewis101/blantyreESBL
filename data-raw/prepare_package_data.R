@@ -3,6 +3,7 @@
 # the load_phd_data scripts are from the Thesis repo https://github.com/joelewis101/thesis
 #library(tidyverse)
 library("phytools")
+library(devtools)
 
 source("/Users/joelewis/Documents/PhD/Thesis/bookdown/final_cleaning_scripts/load_PhD_data.R")
 
