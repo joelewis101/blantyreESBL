@@ -397,7 +397,7 @@ bind_rows(
       Cluster = paste0("K", Cluster)
     ),
   read_csv(here(
-    "data-raw/poppunk/strain_db_clustersESCO.csv"
+    "data-raw/poppunk/strain_db_clusters.csv"
   )) %>%
     mutate(
       Taxon = gsub("#", "_", Taxon),
