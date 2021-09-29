@@ -20,7 +20,7 @@ This document contains reproducing analysis code which generates the tables and 
 
 <br />
 
-*Genomic analysis of extended-spectrum beta-lactamase (ESBL) producing Escherichia coli colonising adults in Blantyre, Malawi reveals unknown diversity n*
+*Genomic analysis of extended-spectrum beta-lactamase (ESBL) producing Escherichia coli colonising adults in Blantyre, Malawi reveals previously undescribed diversity*
 
 <br />
 
@@ -132,13 +132,13 @@ dassimEcoli_BTEcoli.accession %>%
   coord_flip() +
   theme_bw() +
   theme(legend.position = "none") +
-  labs(x = "ST", y = "n") +
+  labs(x = "ST", y = "Number of Samples") +
   scale_fill_manual(values = pgroup_cols) -> 
   p1 
 #  scale_fill_viridis_d(option = "cividis") -> p1
   
 dassimEcoli_BTEcoli.accession %>% 
-  ggplot(aes(fct_infreq(Phylogroup), fill = Phylogroup)) +
+  ggplot(aes(fct_rev(fct_infreq(Phylogroup)), fill = Phylogroup)) +
   geom_bar() +
   theme_bw() +
   theme(legend.position = "none", 
@@ -146,7 +146,8 @@ dassimEcoli_BTEcoli.accession %>%
                                    hjust = 1)) +
 #  scale_fill_viridis_d(option = "cividis") +
   scale_fill_manual(values = pgroup_cols) +
-  labs(x = "Phylogroup", y = "n") -> p2
+  coord_flip() +
+  labs(x = "Phylogroup", y = "Number of samples") -> p2
 
 btESBL_plasmidreplicons %>% 
   filter(species == "E. coli") %>% 
@@ -189,6 +190,58 @@ if (write_figs) {
 mlst_plot 
 ```
 
+## Compare phylogroup to horesh collection
+
+```{r globalvsmalawi_pgroup, fig.width = 5, fig.height = 4, fig.cap = "Phylogroup distribution in isolates from this study comapred to the global collection"}
+
+bind_rows(
+btESBL_ecoli_horesh_metadata %>% 
+  transmute(Study = "Global",
+            Phylogroup = Phylogroup),
+btESBL_sequence_sample_metadata %>% 
+  filter(species == "E. coli") %>% 
+  transmute(Study = "This Study",
+            Phylogroup = ecoli_phylogroup)
+) %>% 
+  mutate(Phylogroup =
+           if_else(Phylogroup == "Not Determined",
+                   "Unknown",
+                   Phylogroup),
+         Phylogroup = fct_infreq(Phylogroup)
+  ) %>% 
+  count(Study, Phylogroup, .drop = FALSE) %>% 
+  group_by(Study) %>% 
+  mutate(prop = n/sum(n)) %>% 
+  ggplot(aes(fct_reorder(Phylogroup, prop),
+             prop,
+             group = Study,
+             fill = Study)) +
+  geom_col(position = "dodge") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust =1)) +
+  labs(x = "Phylogroup",
+       y = "Proportion") ->
+  malawi_vs_global_pgroup
+
+malawi_vs_global_pgroup
+
+
+if (write_figs) {
+  ggsave(
+    here("figures/ecoli-genomics/global_vs_malawi_pgroup.svg"),
+    malawi_vs_global_pgroup,
+    width = 5,
+    height = 4
+  )
+  ggsave(
+    here("figures/ecoli-genomics/global_vs_malawi_pgroup.pdf"),
+    malawi_vs_global_pgroup,
+    width = 5,
+    height = 4
+  )
+}
+
+```
 
 ### Virulence
 
@@ -402,7 +455,7 @@ ggplot( aes(fct_reorder(fct_rev(fct_infreq(gene)), n_class),
            label = annotate.df$class, 
            size = 3, 
            hjust = 1) +
-  labs(y = "Number") + 
+  labs(y = "Number of samples") + 
   theme(plot.margin = unit(c(0.2,0.5,0.2,4), "cm"),
         axis.title.y  = element_blank(),
         legend.position = "none") -> amrplot
@@ -1395,8 +1448,68 @@ amr %>%
       uq = quantile(n, 0.75),
       max = max(n)
     )
-    
 
+  #QRDR stuff    
+
+  btESBL_amrgenes %>% 
+  semi_join(dassimEcoli_BTEcoli.accession, 
+            by = c( "lane")) %>% 
+  select(-genus) %>% 
+  rename(gene = ref_seq) %>% 
+  # add in QRDR mutations
+  bind_rows(
+    btESBL_qrdr_mutations %>% 
+      filter(genus == "E. coli") %>% 
+      select(-genus) %>% 
+      semi_join(
+        btESBL_CARD_qrdr_mutations, 
+        by = c("variant" = "variant",
+              "gene" =  "gene")
+      ) %>% 
+      unique() %>% 
+      mutate(gene =
+               gsub("(^.{1})", '\\U\\1',
+                    gene,
+                    perl = TRUE))
+      ) %>% 
+  filter(!grepl("AmpH|AMPH|AmpC|MrdA|MefB", gene)) %>% 
+  # add in beta-lactamases
+  left_join(
+    select(btESBL_NCBI_phenotypic_bl, allele_name, class),
+    by = c("gene" = "allele_name")) %>% 
+  mutate(class = case_when(
+    str_detect(gene, quinolone) ~ "Quinolone",
+    str_detect(gene, tetracycline) ~ "Tetracycline",
+    str_detect(gene, sulphonamide) ~ "Sulphonamide",
+    str_detect(gene, aminoglycoside) ~ "Aminoglycoside",
+    str_detect(gene, streptothricin) ~ "Streptothricin",
+    str_detect(gene, macrolide) ~ "Macrolide",
+    str_detect(gene, fosfomycin) ~ "Fosfomycin",
+    str_detect(gene, chloramphenicol) ~ "Chloramphenicol",
+    str_detect(gene, rifampicin) ~ "Rifampicin",
+    str_detect(gene,trimethoprim) ~ "Trimethoprim",
+    str_detect(gene,ESBL) ~ "ESBL",
+    str_detect(gene,penicillinase) ~ "Penicillinase",
+    str_detect(gene,ampc) ~ "AmpC",
+    TRUE ~ class
+  )) %>% 
+    filter(class == "Quinolone") -> quinolone.amr
+  
+  quinolone.amr %>% 
+    mutate(gene = paste0(gene, 
+                         if_else(
+                           !is.na(variant), 
+                           variant, ""))) %>% 
+    select(lane,gene) %>% 
+    unique() %>% 
+    pivot_wider(id_cols = lane,
+                names_from = gene,
+                values_from = gene,
+                values_fn = length,
+                values_fill = 0) %>% 
+    summarise(across(!contains("lane"), sum))
+    
+  
 ```
 
 

@@ -97,7 +97,7 @@
 <a href="#introduction" class="anchor"></a>Introduction</h2>
 <p>This document contains reproducing analysis code which generates the tables and figures for the manuscript:</p>
 <p><br></p>
-<p><em>Genomic analysis of extended-spectrum beta-lactamase (ESBL) producing Escherichia coli colonising adults in Blantyre, Malawi reveals unknown diversity n</em></p>
+<p><em>Genomic analysis of extended-spectrum beta-lactamase (ESBL) producing Escherichia coli colonising adults in Blantyre, Malawi reveals previously undescribed diversity</em></p>
 <p><br></p>
 <p>Joseph M Lewis<sup>1,2,3,4</sup>, , Madalitso Mphasa<sup>1</sup>, Rachel Banda<sup>1</sup>, Matthew Beale<sup>4</sup>, Jane Mallewa<sup>5</sup>, Adam P Roberts<sup>2</sup>, Eva Heinz<sup>2</sup>, Nicholas Thomson^4, 6^, Nicholas A Feasey<sup>1,2</sup></p>
 <ol style="list-style-type: decimal">
@@ -13808,13 +13808,13 @@ DAS1286I
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_flip.html">coord_flip</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"ST"</span>, y <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"ST"</span>, y <span class="op">=</span> <span class="st">"Number of Samples"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">pgroup_cols</span><span class="op">)</span> <span class="op">-&gt;</span> 
   <span class="va">p1</span> 
 <span class="co">#  scale_fill_viridis_d(option = "cividis") -&gt; p1</span>
   
 <span class="va">dassimEcoli_BTEcoli.accession</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_inorder.html">fct_infreq</a></span><span class="op">(</span><span class="va">Phylogroup</span><span class="op">)</span>, fill <span class="op">=</span> <span class="va">Phylogroup</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_rev.html">fct_rev</a></span><span class="op">(</span><span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_inorder.html">fct_infreq</a></span><span class="op">(</span><span class="va">Phylogroup</span><span class="op">)</span><span class="op">)</span>, fill <span class="op">=</span> <span class="va">Phylogroup</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span>, 
@@ -13822,7 +13822,8 @@ DAS1286I
                                    hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
 <span class="co">#  scale_fill_viridis_d(option = "cividis") +</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">pgroup_cols</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Phylogroup"</span>, y <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">p2</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_flip.html">coord_flip</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Phylogroup"</span>, y <span class="op">=</span> <span class="st">"Number of samples"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">p2</span>
 
 <span class="va">btESBL_plasmidreplicons</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">species</span> <span class="op">==</span> <span class="st">"E. coli"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -13869,6 +13870,64 @@ FIGURE 1: Sequence types (A) and phylogroups (B) of included isolates amd (C) id
 </p>
 </div>
 </div>
+</div>
+<div id="compare-phylogroup-to-horesh-collection" class="section level2">
+<h2 class="hasAnchor">
+<a href="#compare-phylogroup-to-horesh-collection" class="anchor"></a>Compare phylogroup to horesh collection</h2>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span><span class="op">(</span>
+<span class="va">btESBL_ecoli_horesh_metadata</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span><span class="op">(</span>Study <span class="op">=</span> <span class="st">"Global"</span>,
+            Phylogroup <span class="op">=</span> <span class="va">Phylogroup</span><span class="op">)</span>,
+<span class="va">btESBL_sequence_sample_metadata</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">species</span> <span class="op">==</span> <span class="st">"E. coli"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span><span class="op">(</span>Study <span class="op">=</span> <span class="st">"This Study"</span>,
+            Phylogroup <span class="op">=</span> <span class="va">ecoli_phylogroup</span><span class="op">)</span>
+<span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Phylogroup <span class="op">=</span>
+           <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else</a></span><span class="op">(</span><span class="va">Phylogroup</span> <span class="op">==</span> <span class="st">"Not Determined"</span>,
+                   <span class="st">"Unknown"</span>,
+                   <span class="va">Phylogroup</span><span class="op">)</span>,
+         Phylogroup <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_inorder.html">fct_infreq</a></span><span class="op">(</span><span class="va">Phylogroup</span><span class="op">)</span>
+  <span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span><span class="va">Study</span>, <span class="va">Phylogroup</span>, .drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">Study</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>prop <span class="op">=</span> <span class="va">n</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_reorder.html">fct_reorder</a></span><span class="op">(</span><span class="va">Phylogroup</span>, <span class="va">prop</span><span class="op">)</span>,
+             <span class="va">prop</span>,
+             group <span class="op">=</span> <span class="va">Study</span>,
+             fill <span class="op">=</span> <span class="va">Study</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_col</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, hjust <span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Phylogroup"</span>,
+       y <span class="op">=</span> <span class="st">"Proportion"</span><span class="op">)</span> <span class="op">-&gt;</span>
+  <span class="va">malawi_vs_global_pgroup</span>
+
+<span class="va">malawi_vs_global_pgroup</span></code></pre></div>
+<div class="figure">
+<img src="analysis-ecoli_files/figure-html/globalvsmalawi_pgroup-1.png" alt="Phylogroup distribution in isolates from this study comapred to the global collection" width="480"><p class="caption">
+Phylogroup distribution in isolates from this study comapred to the global collection
+</p>
+</div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+
+<span class="kw">if</span> <span class="op">(</span><span class="va">write_figs</span><span class="op">)</span> <span class="op">{</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html">ggsave</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"figures/ecoli-genomics/global_vs_malawi_pgroup.svg"</span><span class="op">)</span>,
+    <span class="va">malawi_vs_global_pgroup</span>,
+    width <span class="op">=</span> <span class="fl">5</span>,
+    height <span class="op">=</span> <span class="fl">4</span>
+  <span class="op">)</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html">ggsave</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"figures/ecoli-genomics/global_vs_malawi_pgroup.pdf"</span><span class="op">)</span>,
+    <span class="va">malawi_vs_global_pgroup</span>,
+    width <span class="op">=</span> <span class="fl">5</span>,
+    height <span class="op">=</span> <span class="fl">4</span>
+  <span class="op">)</span>
+<span class="op">}</span></code></pre></div>
 <div id="virulence" class="section level3">
 <h3 class="hasAnchor">
 <a href="#virulence" class="anchor"></a>Virulence</h3>
@@ -13885,7 +13944,7 @@ FIGURE 1: Sequence types (A) and phylogroups (B) of included isolates amd (C) id
 <div id="malawi-phylogeny" class="section level3">
 <h3 class="hasAnchor">
 <a href="#malawi-phylogeny" class="anchor"></a>Malawi phylogeny</h3>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">dassimEcoli_BTEcoli.accession</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">dassimEcoli_BTEcoli.accession</span> 
@@ -13974,7 +14033,7 @@ FIGURE 1: Sequence types (A) and phylogroups (B) of included isolates amd (C) id
 SUPPLEMENTARY FIGURE 1: Midpoint-rooted maximum-likelohood phylogeny of study isolates showing phylogroup and multilocus sequence type.
 </p>
 </div>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="kw">if</span> <span class="op">(</span><span class="va">write_figs</span><span class="op">)</span> <span class="op">{</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html">ggsave</a></span><span class="op">(</span>
@@ -13994,7 +14053,7 @@ SUPPLEMENTARY FIGURE 1: Midpoint-rooted maximum-likelohood phylogeny of study is
 <div id="amr-determinants" class="section level3">
 <h3 class="hasAnchor">
 <a href="#amr-determinants" class="anchor"></a>AMR determinants</h3>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 
 <span class="co"># add class ro which resistnce is conferred --------------------------------</span>
@@ -14095,14 +14154,14 @@ SUPPLEMENTARY FIGURE 1: Midpoint-rooted maximum-likelohood phylogeny of study is
            label <span class="op">=</span> <span class="va">annotate.df</span><span class="op">$</span><span class="va">class</span>, 
            size <span class="op">=</span> <span class="fl">3</span>, 
            hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"Number"</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"Number of samples"</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html">unit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.2</span>,<span class="fl">0.5</span>,<span class="fl">0.2</span>,<span class="fl">4</span><span class="op">)</span>, <span class="st">"cm"</span><span class="op">)</span>,
         axis.title.y  <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span>,
         legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">amrplot</span>
 
 <span class="va">amrplot</span></code></pre></div>
 <p><img src="analysis-ecoli_files/figure-html/amrplot-1.png" width="576"></p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 
 <span class="kw">if</span> <span class="op">(</span><span class="va">write_figs</span><span class="op">)</span> <span class="op">{</span>
@@ -14122,7 +14181,7 @@ SUPPLEMENTARY FIGURE 1: Midpoint-rooted maximum-likelohood phylogeny of study is
 <div id="amr-mapped-to-tree" class="section level4">
 <h4 class="hasAnchor">
 <a href="#amr-mapped-to-tree" class="anchor"></a>AMR mapped to tree</h4>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">amr</span> <span class="op">%&gt;%</span> 
   <span class="co"># filter(!gene %in% c("OqxA", "OqxB", "FosA")) %&gt;% </span>
@@ -14192,7 +14251,7 @@ SUPPLEMENTARY FIGURE 1: Midpoint-rooted maximum-likelohood phylogeny of study is
 AMR determinants mapped back to phylogeny
 </p>
 </div>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 
 <span class="kw">if</span> <span class="op">(</span><span class="va">write_figs</span><span class="op">)</span> <span class="op">{</span>
@@ -14217,7 +14276,7 @@ AMR determinants mapped back to phylogeny
 <div id="phylogeny" class="section level4">
 <h4 class="hasAnchor">
 <a href="#phylogeny" class="anchor"></a>Phylogeny</h4>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
  <span class="co">#prepare metadata ----------</span>
 <span class="co"># lookup list of horesh merged clusters </span>
@@ -14332,7 +14391,7 @@ AMR determinants mapped back to phylogeny
 
 <span class="va">df_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="va">df_all</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">df_all</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">df_all</span><span class="op">$</span><span class="va">lane</span>  </code></pre></div>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="co">#define color palettes</span>
 
@@ -14740,7 +14799,7 @@ AMR determinants mapped back to phylogeny
 A: Malawian E. coli isolates in a global phylogeny. All genomes from Musicha et al along with 500 context genomes from Horesh et al are included. Heatmaps show Phylogroup, year of collection, continent of collection and country (Malawi vs other). Highlighted areas and subtrees B-D show the phylogenetic context of the three commonest STs in this study: ST410 (B), ST167 (C) and ST131 (D). The tree tips in the subtree plots are coloured by popPUNK cluster assignment, with novel clusters that were not identified in the original Horesh collection given no color.
 </p>
 </div>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="kw">if</span> <span class="op">(</span><span class="va">write_figs</span><span class="op">)</span> <span class="op">{</span>
   
@@ -14760,7 +14819,7 @@ A: Malawian E. coli isolates in a global phylogeny. All genomes from Musicha et 
 <div id="poppunk-clusters" class="section level4">
 <h4 class="hasAnchor">
 <a href="#poppunk-clusters" class="anchor"></a>PopPUNK clusters</h4>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 
 <span class="va">df_all</span> <span class="op">%&gt;%</span> 
@@ -14869,7 +14928,7 @@ A: Malawian E. coli isolates in a global phylogeny. All genomes from Musicha et 
 PopPUNK cluster assignments of isolates from this study, using the Horesh et al database. A: Proportion of samples assigned to a given cluster for this study (left) and the Horesh collection (right); clusters are ordered numerically which by definition is form largest to smallest in the Horesh collection. B: Cumulative proportion of isolates with cluster membership, with clusters again ordered numerically (i.e. largest to smallest). Dotted line indicates the end of clusters defined in the original Horesh popPUNK database; clusters to the right of this line are newly defined in the isolates in this study.
 </p>
 </div>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="kw">if</span> <span class="op">(</span><span class="va">write_figs</span><span class="op">)</span> <span class="op">{</span>
   
@@ -14885,7 +14944,7 @@ PopPUNK cluster assignments of isolates from this study, using the Horesh et al 
     height <span class="op">=</span> <span class="fl">6</span><span class="op">)</span>
   
 <span class="op">}</span></code></pre></div>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 
 <span class="va">df_all</span> <span class="op">%&gt;%</span>
@@ -17916,7 +17975,7 @@ ST3856 (1.00)
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="kw">if</span> <span class="op">(</span><span class="va">write_figs</span><span class="op">)</span> <span class="op">{</span>
  <span class="fu"><a href="https://readr.tidyverse.org/reference/write_delim.html">write_csv</a></span><span class="op">(</span><span class="va">df_clusttab</span> <span class="op">%&gt;%</span> 
@@ -17933,7 +17992,7 @@ ST3856 (1.00)
  <span class="op">)</span>
    
 <span class="op">}</span></code></pre></div>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="co"># bits and bobs to calculate for manuscript</span>
 
@@ -18082,8 +18141,72 @@ ST3856 (1.00)
 <span class="co">#&gt; # A tibble: 1 × 5</span>
 <span class="co">#&gt;       m   min    lq    uq   max</span>
 <span class="co">#&gt;   &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;</span>
-<span class="co">#&gt; 1     2     1     1     9    64</span></code></pre></div>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<span class="co">#&gt; 1     2     1     1     9    64</span>
+
+  <span class="co">#QRDR stuff    </span>
+
+  <span class="va">btESBL_amrgenes</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter-joins.html">semi_join</a></span><span class="op">(</span><span class="va">dassimEcoli_BTEcoli.accession</span>, 
+            by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span> <span class="st">"lane"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">genus</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span>gene <span class="op">=</span> <span class="va">ref_seq</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="co"># add in QRDR mutations</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span><span class="op">(</span>
+    <span class="va">btESBL_qrdr_mutations</span> <span class="op">%&gt;%</span> 
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">genus</span> <span class="op">==</span> <span class="st">"E. coli"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">genus</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter-joins.html">semi_join</a></span><span class="op">(</span>
+        <span class="va">btESBL_CARD_qrdr_mutations</span>, 
+        by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"variant"</span> <span class="op">=</span> <span class="st">"variant"</span>,
+              <span class="st">"gene"</span> <span class="op">=</span>  <span class="st">"gene"</span><span class="op">)</span>
+      <span class="op">)</span> <span class="op">%&gt;%</span> 
+      <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>gene <span class="op">=</span>
+               <span class="fu"><a href="https://rdrr.io/r/base/grep.html">gsub</a></span><span class="op">(</span><span class="st">"(^.{1})"</span>, <span class="st">'\\U\\1'</span>,
+                    <span class="va">gene</span>,
+                    perl <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
+      <span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html">grepl</a></span><span class="op">(</span><span class="st">"AmpH|AMPH|AmpC|MrdA|MefB"</span>, <span class="va">gene</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="co"># add in beta-lactamases</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">btESBL_NCBI_phenotypic_bl</span>, <span class="va">allele_name</span>, <span class="va">class</span><span class="op">)</span>,
+    by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"gene"</span> <span class="op">=</span> <span class="st">"allele_name"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>class <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">gene</span>, <span class="va">quinolone</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Quinolone"</span>,
+    <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">gene</span>, <span class="va">tetracycline</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Tetracycline"</span>,
+    <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">gene</span>, <span class="va">sulphonamide</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Sulphonamide"</span>,
+    <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">gene</span>, <span class="va">aminoglycoside</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Aminoglycoside"</span>,
+    <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">gene</span>, <span class="va">streptothricin</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Streptothricin"</span>,
+    <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">gene</span>, <span class="va">macrolide</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Macrolide"</span>,
+    <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">gene</span>, <span class="va">fosfomycin</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Fosfomycin"</span>,
+    <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">gene</span>, <span class="va">chloramphenicol</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Chloramphenicol"</span>,
+    <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">gene</span>, <span class="va">rifampicin</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Rifampicin"</span>,
+    <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">gene</span>,<span class="va">trimethoprim</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Trimethoprim"</span>,
+    <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">gene</span>,<span class="va">ESBL</span><span class="op">)</span> <span class="op">~</span> <span class="st">"ESBL"</span>,
+    <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">gene</span>,<span class="va">penicillinase</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Penicillinase"</span>,
+    <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">gene</span>,<span class="va">ampc</span><span class="op">)</span> <span class="op">~</span> <span class="st">"AmpC"</span>,
+    <span class="cn">TRUE</span> <span class="op">~</span> <span class="va">class</span>
+  <span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">class</span> <span class="op">==</span> <span class="st">"Quinolone"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">quinolone.amr</span>
+  
+  <span class="va">quinolone.amr</span> <span class="op">%&gt;%</span> 
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>gene <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">gene</span>, 
+                         <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else</a></span><span class="op">(</span>
+                           <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">variant</span><span class="op">)</span>, 
+                           <span class="va">variant</span>, <span class="st">""</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">lane</span>,<span class="va">gene</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+    <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+    <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider</a></span><span class="op">(</span>id_cols <span class="op">=</span> <span class="va">lane</span>,
+                names_from <span class="op">=</span> <span class="va">gene</span>,
+                values_from <span class="op">=</span> <span class="va">gene</span>,
+                values_fn <span class="op">=</span> <span class="va">length</span>,
+                values_fill <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">contains</a></span><span class="op">(</span><span class="st">"lane"</span><span class="op">)</span>, <span class="va">sum</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; # A tibble: 1 × 10</span>
+<span class="co">#&gt;    QepA Qnr_S1 QnrB19 QnrS2 QnrB6 QnrB1 GyrAS83L GyrAD87N ParCS80I ParCE84G</span>
+<span class="co">#&gt;   &lt;int&gt;  &lt;int&gt;  &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;    &lt;int&gt;    &lt;int&gt;    &lt;int&gt;</span>
+<span class="co">#&gt; 1    47     57      2     1     2     2      351      294      296        8</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 
 <span class="va">btESBL_plasmidreplicons</span> <span class="op">%&gt;%</span> 
@@ -18135,7 +18258,7 @@ ST3856 (1.00)
 Plasmid replicons mapped back to tree
 </p>
 </div>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="kw">if</span> <span class="op">(</span><span class="va">write_figs</span><span class="op">)</span> <span class="op">{</span>
   
@@ -18156,7 +18279,7 @@ Plasmid replicons mapped back to tree
 <div id="st410-trees" class="section level3">
 <h3 class="hasAnchor">
 <a href="#st410-trees" class="anchor"></a>ST410 trees</h3>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 
 <span class="va">btESBL_ecoli_st410_metadata</span> <span class="op">%&gt;%</span> 
@@ -18349,7 +18472,7 @@ Plasmid replicons mapped back to tree
 ST410 map-to-reference global maximum likelihood, midpoint rooted tree
 </p>
 </div>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="fu">treeio</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/treeio/reference/tree_subset.html">tree_subset</a></span><span class="op">(</span>
   <span class="va">btESBL_ecoli_globalst410_tree</span>, <span class="fl">564</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">st410_subtree</span>
@@ -18455,7 +18578,7 @@ ST410 map-to-reference global maximum likelihood, midpoint rooted tree
 <span class="co">#&gt; will replace the existing scale.</span>
 <span class="co">#&gt; Scale for 'y' is already present. Adding another scale for 'y', which will</span>
 <span class="co">#&gt; replace the existing scale.</span></code></pre></div>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">btESBL_ecoli_st167_plasmids</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html">grepl</a></span><span class="op">(</span><span class="st">"Inc"</span>, <span class="va">ref_seq</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -18643,7 +18766,7 @@ ST410 map-to-reference global maximum likelihood, midpoint rooted tree
 ST167 map-to-reference global maximum likelihood, midpoint rooted tree
 </p>
 </div>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="kw">if</span> <span class="op">(</span><span class="va">write_figs</span><span class="op">)</span> <span class="op">{</span>
 
@@ -18653,7 +18776,7 @@ ST167 map-to-reference global maximum likelihood, midpoint rooted tree
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html">ggsave</a></span><span class="op">(</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"figures/ecoli-genomics/st167_globaltreeplot.pdf"</span><span class="op">)</span>,
        <span class="va">st167_globaltree_plot</span>, width <span class="op">=</span> <span class="fl">10</span>, height <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 
 <span class="fu">treeio</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/treeio/reference/tree_subset.html">tree_subset</a></span><span class="op">(</span>
@@ -18749,7 +18872,7 @@ ST167 map-to-reference global maximum likelihood, midpoint rooted tree
 <span class="co">#&gt; will replace the existing scale.</span>
 <span class="co">#&gt; Scale for 'y' is already present. Adding another scale for 'y', which will</span>
 <span class="co">#&gt; replace the existing scale.</span></code></pre></div>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">st410_subtree_plot</span> <span class="op">+</span>
 <span class="va">st167_subtree_plot</span> <span class="op">+</span>
@@ -18782,7 +18905,7 @@ E. coli ST140 (A) and ST167 (B) subtrees showing ESBL/CPE genes and plasmid mrep
 <div id="reproducibility---packages-r-version-and-os-used" class="section level3">
 <h3 class="hasAnchor">
 <a href="#reproducibility---packages-r-version-and-os-used" class="anchor"></a>Reproducibility - packages, R version and OS used</h3>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; R version 4.1.1 (2021-08-10)</span>
