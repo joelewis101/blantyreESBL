@@ -20,8 +20,8 @@ Jane Mallewa<sup>5</sup>, Christopher Jewell<sup>6</sup>, Nicholas R
 Thomson<sup>4,7</sup>, Nicholas A Feasey<sup>1,2</sup>
 
 **Genomic analysis of extended-spectrum beta-lactamase (ESBL) producing
-Escherichia coli colonising adults in Blantyre, Malawi reveals unknown
-diversity**
+Escherichia coli colonising adults in Blantyre, Malawi reveals
+previously undescribed diversity**
 
 Joseph M Lewis<sup>1,2,3,4</sup>, , Madalitso Mphasa<sup>1</sup>, Rachel
 Banda<sup>1</sup>, Matthew Beale<sup>4</sup>, Jane Mallewa<sup>5</sup>,
