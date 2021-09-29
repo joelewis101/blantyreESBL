@@ -351,14 +351,7 @@ samp_metadata %>%
 
 left_join(
   btESBL_sequence_sample_metadata,
-  bind_rows(
-    read_csv(
-      "~/Documents/PhD/Thesis/bookdown/chapter_7/global_tree/all_acc.csv"
-    ),
-    read_csv(
-      "~/Documents/PhD/Manuscripts/20200208vanilla_genomics/carriage_genomics/data_raw/DASSIM3_accession.csv"
-    )
-  ) %>%
+  read_csv("data-raw/all_dassim_kleb_and_esco_accession.csv") %>%
     mutate(
       `Lane name` = gsub("#", "_", `Lane name`),
       `Lane accession` = if_else(`Lane accession` == "not found",
@@ -369,7 +362,7 @@ left_join(
               accession = `Lane accession`),
   by = "lane"
 )  %>%
-  relocate(accession, before = everything()) ->
+  relocate(accession, .before = everything()) ->
   btESBL_sequence_sample_metadata
 
 #  E coli virulence determinants --------------------------------------

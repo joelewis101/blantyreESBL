@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Introduction
+### Introduction
 
 This document contains reproducing analysis code which generates the tables and figures for the manuscript:
 
@@ -190,7 +190,7 @@ if (write_figs) {
 mlst_plot 
 ```
 
-## Compare phylogroup to horesh collection
+### Compare phylogroup to horesh collection
 
 ```{r globalvsmalawi_pgroup, fig.width = 5, fig.height = 4, fig.cap = "Phylogroup distribution in isolates from this study comapred to the global collection"}
 
