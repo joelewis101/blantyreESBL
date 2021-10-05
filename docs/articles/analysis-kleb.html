@@ -176,11 +176,12 @@
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/GuangchuangYu/ggplotify">ggplotify</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">blantyreESBL</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://stringr.tidyverse.org">stringr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">ggnewscale</span><span class="op">)</span>
 
 <span class="va">sp_dc</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">k</span><span class="op">)</span> <span class="op">{</span>
   <span class="fu"><a href="https://rdrr.io/r/base/trimws.html">trimws</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/format.html">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">k</span><span class="op">)</span>, nsmall <span class="op">=</span> <span class="va">k</span><span class="op">)</span><span class="op">)</span>
 <span class="op">}</span>
-<span class="va">write_figs</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span>
+<span class="va">write_figs</span> <span class="op">&lt;-</span> <span class="cn">FALSE</span>
 
 <span class="kw">if</span> <span class="op">(</span><span class="va">write_figs</span><span class="op">)</span> <span class="op">{</span>
   <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/files2.html">dir.exists</a></span><span class="op">(</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"figures"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/base/files2.html">dir.create</a></span><span class="op">(</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"figures"</span><span class="op">)</span><span class="op">)</span><span class="op">}</span>
@@ -4525,94 +4526,88 @@ Presence of ARIBA-identified AMR genes mapped back to phylogeny for (A) KPI isol
     <span class="st">"Colonising"</span>,
     <span class="st">"ESBL"</span><span class="op">)</span> 
 
-<span class="fu"><a href="https://wilkelab.org/cowplot/reference/get_legend.html">get_legend</a></span><span class="op">(</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/ggtree.html">ggtree</a></span><span class="op">(</span><span class="va">dassimKleb_trees.global</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">dassimKleb_globalKleb.metadata</span>, <span class="va">`Sample Source`</span><span class="op">)</span>,
-      width <span class="op">=</span> <span class="fl">0.05</span>,
-      color <span class="op">=</span> <span class="cn">NA</span>,
-      font.size <span class="op">=</span> <span class="fl">4</span>,
-      colnames_angle <span class="op">=</span> <span class="fl">90</span>,
-      colnames_position <span class="op">=</span> <span class="st">"top"</span>,
-      colnames_offset_y <span class="op">=</span> <span class="fl">5</span>,
-      hjust <span class="op">=</span> <span class="fl">0</span>,
-      offset <span class="op">=</span> <span class="fl">0.0015</span>
-    <span class="op">)</span> <span class="op">+</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">col</span><span class="op">[</span><span class="op">(</span><span class="fl">3</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span><span class="op">]</span>, na.translate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.title <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-<span class="op">)</span> <span class="op">-&gt;</span> <span class="va">leg1</span>
-<span class="co">#&gt; Scale for 'fill' is already present. Adding another scale for 'fill', which</span>
-<span class="co">#&gt; will replace the existing scale.</span>
 
-<span class="fu"><a href="https://wilkelab.org/cowplot/reference/get_legend.html">get_legend</a></span><span class="op">(</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/ggtree.html">ggtree</a></span><span class="op">(</span><span class="va">dassimKleb_trees.global</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">dassimKleb_globalKleb.metadata</span>, <span class="va">`Isolate Type`</span><span class="op">)</span>,
-      width <span class="op">=</span> <span class="fl">0.05</span>,
-      color <span class="op">=</span> <span class="cn">NA</span>,
-      font.size <span class="op">=</span> <span class="fl">4</span>,
-      colnames_angle <span class="op">=</span> <span class="fl">90</span>,
-      colnames_position <span class="op">=</span> <span class="st">"top"</span>,
-      colnames_offset_y <span class="op">=</span> <span class="fl">5</span>,
-      hjust <span class="op">=</span> <span class="fl">0</span>,
-      offset <span class="op">=</span> <span class="fl">0.0015</span>
-    <span class="op">)</span> <span class="op">+</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">col</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">6</span>,<span class="fl">7</span><span class="op">)</span><span class="op">]</span>, na.translate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.title <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-<span class="op">)</span> <span class="op">-&gt;</span> <span class="va">leg2</span>
-<span class="co">#&gt; Scale for 'fill' is already present. Adding another scale for 'fill', which</span>
-<span class="co">#&gt; will replace the existing scale.</span>
-  
-<span class="fu"><a href="https://wilkelab.org/cowplot/reference/get_legend.html">get_legend</a></span><span class="op">(</span>
-<span class="va">dassimKleb_globalKleb.metadata</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>ESBL <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else</a></span><span class="op">(</span><span class="va">ESBL</span> <span class="op">!=</span> <span class="st">"ESBL"</span>, <span class="cn">NA_character_</span>, <span class="va">ESBL</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">ESBL</span>, fill <span class="op">=</span> <span class="va">ESBL</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_bar</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">col</span><span class="op">[</span><span class="fl">8</span><span class="op">]</span>, na.translate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.title <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-  <span class="op">)</span> <span class="op">-&gt;</span> <span class="va">leg3</span>
 
-<span class="fu"><a href="https://wilkelab.org/cowplot/reference/get_legend.html">get_legend</a></span><span class="op">(</span>
-<span class="va">dassimKleb_globalKleb.metadata</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>ybt <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else</a></span><span class="op">(</span><span class="va">ybt</span> <span class="op">==</span> <span class="st">"0"</span>, <span class="cn">NA_character_</span>, <span class="st">"Gene\nPresent"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">ybt</span>, fill <span class="op">=</span> <span class="va">ybt</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_bar</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="st">"grey30"</span>, na.translate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.title <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-  <span class="op">)</span> <span class="op">-&gt;</span> <span class="va">leg4</span>
-
-<span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/ggtree.html">ggtree</a></span><span class="op">(</span><span class="fu">treeio</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/treeio/reference/tree_subset.html">tree_subset</a></span><span class="op">(</span><span class="va">dassimKleb_trees.global</span>, <span class="fl">734</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">dassimKleb_globalKleb.metadata</span>, <span class="va">Malawi</span><span class="op">)</span>,
-    width <span class="op">=</span> <span class="fl">0.03</span>,
-    color <span class="op">=</span> <span class="cn">NA</span>,
-    font.size <span class="op">=</span> <span class="fl">4</span>,
-    colnames_angle <span class="op">=</span> <span class="fl">90</span>,
-    colnames_position <span class="op">=</span> <span class="st">"top"</span>,
-    colnames_offset_y <span class="op">=</span> <span class="fl">5</span>,
-    hjust <span class="op">=</span> <span class="fl">0</span>
-  <span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">dassimKleb_globalKleb.metadata</span>, <span class="va">`Sample Source`</span><span class="op">)</span>,
-    width <span class="op">=</span> <span class="fl">0.03</span>,
-    color <span class="op">=</span> <span class="cn">NA</span>,
-    font.size <span class="op">=</span> <span class="fl">4</span>,
-    colnames_angle <span class="op">=</span> <span class="fl">90</span>,
-    colnames_position <span class="op">=</span> <span class="st">"top"</span>,
-    colnames_offset_y <span class="op">=</span> <span class="fl">5</span>,
-    hjust <span class="op">=</span> <span class="fl">0</span>,
-    offset <span class="op">=</span> <span class="fl">0.0007</span>
-  <span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">dassimKleb_globalKleb.metadata</span>, <span class="va">`Isolate Type`</span><span class="op">)</span>,
-    width <span class="op">=</span> <span class="fl">0.03</span>,
-    color <span class="op">=</span> <span class="cn">NA</span>,
-    font.size <span class="op">=</span> <span class="fl">4</span>,
-    colnames_angle <span class="op">=</span> <span class="fl">90</span>,
-    colnames_position <span class="op">=</span> <span class="st">"top"</span>,
-    colnames_offset_y <span class="op">=</span> <span class="fl">5</span>,
-    hjust <span class="op">=</span> <span class="fl">0</span>,
-    offset <span class="op">=</span> <span class="fl">0.0014</span>
+<span class="op">(</span>
+  <span class="op">(</span>
+    <span class="op">(</span>
+      <span class="op">(</span>
+        <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/ggtree.html">ggtree</a></span><span class="op">(</span>
+          <span class="fu">treeio</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/treeio/reference/tree_subset.html">tree_subset</a></span><span class="op">(</span><span class="va">dassimKleb_trees.global</span>, <span class="fl">734</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,
+          size <span class="op">=</span> <span class="fl">0.3</span>
+        <span class="op">)</span> <span class="op">%&gt;%</span>
+          <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
+            <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">dassimKleb_globalKleb.metadata</span>, <span class="va">Malawi</span><span class="op">)</span> <span class="op">%&gt;%</span>
+              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Malawi <span class="op">=</span>
+                       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span>
+                         <span class="va">Malawi</span> <span class="op">==</span> <span class="st">"1"</span> <span class="op">~</span> <span class="st">"Malawi"</span>,
+                         <span class="va">Malawi</span> <span class="op">==</span> <span class="st">"0"</span> <span class="op">~</span> <span class="st">"Not Malawi"</span>
+                       <span class="op">)</span><span class="op">)</span>,
+            width <span class="op">=</span> <span class="fl">0.03</span>,
+            color <span class="op">=</span> <span class="cn">NA</span>,
+            font.size <span class="op">=</span> <span class="fl">4</span>,
+            colnames_angle <span class="op">=</span> <span class="fl">90</span>,
+            colnames_position <span class="op">=</span> <span class="st">"top"</span>,
+            colnames_offset_y <span class="op">=</span> <span class="fl">5</span>,
+            hjust <span class="op">=</span> <span class="fl">0</span>
+          <span class="op">)</span>  <span class="op">+</span>
+          <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>
+            values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Not Malawi"</span> <span class="op">=</span> <span class="st">"white"</span>, <span class="st">"Malawi"</span> <span class="op">=</span> <span class="st">"grey30"</span><span class="op">)</span>,
+            name <span class="op">=</span> <span class="st">"Country"</span>,
+            na.translate <span class="op">=</span> <span class="cn">FALSE</span>,
+            guide <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html">guide_legend</a></span><span class="op">(</span>order <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
+          <span class="op">)</span>  <span class="op">+</span>
+          <span class="fu"><a href="https://rdrr.io/pkg/ggnewscale/man/new_scale.html">new_scale_fill</a></span><span class="op">(</span><span class="op">)</span>
+      <span class="op">)</span> <span class="op">%&gt;%</span>
+        <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
+          <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">dassimKleb_globalKleb.metadata</span>, <span class="va">`Sample Source`</span><span class="op">)</span>,
+          width <span class="op">=</span> <span class="fl">0.03</span>,
+          color <span class="op">=</span> <span class="cn">NA</span>,
+          font.size <span class="op">=</span> <span class="fl">4</span>,
+          colnames_angle <span class="op">=</span> <span class="fl">90</span>,
+          colnames_position <span class="op">=</span> <span class="st">"top"</span>,
+          colnames_offset_y <span class="op">=</span> <span class="fl">5</span>,
+          hjust <span class="op">=</span> <span class="fl">0</span>,
+          offset <span class="op">=</span> <span class="fl">0.0007</span>
+        <span class="op">)</span> <span class="op">+</span>
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>
+          values <span class="op">=</span>
+            <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+              <span class="st">"Human"</span> <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/brewer_pal.html">brewer_pal</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set3"</span><span class="op">)</span><span class="op">(</span><span class="fl">6</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,
+              <span class="st">"Animal"</span> <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/brewer_pal.html">brewer_pal</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set3"</span><span class="op">)</span><span class="op">(</span><span class="fl">6</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>,
+              <span class="st">"Environmental"</span> <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/brewer_pal.html">brewer_pal</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set3"</span><span class="op">)</span><span class="op">(</span><span class="fl">6</span><span class="op">)</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span>
+            <span class="op">)</span>,
+          na.translate <span class="op">=</span> <span class="cn">FALSE</span>,
+          name <span class="op">=</span> <span class="st">"Sample\nSource"</span>,
+          guide <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html">guide_legend</a></span><span class="op">(</span>order <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
+        <span class="op">)</span> <span class="op">+</span>
+        <span class="fu"><a href="https://rdrr.io/pkg/ggnewscale/man/new_scale.html">new_scale_fill</a></span><span class="op">(</span><span class="op">)</span>
+    <span class="op">)</span> <span class="op">%&gt;%</span>
+      <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
+        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">dassimKleb_globalKleb.metadata</span>, <span class="va">`Isolate Type`</span><span class="op">)</span>,
+        width <span class="op">=</span> <span class="fl">0.03</span>,
+        color <span class="op">=</span> <span class="cn">NA</span>,
+        font.size <span class="op">=</span> <span class="fl">4</span>,
+        colnames_angle <span class="op">=</span> <span class="fl">90</span>,
+        colnames_position <span class="op">=</span> <span class="st">"top"</span>,
+        colnames_offset_y <span class="op">=</span> <span class="fl">5</span>,
+        hjust <span class="op">=</span> <span class="fl">0</span>,
+        offset <span class="op">=</span> <span class="fl">0.0014</span>
+      <span class="op">)</span> <span class="op">+</span>
+      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>
+        values <span class="op">=</span>
+          <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+            <span class="st">"Invasive"</span> <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/brewer_pal.html">brewer_pal</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set3"</span><span class="op">)</span><span class="op">(</span><span class="fl">6</span><span class="op">)</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span>,
+            <span class="st">"Colonising"</span> <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/brewer_pal.html">brewer_pal</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set3"</span><span class="op">)</span><span class="op">(</span><span class="fl">6</span><span class="op">)</span><span class="op">[</span><span class="fl">5</span><span class="op">]</span>
+          <span class="op">)</span>,
+        na.translate <span class="op">=</span> <span class="cn">FALSE</span>,
+        name <span class="op">=</span> <span class="st">"Isolate\nType"</span>,
+        guide <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html">guide_legend</a></span><span class="op">(</span>order <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>
+      <span class="op">)</span> <span class="op">+</span>
+      <span class="fu"><a href="https://rdrr.io/pkg/ggnewscale/man/new_scale.html">new_scale_fill</a></span><span class="op">(</span><span class="op">)</span>
   <span class="op">)</span> <span class="op">%&gt;%</span>   <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">dassimKleb_globalKleb.metadata</span>, <span class="va">ESBL</span><span class="op">)</span>,
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">dassimKleb_globalKleb.metadata</span>, <span class="va">ESBL</span><span class="op">)</span> <span class="op">%&gt;%</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>ESBL <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else</a></span><span class="op">(</span><span class="va">ESBL</span> <span class="op">==</span> <span class="st">"ESBL"</span>, <span class="st">"Present"</span>, <span class="cn">NA_character_</span><span class="op">)</span><span class="op">)</span>,
     width <span class="op">=</span> <span class="fl">0.03</span>,
     color <span class="op">=</span> <span class="cn">NA</span>,
     font.size <span class="op">=</span> <span class="fl">4</span>,
@@ -4622,8 +4617,16 @@ Presence of ARIBA-identified AMR genes mapped back to phylogeny for (A) KPI isol
     hjust <span class="op">=</span> <span class="fl">0</span>,
     offset <span class="op">=</span> <span class="fl">0.0021</span>
   <span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>
+      values <span class="op">=</span>
+        <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Present"</span> <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/brewer_pal.html">brewer_pal</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set3"</span><span class="op">)</span><span class="op">(</span><span class="fl">6</span><span class="op">)</span><span class="op">[</span><span class="fl">6</span><span class="op">]</span><span class="op">)</span>,
+      na.translate <span class="op">=</span> <span class="cn">FALSE</span>,
+      name <span class="op">=</span> <span class="st">"ESBL"</span>,
+      guide <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html">guide_legend</a></span><span class="op">(</span>order <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>
+    <span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggnewscale/man/new_scale.html">new_scale_fill</a></span><span class="op">(</span><span class="op">)</span>
+<span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html">ylim</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">680</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">col</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_cladelabel.html">geom_cladelabel</a></span><span class="op">(</span>
     node <span class="op">=</span> <span class="fl">784</span>,
     label <span class="op">=</span> <span class="st">"ST14"</span>,
@@ -4648,9 +4651,10 @@ Presence of ARIBA-identified AMR genes mapped back to phylogeny for (A) KPI isol
     align <span class="op">=</span> <span class="cn">TRUE</span>,
     offset <span class="op">=</span> <span class="op">-</span><span class="fl">0.002</span>
   <span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_treescale.html">geom_treescale</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">0.001</span>, y <span class="op">=</span> <span class="fl">550</span>, offset <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="op">-&gt;</span>
-  <span class="va">treeplot</span>
+  <span class="va">globaltree_plot</span>
+<span class="co">#&gt; Scale for 'fill' is already present. Adding another scale for 'fill', which</span>
+<span class="co">#&gt; will replace the existing scale.</span>
 <span class="co">#&gt; Scale for 'fill' is already present. Adding another scale for 'fill', which</span>
 <span class="co">#&gt; will replace the existing scale.</span>
 <span class="co">#&gt; Scale for 'fill' is already present. Adding another scale for 'fill', which</span>
@@ -4659,12 +4663,7 @@ Presence of ARIBA-identified AMR genes mapped back to phylogeny for (A) KPI isol
 <span class="co">#&gt; will replace the existing scale.</span>
 <span class="co">#&gt; Scale for 'y' is already present. Adding another scale for 'y', which will</span>
 <span class="co">#&gt; replace the existing scale.</span>
-<span class="co">#&gt; Scale for 'fill' is already present. Adding another scale for 'fill', which</span>
-<span class="co">#&gt; will replace the existing scale.</span>
   
-<span class="va">treeplot</span> <span class="op">+</span>
-  <span class="fu"><a href="https://rpkgs.datanovia.com/ggpubr/reference/ggarrange.html">ggarrange</a></span><span class="op">(</span><span class="cn">NULL</span>,<span class="va">leg1</span>, <span class="va">leg2</span>, <span class="va">leg3</span>, <span class="cn">NULL</span>, ncol <span class="op">=</span> <span class="fl">1</span>, heights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">0.3</span>,<span class="fl">0.3</span>,<span class="fl">0.3</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html">plot_layout</a></span><span class="op">(</span>widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">5</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">globaltree_plot</span>
 
 <span class="va">globaltree_plot</span>  </code></pre></div>
 <p><img src="analysis-kleb_files/figure-html/global-tree-1.png" width="768"></p>
@@ -4674,13 +4673,13 @@ Presence of ARIBA-identified AMR genes mapped back to phylogeny for (A) KPI isol
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html">ggsave</a></span><span class="op">(</span>
     filename <span class="op">=</span> <span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"figures/kleb-genomics/F3_globaltree.pdf"</span><span class="op">)</span>,
     plot <span class="op">=</span> <span class="va">globaltree_plot</span>,
-    width <span class="op">=</span> <span class="fl">8</span>,
+    width <span class="op">=</span> <span class="fl">9</span>,
     height <span class="op">=</span> <span class="fl">12</span>
   <span class="op">)</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html">ggsave</a></span><span class="op">(</span>
     filename <span class="op">=</span> <span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"figures/kleb-genomics/F3_globaltree.svg"</span><span class="op">)</span>,
     plot <span class="op">=</span> <span class="va">globaltree_plot</span>,
-    width <span class="op">=</span> <span class="fl">8</span>,
+    width <span class="op">=</span> <span class="fl">9</span>,
     height <span class="op">=</span> <span class="fl">12</span>
   <span class="op">)</span>
 <span class="op">}</span></code></pre></div>
@@ -4694,7 +4693,8 @@ Presence of ARIBA-identified AMR genes mapped back to phylogeny for (A) KPI isol
 
 
 <span class="co"># 627  = ST 218</span>
-
+<span class="op">(</span>
+<span class="op">(</span>
 <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/ggtree.html">ggtree</a></span><span class="op">(</span><span class="fu">treeio</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/treeio/reference/tree_subset.html">tree_subset</a></span><span class="op">(</span><span class="va">btESBL_kleb_malawi_allisolate_core_gene_tree</span>, <span class="fl">372</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">dassimKleb_globalKleb.metadata</span>, <span class="va">`Isolate Type`</span><span class="op">)</span>,
@@ -4706,8 +4706,21 @@ Presence of ARIBA-identified AMR genes mapped back to phylogeny for (A) KPI isol
     colnames_offset_y <span class="op">=</span> <span class="fl">5</span>,
     hjust <span class="op">=</span> <span class="fl">0</span>,
     offset <span class="op">=</span> <span class="fl">0.001</span>
-  <span class="op">)</span> <span class="op">%&gt;%</span>   <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">dassimKleb_globalKleb.metadata</span>, <span class="va">ESBL</span><span class="op">)</span>,
+  <span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>
+        values <span class="op">=</span>
+          <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+            <span class="st">"Invasive"</span> <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/brewer_pal.html">brewer_pal</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set3"</span><span class="op">)</span><span class="op">(</span><span class="fl">6</span><span class="op">)</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span>,
+            <span class="st">"Colonising"</span> <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/brewer_pal.html">brewer_pal</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set3"</span><span class="op">)</span><span class="op">(</span><span class="fl">6</span><span class="op">)</span><span class="op">[</span><span class="fl">5</span><span class="op">]</span>
+          <span class="op">)</span>,
+        na.translate <span class="op">=</span> <span class="cn">FALSE</span>,
+        name <span class="op">=</span> <span class="st">"Isolate\nType"</span>,
+        guide <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html">guide_legend</a></span><span class="op">(</span>order <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
+      <span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/ggnewscale/man/new_scale.html">new_scale_fill</a></span><span class="op">(</span><span class="op">)</span> 
+<span class="op">)</span> <span class="op">%&gt;%</span>   <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">dassimKleb_globalKleb.metadata</span>, <span class="va">ESBL</span><span class="op">)</span>  <span class="op">%&gt;%</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>ESBL <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else</a></span><span class="op">(</span><span class="va">ESBL</span> <span class="op">==</span> <span class="st">"ESBL"</span>, <span class="st">"Present"</span>, <span class="cn">NA_character_</span><span class="op">)</span><span class="op">)</span>,
     width <span class="op">=</span> <span class="fl">0.03</span>,
     color <span class="op">=</span> <span class="cn">NA</span>,
     font.size <span class="op">=</span> <span class="fl">4</span>,
@@ -4716,8 +4729,19 @@ Presence of ARIBA-identified AMR genes mapped back to phylogeny for (A) KPI isol
     colnames_offset_y <span class="op">=</span> <span class="fl">5</span>,
     hjust <span class="op">=</span> <span class="fl">0</span>,
     offset <span class="op">=</span> <span class="fl">0</span>
-  <span class="op">)</span><span class="op">%&gt;%</span>   <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">dassimKleb_globalKleb.metadata</span>, <span class="va">ybt</span>,<span class="va">clb</span>,<span class="va">iuc</span>,<span class="va">iro</span>,<span class="va">rmpA</span>,<span class="va">rmpA2</span><span class="op">)</span>,
+  <span class="op">)</span>  <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>
+      values <span class="op">=</span>
+        <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Present"</span> <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/brewer_pal.html">brewer_pal</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set3"</span><span class="op">)</span><span class="op">(</span><span class="fl">6</span><span class="op">)</span><span class="op">[</span><span class="fl">6</span><span class="op">]</span><span class="op">)</span>,
+      na.translate <span class="op">=</span> <span class="cn">FALSE</span>,
+      name <span class="op">=</span> <span class="st">"ESBL"</span>,
+      guide <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html">guide_legend</a></span><span class="op">(</span>order <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
+    <span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggnewscale/man/new_scale.html">new_scale_fill</a></span><span class="op">(</span><span class="op">)</span>
+<span class="op">)</span> <span class="op">%&gt;%</span>   <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">dassimKleb_globalKleb.metadata</span>, <span class="va">ybt</span>,<span class="va">clb</span>,<span class="va">iuc</span>,<span class="va">iro</span>,<span class="va">rmpA</span>,<span class="va">rmpA2</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span>, <span class="op">~</span> 
+                    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else</a></span><span class="op">(</span><span class="va">.x</span> <span class="op">==</span> <span class="st">"1"</span>, <span class="st">"Present"</span>, <span class="cn">NA_character_</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
     width <span class="op">=</span> <span class="fl">0.18</span>,
     color <span class="op">=</span> <span class="st">"black"</span>,
     font.size <span class="op">=</span> <span class="fl">4</span>,
@@ -4727,16 +4751,18 @@ Presence of ARIBA-identified AMR genes mapped back to phylogeny for (A) KPI isol
     hjust <span class="op">=</span> <span class="fl">0</span>,
     offset <span class="op">=</span> <span class="fl">0.002</span>
   <span class="op">)</span>  <span class="op">+</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">col</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html">ylim</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">370</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Present"</span> <span class="op">=</span> <span class="st">"grey30"</span><span class="op">)</span>,
+                    name <span class="op">=</span> <span class="st">"Virulence\nGene"</span>, na.translate <span class="op">=</span> <span class="cn">FALSE</span>,
+                    guide <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html">guide_legend</a></span><span class="op">(</span>order <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html">ylim</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">370</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_cladelabel.html">geom_cladelabel</a></span><span class="op">(</span>node <span class="op">=</span> <span class="fl">599</span>, label <span class="op">=</span> <span class="st">"ST268"</span>, align <span class="op">=</span> <span class="cn">TRUE</span>, offset <span class="op">=</span> <span class="op">-</span> <span class="fl">0.003</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_cladelabel.html">geom_cladelabel</a></span><span class="op">(</span>node <span class="op">=</span> <span class="fl">582</span>, label <span class="op">=</span> <span class="st">"ST218"</span>, align <span class="op">=</span> <span class="cn">TRUE</span>, offset <span class="op">=</span> <span class="op">-</span> <span class="fl">0.003</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_cladelabel.html">geom_cladelabel</a></span><span class="op">(</span>node <span class="op">=</span> <span class="fl">377</span>, label <span class="op">=</span> <span class="st">"ST14"</span>, align <span class="op">=</span> <span class="cn">TRUE</span>, offset <span class="op">=</span> <span class="op">-</span> <span class="fl">0.003</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_cladelabel.html">geom_cladelabel</a></span><span class="op">(</span>node <span class="op">=</span> <span class="fl">413</span>, label <span class="op">=</span> <span class="st">"ST15"</span>, align <span class="op">=</span> <span class="cn">TRUE</span>, offset <span class="op">=</span> <span class="op">-</span> <span class="fl">0.003</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_cladelabel.html">geom_cladelabel</a></span><span class="op">(</span>node <span class="op">=</span> <span class="fl">531</span>, label <span class="op">=</span> <span class="st">"ST340"</span>, align <span class="op">=</span> <span class="cn">TRUE</span>, offset <span class="op">=</span> <span class="op">-</span> <span class="fl">0.003</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_cladelabel.html">geom_cladelabel</a></span><span class="op">(</span>node <span class="op">=</span> <span class="fl">607</span>, label <span class="op">=</span> <span class="st">"ST307"</span>, align <span class="op">=</span> <span class="cn">TRUE</span>, offset <span class="op">=</span> <span class="op">-</span> <span class="fl">0.003</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_treescale.html">geom_treescale</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_treescale.html">geom_treescale</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">0.001</span>, y <span class="op">=</span> <span class="fl">280</span>, offset <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">malawi_tree_plot</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_treescale.html">geom_treescale</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">0.001</span>, y <span class="op">=</span> <span class="fl">280</span>, offset <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">malawi_tree_plot_final</span>
 <span class="co">#&gt; Scale for 'fill' is already present. Adding another scale for 'fill', which</span>
 <span class="co">#&gt; will replace the existing scale.</span>
 <span class="co">#&gt; Scale for 'fill' is already present. Adding another scale for 'fill', which</span>
@@ -4745,10 +4771,6 @@ Presence of ARIBA-identified AMR genes mapped back to phylogeny for (A) KPI isol
 <span class="co">#&gt; will replace the existing scale.</span>
 <span class="co">#&gt; Scale for 'y' is already present. Adding another scale for 'y', which will</span>
 <span class="co">#&gt; replace the existing scale.</span>
-
-<span class="va">malawi_tree_plot</span> <span class="op">+</span>
-  <span class="fu"><a href="https://rpkgs.datanovia.com/ggpubr/reference/ggarrange.html">ggarrange</a></span><span class="op">(</span><span class="cn">NULL</span>,<span class="va">leg3</span>,<span class="va">leg2</span>,<span class="va">leg4</span>, <span class="cn">NULL</span>, ncol <span class="op">=</span> <span class="fl">1</span>, heights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">0.2</span>,<span class="fl">0.4</span>,<span class="fl">0.2</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html">plot_layout</a></span><span class="op">(</span>widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">5</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">malawi_tree_plot_final</span>
 
 <span class="va">malawi_tree_plot_final</span></code></pre></div>
 <div class="figure">
@@ -6187,13 +6209,14 @@ Unknown
 <span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; other attached packages:</span>
-<span class="co">#&gt;  [1] stringr_1.4.0           blantyreESBL_0.1.0.0000 ggplotify_0.1.0        </span>
-<span class="co">#&gt;  [4] pheatmap_1.0.12         viridis_0.6.1           viridisLite_0.4.0      </span>
-<span class="co">#&gt;  [7] scales_1.1.1            patchwork_1.1.1         kableExtra_1.3.4       </span>
-<span class="co">#&gt; [10] here_1.0.1              tidyr_1.1.3             forcats_0.5.1          </span>
-<span class="co">#&gt; [13] dplyr_1.0.7             ggpubr_0.4.0            ggplot2_3.3.5          </span>
-<span class="co">#&gt; [16] cowplot_1.1.1           ggtree_3.0.4            phytools_0.7-80        </span>
-<span class="co">#&gt; [19] maps_3.3.0              ape_5.5                 rstatix_0.7.0          </span>
+<span class="co">#&gt;  [1] ggnewscale_0.4.5        stringr_1.4.0           blantyreESBL_0.1.0.0000</span>
+<span class="co">#&gt;  [4] ggplotify_0.1.0         pheatmap_1.0.12         viridis_0.6.1          </span>
+<span class="co">#&gt;  [7] viridisLite_0.4.0       scales_1.1.1            patchwork_1.1.1        </span>
+<span class="co">#&gt; [10] kableExtra_1.3.4        here_1.0.1              tidyr_1.1.3            </span>
+<span class="co">#&gt; [13] forcats_0.5.1           dplyr_1.0.7             ggpubr_0.4.0           </span>
+<span class="co">#&gt; [16] ggplot2_3.3.5           cowplot_1.1.1           ggtree_3.0.4           </span>
+<span class="co">#&gt; [19] phytools_0.7-80         maps_3.3.0              ape_5.5                </span>
+<span class="co">#&gt; [22] rstatix_0.7.0          </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; loaded via a namespace (and not attached):</span>
 <span class="co">#&gt;   [1] colorspace_2.0-2        ggsignif_0.6.3          ellipsis_0.3.2         </span>

@@ -34,6 +34,7 @@ library(pheatmap)
 library(ggplotify)
 library(blantyreESBL)
 library(stringr)
+library(ggnewscale)
 
 sp_dc <- function(x, k) {
   trimws(format(round(x, k), nsmall = k))
@@ -792,90 +793,88 @@ names(col) <-
     "Colonising",
     "ESBL") 
 
-get_legend(
-  ggtree(dassimKleb_trees.global) %>%
-    gheatmap(
-      select(dassimKleb_globalKleb.metadata, `Sample Source`),
-      width = 0.05,
-      color = NA,
-      font.size = 4,
-      colnames_angle = 90,
-      colnames_position = "top",
-      colnames_offset_y = 5,
-      hjust = 0,
-      offset = 0.0015
-    ) +
-    scale_fill_manual(values = col[(3:5)], na.translate = FALSE) +
-    theme(legend.title = element_blank())
-) -> leg1
 
-get_legend(
-  ggtree(dassimKleb_trees.global) %>%
-    gheatmap(
-      select(dassimKleb_globalKleb.metadata, `Isolate Type`),
-      width = 0.05,
-      color = NA,
-      font.size = 4,
-      colnames_angle = 90,
-      colnames_position = "top",
-      colnames_offset_y = 5,
-      hjust = 0,
-      offset = 0.0015
-    ) +
-    scale_fill_manual(values = col[c(6,7)], na.translate = FALSE) +
-    theme(legend.title = element_blank())
-) -> leg2
-  
-get_legend(
-dassimKleb_globalKleb.metadata %>% 
-  mutate(ESBL = if_else(ESBL != "ESBL", NA_character_, ESBL)) %>% 
-  ggplot(aes(ESBL, fill = ESBL)) + geom_bar() +
-  scale_fill_manual(values = col[8], na.translate = FALSE) +
-  theme(legend.title = element_blank())
-  ) -> leg3
 
-get_legend(
-dassimKleb_globalKleb.metadata %>% 
-  mutate(ybt = if_else(ybt == "0", NA_character_, "Gene\nPresent")) %>% 
-  ggplot(aes(ybt, fill = ybt)) + geom_bar() +
-  scale_fill_manual(values = "grey30", na.translate = FALSE) +
-  theme(legend.title = element_blank())
-  ) -> leg4
-
-ggtree(treeio::tree_subset(dassimKleb_trees.global, 734, levels_back = 0), size = 0.3) %>%
-  gheatmap(
-    select(dassimKleb_globalKleb.metadata, Malawi),
-    width = 0.03,
-    color = NA,
-    font.size = 4,
-    colnames_angle = 90,
-    colnames_position = "top",
-    colnames_offset_y = 5,
-    hjust = 0
-  ) %>%
-  gheatmap(
-    select(dassimKleb_globalKleb.metadata, `Sample Source`),
-    width = 0.03,
-    color = NA,
-    font.size = 4,
-    colnames_angle = 90,
-    colnames_position = "top",
-    colnames_offset_y = 5,
-    hjust = 0,
-    offset = 0.0007
-  ) %>%
-  gheatmap(
-    select(dassimKleb_globalKleb.metadata, `Isolate Type`),
-    width = 0.03,
-    color = NA,
-    font.size = 4,
-    colnames_angle = 90,
-    colnames_position = "top",
-    colnames_offset_y = 5,
-    hjust = 0,
-    offset = 0.0014
+(
+  (
+    (
+      (
+        ggtree(
+          treeio::tree_subset(dassimKleb_trees.global, 734, levels_back = 0),
+          size = 0.3
+        ) %>%
+          gheatmap(
+            select(dassimKleb_globalKleb.metadata, Malawi) %>%
+              mutate(Malawi =
+                       case_when(
+                         Malawi == "1" ~ "Malawi",
+                         Malawi == "0" ~ "Not Malawi"
+                       )),
+            width = 0.03,
+            color = NA,
+            font.size = 4,
+            colnames_angle = 90,
+            colnames_position = "top",
+            colnames_offset_y = 5,
+            hjust = 0
+          )  +
+          scale_fill_manual(
+            values = c("Not Malawi" = "white", "Malawi" = "grey30"),
+            name = "Country",
+            na.translate = FALSE,
+            guide = guide_legend(order = 1)
+          )  +
+          new_scale_fill()
+      ) %>%
+        gheatmap(
+          select(dassimKleb_globalKleb.metadata, `Sample Source`),
+          width = 0.03,
+          color = NA,
+          font.size = 4,
+          colnames_angle = 90,
+          colnames_position = "top",
+          colnames_offset_y = 5,
+          hjust = 0,
+          offset = 0.0007
+        ) +
+        scale_fill_manual(
+          values =
+            c(
+              "Human" = brewer_pal(palette = "Set3")(6)[1],
+              "Animal" = brewer_pal(palette = "Set3")(6)[2],
+              "Environmental" = brewer_pal(palette = "Set3")(6)[3]
+            ),
+          na.translate = FALSE,
+          name = "Sample\nSource",
+          guide = guide_legend(order = 2)
+        ) +
+        new_scale_fill()
+    ) %>%
+      gheatmap(
+        select(dassimKleb_globalKleb.metadata, `Isolate Type`),
+        width = 0.03,
+        color = NA,
+        font.size = 4,
+        colnames_angle = 90,
+        colnames_position = "top",
+        colnames_offset_y = 5,
+        hjust = 0,
+        offset = 0.0014
+      ) +
+      scale_fill_manual(
+        values =
+          c(
+            "Invasive" = brewer_pal(palette = "Set3")(6)[4],
+            "Colonising" = brewer_pal(palette = "Set3")(6)[5]
+          ),
+        na.translate = FALSE,
+        name = "Isolate\nType",
+        guide = guide_legend(order = 3)
+      ) +
+      new_scale_fill()
   ) %>%   gheatmap(
-    select(dassimKleb_globalKleb.metadata, ESBL),
+    select(dassimKleb_globalKleb.metadata, ESBL) %>%
+      mutate(ESBL = if_else(ESBL == "ESBL", "Present", NA_character_)),
     width = 0.03,
     color = NA,
     font.size = 4,
@@ -885,8 +884,16 @@ ggtree(treeio::tree_subset(dassimKleb_trees.global, 734, levels_back = 0), size 
     hjust = 0,
     offset = 0.0021
   ) +
+    scale_fill_manual(
+      values =
+        c("Present" = brewer_pal(palette = "Set3")(6)[6]),
+      na.translate = FALSE,
+      name = "ESBL",
+      guide = guide_legend(order = 4)
+    ) +
+    new_scale_fill()
+) +
   ylim(NA, 680) +
-  scale_fill_manual(values = col) +
   geom_cladelabel(
     node = 784,
     label = "ST14",
@@ -911,13 +918,9 @@ ggtree(treeio::tree_subset(dassimKleb_trees.global, 734, levels_back = 0), size 
     align = TRUE,
     offset = -0.002
   ) +
-  theme(legend.position = "none") +
   geom_treescale(x = 0.001, y = 550, offset = 5) ->
-  treeplot
+  globaltree_plot
   
-treeplot +
-  ggarrange(NULL,leg1, leg2, leg3, NULL, ncol = 1, heights = c(1,0.3,0.3,0.3,1)) + 
-  plot_layout(widths = c(5,1)) -> globaltree_plot
 
 globaltree_plot  
 
@@ -925,13 +928,13 @@ if (write_figs) {
   ggsave(
     filename = here("figures/kleb-genomics/F3_globaltree.pdf"),
     plot = globaltree_plot,
-    width = 8,
+    width = 9,
     height = 12
   )
   ggsave(
     filename = here("figures/kleb-genomics/F3_globaltree.svg"),
     plot = globaltree_plot,
-    width = 8,
+    width = 9,
     height = 12
   )
 }
@@ -948,7 +951,8 @@ if (write_figs) {
 
 
 # 627  = ST 218
-
+(
+(
 ggtree(treeio::tree_subset(btESBL_kleb_malawi_allisolate_core_gene_tree, 372, levels_back = 0)) %>%
   gheatmap(
     select(dassimKleb_globalKleb.metadata, `Isolate Type`),
@@ -960,8 +964,21 @@ ggtree(treeio::tree_subset(btESBL_kleb_malawi_allisolate_core_gene_tree, 372, le
     colnames_offset_y = 5,
     hjust = 0,
     offset = 0.001
-  ) %>%   gheatmap(
-    select(dassimKleb_globalKleb.metadata, ESBL),
+  ) + 
+  scale_fill_manual(
+        values =
+          c(
+            "Invasive" = brewer_pal(palette = "Set3")(6)[4],
+            "Colonising" = brewer_pal(palette = "Set3")(6)[5]
+          ),
+        na.translate = FALSE,
+        name = "Isolate\nType",
+        guide = guide_legend(order = 2)
+      ) +
+  new_scale_fill() 
+) %>%   gheatmap(
+    select(dassimKleb_globalKleb.metadata, ESBL)  %>%
+      mutate(ESBL = if_else(ESBL == "ESBL", "Present", NA_character_)),
     width = 0.03,
     color = NA,
     font.size = 4,
@@ -970,8 +987,19 @@ ggtree(treeio::tree_subset(btESBL_kleb_malawi_allisolate_core_gene_tree, 372, le
     colnames_offset_y = 5,
     hjust = 0,
     offset = 0
-  )%>%   gheatmap(
-    select(dassimKleb_globalKleb.metadata, ybt,clb,iuc,iro,rmpA,rmpA2),
+  )  +
+    scale_fill_manual(
+      values =
+        c("Present" = brewer_pal(palette = "Set3")(6)[6]),
+      na.translate = FALSE,
+      name = "ESBL",
+      guide = guide_legend(order = 1)
+    ) +
+    new_scale_fill()
+) %>%   gheatmap(
+    select(dassimKleb_globalKleb.metadata, ybt,clb,iuc,iro,rmpA,rmpA2) %>% 
+      mutate(across(everything(), ~ 
+                    if_else(.x == "1", "Present", NA_character_))),
     width = 0.18,
     color = "black",
     font.size = 4,
@@ -981,20 +1009,18 @@ ggtree(treeio::tree_subset(btESBL_kleb_malawi_allisolate_core_gene_tree, 372, le
     hjust = 0,
     offset = 0.002
   )  + 
-  scale_fill_manual(values = col) + ylim(NA, 370) +
+  scale_fill_manual(values = c("Present" = "grey30"),
+                    name = "Virulence\nGene", na.translate = FALSE,
+                    guide = guide_legend(order = 3)) + 
+  ylim(NA, 370) +
   geom_cladelabel(node = 599, label = "ST268", align = TRUE, offset = - 0.003) +
   geom_cladelabel(node = 582, label = "ST218", align = TRUE, offset = - 0.003) +
   geom_cladelabel(node = 377, label = "ST14", align = TRUE, offset = - 0.003) +
   geom_cladelabel(node = 413, label = "ST15", align = TRUE, offset = - 0.003) +
   geom_cladelabel(node = 531, label = "ST340", align = TRUE, offset = - 0.003) +
   geom_cladelabel(node = 607, label = "ST307", align = TRUE, offset = - 0.003) +
-  theme(legend.position = "none") +
   geom_treescale() +
-    geom_treescale(x = 0.001, y = 280, offset = 2) -> malawi_tree_plot
-
-malawi_tree_plot +
-  ggarrange(NULL,leg3,leg2,leg4, NULL, ncol = 1, heights = c(1,0.2,0.4,0.2,1)) + 
-  plot_layout(widths = c(5,1)) -> malawi_tree_plot_final
+    geom_treescale(x = 0.001, y = 280, offset = 2) -> malawi_tree_plot_final
 
 malawi_tree_plot_final
 
