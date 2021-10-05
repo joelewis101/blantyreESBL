@@ -38,7 +38,7 @@ library(stringr)
 sp_dc <- function(x, k) {
   trimws(format(round(x, k), nsmall = k))
 }
-write_figs <- TRUE
+write_figs <- FALSE
 
 if (write_figs) {
   if (!dir.exists(here("figures"))) {dir.create(here("figures"))}
