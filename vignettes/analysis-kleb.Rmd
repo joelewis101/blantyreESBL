@@ -38,7 +38,7 @@ library(stringr)
 sp_dc <- function(x, k) {
   trimws(format(round(x, k), nsmall = k))
 }
-write_figs <- FALSE
+write_figs <- TRUE
 
 if (write_figs) {
   if (!dir.exists(here("figures"))) {dir.create(here("figures"))}
@@ -469,7 +469,7 @@ chloramphenicol <- "Cat|FloR|Cml"
 trimethoprim <- "Dfr"
 rifampicin <- "Arr"
 ESBL <- "SHV_12"
-penicillinase <- "OKP|SCO|LEN|LAP"
+penicillinase <- "OKP|SCO|LEN|LAP|AmpC|AmpH"
 ampc <- "CMY"
 
 btESBL_amrgenes %>% 
@@ -494,7 +494,7 @@ btESBL_amrgenes %>%
                     gene,
                     perl = TRUE))
       ) %>% 
-  filter(!grepl("AmpH|AMPH|AmpC|MrdA|MefB", gene)) %>% 
+  filter(!grepl("MrdA|MefB", gene)) %>% # AmpH|AMPH|AmpC|
   # add in beta-lactamases
   left_join(
     select(btESBL_NCBI_phenotypic_bl, allele_name, class),
@@ -771,7 +771,12 @@ if (write_figs) {
 ``` {r global-tree, fig.height = 12, fig.width = 8}
 
 dassimKleb_trees.global <- btESBL_kleb_globaltree
-dassimKleb_globalKleb.metadata <- btESBL_kleb_global_metadata
+btESBL_kleb_global_metadata %>% 
+  mutate(`Isolate Type` = case_when(
+    `Isolate Type` == "Carriage" ~ "Colonising",
+    `Isolate Type` == "Infection" ~ "Invasive",
+    TRUE ~ `Isolate Type`)) ->
+dassimKleb_globalKleb.metadata 
 
 col <-
   c("white",
@@ -783,8 +788,8 @@ names(col) <-
     "Human",
     "Animal",
     "Environmental",
-    "Infection",
-    "Carriage",
+    "Invasive",
+    "Colonising",
     "ESBL") 
 
 get_legend(
@@ -1282,15 +1287,25 @@ dassimKleb_BTKleb.diversity %>%
 
 
 dassimKleb_BTKleb.amr %>% 
-  filter(!gene %in% c("OqxA", "OqxB")) %>% 
+  filter(!gene %in% c("OqxA", "OqxB", "AmpH")) %>% 
   group_by(lane, class) %>%
   ungroup() %>%  
   select(lane, class) %>% 
   unique() %>% 
   filter(!is.na(class)) %>% 
   group_by(class) %>% 
-  summarise(n = n(), prop = n /203)
+  summarise(n = n(), prop = n /203) %>% 
+  as.data.frame()
 
+
+btESBL_qrdr_mutations %>% 
+    filter(genus == "K. pneumoniae complex") %>% 
+    select(-genus) %>% 
+    semi_join(
+        btESBL_CARD_qrdr_mutations, 
+        by = c("variant" = "variant",
+               "gene" =  "gene")) %>% 
+       unique() %>% count(gene,variant)
 
 dassimKleb_globalKleb.metadata %>%
     filter(location == "Malawi") %>%
@@ -1332,6 +1347,24 @@ dassimKleb_globalKleb.metadata %>%
   mutate(vir = clb == 1 |
            iuc == 1 | iro == 1 | rmpA == 1 | rmpA2 == 1) %>%  
               filter(ESBL == "ESBL" & vir == TRUE)
+
+# simpsons diversity
+
+dassimKleb_BTKleb.diversity %>% 
+    mutate(K_locus = case_when(
+        K_locus_confidence %in% 
+            c("Good",
+              "High",             
+              "Very high") ~ K_locus,
+        TRUE ~ NA_character_)) %>% 
+    mutate(O_locus = case_when(
+        O_locus_confidence %in% 
+            c("Good",
+              "High",             
+              "Very high") ~ O_locus,
+        TRUE ~ NA_character_)) -> df
+
+
 
 ```
 
