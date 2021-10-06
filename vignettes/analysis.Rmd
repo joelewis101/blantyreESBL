@@ -539,82 +539,6 @@ btESBL_exposures %>%
 ```
 
 
-```{r esbl-prev-tab}
-
-
-
-left_join(
-  btESBL_stoolESBL %>%
-    group_by(arm, visit) %>%
-    summarise(n = n(),
-              n_esbl = sum(ESBL == "Positive")),
-  
-  btESBL_stoolESBL %>%
-    left_join(btESBL_stoolorgs %>% 
-                filter(ESBL == "Positive") %>%
-                select(lab_id,organism)) %>% 
-    group_by(arm, visit) %>%
-    summarise(
-      n_esco = sum(organism == "Escherichia coli", na.rm = TRUE),
-      n_kleb = sum(organism == "Klebsiella pneumoniae", na.rm = TRUE)
-    )
-) %>%
-  mutate(
-    esbl_str = paste0(n_esbl, " (",
-                      specify_decimal(n_esbl * 100 / n, 0),
-                      "%)"),
-    esco_str = paste0(n_esco, " (",
-                      specify_decimal(n_esco * 100 / n, 0),
-                      "%)"),
-    kleb_str = paste0(n_kleb, " (",
-                      specify_decimal(n_kleb * 100 / n, 0),
-                      "%)"),
-    n = as.character(n)
-  ) %>%
-  select(visit, arm, n, esbl_str, esco_str, kleb_str) %>%
-  pivot_wider(
-    id_cols = visit ,
-    names_from = arm,
-    values_from = c("n", "esbl_str", "esco_str", "kleb_str"),
-    values_fill = "-"
-  ) %>%
-  select(
-    visit,
-    n_1,
-    esbl_str_1,
-    esco_str_1,
-    kleb_str_1,
-    n_2,
-    esbl_str_2,
-    esco_str_2,
-    kleb_str_2,
-    n_3,
-    esbl_str_3,
-    esco_str_3,
-    kleb_str_3
-  ) %>%
-  mutate(
-    visit = case_when(
-      visit == 0 ~ "Baseline",
-      visit == 1 ~ "Day 7",
-      visit == 2 ~ "Day 28",
-      visit == 3 ~ "Day 90",
-      visit == 4 ~ "Day 180"
-    )) %>%
-      kable(col.names = c("Visit", rep(
-        c("n", "ESBL", "E. coli", "K. pneumo"), 3
-      )),
-      caption = "ESBL, E. coli and K. pneumoniae prevalence in stool at study visits, stratified by study arm.") %>%
-      kable_classic(full_width = FALSE) %>%
-      add_header_above(c(
-        " " = 1,
-        "Sepsis" = 4,
-        "Inpatient" = 4,
-        "Community" = 4
-      ))
-    
-```
-
 
 ### Timing of sample collection
 
@@ -648,6 +572,8 @@ if (write_figs) {
 ```
 
 ### Species plot
+
+
 
 ```{r ESBLspecies, fig.width=6, fig.height =4, fig.cap = "Species cultured from stool."}
 
@@ -833,6 +759,84 @@ log_regESBL %>%
 ```
 
 ### Longitudinal carriage
+
+```{r esbl-prev-tab}
+
+
+
+left_join(
+  btESBL_stoolESBL %>%
+    group_by(arm, visit) %>%
+    summarise(n = n(),
+              n_esbl = sum(ESBL == "Positive")),
+  
+  btESBL_stoolESBL %>%
+    left_join(btESBL_stoolorgs %>% 
+                filter(ESBL == "Positive") %>%
+                select(lab_id,organism)) %>% 
+    group_by(arm, visit) %>%
+    summarise(
+      n_esco = sum(organism == "Escherichia coli", na.rm = TRUE),
+      n_kleb = sum(organism == "Klebsiella pneumoniae", na.rm = TRUE)
+    )
+) %>%
+  mutate(
+    esbl_str = paste0(n_esbl, " (",
+                      specify_decimal(n_esbl * 100 / n, 0),
+                      "%)"),
+    esco_str = paste0(n_esco, " (",
+                      specify_decimal(n_esco * 100 / n, 0),
+                      "%)"),
+    kleb_str = paste0(n_kleb, " (",
+                      specify_decimal(n_kleb * 100 / n, 0),
+                      "%)"),
+    n = as.character(n)
+  ) %>%
+  select(visit, arm, n, esbl_str, esco_str, kleb_str) %>%
+  pivot_wider(
+    id_cols = visit ,
+    names_from = arm,
+    values_from = c("n", "esbl_str", "esco_str", "kleb_str"),
+    values_fill = "-"
+  ) %>%
+  select(
+    visit,
+    n_1,
+    esbl_str_1,
+    esco_str_1,
+    kleb_str_1,
+    n_2,
+    esbl_str_2,
+    esco_str_2,
+    kleb_str_2,
+    n_3,
+    esbl_str_3,
+    esco_str_3,
+    kleb_str_3
+  ) %>%
+  mutate(
+    visit = case_when(
+      visit == 0 ~ "Baseline",
+      visit == 1 ~ "Day 7",
+      visit == 2 ~ "Day 28",
+      visit == 3 ~ "Day 90",
+      visit == 4 ~ "Day 180"
+    )) %>%
+      kable(col.names = c("Visit", rep(
+        c("n", "ESBL", "E. coli", "K. pneumo"), 3
+      )),
+      caption = "ESBL, E. coli and K. pneumoniae prevalence in stool at study visits, stratified by study arm.") %>%
+      kable_classic(full_width = FALSE) %>%
+      add_header_above(c(
+        " " = 1,
+        "Sepsis" = 4,
+        "Inpatient" = 4,
+        "Community" = 4
+      ))
+    
+```
+
+
 
 
 ```{r esbl-prev-plot, fig.cap = "ESBL prevalence as a function of time, stratified by study arm: sepsis patients exposed to antimicrobials and admitted to hospital; inpatients admitted to hospital but without antimicrobial exposure; and community members not admitted to hospital and without antimicrobial exposure. Non-sepsis inpatients are censored on first antimicrobial exposure and community members censored on antimicrobial expoure or hospitalisation. Smoothed prevalence is estimated from fitting a LOESS nonparametric regression line with span parameter 0.8.", fig.height=3, fig.width = 6 }
