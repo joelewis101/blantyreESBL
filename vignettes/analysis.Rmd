@@ -24,7 +24,7 @@ This document contains reproducing analysis code which generates the tables and 
 
 <br />
 
-Joseph M Lewis^1,2,3,4^, , Madalitso Mphasa^1^, Rachel Banda^1^,  Matthew Beale^4^, Eva Heinz^2^, Jane Mallewa^5^, Christopher Jewell^6^, Nicholas R Thomson^4^, Nicholas A Feasey^1,2^
+Joseph M Lewis^1,2,3,4^, , Madalitso Mphasa^1^, Rachel Banda^1^,  Matthew Beale^4^, Eva Heinz^2^, Jane Mallewa^5^, Christopher Jewell^6^, Nicholas R Thomson^4,7^, Nicholas A Feasey^1,2^
 
 1. Malawi Liverpool Wellcome Clinical Research Programme, Blantyre, Malawi
 2. Liverpool School of Tropical Medicine, Liverpool, UK
@@ -616,74 +616,6 @@ left_join(
 ```
 
 
-```{r esbl-prev-plot, fig.cap = "ESBL prevalence as a function of time, stratified by study arm: sepsis patients exposed to antimicrobials and admitted to hospital; inpatients admitted to hospital but without antimicrobial exposure; and community members not admitted to hospital and without antimicrobial exposure. Non-sepsis inpatients are censored on first antimicrobial exposure and community members censored on antimicrobial expoure or hospitalisation. Smoothed prevalence is estimated from fitting a LOESS nonparametric regression line with span parameter 0.8.", fig.height=3, fig.width = 6 }
-fills = c("#A25050","#6497b1","#7cb9b9")
-
-
-
-cols = c("#8F2727","#03396c","#278f8f")
-
-# get first ab exposure 
-btESBL_stoolESBL %>% 
-left_join(
-    btESBL_exposures %>%
-      group_by(pid) %>%
-      complete(assess_type = c(0:max(assess_type))) %>%
-      fill(everything()) %>% rowwise() %>%
-      mutate(any_abx = any(c_across(!matches(
-        "pid|assess|hosp|died"
-      )) == 1)) %>%
-      group_by(pid) %>%
-      filter(any_abx == 1) %>%
-      arrange(pid, assess_type) %>%
-      slice(n = 1) %>%
-      mutate(first_ab = assess_type) %>%
-      select(pid, first_ab)) %>% 
-  # and hospital exposure
-  left_join(
-    btESBL_exposures %>%
-      group_by(pid) %>%
-      complete(assess_type = c(0:max(assess_type))) %>%  
-      fill(everything()) %>% 
-      group_by(pid) %>% 
-      filter(hosp == 1) %>% 
-      arrange(pid, assess_type) %>% 
-      slice(n=1) %>% 
-      mutate(first_hosp = assess_type) %>%
-      select(pid, first_hosp)) %>% 
-  # censor as described
-  filter(
-    !(arm == 2 & !is.na(first_ab) & first_ab < t),
-    !(arm == 3 & !is.na(first_ab) & first_ab < t),
-    !(arm == 3 & !is.na(first_hosp) & first_hosp < t)
-  ) %>% 
-  mutate(arm = case_when(
-    arm == 1 ~ "Inpatient:\nantimicrobials",
-    arm == 2 ~ "Inpatient:\nno antimicrobials",
-    arm == 3 ~ "Community"),
-    arm = factor(arm, levels = c("Inpatient:\nantimicrobials", 
-                                 "Inpatient:\nno antimicrobials",
-                                 "Community"))
-    ) %>% 
-ggplot(aes(t, as.numeric(ESBL == "Positive"), 
-               color = as.factor(arm), 
-               group = as.factor(arm),
-               fill = as.factor(arm))) +
-  geom_smooth(size = 0.5) +
-  coord_cartesian(xlim = c(0,180), ylim = c(0.1,0.9)) +
-  theme_bw() +
-  scale_fill_manual(values = fills) +
-  scale_color_manual(values = cols) +
-#  scale_color_npg() +
- #   scale_fill_npg() + 
-#  scale_color_manual(values = pal_lancet()(3)[c(2,1,3)]) + 
- # scale_fill_manual(values = pal_lancet()(3)[c(2,1,3)]) +
-  xlab("Day post enrollment") +
-  ylab("ESBL-E prevalence") +
-  theme(legend.title = element_blank(),
-        legend.position = "top") -> ESBLprevplot
-
-```
 ### Timing of sample collection
 
 ```{r sample_timing, fig.cap = "Timing of sample collection showing long tails around sample collection time.", fig.height = 4, fig.width= 6 }
@@ -725,6 +657,8 @@ btESBL_stoolorgs %>%
       case_when(organism == "pantoea sp" ~ "Panotea species",
                 organism == "Gram negative bacilli" ~
                   "Gram negative bacilli*",
+                organism == "Klebsiella pneumoniae" ~
+                  "Klebsiella pneumoniae complex",
                 TRUE ~ organism)) %>% 
   ggplot(aes(fct_rev(fct_infreq(organism)), fill = ESBL)) +
   geom_bar() +
@@ -900,6 +834,75 @@ log_regESBL %>%
 
 ### Longitudinal carriage
 
+
+```{r esbl-prev-plot, fig.cap = "ESBL prevalence as a function of time, stratified by study arm: sepsis patients exposed to antimicrobials and admitted to hospital; inpatients admitted to hospital but without antimicrobial exposure; and community members not admitted to hospital and without antimicrobial exposure. Non-sepsis inpatients are censored on first antimicrobial exposure and community members censored on antimicrobial expoure or hospitalisation. Smoothed prevalence is estimated from fitting a LOESS nonparametric regression line with span parameter 0.8.", fig.height=3, fig.width = 6 }
+fills = c("#A25050","#6497b1","#7cb9b9")
+
+
+
+cols = c("#8F2727","#03396c","#278f8f")
+
+# get first ab exposure 
+btESBL_stoolESBL %>% 
+left_join(
+    btESBL_exposures %>%
+      group_by(pid) %>%
+      complete(assess_type = c(0:max(assess_type))) %>%
+      fill(everything()) %>% rowwise() %>%
+      mutate(any_abx = any(c_across(!matches(
+        "pid|assess|hosp|died"
+      )) == 1)) %>%
+      group_by(pid) %>%
+      filter(any_abx == 1) %>%
+      arrange(pid, assess_type) %>%
+      slice(n = 1) %>%
+      mutate(first_ab = assess_type) %>%
+      select(pid, first_ab)) %>% 
+  # and hospital exposure
+  left_join(
+    btESBL_exposures %>%
+      group_by(pid) %>%
+      complete(assess_type = c(0:max(assess_type))) %>%  
+      fill(everything()) %>% 
+      group_by(pid) %>% 
+      filter(hosp == 1) %>% 
+      arrange(pid, assess_type) %>% 
+      slice(n=1) %>% 
+      mutate(first_hosp = assess_type) %>%
+      select(pid, first_hosp)) %>% 
+  # censor as described
+  filter(
+    !(arm == 2 & !is.na(first_ab) & first_ab < t),
+    !(arm == 3 & !is.na(first_ab) & first_ab < t),
+    !(arm == 3 & !is.na(first_hosp) & first_hosp < t)
+  ) %>% 
+  mutate(arm = case_when(
+    arm == 1 ~ "Inpatient:\nantimicrobials",
+    arm == 2 ~ "Inpatient:\nno antimicrobials",
+    arm == 3 ~ "Community"),
+    arm = factor(arm, levels = c("Inpatient:\nantimicrobials", 
+                                 "Inpatient:\nno antimicrobials",
+                                 "Community"))
+    ) %>% 
+ggplot(aes(t, as.numeric(ESBL == "Positive"), 
+               color = as.factor(arm), 
+               group = as.factor(arm),
+               fill = as.factor(arm))) +
+  geom_smooth(size = 0.5) +
+  coord_cartesian(xlim = c(0,180), ylim = c(0.1,0.9)) +
+  theme_bw() +
+  scale_fill_manual(values = fills) +
+  scale_color_manual(values = cols) +
+#  scale_color_npg() +
+ #   scale_fill_npg() + 
+#  scale_color_manual(values = pal_lancet()(3)[c(2,1,3)]) + 
+ # scale_fill_manual(values = pal_lancet()(3)[c(2,1,3)]) +
+  xlab("Day post enrollment") +
+  ylab("ESBL-E prevalence") +
+  theme(legend.title = element_blank(),
+        legend.position = "top") -> ESBLprevplot
+
+```
 Describe carriage prevalence; plot model parameters; plot predicted prevalence.
 
 ```{r markov-model-panel-plot, fig.cap = "Determinants of ESBL-E carriage. A: Prevalence of ESBL-E carriage stratified by study arm. Inpatients without sepsis are censored at first antimicrobial exposure and community members censored at first antimicrobial exposure or hospital admission. Estimated prevalence and 95% confience intervals derived from a nonparametric LOESS regression with span parameter 0.8. B: Simulated probability of ESBL colonisation generated from the posterior parameter estimates of the fitted model with a starting probability of colonisation of 0.5 and seven days of hospitalisation with either seven, two, or no days antimicrobial exposure. In this model, truncated courses of antimicrobials havelittle effect on reducing ESBL-E carriage. C-E: Density plots of parameter estimates form fitted model with median (line) and 95% credible intervals (shading) shown. A: log hazard ratios of ESBL-E gain and loss for hospialisation and antimicrobial exposure: hospitalisation acts to acts to increase both acquisition and loss of ESBL-E whereas antmicrobial exposure acts to prevent loss. D: mean time in state for uncolonised and colonised states. E: Half life of decay of effecr of antimicrobials, showing that the effect of antimicrobials, in this model, acts for many days after exposure has finished.", fig.width = 12, fig.height=6  }
@@ -2212,7 +2215,11 @@ ggplot(df.manhattan.popPUNK, aes(clustr, log_pval, color = log_pval >
     legend.position = "none",
     axis.text.x = element_blank()) +
       scale_color_manual(values = c("black", "red")) +
-  labs(y = "-log(p)", x = "popPUNK cluster") -> manhattanplot_popPUNK
+  labs(y = "-log(p)", x = "popPUNK cluster") +
+  geom_segment(aes(x = (23*1.3), y =  (3.66722 - 3.66722/3), 
+                   xend = 23 + 23*0.3*0.1, yend = 3.66722 - 0.1*3.66722/3),
+               arrow = arrow(length = unit(0.3, "cm"))) ->
+  manhattanplot_popPUNK
  # 
 
 ## -- esbl clusters
@@ -2254,7 +2261,11 @@ ggplot(df.manhattan.esbl, aes(clstr_name, log_pval, color = log_pval >
     legend.position = "none",
     axis.text.x = element_blank()) +
       scale_color_manual(values = c("black", "red")) +
-  labs(y = "-log(p)", x = "ESBL-contig cluster") -> manhattanplot_esbl
+  labs(y = "-log(p)", x = "Contig cluster") +
+  geom_segment(aes(x = (27*1.3), y =  (3.680 - 3.680/3), 
+                   xend = 27 + 27*0.3*0.1, yend = 3.680 - 0.1*3.680/3),
+               arrow = arrow(length = unit(0.3, "cm")) ) ->
+  manhattanplot_esbl
  # 
 
 (((hospassoc.tree.esco |
@@ -2554,7 +2565,9 @@ ggraph(gr.k, layout = "fr") + geom_edge_fan(aes(color = type), width = 1) +
 
 (snp_network_plot.esco + 
   snp_network_plot.kleb) + plot_layout(guides = "collect") +  
-  plot_annotation(tag_levels = "A") & theme(legend.position = 'bottom') ->
+  plot_annotation(tag_levels = "A") & 
+  theme(legend.position = 'bottom', 
+        plot.tag = element_text(size = 22)) ->
   snp_networks
 snp_networks
 
@@ -2893,9 +2906,14 @@ plot_layout(guides = "collect") -> sens_analysis_within_snpdist
 
 if (write_figs) {
 
-ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/SUPP_FIG_sens_analysis_snpdist_autocorrelation.svg", sens_analysis_within_snpdist, width = 9, height = 4)
-
-ggsave("~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/SUPP_FIG_sens_analysis_snpdist_autocorrelation.pdf", sens_analysis_within_snpdist, width = 9, height = 4)
+  ggsave(here("figures/long-modelling/SUPP_FIG_sens_analysis_snpdist_autocorrelation.svg"),
+         snp_networks,
+         width = 9,
+         height = 4)
+  ggsave(here("figures/long-modelling/SUPP_FIG_sens_analysis_snpdist_autocorrelation.svg"),
+         snp_networks,
+         width = 9, 
+         height = 4)
 
 }
 ```

@@ -99,7 +99,7 @@
 <p><br></p>
 <p><em>Dynamics of gut mucosal colonisation with extended spectrum beta-lactamase producing Enterobacterales in Malawi</em></p>
 <p><br></p>
-<p>Joseph M Lewis<sup>1,2,3,4</sup>, , Madalitso Mphasa<sup>1</sup>, Rachel Banda<sup>1</sup>, Matthew Beale<sup>4</sup>, Eva Heinz<sup>2</sup>, Jane Mallewa<sup>5</sup>, Christopher Jewell<sup>6</sup>, Nicholas R Thomson<sup>4</sup>, Nicholas A Feasey<sup>1,2</sup></p>
+<p>Joseph M Lewis<sup>1,2,3,4</sup>, , Madalitso Mphasa<sup>1</sup>, Rachel Banda<sup>1</sup>, Matthew Beale<sup>4</sup>, Eva Heinz<sup>2</sup>, Jane Mallewa<sup>5</sup>, Christopher Jewell<sup>6</sup>, Nicholas R Thomson<sup>4,7</sup>, Nicholas A Feasey<sup>1,2</sup></p>
 <ol style="list-style-type: decimal">
 <li>Malawi Liverpool Wellcome Clinical Research Programme, Blantyre, Malawi</li>
 <li>Liverpool School of Tropical Medicine, Liverpool, UK</li>
@@ -445,7 +445,7 @@ Male
 40/100 (40%)
 </td>
 <td style="text-align:left;">
-0.173
+0.169
 </td>
 <td style="text-align:left;">
 205/425 (48%)
@@ -533,7 +533,7 @@ Current CPT
 7/18 (39%)
 </td>
 <td style="text-align:left;">
-0.009
+0.010
 </td>
 <td style="text-align:left;">
 110/171 (64%)
@@ -553,7 +553,7 @@ Current ART
 18/18 (100%)
 </td>
 <td style="text-align:left;">
-0.072
+0.074
 </td>
 <td style="text-align:left;">
 144/173 (83%)
@@ -573,7 +573,7 @@ ART regimen: EFV/3TC/TDF
 17/18 (94%)
 </td>
 <td style="text-align:left;">
-0.652
+0.647
 </td>
 <td style="text-align:left;">
 135/144 (94%)
@@ -638,7 +638,7 @@ Hospitalised within 28 days
 0/100 (0%)
 </td>
 <td style="text-align:left;">
-&lt;0.001
+0.002
 </td>
 <td style="text-align:left;">
 19/425 (4%)
@@ -658,7 +658,7 @@ Current TB treatment
 4/100 (4%)
 </td>
 <td style="text-align:left;">
-0.089
+0.095
 </td>
 <td style="text-align:left;">
 14/425 (3%)
@@ -819,7 +819,7 @@ Electricty in house
 58/100 (58%)
 </td>
 <td style="text-align:left;">
-0.037
+0.040
 </td>
 <td style="text-align:left;">
 218/425 (51%)
@@ -839,7 +839,7 @@ Flush toilet<sup>‡</sup>
 1/100 (1%)
 </td>
 <td style="text-align:left;">
-0.116
+0.113
 </td>
 <td style="text-align:left;">
 20/425 (5%)
@@ -859,7 +859,7 @@ Protected water source<sup>§</sup>
 98/100 (98%)
 </td>
 <td style="text-align:left;">
-0.134
+0.122
 </td>
 <td style="text-align:left;">
 406/425 (96%)
@@ -879,7 +879,7 @@ Treat drinking water with chlorine
 0/100 (0%)
 </td>
 <td style="text-align:left;">
-0.003
+0.002
 </td>
 <td style="text-align:left;">
 24/425 (6%)
@@ -2251,79 +2251,11 @@ Day 180
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">fills</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"#A25050"</span>,<span class="st">"#6497b1"</span>,<span class="st">"#7cb9b9"</span><span class="op">)</span>
-
-
-
-<span class="va">cols</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"#8F2727"</span>,<span class="st">"#03396c"</span>,<span class="st">"#278f8f"</span><span class="op">)</span>
-
-<span class="co"># get first ab exposure </span>
-<span class="va">btESBL_stoolESBL</span> <span class="op">%&gt;%</span> 
-<span class="fu">left_join</span><span class="op">(</span>
-    <span class="va">btESBL_exposures</span> <span class="op">%&gt;%</span>
-      <span class="fu">group_by</span><span class="op">(</span><span class="va">pid</span><span class="op">)</span> <span class="op">%&gt;%</span>
-      <span class="fu">complete</span><span class="op">(</span>assess_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">assess_type</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-      <span class="fu">fill</span><span class="op">(</span><span class="fu">everything</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">rowwise</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-      <span class="fu">mutate</span><span class="op">(</span>any_abx <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/any.html">any</a></span><span class="op">(</span><span class="fu">c_across</span><span class="op">(</span><span class="op">!</span><span class="fu">matches</span><span class="op">(</span>
-        <span class="st">"pid|assess|hosp|died"</span>
-      <span class="op">)</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-      <span class="fu">group_by</span><span class="op">(</span><span class="va">pid</span><span class="op">)</span> <span class="op">%&gt;%</span>
-      <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">any_abx</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span>
-      <span class="fu">arrange</span><span class="op">(</span><span class="va">pid</span>, <span class="va">assess_type</span><span class="op">)</span> <span class="op">%&gt;%</span>
-      <span class="fu">slice</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span>
-      <span class="fu">mutate</span><span class="op">(</span>first_ab <span class="op">=</span> <span class="va">assess_type</span><span class="op">)</span> <span class="op">%&gt;%</span>
-      <span class="fu">select</span><span class="op">(</span><span class="va">pid</span>, <span class="va">first_ab</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="co"># and hospital exposure</span>
-  <span class="fu">left_join</span><span class="op">(</span>
-    <span class="va">btESBL_exposures</span> <span class="op">%&gt;%</span>
-      <span class="fu">group_by</span><span class="op">(</span><span class="va">pid</span><span class="op">)</span> <span class="op">%&gt;%</span>
-      <span class="fu">complete</span><span class="op">(</span>assess_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">assess_type</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>  
-      <span class="fu">fill</span><span class="op">(</span><span class="fu">everything</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-      <span class="fu">group_by</span><span class="op">(</span><span class="va">pid</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-      <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">hosp</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-      <span class="fu">arrange</span><span class="op">(</span><span class="va">pid</span>, <span class="va">assess_type</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-      <span class="fu">slice</span><span class="op">(</span>n<span class="op">=</span><span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-      <span class="fu">mutate</span><span class="op">(</span>first_hosp <span class="op">=</span> <span class="va">assess_type</span><span class="op">)</span> <span class="op">%&gt;%</span>
-      <span class="fu">select</span><span class="op">(</span><span class="va">pid</span>, <span class="va">first_hosp</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="co"># censor as described</span>
-  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span>
-    <span class="op">!</span><span class="op">(</span><span class="va">arm</span> <span class="op">==</span> <span class="fl">2</span> <span class="op">&amp;</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">first_ab</span><span class="op">)</span> <span class="op">&amp;</span> <span class="va">first_ab</span> <span class="op">&lt;</span> <span class="va">t</span><span class="op">)</span>,
-    <span class="op">!</span><span class="op">(</span><span class="va">arm</span> <span class="op">==</span> <span class="fl">3</span> <span class="op">&amp;</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">first_ab</span><span class="op">)</span> <span class="op">&amp;</span> <span class="va">first_ab</span> <span class="op">&lt;</span> <span class="va">t</span><span class="op">)</span>,
-    <span class="op">!</span><span class="op">(</span><span class="va">arm</span> <span class="op">==</span> <span class="fl">3</span> <span class="op">&amp;</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">first_hosp</span><span class="op">)</span> <span class="op">&amp;</span> <span class="va">first_hosp</span> <span class="op">&lt;</span> <span class="va">t</span><span class="op">)</span>
-  <span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">mutate</span><span class="op">(</span>arm <span class="op">=</span> <span class="fu">case_when</span><span class="op">(</span>
-    <span class="va">arm</span> <span class="op">==</span> <span class="fl">1</span> <span class="op">~</span> <span class="st">"Inpatient:\nantimicrobials"</span>,
-    <span class="va">arm</span> <span class="op">==</span> <span class="fl">2</span> <span class="op">~</span> <span class="st">"Inpatient:\nno antimicrobials"</span>,
-    <span class="va">arm</span> <span class="op">==</span> <span class="fl">3</span> <span class="op">~</span> <span class="st">"Community"</span><span class="op">)</span>,
-    arm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">arm</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Inpatient:\nantimicrobials"</span>, 
-                                 <span class="st">"Inpatient:\nno antimicrobials"</span>,
-                                 <span class="st">"Community"</span><span class="op">)</span><span class="op">)</span>
-    <span class="op">)</span> <span class="op">%&gt;%</span> 
-<span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">t</span>, <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">ESBL</span> <span class="op">==</span> <span class="st">"Positive"</span><span class="op">)</span>, 
-               color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">arm</span><span class="op">)</span>, 
-               group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">arm</span><span class="op">)</span>,
-               fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">arm</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">geom_smooth</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">coord_cartesian</span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">180</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.1</span>,<span class="fl">0.9</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">scale_fill_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="va">fills</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">scale_color_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="va">cols</span><span class="op">)</span> <span class="op">+</span>
-<span class="co">#  scale_color_npg() +</span>
- <span class="co">#   scale_fill_npg() + </span>
-<span class="co">#  scale_color_manual(values = pal_lancet()(3)[c(2,1,3)]) + </span>
- <span class="co"># scale_fill_manual(values = pal_lancet()(3)[c(2,1,3)]) +</span>
-  <span class="fu">xlab</span><span class="op">(</span><span class="st">"Day post enrollment"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">ylab</span><span class="op">(</span><span class="st">"ESBL-E prevalence"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">theme</span><span class="op">(</span>legend.title <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span>,
-        legend.position <span class="op">=</span> <span class="st">"top"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">ESBLprevplot</span>
-<span class="co">#&gt; Joining, by = "pid"</span>
-<span class="co">#&gt; Joining, by = "pid"</span></code></pre></div>
 </div>
 <div id="timing-of-sample-collection" class="section level3">
 <h3 class="hasAnchor">
 <a href="#timing-of-sample-collection" class="anchor"></a>Timing of sample collection</h3>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">btESBL_stoolESBL</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">visit</span> <span class="op">!=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">mutate</span><span class="op">(</span>visit <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Visit "</span>, <span class="va">visit</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -2346,7 +2278,7 @@ Day 180
 Timing of sample collection showing long tails around sample collection time.
 </p>
 </div>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="kw">if</span> <span class="op">(</span><span class="va">write_figs</span><span class="op">)</span> <span class="op">{</span>
   <span class="fu">ggsave</span><span class="op">(</span><span class="fu">here</span><span class="op">(</span><span class="st">"figures/long-modelling/SUP_FIG_sample_collection_dates.pdf"</span><span class="op">)</span>,
@@ -2362,7 +2294,7 @@ Timing of sample collection showing long tails around sample collection time.
 <div id="species-plot" class="section level3">
 <h3 class="hasAnchor">
 <a href="#species-plot" class="anchor"></a>Species plot</h3>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">btESBL_stoolorgs</span> <span class="op">%&gt;%</span> 
   <span class="fu">mutate</span><span class="op">(</span>
@@ -2370,6 +2302,8 @@ Timing of sample collection showing long tails around sample collection time.
       <span class="fu">case_when</span><span class="op">(</span><span class="va">organism</span> <span class="op">==</span> <span class="st">"pantoea sp"</span> <span class="op">~</span> <span class="st">"Panotea species"</span>,
                 <span class="va">organism</span> <span class="op">==</span> <span class="st">"Gram negative bacilli"</span> <span class="op">~</span>
                   <span class="st">"Gram negative bacilli*"</span>,
+                <span class="va">organism</span> <span class="op">==</span> <span class="st">"Klebsiella pneumoniae"</span> <span class="op">~</span>
+                  <span class="st">"Klebsiella pneumoniae complex"</span>,
                 <span class="cn">TRUE</span> <span class="op">~</span> <span class="va">organism</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="fu">fct_rev</span><span class="op">(</span><span class="fu">fct_infreq</span><span class="op">(</span><span class="va">organism</span><span class="op">)</span><span class="op">)</span>, fill <span class="op">=</span> <span class="va">ESBL</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">geom_bar</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
@@ -2384,7 +2318,7 @@ Timing of sample collection showing long tails around sample collection time.
 Species cultured from stool.
 </p>
 </div>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="kw">if</span> <span class="op">(</span><span class="va">write_figs</span><span class="op">)</span> <span class="op">{</span>
   <span class="fu">ggsave</span><span class="op">(</span><span class="fu">here</span><span class="op">(</span><span class="st">"figures/long-modelling/SUP_FIG_stool_spec.pdf"</span><span class="op">)</span>,
@@ -2400,7 +2334,7 @@ Species cultured from stool.
 <div id="baseline-associations-of-esbl-colonisation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#baseline-associations-of-esbl-colonisation" class="anchor"></a>Baseline associations of ESBL colonisation</h3>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="co"># helper function for univariable ods ratios</span>
 
@@ -2942,6 +2876,74 @@ Rainy season (vs. dry)
 <div id="longitudinal-carriage" class="section level3">
 <h3 class="hasAnchor">
 <a href="#longitudinal-carriage" class="anchor"></a>Longitudinal carriage</h3>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fills</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"#A25050"</span>,<span class="st">"#6497b1"</span>,<span class="st">"#7cb9b9"</span><span class="op">)</span>
+
+
+
+<span class="va">cols</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"#8F2727"</span>,<span class="st">"#03396c"</span>,<span class="st">"#278f8f"</span><span class="op">)</span>
+
+<span class="co"># get first ab exposure </span>
+<span class="va">btESBL_stoolESBL</span> <span class="op">%&gt;%</span> 
+<span class="fu">left_join</span><span class="op">(</span>
+    <span class="va">btESBL_exposures</span> <span class="op">%&gt;%</span>
+      <span class="fu">group_by</span><span class="op">(</span><span class="va">pid</span><span class="op">)</span> <span class="op">%&gt;%</span>
+      <span class="fu">complete</span><span class="op">(</span>assess_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">assess_type</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+      <span class="fu">fill</span><span class="op">(</span><span class="fu">everything</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">rowwise</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+      <span class="fu">mutate</span><span class="op">(</span>any_abx <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/any.html">any</a></span><span class="op">(</span><span class="fu">c_across</span><span class="op">(</span><span class="op">!</span><span class="fu">matches</span><span class="op">(</span>
+        <span class="st">"pid|assess|hosp|died"</span>
+      <span class="op">)</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+      <span class="fu">group_by</span><span class="op">(</span><span class="va">pid</span><span class="op">)</span> <span class="op">%&gt;%</span>
+      <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">any_abx</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span>
+      <span class="fu">arrange</span><span class="op">(</span><span class="va">pid</span>, <span class="va">assess_type</span><span class="op">)</span> <span class="op">%&gt;%</span>
+      <span class="fu">slice</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span>
+      <span class="fu">mutate</span><span class="op">(</span>first_ab <span class="op">=</span> <span class="va">assess_type</span><span class="op">)</span> <span class="op">%&gt;%</span>
+      <span class="fu">select</span><span class="op">(</span><span class="va">pid</span>, <span class="va">first_ab</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="co"># and hospital exposure</span>
+  <span class="fu">left_join</span><span class="op">(</span>
+    <span class="va">btESBL_exposures</span> <span class="op">%&gt;%</span>
+      <span class="fu">group_by</span><span class="op">(</span><span class="va">pid</span><span class="op">)</span> <span class="op">%&gt;%</span>
+      <span class="fu">complete</span><span class="op">(</span>assess_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">assess_type</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>  
+      <span class="fu">fill</span><span class="op">(</span><span class="fu">everything</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+      <span class="fu">group_by</span><span class="op">(</span><span class="va">pid</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+      <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">hosp</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+      <span class="fu">arrange</span><span class="op">(</span><span class="va">pid</span>, <span class="va">assess_type</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+      <span class="fu">slice</span><span class="op">(</span>n<span class="op">=</span><span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+      <span class="fu">mutate</span><span class="op">(</span>first_hosp <span class="op">=</span> <span class="va">assess_type</span><span class="op">)</span> <span class="op">%&gt;%</span>
+      <span class="fu">select</span><span class="op">(</span><span class="va">pid</span>, <span class="va">first_hosp</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="co"># censor as described</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span>
+    <span class="op">!</span><span class="op">(</span><span class="va">arm</span> <span class="op">==</span> <span class="fl">2</span> <span class="op">&amp;</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">first_ab</span><span class="op">)</span> <span class="op">&amp;</span> <span class="va">first_ab</span> <span class="op">&lt;</span> <span class="va">t</span><span class="op">)</span>,
+    <span class="op">!</span><span class="op">(</span><span class="va">arm</span> <span class="op">==</span> <span class="fl">3</span> <span class="op">&amp;</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">first_ab</span><span class="op">)</span> <span class="op">&amp;</span> <span class="va">first_ab</span> <span class="op">&lt;</span> <span class="va">t</span><span class="op">)</span>,
+    <span class="op">!</span><span class="op">(</span><span class="va">arm</span> <span class="op">==</span> <span class="fl">3</span> <span class="op">&amp;</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">first_hosp</span><span class="op">)</span> <span class="op">&amp;</span> <span class="va">first_hosp</span> <span class="op">&lt;</span> <span class="va">t</span><span class="op">)</span>
+  <span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">mutate</span><span class="op">(</span>arm <span class="op">=</span> <span class="fu">case_when</span><span class="op">(</span>
+    <span class="va">arm</span> <span class="op">==</span> <span class="fl">1</span> <span class="op">~</span> <span class="st">"Inpatient:\nantimicrobials"</span>,
+    <span class="va">arm</span> <span class="op">==</span> <span class="fl">2</span> <span class="op">~</span> <span class="st">"Inpatient:\nno antimicrobials"</span>,
+    <span class="va">arm</span> <span class="op">==</span> <span class="fl">3</span> <span class="op">~</span> <span class="st">"Community"</span><span class="op">)</span>,
+    arm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">arm</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Inpatient:\nantimicrobials"</span>, 
+                                 <span class="st">"Inpatient:\nno antimicrobials"</span>,
+                                 <span class="st">"Community"</span><span class="op">)</span><span class="op">)</span>
+    <span class="op">)</span> <span class="op">%&gt;%</span> 
+<span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">t</span>, <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">ESBL</span> <span class="op">==</span> <span class="st">"Positive"</span><span class="op">)</span>, 
+               color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">arm</span><span class="op">)</span>, 
+               group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">arm</span><span class="op">)</span>,
+               fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">arm</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_smooth</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">coord_cartesian</span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">180</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.1</span>,<span class="fl">0.9</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">scale_fill_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="va">fills</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">scale_color_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="va">cols</span><span class="op">)</span> <span class="op">+</span>
+<span class="co">#  scale_color_npg() +</span>
+ <span class="co">#   scale_fill_npg() + </span>
+<span class="co">#  scale_color_manual(values = pal_lancet()(3)[c(2,1,3)]) + </span>
+ <span class="co"># scale_fill_manual(values = pal_lancet()(3)[c(2,1,3)]) +</span>
+  <span class="fu">xlab</span><span class="op">(</span><span class="st">"Day post enrollment"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">ylab</span><span class="op">(</span><span class="st">"ESBL-E prevalence"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">theme</span><span class="op">(</span>legend.title <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span>,
+        legend.position <span class="op">=</span> <span class="st">"top"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">ESBLprevplot</span>
+<span class="co">#&gt; Joining, by = "pid"</span>
+<span class="co">#&gt; Joining, by = "pid"</span></code></pre></div>
 <p>Describe carriage prevalence; plot model parameters; plot predicted prevalence.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
@@ -4429,7 +4431,11 @@ Within participant correlation of organism, lineage, mobile genetic element (MGE
     legend.position <span class="op">=</span> <span class="st">"none"</span>,
     axis.text.x <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
       <span class="fu">scale_color_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"black"</span>, <span class="st">"red"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">labs</span><span class="op">(</span>y <span class="op">=</span> <span class="st">"-log(p)"</span>, x <span class="op">=</span> <span class="st">"popPUNK cluster"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">manhattanplot_popPUNK</span>
+  <span class="fu">labs</span><span class="op">(</span>y <span class="op">=</span> <span class="st">"-log(p)"</span>, x <span class="op">=</span> <span class="st">"popPUNK cluster"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_segment</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="op">(</span><span class="fl">23</span><span class="op">*</span><span class="fl">1.3</span><span class="op">)</span>, y <span class="op">=</span>  <span class="op">(</span><span class="fl">3.66722</span> <span class="op">-</span> <span class="fl">3.66722</span><span class="op">/</span><span class="fl">3</span><span class="op">)</span>, 
+                   xend <span class="op">=</span> <span class="fl">23</span> <span class="op">+</span> <span class="fl">23</span><span class="op">*</span><span class="fl">0.3</span><span class="op">*</span><span class="fl">0.1</span>, yend <span class="op">=</span> <span class="fl">3.66722</span> <span class="op">-</span> <span class="fl">0.1</span><span class="op">*</span><span class="fl">3.66722</span><span class="op">/</span><span class="fl">3</span><span class="op">)</span>,
+               arrow <span class="op">=</span> <span class="fu">arrow</span><span class="op">(</span>length <span class="op">=</span> <span class="fu">unit</span><span class="op">(</span><span class="fl">0.3</span>, <span class="st">"cm"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">-&gt;</span>
+  <span class="va">manhattanplot_popPUNK</span>
  <span class="co"># </span>
 
 <span class="co">## -- esbl clusters</span>
@@ -4471,7 +4477,11 @@ Within participant correlation of organism, lineage, mobile genetic element (MGE
     legend.position <span class="op">=</span> <span class="st">"none"</span>,
     axis.text.x <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
       <span class="fu">scale_color_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"black"</span>, <span class="st">"red"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">labs</span><span class="op">(</span>y <span class="op">=</span> <span class="st">"-log(p)"</span>, x <span class="op">=</span> <span class="st">"ESBL-contig cluster"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">manhattanplot_esbl</span>
+  <span class="fu">labs</span><span class="op">(</span>y <span class="op">=</span> <span class="st">"-log(p)"</span>, x <span class="op">=</span> <span class="st">"Contig cluster"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_segment</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="op">(</span><span class="fl">27</span><span class="op">*</span><span class="fl">1.3</span><span class="op">)</span>, y <span class="op">=</span>  <span class="op">(</span><span class="fl">3.680</span> <span class="op">-</span> <span class="fl">3.680</span><span class="op">/</span><span class="fl">3</span><span class="op">)</span>, 
+                   xend <span class="op">=</span> <span class="fl">27</span> <span class="op">+</span> <span class="fl">27</span><span class="op">*</span><span class="fl">0.3</span><span class="op">*</span><span class="fl">0.1</span>, yend <span class="op">=</span> <span class="fl">3.680</span> <span class="op">-</span> <span class="fl">0.1</span><span class="op">*</span><span class="fl">3.680</span><span class="op">/</span><span class="fl">3</span><span class="op">)</span>,
+               arrow <span class="op">=</span> <span class="fu">arrow</span><span class="op">(</span>length <span class="op">=</span> <span class="fu">unit</span><span class="op">(</span><span class="fl">0.3</span>, <span class="st">"cm"</span><span class="op">)</span><span class="op">)</span> <span class="op">)</span> <span class="op">-&gt;</span>
+  <span class="va">manhattanplot_esbl</span>
  <span class="co"># </span>
 
 <span class="op">(</span><span class="op">(</span><span class="op">(</span><span class="va">hospassoc.tree.esco</span> <span class="op">|</span>
@@ -4781,7 +4791,9 @@ Within participant correlation of organism, lineage, mobile genetic element (MGE
 
 <span class="op">(</span><span class="va">snp_network_plot.esco</span> <span class="op">+</span> 
   <span class="va">snp_network_plot.kleb</span><span class="op">)</span> <span class="op">+</span> <span class="fu">plot_layout</span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"collect"</span><span class="op">)</span> <span class="op">+</span>  
-  <span class="fu">plot_annotation</span><span class="op">(</span>tag_levels <span class="op">=</span> <span class="st">"A"</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">'bottom'</span><span class="op">)</span> <span class="op">-&gt;</span>
+  <span class="fu">plot_annotation</span><span class="op">(</span>tag_levels <span class="op">=</span> <span class="st">"A"</span><span class="op">)</span> <span class="op">&amp;</span> 
+  <span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">'bottom'</span>, 
+        plot.tag <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">22</span><span class="op">)</span><span class="op">)</span> <span class="op">-&gt;</span>
   <span class="va">snp_networks</span>
 <span class="va">snp_networks</span></code></pre></div>
 <div class="figure">
@@ -5144,9 +5156,14 @@ Network plot of SNP-clusters (i.e. putative transmission clusters) for E. coli 
 
 <span class="kw">if</span> <span class="op">(</span><span class="va">write_figs</span><span class="op">)</span> <span class="op">{</span>
 
-<span class="fu">ggsave</span><span class="op">(</span><span class="st">"~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/SUPP_FIG_sens_analysis_snpdist_autocorrelation.svg"</span>, <span class="va">sens_analysis_within_snpdist</span>, width <span class="op">=</span> <span class="fl">9</span>, height <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>
-
-<span class="fu">ggsave</span><span class="op">(</span><span class="st">"~/Documents/PhD/Manuscripts/2021012_esbl_carriage/manuscript/tables_and_figs/SUPP_FIG_sens_analysis_snpdist_autocorrelation.pdf"</span>, <span class="va">sens_analysis_within_snpdist</span>, width <span class="op">=</span> <span class="fl">9</span>, height <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>
+  <span class="fu">ggsave</span><span class="op">(</span><span class="fu">here</span><span class="op">(</span><span class="st">"figures/long-modelling/SUPP_FIG_sens_analysis_snpdist_autocorrelation.svg"</span><span class="op">)</span>,
+         <span class="va">snp_networks</span>,
+         width <span class="op">=</span> <span class="fl">9</span>,
+         height <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>
+  <span class="fu">ggsave</span><span class="op">(</span><span class="fu">here</span><span class="op">(</span><span class="st">"figures/long-modelling/SUPP_FIG_sens_analysis_snpdist_autocorrelation.svg"</span><span class="op">)</span>,
+         <span class="va">snp_networks</span>,
+         width <span class="op">=</span> <span class="fl">9</span>, 
+         height <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>
 
 <span class="op">}</span></code></pre></div>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
