@@ -3,6 +3,8 @@
 
 # blantyreESBL
 
+[![DOI](https://zenodo.org/badge/325831306.svg)](https://zenodo.org/badge/latestdoi/325831306)
+
 <!-- badges: start -->
 <!-- badges: end -->
 
