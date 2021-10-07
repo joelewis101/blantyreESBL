@@ -30,7 +30,7 @@ reference:
   - btESBL_model1posterior
   - btESBL_model2posterior
   - btESBL_model2simulations
-- title: "Global contextual analysis"
+- title: "Global contextual analyses"
   desc: "Metadata of context genomes and results of clustering study isolates with global isolates"
 - contents:
   - btESBL_ecoli_horesh_metadata

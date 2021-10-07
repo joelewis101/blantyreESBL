@@ -80,7 +80,7 @@
 "btESBL_exposures"
 
 
-#' Data: Results of stool testing for ESBL
+#' Data: Results of stool culture for ESBL
 #'
 #' Results of testing stool/rectal swab samples for presence of any ESBL
 #' producer
@@ -100,7 +100,7 @@
 "btESBL_stoolESBL"
 
 
-#' Data: Results of stool testing for ESBL species
+#' Data: Species of bacteria isolated from stool culture for ESBL
 #'
 #' Organisms identified from culture of stool on CHROMagar
 #' (selective agar for cephalosporin resistance)
@@ -179,7 +179,7 @@
 #' }
 "btESBL_plasmidreplicons"
 
-#' Data: AMR genes identified in sequenced isolates
+#' Data: AMR genes identified in sequenced isolates (excluding QRDR mutations)
 #'
 #' Identified AMR genes using ARIBA and the SRST database.
 #' See manuscript for details
@@ -193,6 +193,22 @@
 "btESBL_amrgenes"
 
 #' Data: Identfied QRDR mutations
+#'
+#' Identified quinolone resistance determinant region
+#'mutations in the samples of this study
+#'
+#' @format A tidy data frame with 23 rows and 3 variables:
+#' \describe{
+#'   \item{gene}{QDRR gene (gyrA, gyrB, parC, parE)}
+#'   \item{variant}{Identified variant}
+#'   \item{pmid}{Pubmed ID of publication describing mutation}
+#' }
+"btESBL_qrdr_mutations"
+
+#' }
+"btESBL_amrgenes"
+
+#' Data: Identified QRDR mutations
 #'
 #' Identified quinolone resistance determinant region
 #'mutations in the samples of this study
@@ -219,7 +235,7 @@
 #'   \item{lane}{Unique sample-sequencing run ID}
 #'   \item{genus}{Genus of sample (E. coli or K. pneumioniae complex)}
 #' }
-"btESBL_qrdr_mutations"
+"btESBL_CARD_qrdr_mutations"
 
 #' Data: NCBI phenotypic beta-lactamase classifications
 #'
@@ -259,7 +275,7 @@
 "btESBL_contigclusters"
 
 
-#' Data: Metadata of sequenced isolates
+#' Data: Accession numbers and metadata of isolates sequenced for this study
 #'
 #' Metadata of all sequenced isolates
 #'
@@ -317,7 +333,7 @@
 #'
 "btESBL_coregene_tree_kleb"
 
-#' data: Pairwise SNP-distance matrix for all E. coli genomes
+#' Data: Pairwise SNP-distance matrix for all E. coli genomes
 #'
 #' First column is sample names - all other columns are sample names
 #'
@@ -335,7 +351,7 @@
 "btESBL_snpdists_kleb"
 
 
-#' Data: metadata of 10,146 global E. coli genomes
+#' Data: metadata of 10,146 global E. coli genomes from Horesh et al
 #'
 #' Metadata of a global collection of 10,146 E. coli genomes
 #' Taken from Horesh et al 2021
@@ -346,7 +362,7 @@
 #'
 "btESBL_ecoli_horesh_metadata"
 
-#' Data: metadata of 97 E. coli genomes from Malawi
+#' Data: Accession numbers and metadata of 97 E. coli genomes from Malawi from Musciha et al
 #'
 #' Metadata of a collection of 97 E. coli genomes selected for temporal
 #' diversity and diversity in antibiogram
@@ -408,7 +424,7 @@
 "btESBL_kleb_globaltree"
 
 
-#' Data: metadata of 682 global K. pneumoniae complex genomes
+#' Data: Accession numbers and metadata of 682 global K. pneumoniae complex genomes
 #'
 #' Metadata of a global collection of 682 K. pneumoniae complex genomes.
 #' 66 genomes from kenya from the Henson et al

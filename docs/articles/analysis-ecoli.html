@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">blantyreESBL</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0.0000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0.0000</span>
       </span>
     </div>
 
@@ -99,7 +99,7 @@
 <p><br></p>
 <p><em>Genomic analysis of extended-spectrum beta-lactamase (ESBL) producing Escherichia coli colonising adults in Blantyre, Malawi reveals previously undescribed diversity</em></p>
 <p><br></p>
-<p>Joseph M Lewis<sup>1,2,3,4</sup>, , Madalitso Mphasa<sup>1</sup>, Rachel Banda<sup>1</sup>, Matthew Beale<sup>4</sup>, Jane Mallewa<sup>5</sup>, Adam P Roberts<sup>2</sup>, Eva Heinz<sup>2</sup>, Nicholas Thomson^4, 6^, Nicholas A Feasey<sup>1,2</sup></p>
+<p>Joseph M Lewis<sup>1,2,3,4</sup>, , Madalitso Mphasa<sup>1</sup>, Rachel Banda<sup>1</sup>, Matthew Beale<sup>4</sup>, Jane Mallewa<sup>5</sup>, Adam P Roberts<sup>2</sup>, Eva Heinz<sup>2</sup>, Nicholas Thomson<sup>4,6</sup>, Nicholas A Feasey<sup>1,2</sup></p>
 <ol style="list-style-type: decimal">
 <li>Malawi Liverpool Wellcome Clinical Research Programme, Blantyre, Malawi</li>
 <li>Liverpool School of Tropical Medicine, Liverpool, UK</li>
@@ -14300,7 +14300,7 @@ AMR determinants mapped back to phylogeny
       study <span class="op">=</span> <span class="st">"dassim"</span>,
       Country <span class="op">=</span> <span class="st">"Malawi"</span>,
       Continent <span class="op">=</span> <span class="st">"Africa"</span>,
-      Year <span class="op">=</span> <span class="fu"><a href="http://lubridate.tidyverse.org/reference/year.html">year</a></span><span class="op">(</span><span class="va">data_date</span><span class="op">)</span>
+      Year <span class="op">=</span> <span class="fu"><a href="https://lubridate.tidyverse.org/reference/year.html">year</a></span><span class="op">(</span><span class="va">data_date</span><span class="op">)</span>
     <span class="op">)</span> <span class="op">%&gt;%</span> 
     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span>
       <span class="va">btESBL_ecoli_global_popPUNK_clusters</span>,
@@ -18290,7 +18290,7 @@ Plasmid replicons mapped back to tree
     <span class="va">btESBL_sequence_sample_metadata</span> <span class="op">%&gt;%</span> 
       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">lane</span> <span class="op">%in%</span> <span class="va">btESBL_ecoli_globalst410_tree</span><span class="op">$</span><span class="va">tip.label</span><span class="op">)</span> <span class="op">%&gt;%</span> 
       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span><span class="op">(</span>accession <span class="op">=</span> <span class="va">lane</span>,
-                `Collection Year` <span class="op">=</span> <span class="fu"><a href="http://lubridate.tidyverse.org/reference/year.html">year</a></span><span class="op">(</span><span class="va">data_date</span><span class="op">)</span>,
+                `Collection Year` <span class="op">=</span> <span class="fu"><a href="https://lubridate.tidyverse.org/reference/year.html">year</a></span><span class="op">(</span><span class="va">data_date</span><span class="op">)</span>,
                 `Source Niche` <span class="op">=</span> <span class="st">"Human"</span>,
                 Country <span class="op">=</span> <span class="st">"Malawi"</span><span class="op">)</span>
   <span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -18612,7 +18612,7 @@ ST410 map-to-reference global maximum likelihood, midpoint rooted tree
     <span class="va">btESBL_sequence_sample_metadata</span> <span class="op">%&gt;%</span> 
       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">lane</span> <span class="op">%in%</span> <span class="va">btESBL_ecoli_globalst167_tree</span><span class="op">$</span><span class="va">tip.label</span><span class="op">)</span> <span class="op">%&gt;%</span> 
       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span><span class="op">(</span>accession <span class="op">=</span> <span class="va">lane</span>,
-                `Collection Year` <span class="op">=</span> <span class="fu"><a href="http://lubridate.tidyverse.org/reference/year.html">year</a></span><span class="op">(</span><span class="va">data_date</span><span class="op">)</span>,
+                `Collection Year` <span class="op">=</span> <span class="fu"><a href="https://lubridate.tidyverse.org/reference/year.html">year</a></span><span class="op">(</span><span class="va">data_date</span><span class="op">)</span>,
                 `Source Niche` <span class="op">=</span> <span class="st">"Human"</span>,
                 Country <span class="op">=</span> <span class="st">"Malawi"</span><span class="op">)</span>
   <span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -18927,7 +18927,7 @@ E. coli ST140 (A) and ST167 (B) subtrees showing ESBL/CPE genes and plasmid mrep
 <span class="co">#&gt;  [1] viridis_0.6.1           viridisLite_0.4.0       countrycode_1.3.0      </span>
 <span class="co">#&gt;  [4] ggstance_0.3.5          scales_1.1.1            here_1.0.1             </span>
 <span class="co">#&gt;  [7] patchwork_1.1.1         kableExtra_1.3.4        ggnewscale_0.4.5       </span>
-<span class="co">#&gt; [10] lubridate_1.7.10        blantyreESBL_0.1.0.0000 stringr_1.4.0          </span>
+<span class="co">#&gt; [10] lubridate_1.7.10        blantyreESBL_1.0.0.0000 stringr_1.4.0          </span>
 <span class="co">#&gt; [13] forcats_0.5.1           ggplot2_3.3.5           readr_2.0.1            </span>
 <span class="co">#&gt; [16] tidyr_1.1.3             dplyr_1.0.7             phytools_0.7-80        </span>
 <span class="co">#&gt; [19] maps_3.3.0              ape_5.5                 ggtree_3.0.4           </span>

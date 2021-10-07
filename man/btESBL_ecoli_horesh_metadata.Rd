@@ -3,7 +3,7 @@
 \docType{data}
 \name{btESBL_ecoli_horesh_metadata}
 \alias{btESBL_ecoli_horesh_metadata}
-\title{Data: metadata of 10,146 global E. coli genomes}
+\title{Data: metadata of 10,146 global E. coli genomes from Horesh et al}
 \format{
 A data frame with 10,146 rows and 22 variables:
 }

@@ -3,7 +3,7 @@
 \docType{data}
 \name{btESBL_amrgenes}
 \alias{btESBL_amrgenes}
-\title{Data: AMR genes identified in sequenced isolates}
+\title{Data: AMR genes identified in sequenced isolates (excluding QRDR mutations)}
 \format{
 A tidy data frame with 10822 rows and 3 variables:
 \describe{
@@ -11,8 +11,12 @@ A tidy data frame with 10822 rows and 3 variables:
 \item{ref_seq}{Identified AMR gene sequence}
 \item{genus}{Genus of sample (E. coli or K. pneumioniae complex)}
 }
+
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 10064 rows and 3 columns.
 }
 \usage{
+btESBL_amrgenes
+
 btESBL_amrgenes
 }
 \description{

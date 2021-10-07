@@ -3,7 +3,7 @@
 \docType{data}
 \name{btESBL_stoolorgs}
 \alias{btESBL_stoolorgs}
-\title{Data: Results of stool testing for ESBL species}
+\title{Data: Species of bacteria isolated from stool culture for ESBL}
 \format{
 A data frame with 1032 rows and 3 variables:
 \describe{

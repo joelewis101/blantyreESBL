@@ -3,7 +3,7 @@
 \docType{data}
 \name{btESBL_sequence_sample_metadata}
 \alias{btESBL_sequence_sample_metadata}
-\title{Data: Metadata of sequenced isolates}
+\title{Data: Accession numbers and metadata of isolates sequenced for this study}
 \format{
 A tidy data frame with 676 rows and 12 variables:
 \describe{

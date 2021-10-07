@@ -3,7 +3,7 @@
 \docType{data}
 \name{btESBL_kleb_global_metadata}
 \alias{btESBL_kleb_global_metadata}
-\title{Data: metadata of 682 global K. pneumoniae complex genomes}
+\title{Data: Accession numbers and metadata of 682 global K. pneumoniae complex genomes}
 \format{
 A dataframe with 682 rows and 23 variables
 \describe{

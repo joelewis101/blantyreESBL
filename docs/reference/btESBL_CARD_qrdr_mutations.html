@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Data: K. pneumoniae complex core gene tree of Malawian carriage and invasive isolates — btESBL_kleb_malawi_allisolate_core_gene_tree • blantyreESBL</title>
+<title>Data: CARD described QRDR mutations — btESBL_CARD_qrdr_mutations • blantyreESBL</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,11 @@
 
 
 
-<meta property="og:title" content="Data: K. pneumoniae complex core gene tree of Malawian carriage and invasive isolates — btESBL_kleb_malawi_allisolate_core_gene_tree" />
-<meta property="og:description" content="Midpoint rooted maximum likelihood core gene phylogeny for K.
-pneumoniae complex incorporating all Malawian isolates
-(see manuscript for details)" />
+<meta property="og:title" content="Data: CARD described QRDR mutations — btESBL_CARD_qrdr_mutations" />
+<meta property="og:description" content="Quinolone resistnce determinant region mutations that have been
+associated with resistance in E. coli, downloaded from the
+Comprehensive Antibiotic Resistance Database https://card.mcmaster.ca/
+on 6 September 2021" />
 
 
 
@@ -126,23 +127,31 @@ pneumoniae complex incorporating all Malawian isolates
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Data: K. pneumoniae complex core gene tree of Malawian carriage and invasive isolates</h1>
+    <h1>Data: CARD described QRDR mutations</h1>
     
-    <div class="hidden name"><code>btESBL_kleb_malawi_allisolate_core_gene_tree.Rd</code></div>
+    <div class="hidden name"><code>btESBL_CARD_qrdr_mutations.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Midpoint rooted maximum likelihood core gene phylogeny for K.
-pneumoniae complex incorporating all Malawian isolates
-(see manuscript for details)</p>
+    <p>Quinolone resistnce determinant region mutations that have been
+associated with resistance in E. coli, downloaded from the
+Comprehensive Antibiotic Resistance Database https://card.mcmaster.ca/
+on 6 September 2021</p>
     </div>
 
-    <pre class="usage"><span class='va'>btESBL_kleb_malawi_allisolate_core_gene_tree</span></pre>
+    <pre class="usage"><span class='va'>btESBL_CARD_qrdr_mutations</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A "phylo" object ("ape" package)</p>
+    <p>A tidy data frame with 1293 rows and 4 variables:</p><dl>
+<dt>gene</dt><dd><p>QDRR gene (gyrA, gyrB, parC, parE)</p></dd>
+<dt>variant</dt><dd><p>Identified variant</p></dd>
+<dt>lane</dt><dd><p>Unique sample-sequencing run ID</p></dd>
+<dt>genus</dt><dd><p>Genus of sample (E. coli or K. pneumioniae complex)</p></dd>
+
+</dl>
+
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -1,13 +1,13 @@
 Package: blantyreESBL
-Title: Data and Code Exploring Antimicrobial Resistance in Blantyre, Malawi
-Version: 0.1.0.0000
+Title: Data and Code Repository For a Study Describing Antimicrobial Resistance in Blantyre, Malawi
+Version: 1.0.0.0000
 Authors@R: 
     person(given = "Joseph",
            family = "Lewis",
            role = c("aut", "cre"),
            email = "joseph.lewis@lstmed.ac.uk",
            comment = c(ORCID = "0000-0002-3837-5188"))
-Description: Data and code to replicate the analysis in the mauscript "Dynamics of gut mucosal colonisation with extended spectrum beta-lactamase producing Enterobacterales in Malawi" by Lewis et al.
+Description: Data and code repository for a study to undertand antimicrobial resistance in Blantyre, Malawi
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

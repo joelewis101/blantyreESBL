@@ -68,13 +68,14 @@ This document generates the tables and figures for the manuscript:
 
 <br />
 
-Joseph M Lewis^1,2,3,4^, , Madalitso Mphasa^1^, Rachel Banda^1^,  Matthew Beale^4^, Jane Mallewa^5^, Eva Heinz^2^, Nicholas Thomson^4^, Nicholas A Feasey^1,2^
+Joseph M Lewis^1,2,3,4^, , Madalitso Mphasa^1^, Rachel Banda^1^,  Matthew Beale^4^, Jane Mallewa^5^, Eva Heinz^2^, Nicholas Thomson^4,6^, Nicholas A Feasey^1,2^
 
 1. Malawi Liverpool Wellcome Clinical Research Programme, Blantyre, Malawi
 2. Department of Clinical Sciences, Liverpool School of Tropical Medicine, Liverpool, UK
 3. Department of Clinical Infection, Microbiology and Immunology, University of Liverpool, Liverpool, UK
 4. Wellcome Sanger Institute, Hinxton, UK
 5. College of Medicine, University of Malawi, Malawi
+6. London School of Tropical Medicine and Hygiene, London, UK   
 
 ## Assembly stats and accession numbers
 

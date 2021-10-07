@@ -12,12 +12,11 @@ A tidy data frame with 23 rows and 3 variables:
 \item{pmid}{Pubmed ID of publication describing mutation}
 }
 
-A tidy data frame with 1293 rows and 4 variables:
+A tidy data frame with 23 rows and 3 variables:
 \describe{
 \item{gene}{QDRR gene (gyrA, gyrB, parC, parE)}
 \item{variant}{Identified variant}
-\item{lane}{Unique sample-sequencing run ID}
-\item{genus}{Genus of sample (E. coli or K. pneumioniae complex)}
+\item{pmid}{Pubmed ID of publication describing mutation}
 }
 }
 \usage{
@@ -29,9 +28,7 @@ btESBL_qrdr_mutations
 Identified quinolone resistance determinant region
 mutations in the samples of this study
 
-Quinolone resistnce determinant region mutations that have been
-associated with resistance in E. coli, downloaded from the
-Comprehensive Antibiotic Resistance Database https://card.mcmaster.ca/
-on 6 September 2021
+Identified quinolone resistance determinant region
+mutations in the samples of this study
 }
 \keyword{datasets}
