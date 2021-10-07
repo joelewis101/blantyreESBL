@@ -1020,7 +1020,6 @@ ggtree(treeio::tree_subset(btESBL_kleb_malawi_allisolate_core_gene_tree, 372, le
   geom_cladelabel(node = 413, label = "ST15", align = TRUE, offset = - 0.003) +
   geom_cladelabel(node = 531, label = "ST340", align = TRUE, offset = - 0.003) +
   geom_cladelabel(node = 607, label = "ST307", align = TRUE, offset = - 0.003) +
-  geom_treescale() +
     geom_treescale(x = 0.001, y = 280, offset = 2) -> malawi_tree_plot_final
 
 malawi_tree_plot_final
