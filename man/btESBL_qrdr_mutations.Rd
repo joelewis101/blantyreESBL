@@ -3,15 +3,8 @@
 \docType{data}
 \name{btESBL_qrdr_mutations}
 \alias{btESBL_qrdr_mutations}
-\title{Data: Identfied QRDR mutations}
+\title{Data: Identified QRDR mutations}
 \format{
-A tidy data frame with 23 rows and 3 variables:
-\describe{
-\item{gene}{QDRR gene (gyrA, gyrB, parC, parE)}
-\item{variant}{Identified variant}
-\item{pmid}{Pubmed ID of publication describing mutation}
-}
-
 A tidy data frame with 23 rows and 3 variables:
 \describe{
 \item{gene}{QDRR gene (gyrA, gyrB, parC, parE)}
@@ -21,13 +14,8 @@ A tidy data frame with 23 rows and 3 variables:
 }
 \usage{
 btESBL_qrdr_mutations
-
-btESBL_qrdr_mutations
 }
 \description{
-Identified quinolone resistance determinant region
-mutations in the samples of this study
-
 Identified quinolone resistance determinant region
 mutations in the samples of this study
 }

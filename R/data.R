@@ -192,22 +192,6 @@
 #' }
 "btESBL_amrgenes"
 
-#' Data: Identfied QRDR mutations
-#'
-#' Identified quinolone resistance determinant region
-#'mutations in the samples of this study
-#'
-#' @format A tidy data frame with 23 rows and 3 variables:
-#' \describe{
-#'   \item{gene}{QDRR gene (gyrA, gyrB, parC, parE)}
-#'   \item{variant}{Identified variant}
-#'   \item{pmid}{Pubmed ID of publication describing mutation}
-#' }
-"btESBL_qrdr_mutations"
-
-#' }
-"btESBL_amrgenes"
-
 #' Data: Identified QRDR mutations
 #'
 #' Identified quinolone resistance determinant region

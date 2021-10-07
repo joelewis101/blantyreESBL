@@ -23,6 +23,7 @@ reference:
   - btESBL_snpdists_esco
   - btESBL_snpdists_kleb
   - btESBL_NCBI_phenotypic_bl
+  - btESBL_CARD_qrdr_mutations
 
 - title: "Results of modelling and simulations"
   desc: "Outputs from longituinal modelling of ESBL carriage"
