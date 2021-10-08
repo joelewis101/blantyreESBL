@@ -1002,7 +1002,7 @@ ggtree(treeio::tree_subset(btESBL_kleb_malawi_allisolate_core_gene_tree, 372, le
       mutate(across(everything(), ~ 
                     if_else(.x == "1", "Present", NA_character_))),
     width = 0.18,
-    color = "black",
+    color = "lightgrey",
     font.size = 4,
     colnames_angle = 90,
     colnames_position = "top",
