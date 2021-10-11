@@ -43,6 +43,7 @@ Suggests:
     readr,
     rmarkdown,
     rstatix,
+    rstan,
     scales,
     stringr,
     tidyr,
