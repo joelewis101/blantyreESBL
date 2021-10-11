@@ -1,6 +1,6 @@
 Package: blantyreESBL
 Title: Data and Code Repository For a Study Describing Antimicrobial Resistance in Blantyre, Malawi
-Version: 1.0.0.0000
+Version: 1.0.0.1
 Authors@R: 
     person(given = "Joseph",
            family = "Lewis",
@@ -14,39 +14,41 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Suggests: 
-    knitr,
-    rmarkdown,
+    ape,
+    bayesplot,
+    broom,
+    cowplot,
+    dplyr,
+    forcats,
+    ggnewscale,
+    ggplot2,
+    ggplotify,
+    ggpubr,
+    ggraph,
+    ggsci,
+    ggstance
+    ggtree,
+    glue,
     here,
     igraph,
-    ggraph,
-    dplyr,
-    tidyr,
-    stringr,
-    lubridate,
-    purrr,
-    forcats,
-    glue,
-    broom,
-    ggsci,
-    bayesplot,
-    patchwork,
-    loo,
-    ggplotify,
-    pheatmap,
-    viridis,
-    ggtree,
     kableExtra,
-    rstatix,
-    phytools,
-    ape,
-    cowplot,
-    ggpubr,
-    scales,
+    knitr,
+    loo,
+    lubridate,
+    patchwork,
     pheatmap,
+    pheatmap,
+    phytools,
+    purrr,
     readr,
-    ggplot2,
-    ggnewscale,
-    ggstance
+    rmarkdown,
+    rstatix,
+    scales,
+    stringr,
+    tidyr,
+    viridis,
+Remotes:
+    bioc::ggtree
 VignetteBuilder: knitr
 Depends: 
     R (>= 2.10)
