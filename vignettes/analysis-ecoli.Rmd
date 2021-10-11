@@ -2,7 +2,7 @@
 title: "Analysis scripts: E. coli genomics"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{analysis}
+  %\VignetteIndexEntry{E coli analysis}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
