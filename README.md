@@ -48,7 +48,7 @@ are bundled with the package. To install the package from GitHub:
 
 ``` r
 install.packages("devtools")
-devtools::install_github("https://github.com/joelewis101/blantyreESBL)
+devtools::install_github("https://github.com/joelewis101/blantyreESBL")
 ```
 
 The various data objects are described in the
