@@ -16,3 +16,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ### Fixed
 - remove second geom_treescale on global klebs tree plot
 - change heatmap on malawi kleb tree for better pdf renderning
+

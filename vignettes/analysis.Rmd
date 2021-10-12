@@ -2,7 +2,7 @@
 title: "Analysis scripts: longitudinal ESBL carriage dynamics"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{analysis}
+  %\VignetteIndexEntry{Carriage analysis}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

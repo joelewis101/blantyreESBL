@@ -2,7 +2,7 @@
 title: "Fitting and simulating from Stan models"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{fitting-stan-models}
+  %\VignetteIndexEntry{Fitting stan models}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

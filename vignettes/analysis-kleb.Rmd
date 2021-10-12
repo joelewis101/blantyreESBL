@@ -2,7 +2,7 @@
 title: "Analysis scripts: K. pneumoniae complex genomics"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Reproducible analysis scripts}
+  %\VignetteIndexEntry{Kleb analysis}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

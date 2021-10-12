@@ -40,7 +40,7 @@ If you just want the data, then all the data to replicate the analysis are bundl
 
 ``` r
 install.packages("devtools")
-devtools::install_github("https://github.com/joelewis101/blantyreESBL)
+devtools::install_github("https://github.com/joelewis101/blantyreESBL")
 ```
 
 The various data objects are described in the [pkgdown](https://joelewis101.github.io/blantyreESBL/) site for this package [here](https://joelewis101.github.io/blantyreESBL/reference/index.html), and available via R in the usual way (i.e. `?btESBL_participants` brings up the definitions for the `btESBL_participants` data. They are all lazy loaded so will be available for use immediately; they all start with `btESBL_` to make it easy to choose the one you want using autocomplete.
