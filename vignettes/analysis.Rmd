@@ -580,18 +580,30 @@ if (write_figs) {
 btESBL_stoolorgs %>% 
   mutate(
     organism = 
-      case_when(organism == "pantoea sp" ~ "Panotea species",
+      case_when(organism == "pantoea sp" ~ "italic('Panotea')~species",
                 organism == "Gram negative bacilli" ~
-                  "Gram negative bacilli*",
+                  "paste('Gram negative bacilli', '*')",
                 organism == "Klebsiella pneumoniae" ~
-                  "Klebsiella pneumoniae complex",
-                TRUE ~ organism)) %>% 
-  ggplot(aes(fct_rev(fct_infreq(organism)), fill = ESBL)) +
+                  "italic('Klebsiella pneumoniae')~complex",
+                grepl("species", organism) ~
+                  paste0(
+                    "italic('",
+                    gsub(" species", "", organism),
+                    "')~species"
+                  ),
+                TRUE ~ paste0("italic('", organism, "')")),
+     organism = fct_rev(fct_infreq(organism))
+    ) %>% 
+  {ggplot(data = . , aes(organism, fill = ESBL)) +
   geom_bar() +
   coord_flip() +
   labs(y = "n",
        x = "") +
-  theme_bw() -> stool_spec
+  theme_bw() +
+  scale_x_discrete(labels = parse(
+      text  =  unique(as.character(sort(.$organism)))
+      ))
+                  } -> stool_spec
 
 stool_spec
 
