@@ -322,6 +322,65 @@ btESBL_coregene_tree_kleb <- midpoint.root(btESBL_coregene_tree_kleb)
 use_data(btESBL_coregene_tree_esco, overwrite = TRUE)
 use_data(btESBL_coregene_tree_kleb, overwrite = TRUE)
 
+# non ASC trees
+
+read.tree(here("data-raw/core_gene_trees/kleb_core_gene_tree_nonASC.treefile")) ->
+  btESBL_coregene_tree_kleb_nonASC
+
+btESBL_coregene_tree_kleb_nonASC <- midpoint.root(btESBL_coregene_tree_kleb)
+
+use_data(btESBL_coregene_tree_kleb_nonASC, overwrite = TRUE)
+
+# global kleb tree -----------------------------------------------
+
+btESBL_kleb_globaltree <-
+  read.tree(
+    here("data-raw/GLOBAL_core_gene_alignment_snp_sites.fa.treefile"))
+midpoint.root(btESBL_kleb_globaltree) -> btESBL_kleb_globaltree
+
+# use_data(btESBL_kleb_globaltree, overwrite = TRUE)
+
+# non ASC treee
+
+btESBL_kleb_globaltree_noASC <-
+  read.tree(
+    here("data-raw/kleb-genomics-paper/GLOBAL_core_gene_alignment_snp_sites_noASC.fa.treefile"))
+midpoint.root(btESBL_kleb_globaltree_noASC) ->
+  btESBL_kleb_globaltree_noASC
+
+
+# malawi kleb tree -----------------------------
+
+btESBL_kleb_malawi_allisolate_core_gene_tree <-
+  read.tree(
+    here("data-raw/MALAWI_core_gene_alignment_snp_sites.fa.treefile")
+  )
+midpoint.root(btESBL_kleb_malawi_allisolate_core_gene_tree) ->
+  btESBL_kleb_malawi_allisolate_core_gene_tree
+use_data(btESBL_kleb_malawi_allisolate_core_gene_tree, overwrite = TRUE)
+
+# no ASC
+
+btESBL_kleb_malawi_allisolate_core_gene_tree_noASC <-
+  read.tree(
+    here("data-raw/kleb-genomics-paper/MALAWI_core_gene_alignment_snp_sites_noASC.fa.treefile")
+  )
+midpoint.root(btESBL_kleb_malawi_allisolate_core_gene_tree_noASC) ->
+  btESBL_kleb_malawi_allisolate_core_gene_tree_noASC
+# use_data(btESBL_kleb_malawi_allisolate_core_gene_tree_noASC, overwrite = TRUE)
+
+# overwrite ASC trees withnon ASC
+btESBL_coregene_tree_kleb <- btESBL_coregene_tree_kleb_nonASC
+
+use_data(btESBL_coregene_tree_kleb, overwrite = TRUE)
+
+btESBL_kleb_globaltree <- btESBL_kleb_globaltree_noASC
+use_data(btESBL_kleb_globaltree, overwrite = TRUE)
+
+btESBL_kleb_malawi_allisolate_core_gene_tree <-
+  btESBL_kleb_malawi_allisolate_core_gene_tree_noASC
+use_data(btESBL_kleb_malawi_allisolate_core_gene_tree, overwrite = TRUE)
+
 # sequence sample metadata ----------------------------------
 
 # If there is no lane accession this will use sample accession

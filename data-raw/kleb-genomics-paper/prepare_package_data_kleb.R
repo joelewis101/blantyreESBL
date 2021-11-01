@@ -211,14 +211,24 @@ use_data(dassimKleb_BTKleb.amr, overwrite = TRUE)
 
 # Global metadata -------------------------------------------------------
 
-# global tree
+# global kleb tree
 
-dassimKleb_trees.global <-
+btESBL_kleb_globaltree <-
   read.tree(
     here("data-raw/GLOBAL_core_gene_alignment_snp_sites.fa.treefile"))
-midpoint.root(dassimKleb_trees.global) -> dassimKleb_trees.global
+midpoint.root(btESBL_kleb_globaltree) -> btESBL_kleb_globaltree
 
-use_data(dassimKleb_trees.global, overwrite = TRUE)
+use_data(btESBL_kleb_globaltree, overwrite = TRUE)
+
+# non ASC treee
+
+btESBL_kleb_globaltree_noASC <-
+  read.tree(
+    here("data-raw/kleb-genomics-paper/GLOBAL_core_gene_alignment_snp_sites_noASC.fa.treefile"))
+midpoint.root(btESBL_kleb_globaltree_noASC) ->
+  btESBL_kleb_globaltree_noASC
+
+use_data(btESBL_kleb_globaltree_noASC, overwrite = TRUE)
 
 # load and clean global AMR - aim: ESBL vs not
 

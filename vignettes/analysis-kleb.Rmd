@@ -375,69 +375,72 @@ dassimKleb_BTKleb.diversity %>%
   spec_hm
 rownames(spec_hm) <- spec_hm$strain
 
-get_legend(
-ggtree(dassimKleb_trees.BTcarriage) %>% 
-  gheatmap(
-    select(spec_hm, species), 
-    width = 0.05, 
-    color = NA, 
-    font.size = 3, 
-    colnames_angle = 90, 
-    colnames_position = "top", 
-    colnames_offset_y = 10,
-    offset = 0.006 ) + 
-  theme(legend.position = "bottom", legend.title = element_blank()) +
-  ylim(NA, 220) +
-  scale_fill_manual(values = viridis(n=5)[c(2:5,1)])
-) -> leg
-
-ggtree(dassimKleb_trees.BTcarriage) %>% 
-  gheatmap(
-    select(spec_hm, species) %>% 
-      rename(Species = species), 
-    width = 0.05, 
-    color = NA, 
-    font.size = 3, 
-    colnames_angle = 90, 
-    colnames_position = "top", 
-    colnames_offset_y = 10,
-    offset = 0.006 ) %>% 
-  gheatmap(
-    select(mlst.onehot,-lane),
-    width = 3, 
-    color = NA, 
-    font.size = 3, 
-    colnames_angle = 90, 
-    colnames_position = "top", 
-    colnames_offset_y = 10,
-    offset = 0.05 
-  ) +
-  theme(legend.position = "none") +
-  ylim(NA, 220) +
-  scale_fill_manual(values = c("lightgrey", "black", viridis(n=5)[c(2:5,1)])) +
-  geom_treescale(x = 0.05, y = 180, offset = 2) -> 
-  p1
-
-ggtree(treeio::tree_subset(dassimKleb_trees.BTcarriage, 210, levels_back = 0)) %>% 
-    gheatmap(
-        select(mlst.onehot,-lane),
-        width = 2, 
+  get_legend(
+    ggtree(btESBL_coregene_tree_kleb) %>% 
+      gheatmap(
+        select(spec_hm, species), 
+        width = 0.05, 
         color = NA, 
         font.size = 3, 
         colnames_angle = 90, 
         colnames_position = "top", 
         colnames_offset_y = 10,
-        offset = 0
+        offset = 0.006 ) + 
+      theme(legend.position = "bottom", legend.title = element_blank()) +
+      ylim(NA, 220) +
+      scale_fill_manual(values = viridis(n = 5)[c(2:5,1)])
+  ) -> leg
+  
+  ggtree(btESBL_coregene_tree_kleb) %>% 
+    gheatmap(
+      select(spec_hm, species) %>% 
+        rename(Species = species), 
+      width = 0.05, 
+      color = NA, 
+      font.size = 3, 
+      colnames_angle = 90, 
+      colnames_position = "top", 
+      hjust = 0,
+      colnames_offset_y = 0,
+      offset = 0.006 ) %>% 
+    gheatmap(
+      select(mlst.onehot,-lane),
+      width = 3, 
+      color = NA, 
+      font.size = 3, 
+      colnames_angle = 90, 
+      colnames_position = "top", 
+      colnames_offset_y = 0,
+      hjust = 0,
+      offset = 0.05 
+    ) +
+    theme(legend.position = "none") +
+    ylim(NA, 220) +
+    scale_fill_manual(values = c("lightgrey", "black", viridis(n = 5)[c(2:5,1)])) +
+    geom_treescale(x = 0.05, y = 180, offset = 2) -> 
+    p1
+  
+  ggtree(treeio::tree_subset(btESBL_coregene_tree_kleb, 218, levels_back = 0)) %>% 
+    gheatmap(
+      select(mlst.onehot,-lane),
+      width = 2, 
+      color = NA, 
+      font.size = 3, 
+      colnames_angle = 90, 
+      colnames_position = "top", 
+      colnames_offset_y = 0,
+      hjust = 0,
+      offset = 0
     ) +  ylim(NA, 205) +
     theme(legend.position = "none") +
     scale_fill_manual(values = c("lightgrey", "black")) +
-  geom_treescale(x =0.002, y = 180, offset = 2) -> p2
-
-((p1 + labs(tag = "A")) / leg / (p2 + labs(tag = "B"))) + 
-  plot_layout(heights = c(1, 0.1,1)) -> dassim_trees
+    geom_treescale(x = 0.002, y = 180, offset = 2) -> p2
   
-dassim_trees
-
+  ((p1 + labs(tag = "A")) / leg / (p2 + labs(tag = "B"))) + 
+    plot_layout(heights = c(1, 0.1,1)) -> dassim_trees
+  
+  dassim_trees
+  
 if (write_figs) {
 ggsave(filename = here("figures/kleb-genomics/SUP_F_dassimtrees.pdf"),
        plot = dassim_trees,
@@ -706,7 +709,7 @@ names(colz) <- sort(unique(dassimKleb_BTKleb.amr %>%
                         #     filter(class != "Fosfomycin") %>% 
                              pull(class)))
 
-ggtree(treeio::tree_subset(dassimKleb_trees.BTcarriage, 210, levels_back = 0)) %>% 
+ggtree(treeio::tree_subset(btESBL_coregene_tree_kleb, 218, levels_back = 0)) %>% 
 #ggtree(tree) %>% 
     gheatmap(
         select(amr.ariba.maptotree,-lane),
@@ -726,7 +729,7 @@ ggtree(treeio::tree_subset(dassimKleb_trees.BTcarriage, 210, levels_back = 0)) %
   malawi_tree_with_amr_kp1
 
 
-ggtree(dassimKleb_trees.BTcarriage) %>% 
+ggtree(btESBL_coregene_tree_kleb) %>% 
 #ggtree(tree) %>% 
     gheatmap(
         select(amr.ariba.maptotree,-lane),
@@ -772,7 +775,6 @@ if (write_figs) {
 
 ``` {r global-tree, fig.height = 12, fig.width = 8}
 
-dassimKleb_trees.global <- btESBL_kleb_globaltree
 btESBL_kleb_global_metadata %>% 
   mutate(`Isolate Type` = case_when(
     `Isolate Type` == "Carriage" ~ "Colonising",
@@ -796,39 +798,63 @@ names(col) <-
 
 
 
-(
   (
     (
       (
-        ggtree(
-          treeio::tree_subset(dassimKleb_trees.global, 734, levels_back = 0),
-          size = 0.3
+        (
+          ggtree(
+            treeio::tree_subset(btESBL_kleb_globaltree, 734, levels_back = 0),
+            size = 0.3
+          ) %>%
+            gheatmap(
+              select(dassimKleb_globalKleb.metadata, Malawi) %>%
+                mutate(Malawi =
+                         case_when(
+                           Malawi == "1" ~ "Malawi",
+                           Malawi == "0" ~ "Not Malawi"
+                         )),
+              width = 0.03,
+              color = NA,
+              font.size = 4,
+              colnames_angle = 90,
+              colnames_position = "top",
+              colnames_offset_y = 5,
+              hjust = 0
+            )  +
+            scale_fill_manual(
+              values = c("Not Malawi" = "white", "Malawi" = "grey30"),
+              name = "Country",
+              na.translate = FALSE,
+              guide = guide_legend(order = 1)
+            )  +
+            new_scale_fill()
         ) %>%
           gheatmap(
-            select(dassimKleb_globalKleb.metadata, Malawi) %>%
-              mutate(Malawi =
-                       case_when(
-                         Malawi == "1" ~ "Malawi",
-                         Malawi == "0" ~ "Not Malawi"
-                       )),
+            select(dassimKleb_globalKleb.metadata, `Sample Source`),
             width = 0.03,
             color = NA,
             font.size = 4,
             colnames_angle = 90,
             colnames_position = "top",
             colnames_offset_y = 5,
-            hjust = 0
-          )  +
+            hjust = 0,
+            offset = 0.00022
+          ) +
           scale_fill_manual(
-            values = c("Not Malawi" = "white", "Malawi" = "grey30"),
-            name = "Country",
+            values =
+              c(
+                "Human" = brewer_pal(palette = "Set3")(6)[1],
+                "Animal" = brewer_pal(palette = "Set3")(6)[2],
+                "Environmental" = brewer_pal(palette = "Set3")(6)[3]
+              ),
             na.translate = FALSE,
-            guide = guide_legend(order = 1)
-          )  +
+            name = "Sample\nSource",
+            guide = guide_legend(order = 2)
+          ) +
           new_scale_fill()
       ) %>%
         gheatmap(
-          select(dassimKleb_globalKleb.metadata, `Sample Source`),
+          select(dassimKleb_globalKleb.metadata, `Isolate Type`),
           width = 0.03,
           color = NA,
           font.size = 4,
@@ -836,91 +862,72 @@ names(col) <-
           colnames_position = "top",
           colnames_offset_y = 5,
           hjust = 0,
-          offset = 0.0007
+          offset = 0.00044
         ) +
         scale_fill_manual(
           values =
             c(
-              "Human" = brewer_pal(palette = "Set3")(6)[1],
-              "Animal" = brewer_pal(palette = "Set3")(6)[2],
-              "Environmental" = brewer_pal(palette = "Set3")(6)[3]
+              "Invasive" = brewer_pal(palette = "Set3")(6)[4],
+              "Colonising" = brewer_pal(palette = "Set3")(6)[5]
             ),
           na.translate = FALSE,
-          name = "Sample\nSource",
-          guide = guide_legend(order = 2)
+          name = "Isolate\nType",
+          guide = guide_legend(order = 3)
         ) +
         new_scale_fill()
-    ) %>%
-      gheatmap(
-        select(dassimKleb_globalKleb.metadata, `Isolate Type`),
-        width = 0.03,
-        color = NA,
-        font.size = 4,
-        colnames_angle = 90,
-        colnames_position = "top",
-        colnames_offset_y = 5,
-        hjust = 0,
-        offset = 0.0014
-      ) +
+    ) %>%   gheatmap(
+      select(dassimKleb_globalKleb.metadata, ESBL) %>%
+        mutate(ESBL = if_else(ESBL == "ESBL", "Present", NA_character_)),
+      width = 0.03,
+      color = NA,
+      font.size = 4,
+      colnames_angle = 90,
+      colnames_position = "top",
+      colnames_offset_y = 5,
+      hjust = 0,
+      offset = 0.00066
+    ) +
       scale_fill_manual(
         values =
-          c(
-            "Invasive" = brewer_pal(palette = "Set3")(6)[4],
-            "Colonising" = brewer_pal(palette = "Set3")(6)[5]
-          ),
+          c("Present" = brewer_pal(palette = "Set3")(6)[6]),
         na.translate = FALSE,
-        name = "Isolate\nType",
-        guide = guide_legend(order = 3)
+        name = "ESBL",
+        guide = guide_legend(order = 4)
       ) +
       new_scale_fill()
-  ) %>%   gheatmap(
-    select(dassimKleb_globalKleb.metadata, ESBL) %>%
-      mutate(ESBL = if_else(ESBL == "ESBL", "Present", NA_character_)),
-    width = 0.03,
-    color = NA,
-    font.size = 4,
-    colnames_angle = 90,
-    colnames_position = "top",
-    colnames_offset_y = 5,
-    hjust = 0,
-    offset = 0.0021
   ) +
-    scale_fill_manual(
-      values =
-        c("Present" = brewer_pal(palette = "Set3")(6)[6]),
-      na.translate = FALSE,
-      name = "ESBL",
-      guide = guide_legend(order = 4)
+    ylim(NA, 680) +
+    geom_cladelabel(
+      node = 759,
+      label = "ST14",
+      align = TRUE,
+      offset = -0.0008,
+      barsize = 0.3
     ) +
-    new_scale_fill()
-) +
-  ylim(NA, 680) +
-  geom_cladelabel(
-    node = 784,
-    label = "ST14",
-    align = TRUE,
-    offset = -0.002
-  ) +
-  geom_cladelabel(
-    node = 827,
-    label = "ST15",
-    align = TRUE,
-    offset = -0.002
-  ) +
-  geom_cladelabel(
-    node = 1020,
-    label = "ST340",
-    align = TRUE,
-    offset = -0.002
-  ) +
-  geom_cladelabel(
-    node = 1066,
-    label = "ST307",
-    align = TRUE,
-    offset = -0.002
-  ) +
-  geom_treescale(x = 0.001, y = 550, offset = 5) ->
-  globaltree_plot
+    geom_cladelabel(
+      node = 801,
+      label = "ST15",
+      align = TRUE,
+      offset = -0.0008,
+      barsize = 0.3
+    ) +
+    geom_cladelabel(
+      node = 1059,
+      label = "ST340",
+      align = TRUE,
+      offset = -0.002,
+      barsize = 0.3
+    ) +
+    geom_cladelabel(
+      node = 1145,
+      label = "ST307",
+      align = TRUE,
+      offset = -0.002,
+      barsize = 0.3
+    ) +
+    geom_treescale(x = 0.001, y = 550, offset = 5,width = 0.001,
+                   linesize =0.3) ->
+    globaltree_plot
   
 
 globaltree_plot  
@@ -953,20 +960,20 @@ if (write_figs) {
 
 # 627  = ST 218
 (
-(
-ggtree(treeio::tree_subset(btESBL_kleb_malawi_allisolate_core_gene_tree, 372, levels_back = 0)) %>%
-  gheatmap(
-    select(dassimKleb_globalKleb.metadata, `Isolate Type`),
-    width = 0.03,
-    color = NA,
-    font.size = 4,
-    colnames_angle = 90,
-    colnames_position = "top",
-    colnames_offset_y = 5,
-    hjust = 0,
-    offset = 0.001
-  ) + 
-  scale_fill_manual(
+  (
+    ggtree(treeio::tree_subset(btESBL_kleb_malawi_allisolate_core_gene_tree, 372, levels_back = 0)) %>%
+      gheatmap(
+        select(dassimKleb_globalKleb.metadata, `Isolate Type`),
+        width = 0.03,
+        color = NA,
+        font.size = 4,
+        colnames_angle = 90,
+        colnames_position = "top",
+        colnames_offset_y = 5,
+        hjust = 0,
+        offset = 0.0002
+      ) + 
+      scale_fill_manual(
         values =
           c(
             "Invasive" = brewer_pal(palette = "Set3")(6)[4],
@@ -976,8 +983,8 @@ ggtree(treeio::tree_subset(btESBL_kleb_malawi_allisolate_core_gene_tree, 372, le
         name = "Isolate\nType",
         guide = guide_legend(order = 2)
       ) +
-  new_scale_fill() 
-) %>%   gheatmap(
+      new_scale_fill() 
+  ) %>%   gheatmap(
     select(dassimKleb_globalKleb.metadata, ESBL)  %>%
       mutate(ESBL = if_else(ESBL == "ESBL", "Present", NA_character_)),
     width = 0.03,
@@ -998,29 +1005,36 @@ ggtree(treeio::tree_subset(btESBL_kleb_malawi_allisolate_core_gene_tree, 372, le
     ) +
     new_scale_fill()
 ) %>%   gheatmap(
-    select(dassimKleb_globalKleb.metadata, ybt,clb,iuc,iro,rmpA,rmpA2) %>% 
-      mutate(across(everything(), ~ 
+  select(dassimKleb_globalKleb.metadata, ybt,clb,iuc,iro,rmpA,rmpA2) %>% 
+    mutate(across(everything(), ~ 
                     if_else(.x == "1", "Present", NA_character_))),
-    width = 0.18,
-    color = "lightgrey",
-    font.size = 4,
-    colnames_angle = 90,
-    colnames_position = "top",
-    colnames_offset_y = 5,
-    hjust = 0,
-    offset = 0.002
-  )  + 
+  width = 0.18,
+  color = "lightgrey",
+  font.size = 4,
+  colnames_angle = 90,
+  colnames_position = "top",
+  colnames_offset_y = 5,
+  hjust = 0,
+  offset = 0.0005
+)  + 
   scale_fill_manual(values = c("Present" = "grey30"),
                     name = "Virulence\nGene", na.translate = FALSE,
                     guide = guide_legend(order = 3)) + 
   ylim(NA, 370) +
-  geom_cladelabel(node = 599, label = "ST268", align = TRUE, offset = - 0.003) +
-  geom_cladelabel(node = 582, label = "ST218", align = TRUE, offset = - 0.003) +
-  geom_cladelabel(node = 377, label = "ST14", align = TRUE, offset = - 0.003) +
-  geom_cladelabel(node = 413, label = "ST15", align = TRUE, offset = - 0.003) +
-  geom_cladelabel(node = 531, label = "ST340", align = TRUE, offset = - 0.003) +
-  geom_cladelabel(node = 607, label = "ST307", align = TRUE, offset = - 0.003) +
-    geom_treescale(x = 0.001, y = 280, offset = 2) -> malawi_tree_plot_final
+  geom_cladelabel(node = 516, label = "ST268", align = TRUE, offset = - 0.0011,
+                  fontsize = 3) +
+  geom_cladelabel(node = 629, label = "ST218", align = TRUE, offset = - 0.00163,
+                  fontsize = 3) +
+  geom_cladelabel(node = 376, label = "ST14", align = TRUE, offset = - 0.00062,
+                  fontsize = 3) +
+  geom_cladelabel(node = 412, label = "ST15", align = TRUE, offset = - 0.00074,
+                  fontsize = 3) +
+  geom_cladelabel(node = 585, label = "ST340", align = TRUE, offset = - 0.00158,
+                  fontsize = 3) +
+  geom_cladelabel(node = 523, label = "ST307", align = TRUE, offset = - 0.0013,
+                  fontsize = 3) +
+  geom_treescale(x = 0.0003, y = 330, offset = 2, width = 0.001,
+                  fontsize = 3) -> malawi_tree_plot_final
 
 malawi_tree_plot_final
 
