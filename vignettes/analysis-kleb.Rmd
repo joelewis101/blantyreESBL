@@ -39,7 +39,7 @@ library(ggnewscale)
 sp_dc <- function(x, k) {
   trimws(format(round(x, k), nsmall = k))
 }
-write_figs <- TRUE
+write_figs <- FALSE
 
 if (write_figs) {
   if (!dir.exists(here("figures"))) {dir.create(here("figures"))}
@@ -376,7 +376,7 @@ dassimKleb_BTKleb.diversity %>%
 rownames(spec_hm) <- spec_hm$strain
 
   get_legend(
-    ggtree(btESBL_coregene_tree_kleb_nonASC) %>% 
+    ggtree(btESBL_coregene_tree_kleb) %>% 
       gheatmap(
         select(spec_hm, species), 
         width = 0.05, 
@@ -391,7 +391,7 @@ rownames(spec_hm) <- spec_hm$strain
       scale_fill_manual(values = viridis(n = 5)[c(2:5,1)])
   ) -> leg
   
-  ggtree(btESBL_coregene_tree_kleb_nonASC) %>% 
+  ggtree(btESBL_coregene_tree_kleb) %>% 
     gheatmap(
       select(spec_hm, species) %>% 
         rename(Species = species), 
@@ -420,7 +420,7 @@ rownames(spec_hm) <- spec_hm$strain
     geom_treescale(x = 0.05, y = 180, offset = 2) -> 
     p1
   
-  ggtree(treeio::tree_subset(btESBL_coregene_tree_kleb_nonASC, 218, levels_back = 0)) %>% 
+  ggtree(treeio::tree_subset(btESBL_coregene_tree_kleb, 218, levels_back = 0)) %>% 
     gheatmap(
       select(mlst.onehot,-lane),
       width = 2, 
@@ -709,7 +709,7 @@ names(colz) <- sort(unique(dassimKleb_BTKleb.amr %>%
                         #     filter(class != "Fosfomycin") %>% 
                              pull(class)))
 
-ggtree(treeio::tree_subset(btESBL_coregene_tree_kleb_nonASC, 218, levels_back = 0)) %>% 
+ggtree(treeio::tree_subset(btESBL_coregene_tree_kleb, 218, levels_back = 0)) %>% 
 #ggtree(tree) %>% 
     gheatmap(
         select(amr.ariba.maptotree,-lane),
@@ -729,7 +729,7 @@ ggtree(treeio::tree_subset(btESBL_coregene_tree_kleb_nonASC, 218, levels_back = 
   malawi_tree_with_amr_kp1
 
 
-ggtree(btESBL_coregene_tree_kleb_nonASC) %>% 
+ggtree(btESBL_coregene_tree_kleb) %>% 
 #ggtree(tree) %>% 
     gheatmap(
         select(amr.ariba.maptotree,-lane),
@@ -803,7 +803,7 @@ names(col) <-
       (
         (
           ggtree(
-            treeio::tree_subset(btESBL_kleb_globaltree_noASC, 734, levels_back = 0),
+            treeio::tree_subset(btESBL_kleb_globaltree, 734, levels_back = 0),
             size = 0.3
           ) %>%
             gheatmap(
@@ -961,7 +961,7 @@ if (write_figs) {
 # 627  = ST 218
 (
   (
-    ggtree(treeio::tree_subset(btESBL_kleb_malawi_allisolate_core_gene_tree_noASC, 372, levels_back = 0)) %>%
+    ggtree(treeio::tree_subset(btESBL_kleb_malawi_allisolate_core_gene_tree, 372, levels_back = 0)) %>%
       gheatmap(
         select(dassimKleb_globalKleb.metadata, `Isolate Type`),
         width = 0.03,
