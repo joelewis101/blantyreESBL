@@ -308,7 +308,7 @@ rownames(mlst_onehot) <- mlst_onehot$lane
            font.size = 2.5,
            color = NA,
            colnames_angle = 90,
-           offset = .02,
+           offset = .0022,
            colnames_offset_y = 3,
            colnames_position = "top",
            hjust = 0)  +
@@ -320,15 +320,15 @@ rownames(mlst_onehot) <- mlst_onehot$lane
            font.size = 3,
            color = NA,
            colnames_angle = 90,
-           offset = .009,
+           offset = .001,
            colnames_offset_y = 3,
            colnames_position = "top",
            hjust = 0)  +
   scale_fill_manual(values = viridis_pal(option = "plasma")(6)[c(3,5)],
                     name = "Pathotype",
                     na.translate = FALSE) +
-  ylim(NA, 540)  + 
-  annotate("text", x = 0.27, y = 540, label = "Sequence Type",
+  ylim(NA, 540) + 
+  annotate("text", x = 0.03, y = 520, label = "Sequence Type",
            size = 3) -> malawi_treeplot
 
 
@@ -522,7 +522,7 @@ names(colz) <- sort(unique(amr %>%
                              filter(class != "Fosfomycin") %>% 
                              pull(class)))
 
-ggtree(blantyreESBL::btESBL_coregene_tree_esco) %>% 
+ggtree(btESBL_coregene_tree_esco ) %>% 
 #ggtree(tree) %>% 
     gheatmap(
         select(amr.ariba.maptotree,-lane),
