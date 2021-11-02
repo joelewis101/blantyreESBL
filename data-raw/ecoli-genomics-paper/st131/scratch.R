@@ -124,6 +124,13 @@ dep %>%
   ) +
     geom_text(aes(label = node), hjust = -.3, size = 2)
 
+  ggtree(
+    treeio::tree_subset(btESBL_coregene_tree_kleb_nonASC, 210, levels_back = 0),
+    size = 0.3
+  ) +
+    geom_text(aes(label = node), hjust = -.3, size = 2)
+
+
   btESBL_kleb_global_metadata %>%
     as.data.frame() ->
     df

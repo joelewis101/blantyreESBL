@@ -327,9 +327,12 @@ use_data(btESBL_coregene_tree_kleb, overwrite = TRUE)
 read.tree(here("data-raw/core_gene_trees/kleb_core_gene_tree_nonASC.treefile")) ->
   btESBL_coregene_tree_kleb_nonASC
 
-btESBL_coregene_tree_kleb_nonASC <- midpoint.root(btESBL_coregene_tree_kleb)
+read.tree(here("data-raw/core_gene_trees/esco_core_gene_tree_nonASC.treefile")) ->
+  btESBL_coregene_tree_esco_nonASC
 
-use_data(btESBL_coregene_tree_kleb_nonASC, overwrite = TRUE)
+btESBL_coregene_tree_kleb_nonASC <- midpoint.root(btESBL_coregene_tree_kleb_nonASC)
+
+#use_data(btESBL_coregene_tree_kleb_nonASC, overwrite = TRUE)
 
 # global kleb tree -----------------------------------------------
 
