@@ -6,8 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ## Unreleased 
 ### Changed
 - Switch E coli Malawi carriage tree to non ASC 
+- Switch E coli global tree to non ASC, using full Horesh collection
+- Use ClermonTyping v20.3 instead of isPcr for phylogroups
 ### Fixed 
 - Updated kleb Malawi carriage tree to non ASC - 1.1.0 didn't have correct ones
+
 
 ## [1.1.0] - 2021-11-01
 ### Changed

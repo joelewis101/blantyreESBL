@@ -347,6 +347,18 @@ btESBL_kleb_globaltree <-
     here("data-raw/GLOBAL_core_gene_alignment_snp_sites.fa.treefile"))
 midpoint.root(btESBL_kleb_globaltree) -> btESBL_kleb_globaltree
 
+# global e coli tree
+
+btESBL_ecoli_globaltree_noASC <-
+  read.tree(
+    here("data-raw/ecoli-genomics-paper/horesh_full_diversity/core_gene_alignment_snpsites.fasta.treefile"
+         ))
+
+midpoint.root(btESBL_ecoli_globaltree_noASC) ->
+  btESBL_ecoli_globaltree_noASC
+
+use_data(btESBL_ecoli_globaltree_noASC, overwrite = TRUE)
+
 # use_data(btESBL_kleb_globaltree, overwrite = TRUE)
 
 # non ASC treee
@@ -924,3 +936,64 @@ amr.ariba167 %>%
   btESBL_ecoli_st167_amr
 
 use_data(btESBL_ecoli_st167_amr, overwrite = TRUE)
+
+# merge in clermonTyping phylogroups
+
+ct <- read_tsv(
+  here("data-raw/ecoli-genomics-paper/horesh_full_diversity/analysis_2021-11-03_110200_phylogroups.txt")
+, col_names = FALSE) %>%
+  select(X1,X5) %>%
+  rename(lane = X1,
+         ct_phylogroup = X5)
+
+# to horesh
+
+btESBL_ecoli_horesh_metadata %>%
+  mutate(matcher  =
+           gsub("\\.|fasta|fa|trimmed|spades|velvet|contigs_|_trimmed","",
+                Assembly_name)) %>% pull(matcher)
+
+left_join(
+  btESBL_ecoli_horesh_metadata %>%
+    mutate(matcher  =
+             gsub("\\.|fasta|fa|trimmed|spades|velvet|contigs_|_trimmed","",
+                  Assembly_name)),
+  ct %>%
+    mutate(lane =
+             gsub("\\.|fasta|fa|trimmed|spades|velvet|contigs_|_trimmed","",
+                  lane)),
+  by = c("matcher" = "lane")) %>%
+  mutate(Phylogroup =
+           case_when(Phylogroup =="Not Determined" &
+                       !is.na(ct_phylogroup) ~ ct_phylogroup,
+                     TRUE ~ Phylogroup)) %>%
+  select(-c(ct_phylogroup, matcher)) -> btESBL_ecoli_horesh_metadata
+
+# dassim samples
+
+btESBL_sequence_sample_metadata %>%
+  left_join(
+    ct %>%
+      mutate(lane =
+               gsub("\\.|fasta|fa|trimmed|spades|velvet|contigs_|_trimmed","",
+                    lane),
+             lane = gsub("#","_", lane))
+  ) %>%
+  mutate(ecoli_phylogroup = ct_phylogroup) %>%
+  select(-ct_phylogroup) -> btESBL_sequence_sample_metadata
+
+btESBL_ecoli_musicha_metadata %>%
+  left_join(
+    ct %>%
+      mutate(lane =
+               gsub("\\.|fasta|fa|trimmed|spades|velvet|contigs_|_trimmed","",
+                    lane),
+             lane = gsub("#","_", lane)) %>%
+      mutate(phylogroup = ct_phylogroup) %>%
+      select(-ct_phylogroup)
+  ) -> btESBL_ecoli_musicha_metadata
+
+use_data(btESBL_ecoli_horesh_metadata, overwrite = TRUE)
+
+use_data(btESBL_sequence_sample_metadata, overwrite = TRUE)
+use_data(btESBL_ecoli_musicha_metadata, overwrite = TRUE)

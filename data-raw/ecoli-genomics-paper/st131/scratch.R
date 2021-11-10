@@ -119,14 +119,116 @@ dep %>%
     ggtree(treeio::tree_subset(btESBL_coregene_tree_kleb_nonASC, 218, levels_back = 0))
 
   ggtree(
-    treeio::tree_subset(btESBL_kleb_globaltree_noASC, 734, levels_back = 0),
+    treeio::tree_subset(btESBL_ecoli_globaltree_noASC, 3565, levels_back = 0),
     size = 0.3
   ) +
     geom_text(aes(label = node), hjust = -.3, size = 2)
 
   ggtree(
-    treeio::tree_subset(btESBL_coregene_tree_kleb_nonASC, 210, levels_back = 0),
+    btESBL_ecoli_globaltree_noASC,
     size = 0.3
   ) +
     geom_text(aes(label = node), hjust = -.3, size = 2)
 
+  (
+    (
+      (
+        (
+          ggtree(btESBL_ecoli_globaltree_noASC, size = 0.4) %<+%
+            (select(df_all, lane, ST) %>%
+               mutate(
+                 ST = if_else(ST == 410,
+                              as.character("hilight"), NA_character_)
+               ))  %>%
+            gheatmap(
+              select(df_all, `Year`),
+              font.size = 4,
+              width = 0.03,
+              colnames_position = "top",
+              color = NA,
+              colnames_offset_y = 5,
+              colnames_angle = 90,
+              offset = 0.0006 + offset_add,
+              hjust = 0
+            )  +
+            scale_fill_viridis_c(name = "Year", na.value = "white",
+                                 guide = guide_colorbar(order = 2)) +
+            new_scale_fill()
+        ) %>%
+          gheatmap(
+            select(df_all, Continent),
+            font.size = 4,
+            width = 0.03,
+            colnames_position = "top",
+            color = NA,
+            colnames_offset_y = 5,
+            colnames_angle = 90,
+            offset = 0.0012 + offset_add,
+            hjust = 0
+          ) +
+          scale_fill_manual(values =
+                              continent_cols,
+                            name = "Continent",
+                            guide = guide_legend(order = 3)) +
+          # geom_tippoint(aes(color = ST), na.rm = TRUE, size = 0.5) +
+          #   scale_color_manual(values  = "red", na.translate = FALSE) +
+          new_scale_fill()
+      ) %>%
+        gheatmap(
+          select(df_all, Country) %>%
+            mutate(Country = if_else(
+              Country == "Malawi",
+              "Malawi", "Not Malawi"
+            )),
+          font.size = 4,
+          width = 0.03,
+          colnames_position = "top",
+          color = NA,
+          colnames_offset_y = 5,
+          colnames_angle = 90,
+          offset = 0.0018 + offset_add,
+          hjust = 0
+        ) +
+        scale_fill_manual(values = country_cols,
+                          name = "Country",
+                          guide = guide_legend(order = 4)) +
+        new_scale_fill()
+    ) %>%
+      gheatmap(
+        select(df_all, Phylogroup) %>%
+          mutate(Phylogroup = if_else(
+            is.na(Phylogroup) ,"Unknown",
+            Phylogroup)),
+        width = 0.03,
+        color = NA,
+        font.size = 4,
+        colnames_angle = 90,
+        colnames_position = "top",
+        colnames_offset_y = 3,
+        hjust = 0,
+        offset = 0 + offset_add
+      ) +
+      scale_fill_manual(values = pgroup_cols,
+      name = "Phylogroup",
+      na.translate = FALSE,
+      guide = guide_legend(order = 1)) +
+      new_scale_fill()
+  ) +
+    ylim(NA, 3900) +# + geom_tippoint(aes(color = ST)) +
+    geom_treescale(y = 900, x = 0.005,offset = 10) +
+    scale_color_manual(values = "red", na.translate = FALSE) -> p
+
+  p + geom_hilight( node = 3550, alpha = 0.3,
+                    fill = "firebrick",
+                    color = "firebrick") +  # phylogroup A
+    geom_cladelabel(node = 3550, label = "C", barsize = 0,offset = 0) +
+    # node 1888 - st167
+    # node 1848 - ST 617
+    # node 1926 - ST 44
+    # 5404
+    geom_highlight(node = 5404, alpha = 0.3, fill = "firebrick",
+                   color = "firebrick", extend = 0.0002) + # st 410 and context
+    geom_cladelabel(node = 5404, label = "B", barsize = 0,offset = 0) +
+    geom_highlight(node = 5652, alpha = 0.3, fill = "firebrick",
+                   color = "firebrick") + #
+    geom_cladelabel(node = 5652, label = "D", barsize = 0,offset = 0)
