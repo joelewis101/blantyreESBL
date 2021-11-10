@@ -703,13 +703,13 @@ popPUNK_clusts_inplots <-
   df_all %>% 
    filter(lane %in% 
            c(treeio::tree_subset(
-             btESBL_ecoli_globaltree_noASC,
+             btESBL_ecoli_globaltree,
              3555, levels_back = 0)$tip.label,
              treeio::tree_subset(
-               btESBL_ecoli_globaltree_noASC,
+               btESBL_ecoli_globaltree,
                5404, levels_back = 0)$tip.label,
              treeio::tree_subset(
-               btESBL_ecoli_globaltree_noASC,
+               btESBL_ecoli_globaltree,
                5652, levels_back = 0)$tip.label)
   ) %>% 
   select(cluster_recode) %>% 
@@ -760,13 +760,13 @@ popPUNK_cols <- c(
 names(popPUNK_cols) <- df_all %>% 
   filter(lane %in% 
            c(treeio::tree_subset(
-             btESBL_ecoli_globaltree_noASC,
+             btESBL_ecoli_globaltree,
              3565, levels_back = 0)$tip.label,
              treeio::tree_subset(
-               btESBL_ecoli_globaltree_noASC,
+               btESBL_ecoli_globaltree,
                5404, levels_back = 0)$tip.label,
              treeio::tree_subset(
-               btESBL_ecoli_globaltree_noASC,
+               btESBL_ecoli_globaltree,
                5652, levels_back = 0)$tip.label)
   ) %>% 
   select(cluster_recode) %>% 
@@ -784,7 +784,7 @@ offset_add <- 0
     (
       (
         (
-          ggtree(btESBL_ecoli_globaltree_noASC, size = 0.2) %<+%
+          ggtree(btESBL_ecoli_globaltree, size = 0.2) %<+%
             (select(df_all, lane, ST) %>%
                mutate(
                  ST = if_else(ST == 167,
@@ -887,7 +887,7 @@ tippoint_alpha = 0.7
 (
   ggtree(
     treeio::tree_subset(
-      btESBL_ecoli_globaltree_noASC, 3565, levels_back = 0)
+      btESBL_ecoli_globaltree, 3565, levels_back = 0)
     ) %<+% select(df_all, lane, cluster_recode) %>% 
     gheatmap(
     select(df_all, Country) %>%
@@ -947,7 +947,7 @@ offset_add <- 0.0004
 (
   ggtree(
     treeio::tree_subset(
-      btESBL_ecoli_globaltree_noASC, 5652, levels_back = 0)
+      btESBL_ecoli_globaltree, 5652, levels_back = 0)
     ) %<+% select(df_all, lane, cluster_recode) %>%
     gheatmap(
       select(df_all, Country) %>%
@@ -1003,7 +1003,7 @@ offset_add <- 0.00007
 (
   ggtree(
     treeio::tree_subset(
-      btESBL_ecoli_globaltree_noASC, 5404, levels_back = 0)
+      btESBL_ecoli_globaltree, 5404, levels_back = 0)
     ) %<+% select(df_all, lane, cluster_recode) %>%
     gheatmap(
     select(df_all, Country) %>%

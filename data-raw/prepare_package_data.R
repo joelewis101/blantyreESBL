@@ -407,6 +407,10 @@ use_data(btESBL_kleb_malawi_allisolate_core_gene_tree, overwrite = TRUE)
 btESBL_coregene_tree_esco <- btESBL_coregene_tree_esco_nonASC
 use_data(btESBL_coregene_tree_esco, overwrite = TRUE)
 
+btESBL_ecoli_globaltree_noASC -> btESBL_ecoli_globaltree
+
+use_data(btESBL_ecoli_globaltree, overwrite = TRUE)
+
 # sequence sample metadata ----------------------------------
 
 # If there is no lane accession this will use sample accession
