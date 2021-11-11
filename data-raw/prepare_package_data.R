@@ -2,15 +2,17 @@
 
 # the load_phd_data scripts are from the Thesis repo https://github.com/joelewis101/thesis
 #library(tidyverse)
-library("phytools")
+library(tidyverse)
+library(lubridate)
+library(phytools)
 library(devtools)
 
 source("/Users/joelewis/Documents/PhD/Thesis/bookdown/final_cleaning_scripts/load_PhD_data.R")
 
 source("/Users/joelewis/Documents/PhD/Thesis/bookdown/final_cleaning_scripts/load_and_clean_lims.R")
 
-library("here")
-library("ape")
+library(here)
+library(ape)
 
 source(here("data-raw/load_metadata_fn.R"))
 
@@ -654,7 +656,7 @@ clusters %>%
     lane %in% btESBL_coregene_tree_kleb$tip.label ~ "K. pneumoniae",
     lane %in% btESBL_coregene_tree_esco$tip.label ~ "E. coli",
     TRUE ~ NA_character_)
-    )-> btESBL_contigclusters
+    ) -> btESBL_contigclusters
 
 use_data(btESBL_contigclusters, overwrite = TRUE)
 
@@ -951,6 +953,7 @@ use_data(btESBL_ecoli_globalst410_tree, overwrite = TRUE)
 btESBL_ecoli_globalst167_tree <- btESBL_ecoli_globalst167_tree_noASC
 
 use_data(btESBL_ecoli_globalst167_tree, overwrite = TRUE)
+
 # st167 amr ---------------------------------------------------
 
 
@@ -965,7 +968,7 @@ amr.ariba167 %>%
          name = gsub("_filtered", "", name),
          name = gsub("#","_", name)) %>%
   pivot_longer(-name,
-               names_to= c( "cluster", ".value"),
+               names_to = c( "cluster", ".value"),
                names_sep = "\\.") %>%
   mutate(gene = sapply(str_split(ref_seq, "__"), function(x) x[3])) %>%
   filter(match == "yes") %>%
@@ -977,6 +980,86 @@ amr.ariba167 %>%
   btESBL_ecoli_st167_amr
 
 use_data(btESBL_ecoli_st167_amr, overwrite = TRUE)
+
+# st131 amr and tree---------------------
+
+read.tree(here("data-raw/ecoli-genomics-paper/st131/non_ASC_trees/gub_base.filtered_polymorphic_sites.fasta.treefile")) ->
+  btESBL_ecoli_globalst131_tree
+phytools::midpoint.root(btESBL_ecoli_globalst131_tree) -> btESBL_ecoli_globalst131_tree
+
+btESBL_ecoli_globalst131_tree$tip.label <-
+  gsub("_filtered", "", btESBL_ecoli_globalst131_tree$tip.label)
+
+use_data(btESBL_ecoli_globalst131_tree, overwrite = TRUE)
+
+bind_rows(
+  read_csv(
+    here("data-raw/ecoli-genomics-paper/st131/mbio.00644-19-st001.csv")
+  ) %>%
+    mutate(clade = case_when(
+      `BAPS-1` %in% c(3) ~ "A",
+      `BAPS-1` %in% c(2,4,5) ~ "B",
+      `BAPS-1` %in% c(1) ~ "C",
+      TRUE ~ "other")) %>%
+    select(Accession_number, Year,Country, clade),
+  btESBL_sequence_sample_metadata %>%
+    transmute(Accession_number = lane,
+              Year = year(data_date),
+              Country = "Malawi") %>%
+    filter(Accession_number %in% btESBL_ecoli_globalst131_tree$tip.label)
+) %>%
+  as.data.frame() -> btESBL_ecoli_st131_metadata
+
+# amr
+
+
+read_csv(
+  here(
+    "data-raw/ecoli-genomics-paper/st131/non_ASC_trees/st131_ariba_srst2_summary.csv"
+  )) %>%
+  mutate(name = gsub("\\./", "", name),
+         name = gsub("/report.tsv", "", name),
+         name = gsub("_filtered", "", name),
+         name = gsub("#","_", name)) %>%
+  pivot_longer(-name,
+               names_to = c( "cluster", ".value"),
+               names_sep = "\\.") %>%
+  mutate(gene = sapply(str_split(ref_seq, "__"), function(x) x[3])) %>%
+  filter(match == "yes") %>%
+  mutate(gene = case_when(
+    gene == "TEM_95" ~ "TEM_1",
+    TRUE ~ gene
+  )) %>%
+  select(name, gene) ->
+  btESBL_ecoli_st131_amr
+
+use_data(btESBL_ecoli_st131_amr, overwrite = TRUE)
+
+# plasmids
+
+st167_plasm <-
+  read_csv(
+    here("data-raw/ecoli-genomics-paper/st167/st167_pf_ariba_summary.csv"))
+
+
+read_csv(
+  here("data-raw/ecoli-genomics-paper/st131/non_ASC_trees/st131-ariba-plasm-summary.csv")
+  ) %>%
+  mutate(name = gsub("\\./", "", name),
+         name = gsub("/report.tsv", "", name),
+         name = gsub("_filtered","", name),
+         name = gsub("#","_", name)) %>%
+  pivot_longer(-name,
+               names_to= c( "cluster", ".value"),
+               names_sep = "\\.") %>%
+  filter(match == "yes") %>%
+  select(name, ref_seq) %>%
+  mutate(ref_seq = gsub("\\..*$", "", ref_seq),
+         ref_seq = gsub("_.*$","", ref_seq),
+         ref_seq = gsub("^FIA", "IncFIA", ref_seq)) ->
+  btESBL_ecoli_st131_plasmids
+
+use_data(btESBL_ecoli_st131_plasmids, overwrite = TRUE)
 
 # merge in clermonTyping phylogroups
 
