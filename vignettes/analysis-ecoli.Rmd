@@ -1672,8 +1672,8 @@ rownames(st410_plasm_onehot) <- st410_plasm_onehot$name
 (
 (  
   (ggtree(
-    treeio::tree_subset (btESBL_ecoli_globalst410_tree,
-                         1083,
+    treeio::tree_subset(btESBL_ecoli_globalst410_tree_noASC,
+                         1085,
                          levels_back = 0)) %<+% 
      (select(st410_metadata, accession, Country) %>% 
         mutate(Country = if_else(Country == "Malawi", "Malawi",NA_character_)))  %>%
@@ -1697,7 +1697,7 @@ rownames(st410_plasm_onehot) <- st410_plasm_onehot$name
     color = NA,
     colnames_offset_y = 5,
     colnames_angle = 90,
-    offset = 0.00015,
+    offset = 0.000015,
     hjust = 0
   ) + 
   scale_fill_viridis_d(option = "plasma", name = "Continent") + 
@@ -1713,7 +1713,7 @@ rownames(st410_plasm_onehot) <- st410_plasm_onehot$name
     color = NA,
     colnames_offset_y = 5,
     colnames_angle = 90,
-    offset = 0.0003,
+    offset = 0.00003,
     hjust = 0
   ) + scale_fill_manual(values = viridis_pal(option = "magma")(5)[c(2,3)],
                         na.translate = FALSE,
@@ -1735,12 +1735,12 @@ rownames(st410_plasm_onehot) <- st410_plasm_onehot$name
   #                       name = "Plasmid\nreplicon") +
   ylim(NA, 600) +
   geom_treescale(x = 0.0002, y = 250, offset = 5) +
-   geom_highlight(node = 568 ,alpha = 0.3) +
+   geom_highlight(node = 695 ,alpha = 0.3) +
   geom_cladelabel(
-    node = 568,
+    node = 695,
     label = "B4/H24RxC",
     angle = 90,
-    offset = -0.0006,
+    offset = 0,
     offset.text = -0.00009,
     barsize = 0,
     hjust = 0.5,
@@ -1763,7 +1763,9 @@ st410_globaltree_plot
 ```{r st410 subtree}
 
 treeio::tree_subset(
-  btESBL_ecoli_globalst410_tree, 564, levels_back = 0) -> st410_subtree
+treeio::tree_subset(
+  btESBL_ecoli_globalst410_tree_noASC, 1085, levels_back = 0),
+695,levels_back = 0) -> st410_subtree
 
 esbl_cpe.ariba410 %>%  
   subset(name %in% st410_subtree$tip.label) %>% 
@@ -1789,7 +1791,7 @@ st410_plasm_onehot %>%
      gheatmap(
        select(st410_metadata, `Year`),
        font.size = 4,
-       width = 0.05,
+       width = 0.071,
        colnames_position = "top",
        color = NA,
        colnames_offset_y = 5,
@@ -1801,12 +1803,12 @@ st410_plasm_onehot %>%
     gheatmap(
       select(st410_metadata, Continent),
       font.size = 4,
-      width = 0.05,
+      width = 0.071,
       colnames_position = "top",
       color = NA,
       colnames_offset_y = 5,
       colnames_angle = 90,
-      offset = 0.00003,
+      offset = 0.000002,
       hjust = 0
     ) + 
     scale_fill_viridis_d(option = "plasma", name = "Continent") + 
@@ -1823,7 +1825,7 @@ st410_plasm_onehot %>%
     color = NA,
     colnames_offset_y = 5,
     colnames_angle = 90,
-    offset = 0.00006,
+    offset = 0.000004,
     hjust = 0
   ) + scale_fill_manual(values = viridis_pal(option = "magma")(5)[c(2,3)],
                         na.translate = FALSE,
@@ -1832,30 +1834,30 @@ st410_plasm_onehot %>%
     ) %>%   gheatmap(
     select(st410_plasm_onehot, -name),
     font.size = 3,
-    width = 1,
+    width = 1.71,
     colnames_position = "top",
     color = NA,
     colnames_offset_y = 5,
     colnames_angle = 90,
-    offset = 0.00029,
+    offset = 0.000016,
     hjust = 0
   ) + scale_fill_manual(values = viridis_pal(option = "cividis")(7)[2],
                         na.translate = FALSE,
                         name = "Plasmid\nreplicon") +
-  ylim(NA, 200) +
-  geom_treescale(x = 0.00005, y = 150, offset = 2) +
-    geom_highlight(node = 181 , alpha = 0.3) +
-    geom_cladelabel(
-      node = 181,
-      label = "B4/H24RxC",
-      angle = 90,
-      offset = -0.00032,
-      barsize = 0,
-      hjust = 0.5,
-      fontsize = 4,
-      offset.text = -0.00002,
-      color = "steelblue"
-    ) -> st410_subtree_plot
+  ylim(NA, 180) +
+  geom_treescale(x = 0.000002, y = 165, offset = 2,width = 1e-5) -> st410_subtree_plot
+    # geom_highlight(node = 149 , alpha = 0.3) +
+    # geom_cladelabel(
+    #   node = 149,
+    #   label = "B4/H24RxC",
+    #   angle = 90,
+    #   offset = 0,
+    #   barsize = 0,
+    #   hjust = 0.5,
+    #   fontsize = 4,
+    #   offset.text = 0,
+    #   color = "steelblue"
+    # ) -> st410_subtree_plot
   
 
 
@@ -1970,7 +1972,7 @@ rownames(esbl_cpe.ariba) <- esbl_cpe.ariba$sample
 (
 (
 (ggtree(treeio::tree_subset(
-  btESBL_ecoli_globalst167_tree, 320, levels_back = 0)) %<+% 
+  btESBL_ecoli_globalst167_tree_noASC, 321, levels_back = 0)) %<+% 
    (select(st167_metadata, accession, Country) %>% 
       mutate(Country = if_else(Country == "Malawi", "Malawi",NA_character_)))  %>%
     gheatmap(
@@ -1993,7 +1995,7 @@ rownames(esbl_cpe.ariba) <- esbl_cpe.ariba$sample
     color = NA,
     colnames_offset_y = 5,
     colnames_angle = 90,
-    offset = 0.00003,
+    offset = 0.000004,
     hjust = 0
   ) + 
   scale_fill_viridis_d(option = "plasma", name = "Continent") + 
@@ -2004,12 +2006,12 @@ rownames(esbl_cpe.ariba) <- esbl_cpe.ariba$sample
   gheatmap(
   select(esbl_cpe.ariba, -sample),
   font.size = 3,
-  width = 0.5,
+  width = (ncol(esbl_cpe.ariba) -1)*0.03,
   colnames_position = "top",
   color = NA,
   colnames_offset_y = 5,
   colnames_angle = 90,
-  offset = 0.00006,
+  offset = 0.000008,
   hjust = 0
 ) + scale_fill_manual(values = viridis_pal(option = "magma")(5)[c(2,3)],
                       na.translate = FALSE,
@@ -2031,7 +2033,7 @@ rownames(esbl_cpe.ariba) <- esbl_cpe.ariba$sample
   #                       na.translate = FALSE,
   #                       name = "Plasmid\nreplicon") +
   ylim(NA, 370) +
-  geom_treescale(x = 0.0002, y = 250, offset = 2)   +
+  geom_treescale(x = 0.00002, y = 370*0.666, offset = 2, width = 0.00001)   +
    geom_highlight(node = 321 ,alpha = 0.3) ->
   st167_globaltree_plot
 
@@ -2049,9 +2051,11 @@ ggsave(here("figures/ecoli-genomics/st167_globaltreeplot.pdf"),
 
 ```{r st167subtree}
 
-
 treeio::tree_subset(
-  btESBL_ecoli_globalst167_tree, 321, levels_back = 0) -> st167_subtree
+treeio::tree_subset(
+  btESBL_ecoli_globalst167_tree_noASC, 321, levels_back = 0),
+321,
+levels_back = 0) -> st167_subtree
 
 esbl_cpe.ariba %>%  
   subset(sample %in% st167_subtree$tip.label) %>% 
@@ -2077,7 +2081,7 @@ st167_plasm_onehot %>%
      gheatmap(
        select(st167_metadata, `Year`),
        font.size = 4,
-       width = 0.05,
+       width = 0.0668,
        colnames_position = "top",
        color = NA,
        colnames_offset_y = 0,
@@ -2089,12 +2093,12 @@ st167_plasm_onehot %>%
     gheatmap(
       select(st167_metadata, Continent),
       font.size = 4,
-      width = 0.05,
+      width = 0.0668,
       colnames_position = "top",
       color = NA,
       colnames_offset_y = 0,
       colnames_angle = 90,
-      offset = 0.00005,
+      offset = 0.000004,
       hjust = 0
     ) + 
     scale_fill_viridis_d(option = "plasma", name = "Continent") + 
@@ -2106,12 +2110,12 @@ st167_plasm_onehot %>%
   gheatmap(
     select(esbl_cpe.ariba167_subset, -sample),
     font.size = 3,
-    width = 0.5,
+    width = 0.0668*(ncol(esbl_cpe.ariba167_subset) - 1),
     colnames_position = "top",
     color = NA,
     colnames_offset_y = 0,
     colnames_angle = 90,
-    offset = 0.0001,
+    offset = 0.000008,
     hjust = 0
   ) + scale_fill_manual(values = viridis_pal(option = "magma")(5)[c(2,3)],
                         na.translate = FALSE,
@@ -2120,24 +2124,24 @@ st167_plasm_onehot %>%
     ) %>%   gheatmap(
     select(st167_plasm_onehot, -name),
     font.size = 3,
-    width = 1,
+    width = 0.0668*(ncol(st167_plasm_onehot) - 1) + 0.1,
     colnames_position = "top",
     color = NA,
     colnames_offset_y = 0,
     colnames_angle = 90,
-    offset = 0.0005,
+    offset = 0.00004,
     hjust = 0
   ) + scale_fill_manual(values = viridis_pal(option = "cividis")(7)[2],
                         na.translate = FALSE,
                         name = "Plasmid\nreplicon") +
   ylim(NA, 70) +
-  geom_treescale(x = 0.0002, y = 50, offset = 2) ->
+  geom_treescale(x = 0.000006, y = 70*0.666, offset = 1, width = 1e-5) ->
     st167_subtree_plot
   
 
 ```
 
-```{r subrtree-plots, fig.height= 12, fig.width = 10, fig.cap = "E. coli ST140 (A) and ST167 (B) subtrees showing ESBL/CPE genes and plasmid mreplicons"}
+```{r subrtree-plots, fig.height= 11, fig.width = 9, fig.cap = "E. coli ST140 (A) and ST167 (B) subtrees showing ESBL/CPE genes and plasmid mreplicons"}
 
 st410_subtree_plot +
 st167_subtree_plot +
@@ -2147,10 +2151,10 @@ plot_layout(ncol = 1,guides = "collect") -> st410_167_subtree_plot
 if (write_figs) {
 
 ggsave(here("figures/ecoli-genomics/st410_167_subtreeplot.svg"),
-       st410_167_subtree_plot, width = 10, height = 12)
+       st410_167_subtree_plot, width = 9, height = 11)
 
 ggsave(here("figures/ecoli-genomics/st410_167_subtreeplot.pdf"),
-       st410_167_subtree_plot, width = 10, height = 12)
+       st410_167_subtree_plot, width = 9, height = 11)
 }
 
 st410_167_subtree_plot

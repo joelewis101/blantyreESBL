@@ -815,6 +815,19 @@ btESBL_ecoli_globalst410_tree$tip.label <-
 
 use_data(btESBL_ecoli_globalst410_tree, overwrite = TRUE)
 
+# non-ASC tree
+
+read.tree(
+  here(
+    "data-raw/ecoli-genomics-paper/st410/non_ASC_trees/clean.full.filtered_polymorphic_sites.fasta.treefile")) ->
+  btESBL_ecoli_globalst410_tree_noASC
+
+midpoint.root(btESBL_ecoli_globalst410_tree_noASC) -> btESBL_ecoli_globalst410_tree_noASC
+btESBL_ecoli_globalst410_tree_noASC$tip.label <-
+  gsub("_filtered","", btESBL_ecoli_globalst410_tree_noASC$tip.label)
+
+use_data(btESBL_ecoli_globalst410_tree_noASC, overwrite = TRUE)
+
 # st410 amr ---------------------------------------------------
 
 
@@ -914,6 +927,20 @@ midpoint.root(st167_tree) -> btESBL_ecoli_globalst167_tree
 
 use_data(btESBL_ecoli_globalst167_tree, overwrite = TRUE)
 
+# non ASC tree
+
+read.tree(
+  here("data-raw/ecoli-genomics-paper/st167/tree_no_ASC/clean.full.filtered_polymorphic_sites.fasta.treefile")
+) -> btESBL_ecoli_globalst167_tree_noASC
+
+
+midpoint.root(btESBL_ecoli_globalst167_tree_noASC) ->
+  btESBL_ecoli_globalst167_tree_noASC
+
+btESBL_ecoli_globalst167_tree_noASC$tip.label <-
+  gsub("_filtered","", btESBL_ecoli_globalst167_tree_noASC$tip.label)
+
+use_data(btESBL_ecoli_globalst167_tree_noASC, overwrite = TRUE)
 # st167 amr ---------------------------------------------------
 
 
