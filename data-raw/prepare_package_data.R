@@ -941,6 +941,16 @@ btESBL_ecoli_globalst167_tree_noASC$tip.label <-
   gsub("_filtered","", btESBL_ecoli_globalst167_tree_noASC$tip.label)
 
 use_data(btESBL_ecoli_globalst167_tree_noASC, overwrite = TRUE)
+
+# overwrite non ASC trees
+
+btESBL_ecoli_globalst410_tree <- btESBL_ecoli_globalst410_tree_noASC
+
+use_data(btESBL_ecoli_globalst410_tree, overwrite = TRUE)
+
+btESBL_ecoli_globalst167_tree <- btESBL_ecoli_globalst167_tree_noASC
+
+use_data(btESBL_ecoli_globalst167_tree, overwrite = TRUE)
 # st167 amr ---------------------------------------------------
 
 

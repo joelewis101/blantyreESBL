@@ -1672,7 +1672,7 @@ rownames(st410_plasm_onehot) <- st410_plasm_onehot$name
 (
 (  
   (ggtree(
-    treeio::tree_subset(btESBL_ecoli_globalst410_tree_noASC,
+    treeio::tree_subset(btESBL_ecoli_globalst410_tree,
                          1085,
                          levels_back = 0)) %<+% 
      (select(st410_metadata, accession, Country) %>% 
@@ -1764,7 +1764,7 @@ st410_globaltree_plot
 
 treeio::tree_subset(
 treeio::tree_subset(
-  btESBL_ecoli_globalst410_tree_noASC, 1085, levels_back = 0),
+  btESBL_ecoli_globalst410_tree, 1085, levels_back = 0),
 695,levels_back = 0) -> st410_subtree
 
 esbl_cpe.ariba410 %>%  
@@ -1972,7 +1972,7 @@ rownames(esbl_cpe.ariba) <- esbl_cpe.ariba$sample
 (
 (
 (ggtree(treeio::tree_subset(
-  btESBL_ecoli_globalst167_tree_noASC, 321, levels_back = 0)) %<+% 
+  btESBL_ecoli_globalst167_tree, 321, levels_back = 0)) %<+% 
    (select(st167_metadata, accession, Country) %>% 
       mutate(Country = if_else(Country == "Malawi", "Malawi",NA_character_)))  %>%
     gheatmap(
@@ -2053,7 +2053,7 @@ ggsave(here("figures/ecoli-genomics/st167_globaltreeplot.pdf"),
 
 treeio::tree_subset(
 treeio::tree_subset(
-  btESBL_ecoli_globalst167_tree_noASC, 321, levels_back = 0),
+  btESBL_ecoli_globalst167_tree, 321, levels_back = 0),
 321,
 levels_back = 0) -> st167_subtree
 
