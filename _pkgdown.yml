@@ -6,6 +6,7 @@ reference:
   - btESBL_participants
   - btESBL_exposures
   - btESBL_stanmodeldata
+  - btESBL_modeldata
 - title: "Stool culture data"
   desc: "Results of selective stool culture for ESBL"
 - contents:
@@ -55,5 +56,12 @@ reference:
   - btESBL_ecoli_st410_metadata
   - btESBL_ecoli_st410_amr
   - btESBL_ecoli_st410_plasmids
+- title: "Global E. coli ST131 contextual analysis"
+  desc: "Metadata of global ST131 isolates and results of contextual genomic analysis"
+- contents:
+  - btESBL_ecoli_globalst131_tree
+  - btESBL_ecoli_st131_metadata
+  - btESBL_ecoli_st131_amr
+  - btESBL_ecoli_st131_plasmids
 
 
