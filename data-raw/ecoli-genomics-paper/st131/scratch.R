@@ -112,145 +112,123 @@ dep %>%
 
   ggtree(btESBL_coregene_tree_kleb_nonASC) + geom_text(aes(label = node), hjust = -.3)
 
-  ggtree(btESBL_kleb_globaltree_noASC) |
-    ggtree(btESBL_kleb_globaltree)
+  ggtree(btESBL_coregene_tree_esco ) |
+    ggtree(btESBL_coregene_tree_esco_nonASC)
 
   ggtree(treeio::tree_subset(btESBL_kleb_globaltree_noASC, 734, levels_back = 0)) |
     ggtree(treeio::tree_subset(btESBL_coregene_tree_kleb_nonASC, 218, levels_back = 0))
 
   ggtree(
-    treeio::tree_subset(btESBL_kleb_globaltree_noASC, 734, levels_back = 0),
+    treeio::tree_subset(btESBL_ecoli_globaltree_noASC, 3565, levels_back = 0),
     size = 0.3
   ) +
     geom_text(aes(label = node), hjust = -.3, size = 2)
 
-  btESBL_kleb_global_metadata %>%
-    as.data.frame() ->
-    df
+  ggtree(
+    btESBL_ecoli_globaltree_noASC,
+    size = 0.3
+  ) +
+    geom_text(aes(label = node), hjust = -.3, size = 2)
 
-  rownames(df) <- df$name
-
-read_csv("data-raw/kleb-genomics-paper/context_genomes/holt_global_kleb_metadata.csv" ) %>%
-  select(File_ID, ST) %>%
-  mutate(ST = gsub("\\*|\\?","", ST)) %>%
-  pivot_wider(id_cols = File_ID,
-              names_from = ST,
-              values_from = ST,
-              values_fn = length)  %>%
-  mutate(across(everything(), as.character)) %>%
-  as.data.frame() -> df
-
-rownames(df) <- df$File_ID
-
-btESBL_kleb_global_metadata %>%
-  select(name, ST) %>%
-  filter(!is.na(ST)) %>%
-  arrange(fct_infreq(ST)) %>%
-  pivot_wider(id_cols = name,
-              names_from = ST,
-              values_from = ST,
-              values_fn = length) %>%
-  as.data.frame() -> mlst.onehot
-
-rownames(mlst.onehot) <- mlst.onehot$name
-
-
-ggtree( treeio::tree_subset(btESBL_kleb_malawi_allisolate_core_gene_tree_noASC,
-                            372, levels_back = 0)) |
-  ggtree(treeio::tree_subset(btESBL_kleb_malawi_allisolate_core_gene_tree, 372, levels_back = 0))
-
-ggtree(
-  # btESBL_kleb_malawi_allisolate_core_gene_tree_noASC
-   treeio::tree_subset(btESBL_kleb_malawi_allisolate_core_gene_tree_noASC,
-                       372, levels_back = 0),
-   size = 0.3
-) +
-  geom_text(aes(label = node), hjust = -.3, size = 1)
-
-ggtree(
-  treeio::tree_subset(btESBL_kleb_malawi_allisolate_core_gene_tree_noASC, 372, levels_back = 0)
-  ) %>%
-  gheatmap(select(mlst.onehot, -name),
-           width = 3,
-           color = NA,
-           font.size = 3,
-           colnames_angle = 90,
-           colnames_position = "top",
-           colnames_offset_y = 0,
-           hjust = 0,
-           ) +
-  ylim(NA, 350) -> p
-
-# 627  = ST 218
-(
   (
-    ggtree(treeio::tree_subset(btESBL_kleb_malawi_allisolate_core_gene_tree_noASC, 372, levels_back = 0)) %>%
+    (
+      (
+        (
+          ggtree(btESBL_ecoli_globaltree_noASC, size = 0.4) %<+%
+            (select(df_all, lane, ST) %>%
+               mutate(
+                 ST = if_else(ST == 410,
+                              as.character("hilight"), NA_character_)
+               ))  %>%
+            gheatmap(
+              select(df_all, `Year`),
+              font.size = 4,
+              width = 0.03,
+              colnames_position = "top",
+              color = NA,
+              colnames_offset_y = 5,
+              colnames_angle = 90,
+              offset = 0.0006 + offset_add,
+              hjust = 0
+            )  +
+            scale_fill_viridis_c(name = "Year", na.value = "white",
+                                 guide = guide_colorbar(order = 2)) +
+            new_scale_fill()
+        ) %>%
+          gheatmap(
+            select(df_all, Continent),
+            font.size = 4,
+            width = 0.03,
+            colnames_position = "top",
+            color = NA,
+            colnames_offset_y = 5,
+            colnames_angle = 90,
+            offset = 0.0012 + offset_add,
+            hjust = 0
+          ) +
+          scale_fill_manual(values =
+                              continent_cols,
+                            name = "Continent",
+                            guide = guide_legend(order = 3)) +
+          # geom_tippoint(aes(color = ST), na.rm = TRUE, size = 0.5) +
+          #   scale_color_manual(values  = "red", na.translate = FALSE) +
+          new_scale_fill()
+      ) %>%
+        gheatmap(
+          select(df_all, Country) %>%
+            mutate(Country = if_else(
+              Country == "Malawi",
+              "Malawi", "Not Malawi"
+            )),
+          font.size = 4,
+          width = 0.03,
+          colnames_position = "top",
+          color = NA,
+          colnames_offset_y = 5,
+          colnames_angle = 90,
+          offset = 0.0018 + offset_add,
+          hjust = 0
+        ) +
+        scale_fill_manual(values = country_cols,
+                          name = "Country",
+                          guide = guide_legend(order = 4)) +
+        new_scale_fill()
+    ) %>%
       gheatmap(
-        select(dassimKleb_globalKleb.metadata, `Isolate Type`),
+        select(df_all, Phylogroup) %>%
+          mutate(Phylogroup = if_else(
+            is.na(Phylogroup) ,"Unknown",
+            Phylogroup)),
         width = 0.03,
         color = NA,
         font.size = 4,
         colnames_angle = 90,
         colnames_position = "top",
-        colnames_offset_y = 5,
+        colnames_offset_y = 3,
         hjust = 0,
-        offset = 0.0002
+        offset = 0 + offset_add
       ) +
-      scale_fill_manual(
-        values =
-          c(
-            "Invasive" = brewer_pal(palette = "Set3")(6)[4],
-            "Colonising" = brewer_pal(palette = "Set3")(6)[5]
-          ),
-        na.translate = FALSE,
-        name = "Isolate\nType",
-        guide = guide_legend(order = 2)
-      ) +
-      new_scale_fill()
-  ) %>%   gheatmap(
-    select(dassimKleb_globalKleb.metadata, ESBL)  %>%
-      mutate(ESBL = if_else(ESBL == "ESBL", "Present", NA_character_)),
-    width = 0.03,
-    color = NA,
-    font.size = 4,
-    colnames_angle = 90,
-    colnames_position = "top",
-    colnames_offset_y = 5,
-    hjust = 0,
-    offset = 0
-  )  +
-    scale_fill_manual(
-      values =
-        c("Present" = brewer_pal(palette = "Set3")(6)[6]),
+      scale_fill_manual(values = pgroup_cols,
+      name = "Phylogroup",
       na.translate = FALSE,
-      name = "ESBL",
-      guide = guide_legend(order = 1)
-    ) +
-    new_scale_fill()
-) %>%   gheatmap(
-  select(dassimKleb_globalKleb.metadata, ybt,clb,iuc,iro,rmpA,rmpA2) %>%
-    mutate(across(everything(), ~
-                    if_else(.x == "1", "Present", NA_character_))),
-  width = 0.18,
-  color = "lightgrey",
-  font.size = 4,
-  colnames_angle = 90,
-  colnames_position = "top",
-  colnames_offset_y = 5,
-  hjust = 0,
-  offset = 0.0005
-)  +
-  scale_fill_manual(values = c("Present" = "grey30"),
-                    name = "Virulence\nGene", na.translate = FALSE,
-                    guide = guide_legend(order = 3)) +
-  ylim(NA, 370) +
-  geom_cladelabel(node = 516, label = "ST268", align = TRUE, offset = - 0.0011) +
-  geom_cladelabel(node = 629, label = "ST218", align = TRUE, offset = - 0.00163) +
-  geom_cladelabel(node = 376, label = "ST14", align = TRUE, offset = - 0.00062) +
-  geom_cladelabel(node = 412, label = "ST15", align = TRUE, offset = - 0.00074) +
-  geom_cladelabel(node = 585, label = "ST340", align = TRUE, offset = - 0.00158) +
-  geom_cladelabel(node = 523, label = "ST307", align = TRUE, offset = - 0.0013) +
-  geom_treescale(x = 0.0003, y = 330, offset = 2, width = 0.001) -> malawi_tree_plot_final
+      guide = guide_legend(order = 1)) +
+      new_scale_fill()
+  ) +
+    ylim(NA, 3900) +# + geom_tippoint(aes(color = ST)) +
+    geom_treescale(y = 900, x = 0.005,offset = 10) +
+    scale_color_manual(values = "red", na.translate = FALSE) -> p
 
-malawi_tree_plot_final
-
+  p + geom_hilight( node = 3550, alpha = 0.3,
+                    fill = "firebrick",
+                    color = "firebrick") +  # phylogroup A
+    geom_cladelabel(node = 3550, label = "C", barsize = 0,offset = 0) +
+    # node 1888 - st167
+    # node 1848 - ST 617
+    # node 1926 - ST 44
+    # 5404
+    geom_highlight(node = 5404, alpha = 0.3, fill = "firebrick",
+                   color = "firebrick", extend = 0.0002) + # st 410 and context
+    geom_cladelabel(node = 5404, label = "B", barsize = 0,offset = 0) +
+    geom_highlight(node = 5652, alpha = 0.3, fill = "firebrick",
+                   color = "firebrick") + #
+    geom_cladelabel(node = 5652, label = "D", barsize = 0,offset = 0)

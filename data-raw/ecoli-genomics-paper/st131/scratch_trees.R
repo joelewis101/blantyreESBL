@@ -18,11 +18,13 @@ df$baps_1 <- as.character(df$`BAPS-1`)
 btESBL_st131_tree$tip.label <- gsub("_filtered", "", btESBL_st131_tree$tip.label)
 
 bind_rows(
-df %>%
+  read_csv(
+    here("data-raw/ecoli-genomics-paper/st131/mbio.00644-19-st001.csv")
+    ) %>%
   mutate(clade = case_when(
-    baps_1 %in% c(3) ~ "A",
-    baps_1 %in% c(2,4,5) ~ "B",
-    baps_1 %in% c(1) ~ "C",
+    `BAPS-1` %in% c(3) ~ "A",
+    `BAPS-1` %in% c(2,4,5) ~ "B",
+    `BAPS-1` %in% c(1) ~ "C",
     TRUE ~ "other")) %>%
     select(Accession_number, Year,Country, clade),
  btESBL_sequence_sample_metadata %>%
@@ -31,7 +33,7 @@ df %>%
                 Country = "Malawi") %>%
       filter(Accession_number %in% btESBL_st131_tree$tip.label)
     ) %>%
-  as.data.frame()-> btESBL_st131_metadata
+  as.data.frame() -> btESBL_st131_metadata
 
 rownames(btESBL_st131_metadata) <- btESBL_st131_metadata$Accession_number
 

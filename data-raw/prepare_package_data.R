@@ -2,15 +2,17 @@
 
 # the load_phd_data scripts are from the Thesis repo https://github.com/joelewis101/thesis
 #library(tidyverse)
-library("phytools")
+library(tidyverse)
+library(lubridate)
+library(phytools)
 library(devtools)
 
 source("/Users/joelewis/Documents/PhD/Thesis/bookdown/final_cleaning_scripts/load_PhD_data.R")
 
 source("/Users/joelewis/Documents/PhD/Thesis/bookdown/final_cleaning_scripts/load_and_clean_lims.R")
 
-library("here")
-library("ape")
+library(here)
+library(ape)
 
 source(here("data-raw/load_metadata_fn.R"))
 
@@ -324,12 +326,21 @@ use_data(btESBL_coregene_tree_kleb, overwrite = TRUE)
 
 # non ASC trees
 
-read.tree(here("data-raw/core_gene_trees/kleb_core_gene_tree_nonASC.treefile")) ->
+read.tree(here(
+  "data-raw/core_gene_trees/kleb_core_gene_tree_nonASC.treefile")) ->
   btESBL_coregene_tree_kleb_nonASC
 
-btESBL_coregene_tree_kleb_nonASC <- midpoint.root(btESBL_coregene_tree_kleb)
+read.tree(here(
+  "data-raw/core_gene_trees/esco_core_gene_tree_nonASC.treefile")) ->
+  btESBL_coregene_tree_esco_nonASC
 
-use_data(btESBL_coregene_tree_kleb_nonASC, overwrite = TRUE)
+btESBL_coregene_tree_kleb_nonASC <-
+  midpoint.root(btESBL_coregene_tree_kleb_nonASC)
+
+btESBL_coregene_tree_esco_nonASC <-
+  midpoint.root(btESBL_coregene_tree_esco_nonASC)
+
+#use_data(btESBL_coregene_tree_kleb_nonASC, overwrite = TRUE)
 
 # global kleb tree -----------------------------------------------
 
@@ -337,6 +348,18 @@ btESBL_kleb_globaltree <-
   read.tree(
     here("data-raw/GLOBAL_core_gene_alignment_snp_sites.fa.treefile"))
 midpoint.root(btESBL_kleb_globaltree) -> btESBL_kleb_globaltree
+
+# global e coli tree
+
+btESBL_ecoli_globaltree_noASC <-
+  read.tree(
+    here("data-raw/ecoli-genomics-paper/horesh_full_diversity/core_gene_alignment_snpsites.fasta.treefile"
+         ))
+
+midpoint.root(btESBL_ecoli_globaltree_noASC) ->
+  btESBL_ecoli_globaltree_noASC
+
+use_data(btESBL_ecoli_globaltree_noASC, overwrite = TRUE)
 
 # use_data(btESBL_kleb_globaltree, overwrite = TRUE)
 
@@ -369,7 +392,7 @@ midpoint.root(btESBL_kleb_malawi_allisolate_core_gene_tree_noASC) ->
   btESBL_kleb_malawi_allisolate_core_gene_tree_noASC
 # use_data(btESBL_kleb_malawi_allisolate_core_gene_tree_noASC, overwrite = TRUE)
 
-# overwrite ASC trees withnon ASC
+# overwrite ASC trees withnon ASC - kleb
 btESBL_coregene_tree_kleb <- btESBL_coregene_tree_kleb_nonASC
 
 use_data(btESBL_coregene_tree_kleb, overwrite = TRUE)
@@ -380,6 +403,15 @@ use_data(btESBL_kleb_globaltree, overwrite = TRUE)
 btESBL_kleb_malawi_allisolate_core_gene_tree <-
   btESBL_kleb_malawi_allisolate_core_gene_tree_noASC
 use_data(btESBL_kleb_malawi_allisolate_core_gene_tree, overwrite = TRUE)
+
+# and esco
+
+btESBL_coregene_tree_esco <- btESBL_coregene_tree_esco_nonASC
+use_data(btESBL_coregene_tree_esco, overwrite = TRUE)
+
+btESBL_ecoli_globaltree_noASC -> btESBL_ecoli_globaltree
+
+use_data(btESBL_ecoli_globaltree, overwrite = TRUE)
 
 # sequence sample metadata ----------------------------------
 
@@ -624,7 +656,7 @@ clusters %>%
     lane %in% btESBL_coregene_tree_kleb$tip.label ~ "K. pneumoniae",
     lane %in% btESBL_coregene_tree_esco$tip.label ~ "E. coli",
     TRUE ~ NA_character_)
-    )-> btESBL_contigclusters
+    ) -> btESBL_contigclusters
 
 use_data(btESBL_contigclusters, overwrite = TRUE)
 
@@ -785,6 +817,19 @@ btESBL_ecoli_globalst410_tree$tip.label <-
 
 use_data(btESBL_ecoli_globalst410_tree, overwrite = TRUE)
 
+# non-ASC tree
+
+read.tree(
+  here(
+    "data-raw/ecoli-genomics-paper/st410/non_ASC_trees/clean.full.filtered_polymorphic_sites.fasta.treefile")) ->
+  btESBL_ecoli_globalst410_tree_noASC
+
+midpoint.root(btESBL_ecoli_globalst410_tree_noASC) -> btESBL_ecoli_globalst410_tree_noASC
+btESBL_ecoli_globalst410_tree_noASC$tip.label <-
+  gsub("_filtered","", btESBL_ecoli_globalst410_tree_noASC$tip.label)
+
+use_data(btESBL_ecoli_globalst410_tree_noASC, overwrite = TRUE)
+
 # st410 amr ---------------------------------------------------
 
 
@@ -884,6 +929,31 @@ midpoint.root(st167_tree) -> btESBL_ecoli_globalst167_tree
 
 use_data(btESBL_ecoli_globalst167_tree, overwrite = TRUE)
 
+# non ASC tree
+
+read.tree(
+  here("data-raw/ecoli-genomics-paper/st167/tree_no_ASC/clean.full.filtered_polymorphic_sites.fasta.treefile")
+) -> btESBL_ecoli_globalst167_tree_noASC
+
+
+midpoint.root(btESBL_ecoli_globalst167_tree_noASC) ->
+  btESBL_ecoli_globalst167_tree_noASC
+
+btESBL_ecoli_globalst167_tree_noASC$tip.label <-
+  gsub("_filtered","", btESBL_ecoli_globalst167_tree_noASC$tip.label)
+
+use_data(btESBL_ecoli_globalst167_tree_noASC, overwrite = TRUE)
+
+# overwrite non ASC trees
+
+btESBL_ecoli_globalst410_tree <- btESBL_ecoli_globalst410_tree_noASC
+
+use_data(btESBL_ecoli_globalst410_tree, overwrite = TRUE)
+
+btESBL_ecoli_globalst167_tree <- btESBL_ecoli_globalst167_tree_noASC
+
+use_data(btESBL_ecoli_globalst167_tree, overwrite = TRUE)
+
 # st167 amr ---------------------------------------------------
 
 
@@ -898,7 +968,7 @@ amr.ariba167 %>%
          name = gsub("_filtered", "", name),
          name = gsub("#","_", name)) %>%
   pivot_longer(-name,
-               names_to= c( "cluster", ".value"),
+               names_to = c( "cluster", ".value"),
                names_sep = "\\.") %>%
   mutate(gene = sapply(str_split(ref_seq, "__"), function(x) x[3])) %>%
   filter(match == "yes") %>%
@@ -910,3 +980,145 @@ amr.ariba167 %>%
   btESBL_ecoli_st167_amr
 
 use_data(btESBL_ecoli_st167_amr, overwrite = TRUE)
+
+# st131 amr and tree---------------------
+
+read.tree(here("data-raw/ecoli-genomics-paper/st131/non_ASC_trees/gub_base.filtered_polymorphic_sites.fasta.treefile")) ->
+  btESBL_ecoli_globalst131_tree
+phytools::midpoint.root(btESBL_ecoli_globalst131_tree) -> btESBL_ecoli_globalst131_tree
+
+btESBL_ecoli_globalst131_tree$tip.label <-
+  gsub("_filtered", "", btESBL_ecoli_globalst131_tree$tip.label)
+
+use_data(btESBL_ecoli_globalst131_tree, overwrite = TRUE)
+
+bind_rows(
+  read_csv(
+    here("data-raw/ecoli-genomics-paper/st131/mbio.00644-19-st001.csv")
+  ) %>%
+    mutate(clade = case_when(
+      `BAPS-1` %in% c(3) ~ "A",
+      `BAPS-1` %in% c(2,4,5) ~ "B",
+      `BAPS-1` %in% c(1) ~ "C",
+      TRUE ~ "other")) %>%
+    select(Accession_number, Year,Country, clade),
+  btESBL_sequence_sample_metadata %>%
+    transmute(Accession_number = lane,
+              Year = year(data_date),
+              Country = "Malawi") %>%
+    filter(Accession_number %in% btESBL_ecoli_globalst131_tree$tip.label)
+) %>%
+  as.data.frame() -> btESBL_ecoli_st131_metadata
+
+use_data(btESBL_ecoli_st131_metadata, overwrite = TRUE)
+# amr
+
+
+read_csv(
+  here(
+    "data-raw/ecoli-genomics-paper/st131/non_ASC_trees/st131_ariba_srst2_summary.csv"
+  )) %>%
+  mutate(name = gsub("\\./", "", name),
+         name = gsub("/report.tsv", "", name),
+         name = gsub("_filtered", "", name),
+         name = gsub("#","_", name)) %>%
+  pivot_longer(-name,
+               names_to = c( "cluster", ".value"),
+               names_sep = "\\.") %>%
+  mutate(gene = sapply(str_split(ref_seq, "__"), function(x) x[3])) %>%
+  filter(match == "yes") %>%
+  mutate(gene = case_when(
+    gene == "TEM_95" ~ "TEM_1",
+    TRUE ~ gene
+  )) %>%
+  select(name, gene) ->
+  btESBL_ecoli_st131_amr
+
+use_data(btESBL_ecoli_st131_amr, overwrite = TRUE)
+
+# plasmids
+
+st167_plasm <-
+  read_csv(
+    here("data-raw/ecoli-genomics-paper/st167/st167_pf_ariba_summary.csv"))
+
+
+read_csv(
+  here("data-raw/ecoli-genomics-paper/st131/non_ASC_trees/st131-ariba-plasm-summary.csv")
+  ) %>%
+  mutate(name = gsub("\\./", "", name),
+         name = gsub("/report.tsv", "", name),
+         name = gsub("_filtered","", name),
+         name = gsub("#","_", name)) %>%
+  pivot_longer(-name,
+               names_to= c( "cluster", ".value"),
+               names_sep = "\\.") %>%
+  filter(match == "yes") %>%
+  select(name, ref_seq) %>%
+  mutate(ref_seq = gsub("\\..*$", "", ref_seq),
+         ref_seq = gsub("_.*$","", ref_seq),
+         ref_seq = gsub("^FIA", "IncFIA", ref_seq)) ->
+  btESBL_ecoli_st131_plasmids
+
+use_data(btESBL_ecoli_st131_plasmids, overwrite = TRUE)
+
+# merge in clermonTyping phylogroups
+
+ct <- read_tsv(
+  here("data-raw/ecoli-genomics-paper/horesh_full_diversity/analysis_2021-11-03_110200_phylogroups.txt")
+, col_names = FALSE) %>%
+  select(X1,X5) %>%
+  rename(lane = X1,
+         ct_phylogroup = X5)
+
+# to horesh
+
+btESBL_ecoli_horesh_metadata %>%
+  mutate(matcher  =
+           gsub("\\.|fasta|fa|trimmed|spades|velvet|contigs_|_trimmed","",
+                Assembly_name)) %>% pull(matcher)
+
+left_join(
+  btESBL_ecoli_horesh_metadata %>%
+    mutate(matcher  =
+             gsub("\\.|fasta|fa|trimmed|spades|velvet|contigs_|_trimmed","",
+                  Assembly_name)),
+  ct %>%
+    mutate(lane =
+             gsub("\\.|fasta|fa|trimmed|spades|velvet|contigs_|_trimmed","",
+                  lane)),
+  by = c("matcher" = "lane")) %>%
+  mutate(Phylogroup =
+           case_when(Phylogroup =="Not Determined" &
+                       !is.na(ct_phylogroup) ~ ct_phylogroup,
+                     TRUE ~ Phylogroup)) %>%
+  select(-c(ct_phylogroup, matcher)) -> btESBL_ecoli_horesh_metadata
+
+# dassim samples
+
+btESBL_sequence_sample_metadata %>%
+  left_join(
+    ct %>%
+      mutate(lane =
+               gsub("\\.|fasta|fa|trimmed|spades|velvet|contigs_|_trimmed","",
+                    lane),
+             lane = gsub("#","_", lane))
+  ) %>%
+  mutate(ecoli_phylogroup = ct_phylogroup) %>%
+  select(-ct_phylogroup) -> btESBL_sequence_sample_metadata
+
+btESBL_ecoli_musicha_metadata %>%
+  left_join(
+    ct %>%
+      mutate(lane =
+               gsub("\\.|fasta|fa|trimmed|spades|velvet|contigs_|_trimmed","",
+                    lane),
+             lane = gsub("#","_", lane)) %>%
+      mutate(phylogroup = ct_phylogroup) %>%
+      select(-ct_phylogroup)
+  ) -> btESBL_ecoli_musicha_metadata
+
+use_data(btESBL_ecoli_horesh_metadata, overwrite = TRUE)
+
+use_data(btESBL_sequence_sample_metadata, overwrite = TRUE)
+use_data(btESBL_ecoli_musicha_metadata, overwrite = TRUE)

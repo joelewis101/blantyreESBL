@@ -483,6 +483,18 @@
 #' @format A "phylo" object ("ape" package)
 "btESBL_ecoli_globalst410_tree"
 
+#' Data: E. coli ST131 global phylogeny
+#'
+#' Midpoint rooted maximum likelihood phylogeny for E. coli
+#' incorporating all ST131 study isolates and all ST131 E. coli
+#' from a study of global ST131
+#' (Mcnally et al 2019 https://doi.org/10.1128/mBio.00644-19)
+#' reconstructed from a multiple sequence alignment from mapping to reference.
+#'  (see manuscript for details)
+#'
+#' @format A "phylo" object ("ape" package)
+"btESBL_ecoli_globalst131_tree"
+
 #' Data: metadata of global E. coli ST410 isolates
 #'
 #' Metadata of a collection of 1230 E. coli ST410 genomes
@@ -609,5 +621,50 @@
 #'
 #' @format The data from btESBL_stanmodeldata in dataframe format
 "btESBL_modeldata"
+
+
+
+#' Data: metadata of global E. coli ST131 isolates
+#'
+#' Metadata of a collection of 926 E. coli ST131 genomes
+#' including 862 from a study of global E. coli ST131
+#' (Mcnally et at 2019 https://doi.org/10.1128/mBio.00644-19)
+#' and the remainder sequenced as part of this study
+#'
+#'@format A dataframe with 926 rows and 4 variables
+#'\describe{
+#'   \item{Accession_number}{Unique sample-sequencing run ID or accession}
+#'   \item{Year}{Year of sample collection}
+#'   \item{Country}{Country of sample collection}
+#'   \item{clade}{ST131 clade as defined in Mcnally et al}
+#' }
+"btESBL_ecoli_st131_metadata"
+
+
+#' Data: AMR genes identified in global ST131 isolates
+#'
+#' Identified AMR genes using ARIBA and the SRST database.
+#' See manuscript for details
+#'
+#' @format A tidy data frame with 5494 rows and 2 variables:
+#' \describe{
+#'   \item{name}{Unique sample-sequencing run ID or accession}
+#'   \item{gene}{Identified AMR gene sequence}
+#' }
+"btESBL_ecoli_st131_amr"
+
+
+#' Data: Plasmid replicons identified in global ST131 isolates
+#'
+#' Identified plasmid replcions using ARIBA and the PlasmidFinder database.
+#' See manuscript for details
+#'
+#' @format A tidy data frame with 1838 rows and 2 variables:
+#' \describe{
+#'   \item{name}{Unique sample-sequencing run ID or accession}
+#'   \item{ref_seq}{Identified Plasmid replicon}
+#' }
+"btESBL_ecoli_st131_plasmids"
+
 
 

@@ -402,7 +402,7 @@ rownames(spec_hm) <- spec_hm$strain
       colnames_position = "top", 
       hjust = 0,
       colnames_offset_y = 0,
-      offset = 0.006 ) %>% 
+      offset = 0 ) %>% 
     gheatmap(
       select(mlst.onehot,-lane),
       width = 3, 
@@ -412,7 +412,7 @@ rownames(spec_hm) <- spec_hm$strain
       colnames_position = "top", 
       colnames_offset_y = 0,
       hjust = 0,
-      offset = 0.05 
+      offset = 0.008 
     ) +
     theme(legend.position = "none") +
     ylim(NA, 220) +
@@ -420,7 +420,8 @@ rownames(spec_hm) <- spec_hm$strain
     geom_treescale(x = 0.05, y = 180, offset = 2) -> 
     p1
   
-  ggtree(treeio::tree_subset(btESBL_coregene_tree_kleb, 218, levels_back = 0)) %>% 
+  ggtree(treeio::tree_subset(btESBL_coregene_tree_kleb, 210, 
+                             levels_back = 0)) %>% 
     gheatmap(
       select(mlst.onehot,-lane),
       width = 2, 
@@ -709,7 +710,8 @@ names(colz) <- sort(unique(dassimKleb_BTKleb.amr %>%
                         #     filter(class != "Fosfomycin") %>% 
                              pull(class)))
 
-ggtree(treeio::tree_subset(btESBL_coregene_tree_kleb, 218, levels_back = 0)) %>% 
+ggtree(treeio::tree_subset(btESBL_coregene_tree_kleb, 210, 
+                           levels_back = 0)) %>% 
 #ggtree(tree) %>% 
     gheatmap(
         select(amr.ariba.maptotree,-lane),

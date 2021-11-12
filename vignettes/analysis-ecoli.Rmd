@@ -12,6 +12,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
 ### Introduction
@@ -218,7 +219,7 @@ btESBL_sequence_sample_metadata %>%
              fill = Study)) +
   geom_col(position = "dodge") +
   theme_bw() +
-  theme(axis.text.x = element_text(angle = 45, hjust =1)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   labs(x = "Phylogroup",
        y = "Proportion") ->
   malawi_vs_global_pgroup
@@ -308,7 +309,7 @@ rownames(mlst_onehot) <- mlst_onehot$lane
            font.size = 2.5,
            color = NA,
            colnames_angle = 90,
-           offset = .02,
+           offset = .0022,
            colnames_offset_y = 3,
            colnames_position = "top",
            hjust = 0)  +
@@ -320,15 +321,15 @@ rownames(mlst_onehot) <- mlst_onehot$lane
            font.size = 3,
            color = NA,
            colnames_angle = 90,
-           offset = .009,
+           offset = .001,
            colnames_offset_y = 3,
            colnames_position = "top",
            hjust = 0)  +
   scale_fill_manual(values = viridis_pal(option = "plasma")(6)[c(3,5)],
                     name = "Pathotype",
                     na.translate = FALSE) +
-  ylim(NA, 540)  + 
-  annotate("text", x = 0.27, y = 540, label = "Sequence Type",
+  ylim(NA, 540) + 
+  annotate("text", x = 0.03, y = 520, label = "Sequence Type",
            size = 3) -> malawi_treeplot
 
 
@@ -522,7 +523,7 @@ names(colz) <- sort(unique(amr %>%
                              filter(class != "Fosfomycin") %>% 
                              pull(class)))
 
-ggtree(blantyreESBL::btESBL_coregene_tree_esco) %>% 
+ggtree(btESBL_coregene_tree_esco ) %>% 
 #ggtree(tree) %>% 
     gheatmap(
         select(amr.ariba.maptotree,-lane),
@@ -667,7 +668,8 @@ bind_rows(
                        ]),
                    Phylogroup =
                      case_when(
-                       Phylogroup %in% c("Unknown", "Not Determined") ~
+                       Phylogroup %in% c("Unknown", "Not Determined",
+                                         "E or cladeI") ~
                          "Unknown",
                        is.na(Phylogroup) ~ "Unknown",
                        TRUE ~ Phylogroup
@@ -684,7 +686,8 @@ rownames(df_all) <- df_all$lane
 
 #define color palettes
 
-pgroup_cols <- c(hue_pal()(9), "white")
+pgroup_cols <- c(brewer_pal(type = "qual", palette = 8)(10),
+                            "white")
   names(pgroup_cols) <- sort(unique(df_all$Phylogroup))
 
 continent_cols <- c(viridis_pal(option = "plasma")(5),
@@ -699,13 +702,16 @@ btESBL_ecoli_globaltree -> horesh_context_tree
 
 popPUNK_clusts_inplots <- 
   df_all %>% 
-  filter(lane %in% 
+   filter(lane %in% 
            c(treeio::tree_subset(
-             horesh_context_tree, 1834, levels_back = 0)$tip.label,
+             btESBL_ecoli_globaltree,
+             3555, levels_back = 0)$tip.label,
              treeio::tree_subset(
-               horesh_context_tree, 1526, levels_back = 0)$tip.label,
+               btESBL_ecoli_globaltree,
+               5404, levels_back = 0)$tip.label,
              treeio::tree_subset(
-               horesh_context_tree, 1227, levels_back = 0)$tip.label)
+               btESBL_ecoli_globaltree,
+               5652, levels_back = 0)$tip.label)
   ) %>% 
   select(cluster_recode) %>% 
   unique() %>% 
@@ -714,156 +720,167 @@ popPUNK_clusts_inplots <-
  
      
 popPUNK_cols <- c(
-  "palegreen2",
-  "#E31A1C",
+  "dodgerblue2", "#E31A1C", # red
   "green4",
-  "#6A3D9A",
-  "#FF7F00",
-  "steelblue4",
-  "gold1",
-  "skyblue2",
-  "dodgerblue2",
-  "#FDBF6F",
-  "gray70",
-  "maroon",
-  "orchid1",
-  "darkturquoise",
-  "darkorange4",
-  "brown",
-  "white"
+  "#6A3D9A", # purple
+  "#FF7F00", # orange
+  "black", "gold1",
+  "skyblue2", "#FB9A99", # lt pink
+  "palegreen2",
+  "#CAB2D6", # lt purple
+  "#FDBF6F", # lt orange
+  "gray70", "khaki2",
+  "maroon", "orchid1", "deeppink1", "blue1", "steelblue4",
+  "darkturquoise", "green1", "yellow4", "yellow3",
+  "darkorange4", "brown"
 )
+  
+  
+#   c(
+#   "palegreen2",
+#   "#E31A1C",
+#   "green4",
+#   "#6A3D9A",
+#   "#FF7F00",
+#   "steelblue4",
+#   "gold1",
+#   "skyblue2",
+#   "dodgerblue2",
+#   "#FDBF6F",
+#   "gray70",
+#   "maroon",
+#   "orchid1",
+#   "darkturquoise",
+#   "darkorange4",
+#   "brown",
+#   "white"
+# )
 
 
 
 names(popPUNK_cols) <- df_all %>% 
   filter(lane %in% 
            c(treeio::tree_subset(
-             horesh_context_tree, 1834, levels_back = 0)$tip.label,
+             btESBL_ecoli_globaltree,
+             3565, levels_back = 0)$tip.label,
              treeio::tree_subset(
-               horesh_context_tree, 1526, levels_back = 0)$tip.label,
+               btESBL_ecoli_globaltree,
+               5404, levels_back = 0)$tip.label,
              treeio::tree_subset(
-               horesh_context_tree, 1227, levels_back = 0)$tip.label)
+               btESBL_ecoli_globaltree,
+               5652, levels_back = 0)$tip.label)
   ) %>% 
   select(cluster_recode) %>% 
   unique() %>% 
   arrange(cluster_recode) %>% 
   pull(cluster_recode)
 
-popPUNK_cols <- popPUNK_cols[1:16]
+popPUNK_cols <- popPUNK_cols[!is.na(names(popPUNK_cols))]
 
 
 
 offset_add <- 0
   
 (
-  (
     (
       (
-        ggtree(horesh_context_tree, size = 0.4) %<+%
-          (select(df_all, lane, ST) %>%
-             mutate(
-               ST = if_else(ST == 410,
-                                 as.character("hilight"), NA_character_)
-             ))  %>%
+        (
+          ggtree(btESBL_ecoli_globaltree, size = 0.2) %<+%
+            (select(df_all, lane, ST) %>%
+               mutate(
+                 ST = if_else(ST == 167,
+                              as.character("hilight"), NA_character_)
+               ))  %>%
+            gheatmap(
+              select(df_all, `Year`),
+              font.size = 4,
+              width = 0.03,
+              colnames_position = "top",
+              color = NA,
+              colnames_offset_y = 5,
+              colnames_angle = 90,
+              offset = 0.0006 + offset_add,
+              hjust = 0
+            )  +
+            scale_fill_viridis_c(name = "Year", na.value = "white",
+                                 guide = guide_colorbar(order = 2)) +
+            new_scale_fill()
+        ) %>%
           gheatmap(
-            select(df_all, `Year`),
+            select(df_all, Continent),
             font.size = 4,
             width = 0.03,
             colnames_position = "top",
             color = NA,
             colnames_offset_y = 5,
             colnames_angle = 90,
-            offset = 0.0006 + offset_add,
+            offset = 0.0012 + offset_add,
             hjust = 0
-          )  +
-          scale_fill_viridis_c(name = "Year", na.value = "white",
-                               guide = guide_colorbar(order = 2)) +
+          ) +
+          scale_fill_manual(values = 
+                              continent_cols,
+                            name = "Continent",
+                            guide = guide_legend(order = 3)) +
           new_scale_fill()
       ) %>%
         gheatmap(
-          select(df_all, Continent),
+          select(df_all, Country) %>%
+            mutate(Country = if_else(
+              Country == "Malawi",
+              "Malawi", "Not Malawi"
+            )),
           font.size = 4,
           width = 0.03,
           colnames_position = "top",
           color = NA,
           colnames_offset_y = 5,
           colnames_angle = 90,
-          offset = 0.0012 + offset_add,
+          offset = 0.0018 + offset_add,
           hjust = 0
         ) +
-        scale_fill_manual(values = 
-                           continent_cols,
-                          name = "Continent",
-                          guide = guide_legend(order = 3)) +
-      # geom_tippoint(aes(color = ST), na.rm = TRUE, size = 0.5) +
-      #   scale_color_manual(values  = "red", na.translate = FALSE) +
+        scale_fill_manual(values = country_cols,
+                          name = "Country",
+                          guide = guide_legend(order = 4)) +
         new_scale_fill()
     ) %>%
       gheatmap(
-        select(df_all, Country) %>%
-          mutate(Country = if_else(
-            Country == "Malawi",
-            "Malawi", "Not Malawi"
-          )),
-        font.size = 4,
+        select(df_all, Phylogroup) %>% 
+          mutate(Phylogroup = if_else(
+            is.na(Phylogroup) ,"Unknown",
+            Phylogroup)),
         width = 0.03,
-        colnames_position = "top",
         color = NA,
-        colnames_offset_y = 5,
+        font.size = 4,
         colnames_angle = 90,
-        offset = 0.0018 + offset_add,
-        hjust = 0
+        colnames_position = "top",
+        colnames_offset_y = 3,
+        hjust = 0,
+        offset = 0 + offset_add
       ) +
-      scale_fill_manual(values = country_cols,
-                        name = "Country",
-                        guide = guide_legend(order = 4)) +
+      scale_fill_manual(values = pgroup_cols,
+      name = "Phylogroup",
+      na.translate = FALSE,
+      guide = guide_legend(order = 1)) +
       new_scale_fill()
-  ) %>%
-    gheatmap(
-      select(df_all, Phylogroup) %>% 
-        mutate(Phylogroup = if_else(
-          is.na(Phylogroup) ,"Unknown",
-          Phylogroup)),
-      width = 0.03,
-      color = NA,
-      font.size = 4,
-      colnames_angle = 90,
-      colnames_position = "top",
-      colnames_offset_y = 3,
-      hjust = 0,
-      offset = 0 + offset_add
-    ) +
-    scale_fill_manual(values = pgroup_cols,
-                      name = "Phylogroup",
-                      na.translate = FALSE,
-                      guide = guide_legend(order = 1)) +
-    new_scale_fill()
-) +
-  ylim(NA, 1150) + 
-  geom_treescale(y = 900, x = 0.005,offset = 10) -> p
-  
- 
-# subtrees
+  ) +
+    ylim(NA, 3550) +# + geom_tippoint(aes(color = ST)) + 
+    geom_treescale(y = 2366, x = 0.004,offset = 30)  -> p
 
-# viewClade(p, 1834)  + geom_cladelabel(1886, label = "ST167") +
-#  geom_cladelabel(1848, label = "ST617") +
-#   geom_cladelabel(1926, label = "ST44") +
-#   geom_cladelabel(1959, label = "ST656")
+  p + geom_hilight( node = 3565, alpha = 0.3,
+                    fill = "steelblue",
+                    color = NA) +  # phylogroup A
+    geom_cladelabel(node = 3565, label = "C", barsize = 0,offset = 0) +
+    geom_highlight(node = 5404, alpha = 0.3, fill = "steelblue",
+                   color = NA, extend = 0.0002) + # st 410 and context
+    geom_cladelabel(node = 5404, label = "B", barsize = 0,offset = 0) +
+    geom_highlight(node = 5652, alpha = 0.3, fill = "steelblue",
+                   color = NA) + # ST131
+    geom_cladelabel(node = 5652, label = "D", barsize = 0,offset = 0) -> p
+
+  # phylo a subreee -----------
 
 
-p + geom_hilight( node = 1834, alpha = 0.3) +  # phylogroup A
-  geom_cladelabel(node = 1834, label = "C", barsize = 0,offset = -0.004) +
-  # node 1888 - st167
-  # node 1848 - ST 617
-  # node 1926 - ST 44
-  geom_highlight( node = 1526, alpha = 0.3) + # st 410 and context
-  geom_cladelabel(node = 1526, label = "B", barsize = 0,offset = -0.0025) +
-  geom_highlight(node = 1227, alpha = 0.3) +
-  geom_cladelabel(node = 1227, label = "D", barsize = 0,offset = -0.0022) -> p
-# st 131
-
-
-offset_add <- 0.0015
+offset_add <- 0.0000 #0.0015
 textsize <-  3
 cladelab_offset <- 0.0001
 tippoint_alpha = 0.7
@@ -871,15 +888,15 @@ tippoint_alpha = 0.7
 (
   ggtree(
     treeio::tree_subset(
-      horesh_context_tree, 1834, levels_back = 0)
+      btESBL_ecoli_globaltree, 3565, levels_back = 0)
     ) %<+% select(df_all, lane, cluster_recode) %>% 
     gheatmap(
     select(df_all, Country) %>%
       mutate(Country = if_else(
         Country == "Malawi",
         "Malawi", "Not Malawi")),
-    font.size = 4,
-    width = 0.08,
+    font.size = 3,
+    width = 0.04,
     colnames_position = "top",
     color = NA,
     colnames_offset_y = 0,
@@ -893,43 +910,29 @@ tippoint_alpha = 0.7
       guide = "none") + 
       guides(fill = "none") + 
       new_scale_fill()
-) +
-  ylim(NA, 250) +
-  geom_tippoint(aes(color = cluster_recode), 
-                na.rm = TRUE, 
+) + 
+   ylim(NA, 100) +
+   geom_tippoint(aes(color = cluster_recode), 
+                na.rm = TRUE,
                 size = 1,
                 alpha = tippoint_alpha) +
   scale_color_manual(name = "PopPUNK\nCluster",
                        values = popPUNK_cols,
                        na.translate = FALSE) +
-  geom_treescale(y = 225,
-                 x = offset_add/5,
-                 offset  = 7.5,
-                 width = 0.0001) -> p_phylo_a_subtree
+  geom_treescale(y = 66,
+                 x = 0.00005,
+                 offset  = 2,
+                 width = 0.00001) -> p_phylo_a_subtree
 
 p_phylo_a_subtree + 
-  geom_cladelabel(node = 245, label = "ST167", 
+  geom_cladelabel(node = 119, label = "ST167", 
                   fontsize = textsize,
-                  offset = cladelab_offset,
-                  offset.text = cladelab_offset) +
-  geom_cladelabel(node = 285, label = "ST44", 
+                  offset = 0.00002,
+                  offset.text = 0.000005) +
+  geom_cladelabel(node = 99, label = "ST167", 
                   fontsize = textsize,
-                  offset = cladelab_offset,
-                  offset.text = cladelab_offset) +
-  geom_cladelabel(node = 318, label = "ST656", 
-                  fontsize = textsize,
-                  offset = cladelab_offset,
-                  offset.text = cladelab_offset) +
-  geom_cladelabel(node = 233 , 
-                  label = "ST9847", 
-                  fontsize = textsize,
-                  offset = cladelab_offset,
-                  offset.text = cladelab_offset) +
-  geom_cladelabel(node = 207 , 
-                  label = "ST617", 
-                  fontsize = textsize,
-                  offset = cladelab_offset,
-                  offset.text = cladelab_offset) +
+                  offset = 0.0001665,
+                  offset.text = 0.000005) +
   theme(legend.position = "bottom")  +
   guides(
     color = guide_legend(
@@ -939,25 +942,21 @@ p_phylo_a_subtree +
     ) ->
   plot_phyloa_subtree
    
-    # node 1888 - st167
-    # node 1848 - ST 617
-    # node 1926 - ST 44
-
 # ST131 zoom
 
-offset_add <- 0.0007
+offset_add <- 0.0004
 (
   ggtree(
     treeio::tree_subset(
-      horesh_context_tree, 1227, levels_back = 0)
+      btESBL_ecoli_globaltree, 5652, levels_back = 0)
     ) %<+% select(df_all, lane, cluster_recode) %>%
     gheatmap(
       select(df_all, Country) %>%
       mutate(Country = if_else(
         Country == "Malawi",
         "Malawi", "Not Malawi")),
-      font.size = 4,
-      width = 0.08,
+      font.size = 3,
+      width = 0.07,
       colnames_position = "top",
       color = NA,
       colnames_offset_y = 0,
@@ -970,7 +969,7 @@ offset_add <- 0.0007
                         guide = "none") +
     new_scale_fill()
 ) +
-  ylim(NA, 120) +
+  ylim(NA, 125) +
   geom_tippoint(aes(color = cluster_recode), 
                 na.rm = TRUE, 
                 size = 1,
@@ -978,16 +977,16 @@ offset_add <- 0.0007
   scale_color_manual(name = "PopPUNK\nCluster",
                      values = popPUNK_cols,
                      na.translate = FALSE) +
-  geom_treescale(y = 108,
-                 x = offset_add/5,
+  geom_treescale(y = 83,
+                 x = 0.0001,
                  offset  = 3.6,
                  width = 0.0001) -> p_st131_subtree
 
 p_st131_subtree + 
-  geom_cladelabel(node = 100, label = "ST131", 
+  geom_cladelabel(node = 104, label = "ST131", 
                   fontsize = textsize,
-                  offset = cladelab_offset,
-                  offset.text = cladelab_offset) +
+                  offset = 0.0001,
+                  offset.text = 0.00002) +
   theme(legend.position = "bottom") +
   guides(color = guide_legend(
     nrow = 2,
@@ -999,34 +998,34 @@ p_st131_subtree +
 
 
 
-offset_add <- 0.0008
+offset_add <- 0.00007
 # offset_multiple <- 0.00008
 
 (
   ggtree(
     treeio::tree_subset(
-      horesh_context_tree, 1526, levels_back = 0)
+      btESBL_ecoli_globaltree, 5404, levels_back = 0)
     ) %<+% select(df_all, lane, cluster_recode) %>%
     gheatmap(
     select(df_all, Country) %>%
       mutate(Country = if_else(
         Country == "Malawi",
         "Malawi", "Not Malawi")),
-    font.size = 4,
-    width = 0.08,
+    font.size = 3,
+    width = 0.055,
     colnames_position = "top",
     color = NA,
     colnames_offset_y = 0,
     colnames_angle = 90,
     offset = offset_add,
-    hjust = 0
+    hjust = 0,
     ) +
     scale_fill_manual(values = country_cols, 
                       name = "Country",
                       guide = "none") +
     new_scale_fill()
 ) +
-  ylim(NA, 70) +
+  ylim(NA, 60) +
   geom_tippoint(aes(color = cluster_recode),
                 na.rm = TRUE,
                 size = 1,
@@ -1034,16 +1033,16 @@ offset_add <- 0.0008
   scale_color_manual(name = "PopPUNK\nCluster",
                      values = popPUNK_cols,
                      na.translate = FALSE) +
-  geom_treescale(y = 63,
-                 x = offset_add/5,
-                 offset  = 2.1,
-                 width = 0.0001) -> p_st410_subtree
+  geom_treescale(y = 40,
+                 x = offset_add/2,
+                 offset  = 1,
+                 width = 0.00001) -> p_st410_subtree
 
 p_st410_subtree +
-  geom_cladelabel(61, label = "ST410", 
+  geom_cladelabel(48, label = "ST410", 
                   fontsize = textsize,
-                  offset = cladelab_offset,
-                  offset.text = cladelab_offset) +
+                  offset = offset_add/5,
+                  offset.text = 0.000002) +
   theme(legend.position = "bottom")  +
   guides(
     color = guide_legend(
@@ -1068,7 +1067,7 @@ if (write_figs) {
     here("figures/ecoli-genomics/global_treeplot.pdf"),
     global_tree_plot,
     width = 9,
-    height = 12)
+    height = 13)
   ggsave(
     here("figures/ecoli-genomics/global_treeplot.svg"),
     global_tree_plot,
@@ -1674,8 +1673,8 @@ rownames(st410_plasm_onehot) <- st410_plasm_onehot$name
 (
 (  
   (ggtree(
-    treeio::tree_subset (btESBL_ecoli_globalst410_tree,
-                         1083,
+    treeio::tree_subset(btESBL_ecoli_globalst410_tree,
+                         1085,
                          levels_back = 0)) %<+% 
      (select(st410_metadata, accession, Country) %>% 
         mutate(Country = if_else(Country == "Malawi", "Malawi",NA_character_)))  %>%
@@ -1699,7 +1698,7 @@ rownames(st410_plasm_onehot) <- st410_plasm_onehot$name
     color = NA,
     colnames_offset_y = 5,
     colnames_angle = 90,
-    offset = 0.00015,
+    offset = 0.000015,
     hjust = 0
   ) + 
   scale_fill_viridis_d(option = "plasma", name = "Continent") + 
@@ -1715,7 +1714,7 @@ rownames(st410_plasm_onehot) <- st410_plasm_onehot$name
     color = NA,
     colnames_offset_y = 5,
     colnames_angle = 90,
-    offset = 0.0003,
+    offset = 0.00003,
     hjust = 0
   ) + scale_fill_manual(values = viridis_pal(option = "magma")(5)[c(2,3)],
                         na.translate = FALSE,
@@ -1737,12 +1736,12 @@ rownames(st410_plasm_onehot) <- st410_plasm_onehot$name
   #                       name = "Plasmid\nreplicon") +
   ylim(NA, 600) +
   geom_treescale(x = 0.0002, y = 250, offset = 5) +
-   geom_highlight(node = 568 ,alpha = 0.3) +
+   geom_highlight(node = 695 ,alpha = 0.3) +
   geom_cladelabel(
-    node = 568,
+    node = 695,
     label = "B4/H24RxC",
     angle = 90,
-    offset = -0.0006,
+    offset = 0,
     offset.text = -0.00009,
     barsize = 0,
     hjust = 0.5,
@@ -1765,7 +1764,9 @@ st410_globaltree_plot
 ```{r st410 subtree}
 
 treeio::tree_subset(
-  btESBL_ecoli_globalst410_tree, 564, levels_back = 0) -> st410_subtree
+treeio::tree_subset(
+  btESBL_ecoli_globalst410_tree, 1085, levels_back = 0),
+695,levels_back = 0) -> st410_subtree
 
 esbl_cpe.ariba410 %>%  
   subset(name %in% st410_subtree$tip.label) %>% 
@@ -1791,24 +1792,24 @@ st410_plasm_onehot %>%
      gheatmap(
        select(st410_metadata, `Year`),
        font.size = 4,
-       width = 0.05,
+       width = 0.071,
        colnames_position = "top",
        color = NA,
        colnames_offset_y = 5,
        colnames_angle = 90,
        hjust = 0
      )  + 
-     scale_fill_viridis(name = "Year", limits = c(1975,2020)) +
+     scale_fill_viridis(name = "Year", limits = c(1965,2020)) +
      new_scale_fill()) %>% 
     gheatmap(
       select(st410_metadata, Continent),
       font.size = 4,
-      width = 0.05,
+      width = 0.071,
       colnames_position = "top",
       color = NA,
       colnames_offset_y = 5,
       colnames_angle = 90,
-      offset = 0.00003,
+      offset = 0.000002,
       hjust = 0
     ) + 
     scale_fill_viridis_d(option = "plasma", name = "Continent") + 
@@ -1825,7 +1826,7 @@ st410_plasm_onehot %>%
     color = NA,
     colnames_offset_y = 5,
     colnames_angle = 90,
-    offset = 0.00006,
+    offset = 0.000004,
     hjust = 0
   ) + scale_fill_manual(values = viridis_pal(option = "magma")(5)[c(2,3)],
                         na.translate = FALSE,
@@ -1834,30 +1835,30 @@ st410_plasm_onehot %>%
     ) %>%   gheatmap(
     select(st410_plasm_onehot, -name),
     font.size = 3,
-    width = 1,
+    width = 1.71,
     colnames_position = "top",
     color = NA,
     colnames_offset_y = 5,
     colnames_angle = 90,
-    offset = 0.00029,
+    offset = 0.000016,
     hjust = 0
   ) + scale_fill_manual(values = viridis_pal(option = "cividis")(7)[2],
                         na.translate = FALSE,
                         name = "Plasmid\nreplicon") +
-  ylim(NA, 200) +
-  geom_treescale(x = 0.00005, y = 150, offset = 2) +
-    geom_highlight(node = 181 , alpha = 0.3) +
-    geom_cladelabel(
-      node = 181,
-      label = "B4/H24RxC",
-      angle = 90,
-      offset = -0.00032,
-      barsize = 0,
-      hjust = 0.5,
-      fontsize = 4,
-      offset.text = -0.00002,
-      color = "steelblue"
-    ) -> st410_subtree_plot
+  ylim(NA, 180) +
+  geom_treescale(x = 0.000002, y = 165, offset = 2,width = 1e-5) -> st410_subtree_plot
+    # geom_highlight(node = 149 , alpha = 0.3) +
+    # geom_cladelabel(
+    #   node = 149,
+    #   label = "B4/H24RxC",
+    #   angle = 90,
+    #   offset = 0,
+    #   barsize = 0,
+    #   hjust = 0.5,
+    #   fontsize = 4,
+    #   offset.text = 0,
+    #   color = "steelblue"
+    # ) -> st410_subtree_plot
   
 
 
@@ -1972,7 +1973,7 @@ rownames(esbl_cpe.ariba) <- esbl_cpe.ariba$sample
 (
 (
 (ggtree(treeio::tree_subset(
-  btESBL_ecoli_globalst167_tree, 320, levels_back = 0)) %<+% 
+  btESBL_ecoli_globalst167_tree, 321, levels_back = 0)) %<+% 
    (select(st167_metadata, accession, Country) %>% 
       mutate(Country = if_else(Country == "Malawi", "Malawi",NA_character_)))  %>%
     gheatmap(
@@ -1995,7 +1996,7 @@ rownames(esbl_cpe.ariba) <- esbl_cpe.ariba$sample
     color = NA,
     colnames_offset_y = 5,
     colnames_angle = 90,
-    offset = 0.00003,
+    offset = 0.000004,
     hjust = 0
   ) + 
   scale_fill_viridis_d(option = "plasma", name = "Continent") + 
@@ -2006,12 +2007,12 @@ rownames(esbl_cpe.ariba) <- esbl_cpe.ariba$sample
   gheatmap(
   select(esbl_cpe.ariba, -sample),
   font.size = 3,
-  width = 0.5,
+  width = (ncol(esbl_cpe.ariba) -1)*0.03,
   colnames_position = "top",
   color = NA,
   colnames_offset_y = 5,
   colnames_angle = 90,
-  offset = 0.00006,
+  offset = 0.000008,
   hjust = 0
 ) + scale_fill_manual(values = viridis_pal(option = "magma")(5)[c(2,3)],
                       na.translate = FALSE,
@@ -2033,7 +2034,7 @@ rownames(esbl_cpe.ariba) <- esbl_cpe.ariba$sample
   #                       na.translate = FALSE,
   #                       name = "Plasmid\nreplicon") +
   ylim(NA, 370) +
-  geom_treescale(x = 0.0002, y = 250, offset = 2)   +
+  geom_treescale(x = 0.00002, y = 370*0.666, offset = 2, width = 0.00001)   +
    geom_highlight(node = 321 ,alpha = 0.3) ->
   st167_globaltree_plot
 
@@ -2051,9 +2052,11 @@ ggsave(here("figures/ecoli-genomics/st167_globaltreeplot.pdf"),
 
 ```{r st167subtree}
 
-
 treeio::tree_subset(
-  btESBL_ecoli_globalst167_tree, 321, levels_back = 0) -> st167_subtree
+treeio::tree_subset(
+  btESBL_ecoli_globalst167_tree, 321, levels_back = 0),
+321,
+levels_back = 0) -> st167_subtree
 
 esbl_cpe.ariba %>%  
   subset(sample %in% st167_subtree$tip.label) %>% 
@@ -2079,24 +2082,24 @@ st167_plasm_onehot %>%
      gheatmap(
        select(st167_metadata, `Year`),
        font.size = 4,
-       width = 0.05,
+       width = 0.0668,
        colnames_position = "top",
        color = NA,
        colnames_offset_y = 0,
        colnames_angle = 90,
        hjust = 0
      )  + 
-     scale_fill_viridis(name = "Year", limits = c(1975,2020)) +
+     scale_fill_viridis(name = "Year", limits = c(1965,2020)) +
      new_scale_fill()) %>% 
     gheatmap(
       select(st167_metadata, Continent),
       font.size = 4,
-      width = 0.05,
+      width = 0.0668,
       colnames_position = "top",
       color = NA,
       colnames_offset_y = 0,
       colnames_angle = 90,
-      offset = 0.00005,
+      offset = 0.000004,
       hjust = 0
     ) + 
     scale_fill_viridis_d(option = "plasma", name = "Continent") + 
@@ -2108,12 +2111,12 @@ st167_plasm_onehot %>%
   gheatmap(
     select(esbl_cpe.ariba167_subset, -sample),
     font.size = 3,
-    width = 0.5,
+    width = 0.0668*(ncol(esbl_cpe.ariba167_subset) - 1),
     colnames_position = "top",
     color = NA,
     colnames_offset_y = 0,
     colnames_angle = 90,
-    offset = 0.0001,
+    offset = 0.000008,
     hjust = 0
   ) + scale_fill_manual(values = viridis_pal(option = "magma")(5)[c(2,3)],
                         na.translate = FALSE,
@@ -2122,40 +2125,197 @@ st167_plasm_onehot %>%
     ) %>%   gheatmap(
     select(st167_plasm_onehot, -name),
     font.size = 3,
-    width = 1,
+    width = 0.0668*(ncol(st167_plasm_onehot) - 1) + 0.1,
     colnames_position = "top",
     color = NA,
     colnames_offset_y = 0,
     colnames_angle = 90,
-    offset = 0.0005,
+    offset = 0.00004,
     hjust = 0
   ) + scale_fill_manual(values = viridis_pal(option = "cividis")(7)[2],
                         na.translate = FALSE,
                         name = "Plasmid\nreplicon") +
   ylim(NA, 70) +
-  geom_treescale(x = 0.0002, y = 50, offset = 2) ->
+  geom_treescale(x = 0.000006, y = 70*0.666, offset = 1, width = 1e-5) ->
     st167_subtree_plot
   
 
 ```
 
-```{r subrtree-plots, fig.height= 12, fig.width = 10, fig.cap = "E. coli ST140 (A) and ST167 (B) subtrees showing ESBL/CPE genes and plasmid mreplicons"}
+```{r st131-plots, fig.width=10, fig.height=10, fig.cap = "ST131 map-to-reference global maximum likelihood, midpoint rooted tree"}
 
-st410_subtree_plot +
-st167_subtree_plot +
+
+
+if (write_figs) {
+btESBL_ecoli_st131_metadata %>% 
+  filter(Country != "Malawi") %>% 
+  write_csv(here("tables/ecoli-genomics/SUPP_T_st131_accession_numbers_and_metadata.csv"))
+}
+btESBL_ecoli_st131_metadata$malawi <- btESBL_ecoli_st131_metadata$Country == "Malawi"
+
+
+btESBL_ecoli_st131_metadata$Continent <- 
+  countrycode(
+    sourcevar = btESBL_ecoli_st131_metadata$Country,
+    origin = "country.name",
+    destination = "un.region.name"
+  )
+
+btESBL_ecoli_st131_metadata$Continent[
+  btESBL_ecoli_st131_metadata$Country == "Czech"] <- "Europe"
+
+btESBL_ecoli_st131_metadata$Continent[
+  btESBL_ecoli_st131_metadata$Country == "Taiwan"] <- "Asia"
+
+
+rownames(btESBL_ecoli_st131_metadata) <- btESBL_ecoli_st131_metadata$Accession_number
+
+
+btESBL_ecoli_st131_amr %>% 
+  pivot_wider(names_from = gene, 
+              values_from = gene,
+              values_fn = length,
+              values_fill = 0) %>%
+  mutate(across(everything(), as.character)) %>% 
+  as.data.frame() ->
+  amr.ariba131
+
+
+
+rownames(amr.ariba131) <- amr.ariba131$name
+
+btESBL_ecoli_st131_plasmids %>% 
+  filter(grepl("Inc", ref_seq)) %>% 
+  unique() %>% 
+  pivot_wider(
+    id_cols = name,
+    names_from = ref_seq,
+    values_from = ref_seq,
+    values_fn = function(x) return("Present"),
+    values_fill = NA_character_) %>% 
+  as.data.frame() -> st131_plasm_onehot
+
+rownames(st131_plasm_onehot) <- st131_plasm_onehot$name
+
+esbl_cols <- viridis_pal(option = "magma")(5)[c(2,3)]
+
+names(esbl_cols) <- c( "Carbapenemase", "ESBL/AmpC")
+
+btESBL_ecoli_st131_amr %>% 
+  left_join(
+    select(btESBL_NCBI_phenotypic_bl, allele_name, class),
+    by = c("gene" = "allele_name")
+  ) %>% mutate(class = case_when(
+    grepl("CMY", name) ~ "ESBL/AmpC",
+    class == "ESBL" ~ "ESBL/AmpC",
+    TRUE ~ class
+        )) %>% 
+  filter(class %in% c("ESBL/AmpC", "Carbapenemase")) %>%
+  mutate(gene = gsub("_", "-", gene)) %>% 
+  arrange(class, fct_infreq(gene)) %>% 
+  pivot_wider(id_cols = "name",
+              names_from = gene,
+              values_from = class) %>% 
+  as.data.frame() -> 
+#  select(-`TEM-15`) ->    # not in df?
+  esbl_cpe.ariba131
+
+rownames(esbl_cpe.ariba131) <- esbl_cpe.ariba131$name
+
+(
+(
+(ggtree(btESBL_ecoli_globalst131_tree, size = 0.3) %<+% 
+   (select(btESBL_ecoli_st131_metadata, Accession_number, Country) %>% 
+      mutate(Country = if_else(Country == "Malawi", "Malawi",NA_character_)))  %>%
+    gheatmap(
+      select(btESBL_ecoli_st131_metadata, `Year`),
+      font.size = 4,
+      width = 0.03,
+      colnames_position = "top",
+      color = NA,
+      colnames_offset_y = 5,
+      colnames_angle = 90,
+      hjust = 0
+    )  + 
+     scale_fill_viridis_c(name = "Year", limits = c(1965,2020),
+                          na.value = "white") +
+    new_scale_fill()) %>% 
+  gheatmap(
+    select(btESBL_ecoli_st131_metadata, Continent),
+    font.size = 4,
+    width = 0.03,
+    colnames_position = "top",
+    color = NA,
+    colnames_offset_y = 5,
+    colnames_angle = 90,
+    offset = 0.000004,
+    hjust = 0
+  ) + 
+  scale_fill_viridis_d(option = "plasma", name = "Continent", 
+                       na.translate = FALSE) + 
+  geom_tippoint(aes(color = Country), na.rm = TRUE, size = 0.5) + 
+  scale_color_manual(values  = "red", na.translate = FALSE) +
+    new_scale_fill() 
+) %>% 
+  gheatmap(
+  select(esbl_cpe.ariba131, -name),
+  font.size = 3,
+  width = (ncol(esbl_cpe.ariba131) -1)*0.03,
+  colnames_position = "top",
+  color = NA,
+  colnames_offset_y = 5,
+  colnames_angle = 90,
+  offset = 0.000008,
+  hjust = 0
+) + scale_fill_manual(values = esbl_cols,
+                      na.translate = FALSE,
+                      name = "Beta-\nlactamase") +
+  new_scale_fill()
+)   %>%   gheatmap(
+    select(st131_plasm_onehot, -name),
+    font.size = 3,
+    width = 0.03*(ncol(st131_plasm_onehot) - 1) + 0.1,
+    colnames_position = "top",
+    color = NA,
+    colnames_offset_y = 5,
+    colnames_angle = 90,
+    offset = 0.000058,
+    hjust = 0
+  ) + scale_fill_manual(values = viridis_pal(option = "cividis")(7)[2],
+                        na.translate = FALSE,
+                        name = "Plasmid\nreplicon") + 
+  ylim(NA, 1000) +
+  geom_treescale(x = 0.00002, y = 1000*0.666, offset = 5, width = 0.00001)   +
+  theme(legend.position = "none") ->
+  st131_globaltree_plot
+
+st131_globaltree_plot
+
+
+
+
+```
+
+```{r subrtree-plots, fig.height= 11, fig.width = 20, fig.cap = "E. coli ST140 (A) and ST167 (B) subtrees and (C) ST131 tree showing ESBL/CPE genes and plasmid replicons"}
+
+st410_subtree_plot + st167_subtree_plot  + st131_globaltree_plot + 
+  plot_layout(widths = c(1,1.5),
+              design = "AACCC
+                        BBCCC") +
 plot_annotation(tag_levels = "A") +
-plot_layout(ncol = 1,guides = "collect") -> st410_167_subtree_plot
+plot_layout(guides = "collect") -> st410_167_131_subtree_plot
+
+st410_167_131_subtree_plot
 
 if (write_figs) {
 
-ggsave(here("figures/ecoli-genomics/st410_167_subtreeplot.svg"),
-       st410_167_subtree_plot, width = 10, height = 12)
+ggsave(here("figures/ecoli-genomics/st410_167_131_subtreeplot.svg"),
+       st410_167_131_subtree_plot, width = 20, height = 11)
 
-ggsave(here("figures/ecoli-genomics/st410_167_subtreeplot.pdf"),
-       st410_167_subtree_plot, width = 10, height = 12)
+ggsave(here("figures/ecoli-genomics/st410_167_131_subtreeplot.pdf"),
+       st410_167_131_subtree_plot, width = 20, height = 11)
 }
 
-st410_167_subtree_plot
 
 ```
 
