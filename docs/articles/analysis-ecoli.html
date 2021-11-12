@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">blantyreESBL</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.1</span>
       </span>
     </div>
 
@@ -13900,7 +13900,7 @@ FIGURE 1: Sequence types (A) and phylogroups (B) of included isolates amd (C) id
              fill <span class="op">=</span> <span class="va">Study</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_col</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, hjust <span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Phylogroup"</span>,
        y <span class="op">=</span> <span class="st">"Proportion"</span><span class="op">)</span> <span class="op">-&gt;</span>
   <span class="va">malawi_vs_global_pgroup</span>
@@ -13996,7 +13996,7 @@ Phylogroup distribution in isolates from this study comapred to the global colle
            font.size <span class="op">=</span> <span class="fl">2.5</span>,
            color <span class="op">=</span> <span class="cn">NA</span>,
            colnames_angle <span class="op">=</span> <span class="fl">90</span>,
-           offset <span class="op">=</span> <span class="fl">.02</span>,
+           offset <span class="op">=</span> <span class="fl">.0022</span>,
            colnames_offset_y <span class="op">=</span> <span class="fl">3</span>,
            colnames_position <span class="op">=</span> <span class="st">"top"</span>,
            hjust <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>  <span class="op">+</span>
@@ -14008,15 +14008,15 @@ Phylogroup distribution in isolates from this study comapred to the global colle
            font.size <span class="op">=</span> <span class="fl">3</span>,
            color <span class="op">=</span> <span class="cn">NA</span>,
            colnames_angle <span class="op">=</span> <span class="fl">90</span>,
-           offset <span class="op">=</span> <span class="fl">.009</span>,
+           offset <span class="op">=</span> <span class="fl">.001</span>,
            colnames_offset_y <span class="op">=</span> <span class="fl">3</span>,
            colnames_position <span class="op">=</span> <span class="st">"top"</span>,
            hjust <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>  <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/viridis_pal.html">viridis_pal</a></span><span class="op">(</span>option <span class="op">=</span> <span class="st">"plasma"</span><span class="op">)</span><span class="op">(</span><span class="fl">6</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fl">5</span><span class="op">)</span><span class="op">]</span>,
                     name <span class="op">=</span> <span class="st">"Pathotype"</span>,
                     na.translate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">ylim</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">540</span><span class="op">)</span>  <span class="op">+</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotate.html">annotate</a></span><span class="op">(</span><span class="st">"text"</span>, x <span class="op">=</span> <span class="fl">0.27</span>, y <span class="op">=</span> <span class="fl">540</span>, label <span class="op">=</span> <span class="st">"Sequence Type"</span>,
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">ylim</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">540</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotate.html">annotate</a></span><span class="op">(</span><span class="st">"text"</span>, x <span class="op">=</span> <span class="fl">0.03</span>, y <span class="op">=</span> <span class="fl">520</span>, label <span class="op">=</span> <span class="st">"Sequence Type"</span>,
            size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">malawi_treeplot</span>
 <span class="co">#&gt; Scale for 'fill' is already present. Adding another scale for 'fill', which</span>
 <span class="co">#&gt; will replace the existing scale.</span>
@@ -14223,7 +14223,7 @@ SUPPLEMENTARY FIGURE 1: Midpoint-rooted maximum-likelohood phylogeny of study is
                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">class</span> <span class="op">!=</span> <span class="st">"Fosfomycin"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">class</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/ggtree.html">ggtree</a></span><span class="op">(</span><span class="fu">blantyreESBL</span><span class="fu">::</span><span class="va"><a href="../reference/btESBL_coregene_tree_esco.html">btESBL_coregene_tree_esco</a></span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/ggtree.html">ggtree</a></span><span class="op">(</span><span class="va">btESBL_coregene_tree_esco</span> <span class="op">)</span> <span class="op">%&gt;%</span> 
 <span class="co">#ggtree(tree) %&gt;% </span>
     <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
         <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">amr.ariba.maptotree</span>,<span class="op">-</span><span class="va">lane</span><span class="op">)</span>,
@@ -14378,7 +14378,8 @@ AMR determinants mapped back to phylogeny
                        <span class="op">]</span><span class="op">)</span>,
                    Phylogroup <span class="op">=</span>
                      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span>
-                       <span class="va">Phylogroup</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Unknown"</span>, <span class="st">"Not Determined"</span><span class="op">)</span> <span class="op">~</span>
+                       <span class="va">Phylogroup</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Unknown"</span>, <span class="st">"Not Determined"</span>,
+                                         <span class="st">"E or cladeI"</span><span class="op">)</span> <span class="op">~</span>
                          <span class="st">"Unknown"</span>,
                        <span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">Phylogroup</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Unknown"</span>,
                        <span class="cn">TRUE</span> <span class="op">~</span> <span class="va">Phylogroup</span>
@@ -14396,7 +14397,8 @@ AMR determinants mapped back to phylogeny
 <code class="sourceCode R">
 <span class="co">#define color palettes</span>
 
-<span class="va">pgroup_cols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://scales.r-lib.org/reference/hue_pal.html">hue_pal</a></span><span class="op">(</span><span class="op">)</span><span class="op">(</span><span class="fl">9</span><span class="op">)</span>, <span class="st">"white"</span><span class="op">)</span>
+<span class="va">pgroup_cols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://scales.r-lib.org/reference/brewer_pal.html">brewer_pal</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"qual"</span>, palette <span class="op">=</span> <span class="fl">8</span><span class="op">)</span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>,
+                            <span class="st">"white"</span><span class="op">)</span>
   <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">pgroup_cols</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">df_all</span><span class="op">$</span><span class="va">Phylogroup</span><span class="op">)</span><span class="op">)</span>
 
 <span class="va">continent_cols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://scales.r-lib.org/reference/viridis_pal.html">viridis_pal</a></span><span class="op">(</span>option <span class="op">=</span> <span class="st">"plasma"</span><span class="op">)</span><span class="op">(</span><span class="fl">5</span><span class="op">)</span>,
@@ -14411,13 +14413,16 @@ AMR determinants mapped back to phylogeny
 
 <span class="va">popPUNK_clusts_inplots</span> <span class="op">&lt;-</span> 
   <span class="va">df_all</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">lane</span> <span class="op">%in%</span> 
+   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">lane</span> <span class="op">%in%</span> 
            <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu">treeio</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/treeio/reference/tree_subset.html">tree_subset</a></span><span class="op">(</span>
-             <span class="va">horesh_context_tree</span>, <span class="fl">1834</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">$</span><span class="va">tip.label</span>,
+             <span class="va">btESBL_ecoli_globaltree</span>,
+             <span class="fl">3555</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">$</span><span class="va">tip.label</span>,
              <span class="fu">treeio</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/treeio/reference/tree_subset.html">tree_subset</a></span><span class="op">(</span>
-               <span class="va">horesh_context_tree</span>, <span class="fl">1526</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">$</span><span class="va">tip.label</span>,
+               <span class="va">btESBL_ecoli_globaltree</span>,
+               <span class="fl">5404</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">$</span><span class="va">tip.label</span>,
              <span class="fu">treeio</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/treeio/reference/tree_subset.html">tree_subset</a></span><span class="op">(</span>
-               <span class="va">horesh_context_tree</span>, <span class="fl">1227</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">$</span><span class="va">tip.label</span><span class="op">)</span>
+               <span class="va">btESBL_ecoli_globaltree</span>,
+               <span class="fl">5652</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">$</span><span class="va">tip.label</span><span class="op">)</span>
   <span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">cluster_recode</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -14426,133 +14431,151 @@ AMR determinants mapped back to phylogeny
  
      
 <span class="va">popPUNK_cols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
-  <span class="st">"palegreen2"</span>,
-  <span class="st">"#E31A1C"</span>,
+  <span class="st">"dodgerblue2"</span>, <span class="st">"#E31A1C"</span>, <span class="co"># red</span>
   <span class="st">"green4"</span>,
-  <span class="st">"#6A3D9A"</span>,
-  <span class="st">"#FF7F00"</span>,
-  <span class="st">"steelblue4"</span>,
-  <span class="st">"gold1"</span>,
-  <span class="st">"skyblue2"</span>,
-  <span class="st">"dodgerblue2"</span>,
-  <span class="st">"#FDBF6F"</span>,
-  <span class="st">"gray70"</span>,
-  <span class="st">"maroon"</span>,
-  <span class="st">"orchid1"</span>,
-  <span class="st">"darkturquoise"</span>,
-  <span class="st">"darkorange4"</span>,
-  <span class="st">"brown"</span>,
-  <span class="st">"white"</span>
+  <span class="st">"#6A3D9A"</span>, <span class="co"># purple</span>
+  <span class="st">"#FF7F00"</span>, <span class="co"># orange</span>
+  <span class="st">"black"</span>, <span class="st">"gold1"</span>,
+  <span class="st">"skyblue2"</span>, <span class="st">"#FB9A99"</span>, <span class="co"># lt pink</span>
+  <span class="st">"palegreen2"</span>,
+  <span class="st">"#CAB2D6"</span>, <span class="co"># lt purple</span>
+  <span class="st">"#FDBF6F"</span>, <span class="co"># lt orange</span>
+  <span class="st">"gray70"</span>, <span class="st">"khaki2"</span>,
+  <span class="st">"maroon"</span>, <span class="st">"orchid1"</span>, <span class="st">"deeppink1"</span>, <span class="st">"blue1"</span>, <span class="st">"steelblue4"</span>,
+  <span class="st">"darkturquoise"</span>, <span class="st">"green1"</span>, <span class="st">"yellow4"</span>, <span class="st">"yellow3"</span>,
+  <span class="st">"darkorange4"</span>, <span class="st">"brown"</span>
 <span class="op">)</span>
+  
+  
+<span class="co">#   c(</span>
+<span class="co">#   "palegreen2",</span>
+<span class="co">#   "#E31A1C",</span>
+<span class="co">#   "green4",</span>
+<span class="co">#   "#6A3D9A",</span>
+<span class="co">#   "#FF7F00",</span>
+<span class="co">#   "steelblue4",</span>
+<span class="co">#   "gold1",</span>
+<span class="co">#   "skyblue2",</span>
+<span class="co">#   "dodgerblue2",</span>
+<span class="co">#   "#FDBF6F",</span>
+<span class="co">#   "gray70",</span>
+<span class="co">#   "maroon",</span>
+<span class="co">#   "orchid1",</span>
+<span class="co">#   "darkturquoise",</span>
+<span class="co">#   "darkorange4",</span>
+<span class="co">#   "brown",</span>
+<span class="co">#   "white"</span>
+<span class="co"># )</span>
 
 
 
 <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">popPUNK_cols</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">df_all</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">lane</span> <span class="op">%in%</span> 
            <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu">treeio</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/treeio/reference/tree_subset.html">tree_subset</a></span><span class="op">(</span>
-             <span class="va">horesh_context_tree</span>, <span class="fl">1834</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">$</span><span class="va">tip.label</span>,
+             <span class="va">btESBL_ecoli_globaltree</span>,
+             <span class="fl">3565</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">$</span><span class="va">tip.label</span>,
              <span class="fu">treeio</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/treeio/reference/tree_subset.html">tree_subset</a></span><span class="op">(</span>
-               <span class="va">horesh_context_tree</span>, <span class="fl">1526</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">$</span><span class="va">tip.label</span>,
+               <span class="va">btESBL_ecoli_globaltree</span>,
+               <span class="fl">5404</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">$</span><span class="va">tip.label</span>,
              <span class="fu">treeio</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/treeio/reference/tree_subset.html">tree_subset</a></span><span class="op">(</span>
-               <span class="va">horesh_context_tree</span>, <span class="fl">1227</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">$</span><span class="va">tip.label</span><span class="op">)</span>
+               <span class="va">btESBL_ecoli_globaltree</span>,
+               <span class="fl">5652</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">$</span><span class="va">tip.label</span><span class="op">)</span>
   <span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">cluster_recode</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">cluster_recode</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">cluster_recode</span><span class="op">)</span>
 
-<span class="va">popPUNK_cols</span> <span class="op">&lt;-</span> <span class="va">popPUNK_cols</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">16</span><span class="op">]</span>
+<span class="va">popPUNK_cols</span> <span class="op">&lt;-</span> <span class="va">popPUNK_cols</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">popPUNK_cols</span><span class="op">)</span><span class="op">)</span><span class="op">]</span>
 
 
 
 <span class="va">offset_add</span> <span class="op">&lt;-</span> <span class="fl">0</span>
   
 <span class="op">(</span>
-  <span class="op">(</span>
     <span class="op">(</span>
       <span class="op">(</span>
-        <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/ggtree.html">ggtree</a></span><span class="op">(</span><span class="va">horesh_context_tree</span>, size <span class="op">=</span> <span class="fl">0.4</span><span class="op">)</span> <span class="op">%&lt;+%</span>
-          <span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">df_all</span>, <span class="va">lane</span>, <span class="va">ST</span><span class="op">)</span> <span class="op">%&gt;%</span>
-             <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>
-               ST <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else</a></span><span class="op">(</span><span class="va">ST</span> <span class="op">==</span> <span class="fl">410</span>,
-                                 <span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="st">"hilight"</span><span class="op">)</span>, <span class="cn">NA_character_</span><span class="op">)</span>
-             <span class="op">)</span><span class="op">)</span>  <span class="op">%&gt;%</span>
+        <span class="op">(</span>
+          <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/ggtree.html">ggtree</a></span><span class="op">(</span><span class="va">btESBL_ecoli_globaltree</span>, size <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">%&lt;+%</span>
+            <span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">df_all</span>, <span class="va">lane</span>, <span class="va">ST</span><span class="op">)</span> <span class="op">%&gt;%</span>
+               <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>
+                 ST <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else</a></span><span class="op">(</span><span class="va">ST</span> <span class="op">==</span> <span class="fl">167</span>,
+                              <span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="st">"hilight"</span><span class="op">)</span>, <span class="cn">NA_character_</span><span class="op">)</span>
+               <span class="op">)</span><span class="op">)</span>  <span class="op">%&gt;%</span>
+            <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
+              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">df_all</span>, <span class="va">`Year`</span><span class="op">)</span>,
+              font.size <span class="op">=</span> <span class="fl">4</span>,
+              width <span class="op">=</span> <span class="fl">0.03</span>,
+              colnames_position <span class="op">=</span> <span class="st">"top"</span>,
+              color <span class="op">=</span> <span class="cn">NA</span>,
+              colnames_offset_y <span class="op">=</span> <span class="fl">5</span>,
+              colnames_angle <span class="op">=</span> <span class="fl">90</span>,
+              offset <span class="op">=</span> <span class="fl">0.0006</span> <span class="op">+</span> <span class="va">offset_add</span>,
+              hjust <span class="op">=</span> <span class="fl">0</span>
+            <span class="op">)</span>  <span class="op">+</span>
+            <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html">scale_fill_viridis_c</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Year"</span>, na.value <span class="op">=</span> <span class="st">"white"</span>,
+                                 guide <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_colourbar.html">guide_colorbar</a></span><span class="op">(</span>order <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+            <span class="fu"><a href="https://rdrr.io/pkg/ggnewscale/man/new_scale.html">new_scale_fill</a></span><span class="op">(</span><span class="op">)</span>
+        <span class="op">)</span> <span class="op">%&gt;%</span>
           <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
-            <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">df_all</span>, <span class="va">`Year`</span><span class="op">)</span>,
+            <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">df_all</span>, <span class="va">Continent</span><span class="op">)</span>,
             font.size <span class="op">=</span> <span class="fl">4</span>,
             width <span class="op">=</span> <span class="fl">0.03</span>,
             colnames_position <span class="op">=</span> <span class="st">"top"</span>,
             color <span class="op">=</span> <span class="cn">NA</span>,
             colnames_offset_y <span class="op">=</span> <span class="fl">5</span>,
             colnames_angle <span class="op">=</span> <span class="fl">90</span>,
-            offset <span class="op">=</span> <span class="fl">0.0006</span> <span class="op">+</span> <span class="va">offset_add</span>,
+            offset <span class="op">=</span> <span class="fl">0.0012</span> <span class="op">+</span> <span class="va">offset_add</span>,
             hjust <span class="op">=</span> <span class="fl">0</span>
-          <span class="op">)</span>  <span class="op">+</span>
-          <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html">scale_fill_viridis_c</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Year"</span>, na.value <span class="op">=</span> <span class="st">"white"</span>,
-                               guide <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_colourbar.html">guide_colorbar</a></span><span class="op">(</span>order <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+          <span class="op">)</span> <span class="op">+</span>
+          <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> 
+                              <span class="va">continent_cols</span>,
+                            name <span class="op">=</span> <span class="st">"Continent"</span>,
+                            guide <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html">guide_legend</a></span><span class="op">(</span>order <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
           <span class="fu"><a href="https://rdrr.io/pkg/ggnewscale/man/new_scale.html">new_scale_fill</a></span><span class="op">(</span><span class="op">)</span>
       <span class="op">)</span> <span class="op">%&gt;%</span>
         <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
-          <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">df_all</span>, <span class="va">Continent</span><span class="op">)</span>,
+          <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">df_all</span>, <span class="va">Country</span><span class="op">)</span> <span class="op">%&gt;%</span>
+            <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else</a></span><span class="op">(</span>
+              <span class="va">Country</span> <span class="op">==</span> <span class="st">"Malawi"</span>,
+              <span class="st">"Malawi"</span>, <span class="st">"Not Malawi"</span>
+            <span class="op">)</span><span class="op">)</span>,
           font.size <span class="op">=</span> <span class="fl">4</span>,
           width <span class="op">=</span> <span class="fl">0.03</span>,
           colnames_position <span class="op">=</span> <span class="st">"top"</span>,
           color <span class="op">=</span> <span class="cn">NA</span>,
           colnames_offset_y <span class="op">=</span> <span class="fl">5</span>,
           colnames_angle <span class="op">=</span> <span class="fl">90</span>,
-          offset <span class="op">=</span> <span class="fl">0.0012</span> <span class="op">+</span> <span class="va">offset_add</span>,
+          offset <span class="op">=</span> <span class="fl">0.0018</span> <span class="op">+</span> <span class="va">offset_add</span>,
           hjust <span class="op">=</span> <span class="fl">0</span>
         <span class="op">)</span> <span class="op">+</span>
-        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> 
-                           <span class="va">continent_cols</span>,
-                          name <span class="op">=</span> <span class="st">"Continent"</span>,
-                          guide <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html">guide_legend</a></span><span class="op">(</span>order <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-      <span class="co"># geom_tippoint(aes(color = ST), na.rm = TRUE, size = 0.5) +</span>
-      <span class="co">#   scale_color_manual(values  = "red", na.translate = FALSE) +</span>
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">country_cols</span>,
+                          name <span class="op">=</span> <span class="st">"Country"</span>,
+                          guide <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html">guide_legend</a></span><span class="op">(</span>order <span class="op">=</span> <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
         <span class="fu"><a href="https://rdrr.io/pkg/ggnewscale/man/new_scale.html">new_scale_fill</a></span><span class="op">(</span><span class="op">)</span>
     <span class="op">)</span> <span class="op">%&gt;%</span>
       <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
-        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">df_all</span>, <span class="va">Country</span><span class="op">)</span> <span class="op">%&gt;%</span>
-          <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else</a></span><span class="op">(</span>
-            <span class="va">Country</span> <span class="op">==</span> <span class="st">"Malawi"</span>,
-            <span class="st">"Malawi"</span>, <span class="st">"Not Malawi"</span>
-          <span class="op">)</span><span class="op">)</span>,
-        font.size <span class="op">=</span> <span class="fl">4</span>,
+        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">df_all</span>, <span class="va">Phylogroup</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+          <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Phylogroup <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else</a></span><span class="op">(</span>
+            <span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">Phylogroup</span><span class="op">)</span> ,<span class="st">"Unknown"</span>,
+            <span class="va">Phylogroup</span><span class="op">)</span><span class="op">)</span>,
         width <span class="op">=</span> <span class="fl">0.03</span>,
-        colnames_position <span class="op">=</span> <span class="st">"top"</span>,
         color <span class="op">=</span> <span class="cn">NA</span>,
-        colnames_offset_y <span class="op">=</span> <span class="fl">5</span>,
+        font.size <span class="op">=</span> <span class="fl">4</span>,
         colnames_angle <span class="op">=</span> <span class="fl">90</span>,
-        offset <span class="op">=</span> <span class="fl">0.0018</span> <span class="op">+</span> <span class="va">offset_add</span>,
-        hjust <span class="op">=</span> <span class="fl">0</span>
+        colnames_position <span class="op">=</span> <span class="st">"top"</span>,
+        colnames_offset_y <span class="op">=</span> <span class="fl">3</span>,
+        hjust <span class="op">=</span> <span class="fl">0</span>,
+        offset <span class="op">=</span> <span class="fl">0</span> <span class="op">+</span> <span class="va">offset_add</span>
       <span class="op">)</span> <span class="op">+</span>
-      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">country_cols</span>,
-                        name <span class="op">=</span> <span class="st">"Country"</span>,
-                        guide <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html">guide_legend</a></span><span class="op">(</span>order <span class="op">=</span> <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">pgroup_cols</span>,
+      name <span class="op">=</span> <span class="st">"Phylogroup"</span>,
+      na.translate <span class="op">=</span> <span class="cn">FALSE</span>,
+      guide <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html">guide_legend</a></span><span class="op">(</span>order <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
       <span class="fu"><a href="https://rdrr.io/pkg/ggnewscale/man/new_scale.html">new_scale_fill</a></span><span class="op">(</span><span class="op">)</span>
-  <span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
-      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">df_all</span>, <span class="va">Phylogroup</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Phylogroup <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else</a></span><span class="op">(</span>
-          <span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">Phylogroup</span><span class="op">)</span> ,<span class="st">"Unknown"</span>,
-          <span class="va">Phylogroup</span><span class="op">)</span><span class="op">)</span>,
-      width <span class="op">=</span> <span class="fl">0.03</span>,
-      color <span class="op">=</span> <span class="cn">NA</span>,
-      font.size <span class="op">=</span> <span class="fl">4</span>,
-      colnames_angle <span class="op">=</span> <span class="fl">90</span>,
-      colnames_position <span class="op">=</span> <span class="st">"top"</span>,
-      colnames_offset_y <span class="op">=</span> <span class="fl">3</span>,
-      hjust <span class="op">=</span> <span class="fl">0</span>,
-      offset <span class="op">=</span> <span class="fl">0</span> <span class="op">+</span> <span class="va">offset_add</span>
-    <span class="op">)</span> <span class="op">+</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">pgroup_cols</span>,
-                      name <span class="op">=</span> <span class="st">"Phylogroup"</span>,
-                      na.translate <span class="op">=</span> <span class="cn">FALSE</span>,
-                      guide <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html">guide_legend</a></span><span class="op">(</span>order <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu"><a href="https://rdrr.io/pkg/ggnewscale/man/new_scale.html">new_scale_fill</a></span><span class="op">(</span><span class="op">)</span>
-<span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">ylim</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">1150</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_treescale.html">geom_treescale</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fl">900</span>, x <span class="op">=</span> <span class="fl">0.005</span>,offset <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">p</span>
+  <span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">ylim</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">3550</span><span class="op">)</span> <span class="op">+</span><span class="co"># + geom_tippoint(aes(color = ST)) + </span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_treescale.html">geom_treescale</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fl">2366</span>, x <span class="op">=</span> <span class="fl">0.004</span>,offset <span class="op">=</span> <span class="fl">30</span><span class="op">)</span>  <span class="op">-&gt;</span> <span class="va">p</span>
 <span class="co">#&gt; Scale for 'fill' is already present. Adding another scale for 'fill', which</span>
 <span class="co">#&gt; will replace the existing scale.</span>
 <span class="co">#&gt; Scale for 'fill' is already present. Adding another scale for 'fill', which</span>
@@ -14563,29 +14586,22 @@ AMR determinants mapped back to phylogeny
 <span class="co">#&gt; will replace the existing scale.</span>
 <span class="co">#&gt; Scale for 'y' is already present. Adding another scale for 'y', which will</span>
 <span class="co">#&gt; replace the existing scale.</span>
-  
- 
-<span class="co"># subtrees</span>
 
-<span class="co"># viewClade(p, 1834)  + geom_cladelabel(1886, label = "ST167") +</span>
-<span class="co">#  geom_cladelabel(1848, label = "ST617") +</span>
-<span class="co">#   geom_cladelabel(1926, label = "ST44") +</span>
-<span class="co">#   geom_cladelabel(1959, label = "ST656")</span>
+  <span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom-hilight.html">geom_hilight</a></span><span class="op">(</span> node <span class="op">=</span> <span class="fl">3565</span>, alpha <span class="op">=</span> <span class="fl">0.3</span>,
+                    fill <span class="op">=</span> <span class="st">"steelblue"</span>,
+                    color <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span>  <span class="co"># phylogroup A</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_cladelabel.html">geom_cladelabel</a></span><span class="op">(</span>node <span class="op">=</span> <span class="fl">3565</span>, label <span class="op">=</span> <span class="st">"C"</span>, barsize <span class="op">=</span> <span class="fl">0</span>,offset <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom-hilight.html">geom_highlight</a></span><span class="op">(</span>node <span class="op">=</span> <span class="fl">5404</span>, alpha <span class="op">=</span> <span class="fl">0.3</span>, fill <span class="op">=</span> <span class="st">"steelblue"</span>,
+                   color <span class="op">=</span> <span class="cn">NA</span>, extend <span class="op">=</span> <span class="fl">0.0002</span><span class="op">)</span> <span class="op">+</span> <span class="co"># st 410 and context</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_cladelabel.html">geom_cladelabel</a></span><span class="op">(</span>node <span class="op">=</span> <span class="fl">5404</span>, label <span class="op">=</span> <span class="st">"B"</span>, barsize <span class="op">=</span> <span class="fl">0</span>,offset <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom-hilight.html">geom_highlight</a></span><span class="op">(</span>node <span class="op">=</span> <span class="fl">5652</span>, alpha <span class="op">=</span> <span class="fl">0.3</span>, fill <span class="op">=</span> <span class="st">"steelblue"</span>,
+                   color <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span> <span class="co"># ST131</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_cladelabel.html">geom_cladelabel</a></span><span class="op">(</span>node <span class="op">=</span> <span class="fl">5652</span>, label <span class="op">=</span> <span class="st">"D"</span>, barsize <span class="op">=</span> <span class="fl">0</span>,offset <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">p</span>
 
-
-<span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom-hilight.html">geom_hilight</a></span><span class="op">(</span> node <span class="op">=</span> <span class="fl">1834</span>, alpha <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">+</span>  <span class="co"># phylogroup A</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_cladelabel.html">geom_cladelabel</a></span><span class="op">(</span>node <span class="op">=</span> <span class="fl">1834</span>, label <span class="op">=</span> <span class="st">"C"</span>, barsize <span class="op">=</span> <span class="fl">0</span>,offset <span class="op">=</span> <span class="op">-</span><span class="fl">0.004</span><span class="op">)</span> <span class="op">+</span>
-  <span class="co"># node 1888 - st167</span>
-  <span class="co"># node 1848 - ST 617</span>
-  <span class="co"># node 1926 - ST 44</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom-hilight.html">geom_highlight</a></span><span class="op">(</span> node <span class="op">=</span> <span class="fl">1526</span>, alpha <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">+</span> <span class="co"># st 410 and context</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_cladelabel.html">geom_cladelabel</a></span><span class="op">(</span>node <span class="op">=</span> <span class="fl">1526</span>, label <span class="op">=</span> <span class="st">"B"</span>, barsize <span class="op">=</span> <span class="fl">0</span>,offset <span class="op">=</span> <span class="op">-</span><span class="fl">0.0025</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom-hilight.html">geom_highlight</a></span><span class="op">(</span>node <span class="op">=</span> <span class="fl">1227</span>, alpha <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_cladelabel.html">geom_cladelabel</a></span><span class="op">(</span>node <span class="op">=</span> <span class="fl">1227</span>, label <span class="op">=</span> <span class="st">"D"</span>, barsize <span class="op">=</span> <span class="fl">0</span>,offset <span class="op">=</span> <span class="op">-</span><span class="fl">0.0022</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">p</span>
-<span class="co"># st 131</span>
+  <span class="co"># phylo a subreee -----------</span>
 
 
-<span class="va">offset_add</span> <span class="op">&lt;-</span> <span class="fl">0.0015</span>
+<span class="va">offset_add</span> <span class="op">&lt;-</span> <span class="fl">0.0000</span> <span class="co">#0.0015</span>
 <span class="va">textsize</span> <span class="op">&lt;-</span>  <span class="fl">3</span>
 <span class="va">cladelab_offset</span> <span class="op">&lt;-</span> <span class="fl">0.0001</span>
 <span class="va">tippoint_alpha</span> <span class="op">=</span> <span class="fl">0.7</span>
@@ -14593,15 +14609,15 @@ AMR determinants mapped back to phylogeny
 <span class="op">(</span>
   <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/ggtree.html">ggtree</a></span><span class="op">(</span>
     <span class="fu">treeio</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/treeio/reference/tree_subset.html">tree_subset</a></span><span class="op">(</span>
-      <span class="va">horesh_context_tree</span>, <span class="fl">1834</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>
+      <span class="va">btESBL_ecoli_globaltree</span>, <span class="fl">3565</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>
     <span class="op">)</span> <span class="op">%&lt;+%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">df_all</span>, <span class="va">lane</span>, <span class="va">cluster_recode</span><span class="op">)</span> <span class="op">%&gt;%</span> 
     <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">df_all</span>, <span class="va">Country</span><span class="op">)</span> <span class="op">%&gt;%</span>
       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else</a></span><span class="op">(</span>
         <span class="va">Country</span> <span class="op">==</span> <span class="st">"Malawi"</span>,
         <span class="st">"Malawi"</span>, <span class="st">"Not Malawi"</span><span class="op">)</span><span class="op">)</span>,
-    font.size <span class="op">=</span> <span class="fl">4</span>,
-    width <span class="op">=</span> <span class="fl">0.08</span>,
+    font.size <span class="op">=</span> <span class="fl">3</span>,
+    width <span class="op">=</span> <span class="fl">0.04</span>,
     colnames_position <span class="op">=</span> <span class="st">"top"</span>,
     color <span class="op">=</span> <span class="cn">NA</span>,
     colnames_offset_y <span class="op">=</span> <span class="fl">0</span>,
@@ -14615,47 +14631,33 @@ AMR determinants mapped back to phylogeny
       guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span> 
       <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html">guides</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span> 
       <span class="fu"><a href="https://rdrr.io/pkg/ggnewscale/man/new_scale.html">new_scale_fill</a></span><span class="op">(</span><span class="op">)</span>
-<span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">ylim</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">250</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_tippoint.html">geom_tippoint</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">cluster_recode</span><span class="op">)</span>, 
-                na.rm <span class="op">=</span> <span class="cn">TRUE</span>, 
+<span class="op">)</span> <span class="op">+</span> 
+   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">ylim</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">100</span><span class="op">)</span> <span class="op">+</span>
+   <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_tippoint.html">geom_tippoint</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">cluster_recode</span><span class="op">)</span>, 
+                na.rm <span class="op">=</span> <span class="cn">TRUE</span>,
                 size <span class="op">=</span> <span class="fl">1</span>,
                 alpha <span class="op">=</span> <span class="va">tippoint_alpha</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_color_manual</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"PopPUNK\nCluster"</span>,
                        values <span class="op">=</span> <span class="va">popPUNK_cols</span>,
                        na.translate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_treescale.html">geom_treescale</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fl">225</span>,
-                 x <span class="op">=</span> <span class="va">offset_add</span><span class="op">/</span><span class="fl">5</span>,
-                 offset  <span class="op">=</span> <span class="fl">7.5</span>,
-                 width <span class="op">=</span> <span class="fl">0.0001</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">p_phylo_a_subtree</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_treescale.html">geom_treescale</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fl">66</span>,
+                 x <span class="op">=</span> <span class="fl">0.00005</span>,
+                 offset  <span class="op">=</span> <span class="fl">2</span>,
+                 width <span class="op">=</span> <span class="fl">0.00001</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">p_phylo_a_subtree</span>
 <span class="co">#&gt; Scale for 'fill' is already present. Adding another scale for 'fill', which</span>
 <span class="co">#&gt; will replace the existing scale.</span>
 <span class="co">#&gt; Scale for 'y' is already present. Adding another scale for 'y', which will</span>
 <span class="co">#&gt; replace the existing scale.</span>
 
 <span class="va">p_phylo_a_subtree</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_cladelabel.html">geom_cladelabel</a></span><span class="op">(</span>node <span class="op">=</span> <span class="fl">245</span>, label <span class="op">=</span> <span class="st">"ST167"</span>, 
+  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_cladelabel.html">geom_cladelabel</a></span><span class="op">(</span>node <span class="op">=</span> <span class="fl">119</span>, label <span class="op">=</span> <span class="st">"ST167"</span>, 
                   fontsize <span class="op">=</span> <span class="va">textsize</span>,
-                  offset <span class="op">=</span> <span class="va">cladelab_offset</span>,
-                  offset.text <span class="op">=</span> <span class="va">cladelab_offset</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_cladelabel.html">geom_cladelabel</a></span><span class="op">(</span>node <span class="op">=</span> <span class="fl">285</span>, label <span class="op">=</span> <span class="st">"ST44"</span>, 
+                  offset <span class="op">=</span> <span class="fl">0.00002</span>,
+                  offset.text <span class="op">=</span> <span class="fl">0.000005</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_cladelabel.html">geom_cladelabel</a></span><span class="op">(</span>node <span class="op">=</span> <span class="fl">99</span>, label <span class="op">=</span> <span class="st">"ST167"</span>, 
                   fontsize <span class="op">=</span> <span class="va">textsize</span>,
-                  offset <span class="op">=</span> <span class="va">cladelab_offset</span>,
-                  offset.text <span class="op">=</span> <span class="va">cladelab_offset</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_cladelabel.html">geom_cladelabel</a></span><span class="op">(</span>node <span class="op">=</span> <span class="fl">318</span>, label <span class="op">=</span> <span class="st">"ST656"</span>, 
-                  fontsize <span class="op">=</span> <span class="va">textsize</span>,
-                  offset <span class="op">=</span> <span class="va">cladelab_offset</span>,
-                  offset.text <span class="op">=</span> <span class="va">cladelab_offset</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_cladelabel.html">geom_cladelabel</a></span><span class="op">(</span>node <span class="op">=</span> <span class="fl">233</span> , 
-                  label <span class="op">=</span> <span class="st">"ST9847"</span>, 
-                  fontsize <span class="op">=</span> <span class="va">textsize</span>,
-                  offset <span class="op">=</span> <span class="va">cladelab_offset</span>,
-                  offset.text <span class="op">=</span> <span class="va">cladelab_offset</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_cladelabel.html">geom_cladelabel</a></span><span class="op">(</span>node <span class="op">=</span> <span class="fl">207</span> , 
-                  label <span class="op">=</span> <span class="st">"ST617"</span>, 
-                  fontsize <span class="op">=</span> <span class="va">textsize</span>,
-                  offset <span class="op">=</span> <span class="va">cladelab_offset</span>,
-                  offset.text <span class="op">=</span> <span class="va">cladelab_offset</span><span class="op">)</span> <span class="op">+</span>
+                  offset <span class="op">=</span> <span class="fl">0.0001665</span>,
+                  offset.text <span class="op">=</span> <span class="fl">0.000005</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span>  <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html">guides</a></span><span class="op">(</span>
     color <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html">guide_legend</a></span><span class="op">(</span>
@@ -14665,25 +14667,21 @@ AMR determinants mapped back to phylogeny
     <span class="op">)</span> <span class="op">-&gt;</span>
   <span class="va">plot_phyloa_subtree</span>
    
-    <span class="co"># node 1888 - st167</span>
-    <span class="co"># node 1848 - ST 617</span>
-    <span class="co"># node 1926 - ST 44</span>
-
 <span class="co"># ST131 zoom</span>
 
-<span class="va">offset_add</span> <span class="op">&lt;-</span> <span class="fl">0.0007</span>
+<span class="va">offset_add</span> <span class="op">&lt;-</span> <span class="fl">0.0004</span>
 <span class="op">(</span>
   <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/ggtree.html">ggtree</a></span><span class="op">(</span>
     <span class="fu">treeio</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/treeio/reference/tree_subset.html">tree_subset</a></span><span class="op">(</span>
-      <span class="va">horesh_context_tree</span>, <span class="fl">1227</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>
+      <span class="va">btESBL_ecoli_globaltree</span>, <span class="fl">5652</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>
     <span class="op">)</span> <span class="op">%&lt;+%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">df_all</span>, <span class="va">lane</span>, <span class="va">cluster_recode</span><span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">df_all</span>, <span class="va">Country</span><span class="op">)</span> <span class="op">%&gt;%</span>
       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else</a></span><span class="op">(</span>
         <span class="va">Country</span> <span class="op">==</span> <span class="st">"Malawi"</span>,
         <span class="st">"Malawi"</span>, <span class="st">"Not Malawi"</span><span class="op">)</span><span class="op">)</span>,
-      font.size <span class="op">=</span> <span class="fl">4</span>,
-      width <span class="op">=</span> <span class="fl">0.08</span>,
+      font.size <span class="op">=</span> <span class="fl">3</span>,
+      width <span class="op">=</span> <span class="fl">0.07</span>,
       colnames_position <span class="op">=</span> <span class="st">"top"</span>,
       color <span class="op">=</span> <span class="cn">NA</span>,
       colnames_offset_y <span class="op">=</span> <span class="fl">0</span>,
@@ -14696,7 +14694,7 @@ AMR determinants mapped back to phylogeny
                         guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span>
     <span class="fu"><a href="https://rdrr.io/pkg/ggnewscale/man/new_scale.html">new_scale_fill</a></span><span class="op">(</span><span class="op">)</span>
 <span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">ylim</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">120</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">ylim</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">125</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_tippoint.html">geom_tippoint</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">cluster_recode</span><span class="op">)</span>, 
                 na.rm <span class="op">=</span> <span class="cn">TRUE</span>, 
                 size <span class="op">=</span> <span class="fl">1</span>,
@@ -14704,8 +14702,8 @@ AMR determinants mapped back to phylogeny
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_color_manual</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"PopPUNK\nCluster"</span>,
                      values <span class="op">=</span> <span class="va">popPUNK_cols</span>,
                      na.translate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_treescale.html">geom_treescale</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fl">108</span>,
-                 x <span class="op">=</span> <span class="va">offset_add</span><span class="op">/</span><span class="fl">5</span>,
+  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_treescale.html">geom_treescale</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fl">83</span>,
+                 x <span class="op">=</span> <span class="fl">0.0001</span>,
                  offset  <span class="op">=</span> <span class="fl">3.6</span>,
                  width <span class="op">=</span> <span class="fl">0.0001</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">p_st131_subtree</span>
 <span class="co">#&gt; Scale for 'fill' is already present. Adding another scale for 'fill', which</span>
@@ -14714,10 +14712,10 @@ AMR determinants mapped back to phylogeny
 <span class="co">#&gt; replace the existing scale.</span>
 
 <span class="va">p_st131_subtree</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_cladelabel.html">geom_cladelabel</a></span><span class="op">(</span>node <span class="op">=</span> <span class="fl">100</span>, label <span class="op">=</span> <span class="st">"ST131"</span>, 
+  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_cladelabel.html">geom_cladelabel</a></span><span class="op">(</span>node <span class="op">=</span> <span class="fl">104</span>, label <span class="op">=</span> <span class="st">"ST131"</span>, 
                   fontsize <span class="op">=</span> <span class="va">textsize</span>,
-                  offset <span class="op">=</span> <span class="va">cladelab_offset</span>,
-                  offset.text <span class="op">=</span> <span class="va">cladelab_offset</span><span class="op">)</span> <span class="op">+</span>
+                  offset <span class="op">=</span> <span class="fl">0.0001</span>,
+                  offset.text <span class="op">=</span> <span class="fl">0.00002</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html">guides</a></span><span class="op">(</span>color <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html">guide_legend</a></span><span class="op">(</span>
     nrow <span class="op">=</span> <span class="fl">2</span>,
@@ -14729,34 +14727,34 @@ AMR determinants mapped back to phylogeny
 
 
 
-<span class="va">offset_add</span> <span class="op">&lt;-</span> <span class="fl">0.0008</span>
+<span class="va">offset_add</span> <span class="op">&lt;-</span> <span class="fl">0.00007</span>
 <span class="co"># offset_multiple &lt;- 0.00008</span>
 
 <span class="op">(</span>
   <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/ggtree.html">ggtree</a></span><span class="op">(</span>
     <span class="fu">treeio</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/treeio/reference/tree_subset.html">tree_subset</a></span><span class="op">(</span>
-      <span class="va">horesh_context_tree</span>, <span class="fl">1526</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>
+      <span class="va">btESBL_ecoli_globaltree</span>, <span class="fl">5404</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>
     <span class="op">)</span> <span class="op">%&lt;+%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">df_all</span>, <span class="va">lane</span>, <span class="va">cluster_recode</span><span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">df_all</span>, <span class="va">Country</span><span class="op">)</span> <span class="op">%&gt;%</span>
       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else</a></span><span class="op">(</span>
         <span class="va">Country</span> <span class="op">==</span> <span class="st">"Malawi"</span>,
         <span class="st">"Malawi"</span>, <span class="st">"Not Malawi"</span><span class="op">)</span><span class="op">)</span>,
-    font.size <span class="op">=</span> <span class="fl">4</span>,
-    width <span class="op">=</span> <span class="fl">0.08</span>,
+    font.size <span class="op">=</span> <span class="fl">3</span>,
+    width <span class="op">=</span> <span class="fl">0.055</span>,
     colnames_position <span class="op">=</span> <span class="st">"top"</span>,
     color <span class="op">=</span> <span class="cn">NA</span>,
     colnames_offset_y <span class="op">=</span> <span class="fl">0</span>,
     colnames_angle <span class="op">=</span> <span class="fl">90</span>,
     offset <span class="op">=</span> <span class="va">offset_add</span>,
-    hjust <span class="op">=</span> <span class="fl">0</span>
+    hjust <span class="op">=</span> <span class="fl">0</span>,
     <span class="op">)</span> <span class="op">+</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">country_cols</span>, 
                       name <span class="op">=</span> <span class="st">"Country"</span>,
                       guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span>
     <span class="fu"><a href="https://rdrr.io/pkg/ggnewscale/man/new_scale.html">new_scale_fill</a></span><span class="op">(</span><span class="op">)</span>
 <span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">ylim</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">70</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">ylim</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">60</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_tippoint.html">geom_tippoint</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">cluster_recode</span><span class="op">)</span>,
                 na.rm <span class="op">=</span> <span class="cn">TRUE</span>,
                 size <span class="op">=</span> <span class="fl">1</span>,
@@ -14764,20 +14762,20 @@ AMR determinants mapped back to phylogeny
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_color_manual</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"PopPUNK\nCluster"</span>,
                      values <span class="op">=</span> <span class="va">popPUNK_cols</span>,
                      na.translate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_treescale.html">geom_treescale</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fl">63</span>,
-                 x <span class="op">=</span> <span class="va">offset_add</span><span class="op">/</span><span class="fl">5</span>,
-                 offset  <span class="op">=</span> <span class="fl">2.1</span>,
-                 width <span class="op">=</span> <span class="fl">0.0001</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">p_st410_subtree</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_treescale.html">geom_treescale</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fl">40</span>,
+                 x <span class="op">=</span> <span class="va">offset_add</span><span class="op">/</span><span class="fl">2</span>,
+                 offset  <span class="op">=</span> <span class="fl">1</span>,
+                 width <span class="op">=</span> <span class="fl">0.00001</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">p_st410_subtree</span>
 <span class="co">#&gt; Scale for 'fill' is already present. Adding another scale for 'fill', which</span>
 <span class="co">#&gt; will replace the existing scale.</span>
 <span class="co">#&gt; Scale for 'y' is already present. Adding another scale for 'y', which will</span>
 <span class="co">#&gt; replace the existing scale.</span>
 
 <span class="va">p_st410_subtree</span> <span class="op">+</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_cladelabel.html">geom_cladelabel</a></span><span class="op">(</span><span class="fl">61</span>, label <span class="op">=</span> <span class="st">"ST410"</span>, 
+  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_cladelabel.html">geom_cladelabel</a></span><span class="op">(</span><span class="fl">48</span>, label <span class="op">=</span> <span class="st">"ST410"</span>, 
                   fontsize <span class="op">=</span> <span class="va">textsize</span>,
-                  offset <span class="op">=</span> <span class="va">cladelab_offset</span>,
-                  offset.text <span class="op">=</span> <span class="va">cladelab_offset</span><span class="op">)</span> <span class="op">+</span>
+                  offset <span class="op">=</span> <span class="va">offset_add</span><span class="op">/</span><span class="fl">5</span>,
+                  offset.text <span class="op">=</span> <span class="fl">0.000002</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span>  <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html">guides</a></span><span class="op">(</span>
     color <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html">guide_legend</a></span><span class="op">(</span>
@@ -14808,7 +14806,7 @@ A: Malawian E. coli isolates in a global phylogeny. All genomes from Musicha et 
     <span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"figures/ecoli-genomics/global_treeplot.pdf"</span><span class="op">)</span>,
     <span class="va">global_tree_plot</span>,
     width <span class="op">=</span> <span class="fl">9</span>,
-    height <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>
+    height <span class="op">=</span> <span class="fl">13</span><span class="op">)</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html">ggsave</a></span><span class="op">(</span>
     <span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"figures/ecoli-genomics/global_treeplot.svg"</span><span class="op">)</span>,
     <span class="va">global_tree_plot</span>,
@@ -15743,7 +15741,7 @@ ST10 (1.00)
 77
 </td>
 <td style="text-align:left;">
-Unknown
+D
 </td>
 <td style="text-align:right;">
 4
@@ -15769,7 +15767,7 @@ Not determined (0.82);ExPEC (0.18)
 1195
 </td>
 <td style="text-align:left;">
-F
+D
 </td>
 <td style="text-align:right;">
 4
@@ -16029,7 +16027,7 @@ ST10 (1.00)
 122
 </td>
 <td style="text-align:left;">
-Unknown
+B1
 </td>
 <td style="text-align:right;">
 2
@@ -16185,7 +16183,7 @@ ST424 (1.00)
 1209
 </td>
 <td style="text-align:left;">
-B2
+E
 </td>
 <td style="text-align:right;">
 2
@@ -16315,7 +16313,7 @@ ST48 (1.00)
 63
 </td>
 <td style="text-align:left;">
-Unknown
+D
 </td>
 <td style="text-align:right;">
 1
@@ -16341,7 +16339,7 @@ Not determined (0.53);ExPEC (0.47)
 112
 </td>
 <td style="text-align:left;">
-Unknown
+A
 </td>
 <td style="text-align:right;">
 1
@@ -16367,7 +16365,7 @@ Not determined (0.71);EPEC (0.29)
 118
 </td>
 <td style="text-align:left;">
-Unknown
+A
 </td>
 <td style="text-align:right;">
 1
@@ -16835,7 +16833,7 @@ ST44 (1.00)
 1248
 </td>
 <td style="text-align:left;">
-Clade I or II
+Unknown
 </td>
 <td style="text-align:right;">
 1
@@ -16861,7 +16859,7 @@ ST410 (1.00)
 1249
 </td>
 <td style="text-align:left;">
-Clade I or II
+Unknown
 </td>
 <td style="text-align:right;">
 1
@@ -16991,7 +16989,7 @@ ST1081 (1.00)
 1254
 </td>
 <td style="text-align:left;">
-F
+E
 </td>
 <td style="text-align:right;">
 1
@@ -17381,7 +17379,7 @@ ST167 (1.00)
 1269
 </td>
 <td style="text-align:left;">
-B2
+Unknown
 </td>
 <td style="text-align:right;">
 1
@@ -17511,7 +17509,7 @@ ST131 (1.00)
 1274
 </td>
 <td style="text-align:left;">
-F
+D
 </td>
 <td style="text-align:right;">
 1
@@ -18375,8 +18373,8 @@ Plasmid replicons mapped back to tree
 <span class="op">(</span>
 <span class="op">(</span>  
   <span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/ggtree.html">ggtree</a></span><span class="op">(</span>
-    <span class="fu">treeio</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/treeio/reference/tree_subset.html">tree_subset</a></span> <span class="op">(</span><span class="va">btESBL_ecoli_globalst410_tree</span>,
-                         <span class="fl">1083</span>,
+    <span class="fu">treeio</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/treeio/reference/tree_subset.html">tree_subset</a></span><span class="op">(</span><span class="va">btESBL_ecoli_globalst410_tree</span>,
+                         <span class="fl">1085</span>,
                          levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">%&lt;+%</span> 
      <span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">st410_metadata</span>, <span class="va">accession</span>, <span class="va">Country</span><span class="op">)</span> <span class="op">%&gt;%</span> 
         <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else</a></span><span class="op">(</span><span class="va">Country</span> <span class="op">==</span> <span class="st">"Malawi"</span>, <span class="st">"Malawi"</span>,<span class="cn">NA_character_</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>  <span class="op">%&gt;%</span>
@@ -18400,7 +18398,7 @@ Plasmid replicons mapped back to tree
     color <span class="op">=</span> <span class="cn">NA</span>,
     colnames_offset_y <span class="op">=</span> <span class="fl">5</span>,
     colnames_angle <span class="op">=</span> <span class="fl">90</span>,
-    offset <span class="op">=</span> <span class="fl">0.00015</span>,
+    offset <span class="op">=</span> <span class="fl">0.000015</span>,
     hjust <span class="op">=</span> <span class="fl">0</span>
   <span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html">scale_fill_viridis_d</a></span><span class="op">(</span>option <span class="op">=</span> <span class="st">"plasma"</span>, name <span class="op">=</span> <span class="st">"Continent"</span><span class="op">)</span> <span class="op">+</span> 
@@ -18416,7 +18414,7 @@ Plasmid replicons mapped back to tree
     color <span class="op">=</span> <span class="cn">NA</span>,
     colnames_offset_y <span class="op">=</span> <span class="fl">5</span>,
     colnames_angle <span class="op">=</span> <span class="fl">90</span>,
-    offset <span class="op">=</span> <span class="fl">0.0003</span>,
+    offset <span class="op">=</span> <span class="fl">0.00003</span>,
     hjust <span class="op">=</span> <span class="fl">0</span>
   <span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/viridis_pal.html">viridis_pal</a></span><span class="op">(</span>option <span class="op">=</span> <span class="st">"magma"</span><span class="op">)</span><span class="op">(</span><span class="fl">5</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span><span class="op">]</span>,
                         na.translate <span class="op">=</span> <span class="cn">FALSE</span>,
@@ -18438,12 +18436,12 @@ Plasmid replicons mapped back to tree
   <span class="co">#                       name = "Plasmid\nreplicon") +</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">ylim</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">600</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_treescale.html">geom_treescale</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">0.0002</span>, y <span class="op">=</span> <span class="fl">250</span>, offset <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="op">+</span>
-   <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom-hilight.html">geom_highlight</a></span><span class="op">(</span>node <span class="op">=</span> <span class="fl">568</span> ,alpha <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">+</span>
+   <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom-hilight.html">geom_highlight</a></span><span class="op">(</span>node <span class="op">=</span> <span class="fl">695</span> ,alpha <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_cladelabel.html">geom_cladelabel</a></span><span class="op">(</span>
-    node <span class="op">=</span> <span class="fl">568</span>,
+    node <span class="op">=</span> <span class="fl">695</span>,
     label <span class="op">=</span> <span class="st">"B4/H24RxC"</span>,
     angle <span class="op">=</span> <span class="fl">90</span>,
-    offset <span class="op">=</span> <span class="op">-</span><span class="fl">0.0006</span>,
+    offset <span class="op">=</span> <span class="fl">0</span>,
     offset.text <span class="op">=</span> <span class="op">-</span><span class="fl">0.00009</span>,
     barsize <span class="op">=</span> <span class="fl">0</span>,
     hjust <span class="op">=</span> <span class="fl">0.5</span>,
@@ -18476,7 +18474,9 @@ ST410 map-to-reference global maximum likelihood, midpoint rooted tree
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="fu">treeio</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/treeio/reference/tree_subset.html">tree_subset</a></span><span class="op">(</span>
-  <span class="va">btESBL_ecoli_globalst410_tree</span>, <span class="fl">564</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">st410_subtree</span>
+<span class="fu">treeio</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/treeio/reference/tree_subset.html">tree_subset</a></span><span class="op">(</span>
+  <span class="va">btESBL_ecoli_globalst410_tree</span>, <span class="fl">1085</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,
+<span class="fl">695</span>,levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">st410_subtree</span>
 
 <span class="va">esbl_cpe.ariba410</span> <span class="op">%&gt;%</span>  
   <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">name</span> <span class="op">%in%</span> <span class="va">st410_subtree</span><span class="op">$</span><span class="va">tip.label</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -18502,24 +18502,24 @@ ST410 map-to-reference global maximum likelihood, midpoint rooted tree
      <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">st410_metadata</span>, <span class="va">`Year`</span><span class="op">)</span>,
        font.size <span class="op">=</span> <span class="fl">4</span>,
-       width <span class="op">=</span> <span class="fl">0.05</span>,
+       width <span class="op">=</span> <span class="fl">0.071</span>,
        colnames_position <span class="op">=</span> <span class="st">"top"</span>,
        color <span class="op">=</span> <span class="cn">NA</span>,
        colnames_offset_y <span class="op">=</span> <span class="fl">5</span>,
        colnames_angle <span class="op">=</span> <span class="fl">90</span>,
        hjust <span class="op">=</span> <span class="fl">0</span>
      <span class="op">)</span>  <span class="op">+</span> 
-     <span class="fu"><a href="https://sjmgarnier.github.io/viridis/reference/scale_viridis.html">scale_fill_viridis</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Year"</span>, limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1975</span>,<span class="fl">2020</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+     <span class="fu"><a href="https://sjmgarnier.github.io/viridis/reference/scale_viridis.html">scale_fill_viridis</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Year"</span>, limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1965</span>,<span class="fl">2020</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
      <span class="fu"><a href="https://rdrr.io/pkg/ggnewscale/man/new_scale.html">new_scale_fill</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
     <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">st410_metadata</span>, <span class="va">Continent</span><span class="op">)</span>,
       font.size <span class="op">=</span> <span class="fl">4</span>,
-      width <span class="op">=</span> <span class="fl">0.05</span>,
+      width <span class="op">=</span> <span class="fl">0.071</span>,
       colnames_position <span class="op">=</span> <span class="st">"top"</span>,
       color <span class="op">=</span> <span class="cn">NA</span>,
       colnames_offset_y <span class="op">=</span> <span class="fl">5</span>,
       colnames_angle <span class="op">=</span> <span class="fl">90</span>,
-      offset <span class="op">=</span> <span class="fl">0.00003</span>,
+      offset <span class="op">=</span> <span class="fl">0.000002</span>,
       hjust <span class="op">=</span> <span class="fl">0</span>
     <span class="op">)</span> <span class="op">+</span> 
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html">scale_fill_viridis_d</a></span><span class="op">(</span>option <span class="op">=</span> <span class="st">"plasma"</span>, name <span class="op">=</span> <span class="st">"Continent"</span><span class="op">)</span> <span class="op">+</span> 
@@ -18536,7 +18536,7 @@ ST410 map-to-reference global maximum likelihood, midpoint rooted tree
     color <span class="op">=</span> <span class="cn">NA</span>,
     colnames_offset_y <span class="op">=</span> <span class="fl">5</span>,
     colnames_angle <span class="op">=</span> <span class="fl">90</span>,
-    offset <span class="op">=</span> <span class="fl">0.00006</span>,
+    offset <span class="op">=</span> <span class="fl">0.000004</span>,
     hjust <span class="op">=</span> <span class="fl">0</span>
   <span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/viridis_pal.html">viridis_pal</a></span><span class="op">(</span>option <span class="op">=</span> <span class="st">"magma"</span><span class="op">)</span><span class="op">(</span><span class="fl">5</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span><span class="op">]</span>,
                         na.translate <span class="op">=</span> <span class="cn">FALSE</span>,
@@ -18545,30 +18545,18 @@ ST410 map-to-reference global maximum likelihood, midpoint rooted tree
     <span class="op">)</span> <span class="op">%&gt;%</span>   <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">st410_plasm_onehot</span>, <span class="op">-</span><span class="va">name</span><span class="op">)</span>,
     font.size <span class="op">=</span> <span class="fl">3</span>,
-    width <span class="op">=</span> <span class="fl">1</span>,
+    width <span class="op">=</span> <span class="fl">1.71</span>,
     colnames_position <span class="op">=</span> <span class="st">"top"</span>,
     color <span class="op">=</span> <span class="cn">NA</span>,
     colnames_offset_y <span class="op">=</span> <span class="fl">5</span>,
     colnames_angle <span class="op">=</span> <span class="fl">90</span>,
-    offset <span class="op">=</span> <span class="fl">0.00029</span>,
+    offset <span class="op">=</span> <span class="fl">0.000016</span>,
     hjust <span class="op">=</span> <span class="fl">0</span>
   <span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/viridis_pal.html">viridis_pal</a></span><span class="op">(</span>option <span class="op">=</span> <span class="st">"cividis"</span><span class="op">)</span><span class="op">(</span><span class="fl">7</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>,
                         na.translate <span class="op">=</span> <span class="cn">FALSE</span>,
                         name <span class="op">=</span> <span class="st">"Plasmid\nreplicon"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">ylim</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">200</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_treescale.html">geom_treescale</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">0.00005</span>, y <span class="op">=</span> <span class="fl">150</span>, offset <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom-hilight.html">geom_highlight</a></span><span class="op">(</span>node <span class="op">=</span> <span class="fl">181</span> , alpha <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_cladelabel.html">geom_cladelabel</a></span><span class="op">(</span>
-      node <span class="op">=</span> <span class="fl">181</span>,
-      label <span class="op">=</span> <span class="st">"B4/H24RxC"</span>,
-      angle <span class="op">=</span> <span class="fl">90</span>,
-      offset <span class="op">=</span> <span class="op">-</span><span class="fl">0.00032</span>,
-      barsize <span class="op">=</span> <span class="fl">0</span>,
-      hjust <span class="op">=</span> <span class="fl">0.5</span>,
-      fontsize <span class="op">=</span> <span class="fl">4</span>,
-      offset.text <span class="op">=</span> <span class="op">-</span><span class="fl">0.00002</span>,
-      color <span class="op">=</span> <span class="st">"steelblue"</span>
-    <span class="op">)</span> <span class="op">-&gt;</span> <span class="va">st410_subtree_plot</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">ylim</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">180</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_treescale.html">geom_treescale</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">0.000002</span>, y <span class="op">=</span> <span class="fl">165</span>, offset <span class="op">=</span> <span class="fl">2</span>,width <span class="op">=</span> <span class="fl">1e-5</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">st410_subtree_plot</span>
 <span class="co">#&gt; Scale for 'fill' is already present. Adding another scale for 'fill', which</span>
 <span class="co">#&gt; will replace the existing scale.</span>
 <span class="co">#&gt; Scale for 'fill' is already present. Adding another scale for 'fill', which</span>
@@ -18578,7 +18566,20 @@ ST410 map-to-reference global maximum likelihood, midpoint rooted tree
 <span class="co">#&gt; Scale for 'fill' is already present. Adding another scale for 'fill', which</span>
 <span class="co">#&gt; will replace the existing scale.</span>
 <span class="co">#&gt; Scale for 'y' is already present. Adding another scale for 'y', which will</span>
-<span class="co">#&gt; replace the existing scale.</span></code></pre></div>
+<span class="co">#&gt; replace the existing scale.</span>
+    <span class="co"># geom_highlight(node = 149 , alpha = 0.3) +</span>
+    <span class="co"># geom_cladelabel(</span>
+    <span class="co">#   node = 149,</span>
+    <span class="co">#   label = "B4/H24RxC",</span>
+    <span class="co">#   angle = 90,</span>
+    <span class="co">#   offset = 0,</span>
+    <span class="co">#   barsize = 0,</span>
+    <span class="co">#   hjust = 0.5,</span>
+    <span class="co">#   fontsize = 4,</span>
+    <span class="co">#   offset.text = 0,</span>
+    <span class="co">#   color = "steelblue"</span>
+    <span class="co"># ) -&gt; st410_subtree_plot</span>
+  </code></pre></div>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">btESBL_ecoli_st167_plasmids</span> <span class="op">%&gt;%</span> 
@@ -18688,7 +18689,7 @@ ST410 map-to-reference global maximum likelihood, midpoint rooted tree
 <span class="op">(</span>
 <span class="op">(</span>
 <span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/ggtree.html">ggtree</a></span><span class="op">(</span><span class="fu">treeio</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/treeio/reference/tree_subset.html">tree_subset</a></span><span class="op">(</span>
-  <span class="va">btESBL_ecoli_globalst167_tree</span>, <span class="fl">320</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">%&lt;+%</span> 
+  <span class="va">btESBL_ecoli_globalst167_tree</span>, <span class="fl">321</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">%&lt;+%</span> 
    <span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">st167_metadata</span>, <span class="va">accession</span>, <span class="va">Country</span><span class="op">)</span> <span class="op">%&gt;%</span> 
       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else</a></span><span class="op">(</span><span class="va">Country</span> <span class="op">==</span> <span class="st">"Malawi"</span>, <span class="st">"Malawi"</span>,<span class="cn">NA_character_</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>  <span class="op">%&gt;%</span>
     <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
@@ -18711,7 +18712,7 @@ ST410 map-to-reference global maximum likelihood, midpoint rooted tree
     color <span class="op">=</span> <span class="cn">NA</span>,
     colnames_offset_y <span class="op">=</span> <span class="fl">5</span>,
     colnames_angle <span class="op">=</span> <span class="fl">90</span>,
-    offset <span class="op">=</span> <span class="fl">0.00003</span>,
+    offset <span class="op">=</span> <span class="fl">0.000004</span>,
     hjust <span class="op">=</span> <span class="fl">0</span>
   <span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html">scale_fill_viridis_d</a></span><span class="op">(</span>option <span class="op">=</span> <span class="st">"plasma"</span>, name <span class="op">=</span> <span class="st">"Continent"</span><span class="op">)</span> <span class="op">+</span> 
@@ -18722,12 +18723,12 @@ ST410 map-to-reference global maximum likelihood, midpoint rooted tree
   <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">esbl_cpe.ariba</span>, <span class="op">-</span><span class="va">sample</span><span class="op">)</span>,
   font.size <span class="op">=</span> <span class="fl">3</span>,
-  width <span class="op">=</span> <span class="fl">0.5</span>,
+  width <span class="op">=</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">esbl_cpe.ariba</span><span class="op">)</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">*</span><span class="fl">0.03</span>,
   colnames_position <span class="op">=</span> <span class="st">"top"</span>,
   color <span class="op">=</span> <span class="cn">NA</span>,
   colnames_offset_y <span class="op">=</span> <span class="fl">5</span>,
   colnames_angle <span class="op">=</span> <span class="fl">90</span>,
-  offset <span class="op">=</span> <span class="fl">0.00006</span>,
+  offset <span class="op">=</span> <span class="fl">0.000008</span>,
   hjust <span class="op">=</span> <span class="fl">0</span>
 <span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/viridis_pal.html">viridis_pal</a></span><span class="op">(</span>option <span class="op">=</span> <span class="st">"magma"</span><span class="op">)</span><span class="op">(</span><span class="fl">5</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span><span class="op">]</span>,
                       na.translate <span class="op">=</span> <span class="cn">FALSE</span>,
@@ -18749,7 +18750,7 @@ ST410 map-to-reference global maximum likelihood, midpoint rooted tree
   <span class="co">#                       na.translate = FALSE,</span>
   <span class="co">#                       name = "Plasmid\nreplicon") +</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">ylim</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">370</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_treescale.html">geom_treescale</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">0.0002</span>, y <span class="op">=</span> <span class="fl">250</span>, offset <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>   <span class="op">+</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_treescale.html">geom_treescale</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">0.00002</span>, y <span class="op">=</span> <span class="fl">370</span><span class="op">*</span><span class="fl">0.666</span>, offset <span class="op">=</span> <span class="fl">2</span>, width <span class="op">=</span> <span class="fl">0.00001</span><span class="op">)</span>   <span class="op">+</span>
    <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom-hilight.html">geom_highlight</a></span><span class="op">(</span>node <span class="op">=</span> <span class="fl">321</span> ,alpha <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">-&gt;</span>
   <span class="va">st167_globaltree_plot</span>
 <span class="co">#&gt; Scale for 'fill' is already present. Adding another scale for 'fill', which</span>
@@ -18779,9 +18780,11 @@ ST167 map-to-reference global maximum likelihood, midpoint rooted tree
 <span class="op">}</span></code></pre></div>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
-
 <span class="fu">treeio</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/treeio/reference/tree_subset.html">tree_subset</a></span><span class="op">(</span>
-  <span class="va">btESBL_ecoli_globalst167_tree</span>, <span class="fl">321</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">st167_subtree</span>
+<span class="fu">treeio</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/treeio/reference/tree_subset.html">tree_subset</a></span><span class="op">(</span>
+  <span class="va">btESBL_ecoli_globalst167_tree</span>, <span class="fl">321</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,
+<span class="fl">321</span>,
+levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">st167_subtree</span>
 
 <span class="va">esbl_cpe.ariba</span> <span class="op">%&gt;%</span>  
   <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">sample</span> <span class="op">%in%</span> <span class="va">st167_subtree</span><span class="op">$</span><span class="va">tip.label</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -18807,24 +18810,24 @@ ST167 map-to-reference global maximum likelihood, midpoint rooted tree
      <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">st167_metadata</span>, <span class="va">`Year`</span><span class="op">)</span>,
        font.size <span class="op">=</span> <span class="fl">4</span>,
-       width <span class="op">=</span> <span class="fl">0.05</span>,
+       width <span class="op">=</span> <span class="fl">0.0668</span>,
        colnames_position <span class="op">=</span> <span class="st">"top"</span>,
        color <span class="op">=</span> <span class="cn">NA</span>,
        colnames_offset_y <span class="op">=</span> <span class="fl">0</span>,
        colnames_angle <span class="op">=</span> <span class="fl">90</span>,
        hjust <span class="op">=</span> <span class="fl">0</span>
      <span class="op">)</span>  <span class="op">+</span> 
-     <span class="fu"><a href="https://sjmgarnier.github.io/viridis/reference/scale_viridis.html">scale_fill_viridis</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Year"</span>, limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1975</span>,<span class="fl">2020</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+     <span class="fu"><a href="https://sjmgarnier.github.io/viridis/reference/scale_viridis.html">scale_fill_viridis</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Year"</span>, limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1965</span>,<span class="fl">2020</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
      <span class="fu"><a href="https://rdrr.io/pkg/ggnewscale/man/new_scale.html">new_scale_fill</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
     <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">st167_metadata</span>, <span class="va">Continent</span><span class="op">)</span>,
       font.size <span class="op">=</span> <span class="fl">4</span>,
-      width <span class="op">=</span> <span class="fl">0.05</span>,
+      width <span class="op">=</span> <span class="fl">0.0668</span>,
       colnames_position <span class="op">=</span> <span class="st">"top"</span>,
       color <span class="op">=</span> <span class="cn">NA</span>,
       colnames_offset_y <span class="op">=</span> <span class="fl">0</span>,
       colnames_angle <span class="op">=</span> <span class="fl">90</span>,
-      offset <span class="op">=</span> <span class="fl">0.00005</span>,
+      offset <span class="op">=</span> <span class="fl">0.000004</span>,
       hjust <span class="op">=</span> <span class="fl">0</span>
     <span class="op">)</span> <span class="op">+</span> 
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html">scale_fill_viridis_d</a></span><span class="op">(</span>option <span class="op">=</span> <span class="st">"plasma"</span>, name <span class="op">=</span> <span class="st">"Continent"</span><span class="op">)</span> <span class="op">+</span> 
@@ -18836,12 +18839,12 @@ ST167 map-to-reference global maximum likelihood, midpoint rooted tree
   <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">esbl_cpe.ariba167_subset</span>, <span class="op">-</span><span class="va">sample</span><span class="op">)</span>,
     font.size <span class="op">=</span> <span class="fl">3</span>,
-    width <span class="op">=</span> <span class="fl">0.5</span>,
+    width <span class="op">=</span> <span class="fl">0.0668</span><span class="op">*</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">esbl_cpe.ariba167_subset</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>,
     colnames_position <span class="op">=</span> <span class="st">"top"</span>,
     color <span class="op">=</span> <span class="cn">NA</span>,
     colnames_offset_y <span class="op">=</span> <span class="fl">0</span>,
     colnames_angle <span class="op">=</span> <span class="fl">90</span>,
-    offset <span class="op">=</span> <span class="fl">0.0001</span>,
+    offset <span class="op">=</span> <span class="fl">0.000008</span>,
     hjust <span class="op">=</span> <span class="fl">0</span>
   <span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/viridis_pal.html">viridis_pal</a></span><span class="op">(</span>option <span class="op">=</span> <span class="st">"magma"</span><span class="op">)</span><span class="op">(</span><span class="fl">5</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span><span class="op">]</span>,
                         na.translate <span class="op">=</span> <span class="cn">FALSE</span>,
@@ -18850,18 +18853,18 @@ ST167 map-to-reference global maximum likelihood, midpoint rooted tree
     <span class="op">)</span> <span class="op">%&gt;%</span>   <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">st167_plasm_onehot</span>, <span class="op">-</span><span class="va">name</span><span class="op">)</span>,
     font.size <span class="op">=</span> <span class="fl">3</span>,
-    width <span class="op">=</span> <span class="fl">1</span>,
+    width <span class="op">=</span> <span class="fl">0.0668</span><span class="op">*</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">st167_plasm_onehot</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span> <span class="fl">0.1</span>,
     colnames_position <span class="op">=</span> <span class="st">"top"</span>,
     color <span class="op">=</span> <span class="cn">NA</span>,
     colnames_offset_y <span class="op">=</span> <span class="fl">0</span>,
     colnames_angle <span class="op">=</span> <span class="fl">90</span>,
-    offset <span class="op">=</span> <span class="fl">0.0005</span>,
+    offset <span class="op">=</span> <span class="fl">0.00004</span>,
     hjust <span class="op">=</span> <span class="fl">0</span>
   <span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/viridis_pal.html">viridis_pal</a></span><span class="op">(</span>option <span class="op">=</span> <span class="st">"cividis"</span><span class="op">)</span><span class="op">(</span><span class="fl">7</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>,
                         na.translate <span class="op">=</span> <span class="cn">FALSE</span>,
                         name <span class="op">=</span> <span class="st">"Plasmid\nreplicon"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">ylim</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">70</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_treescale.html">geom_treescale</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">0.0002</span>, y <span class="op">=</span> <span class="fl">50</span>, offset <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">-&gt;</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_treescale.html">geom_treescale</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">0.000006</span>, y <span class="op">=</span> <span class="fl">70</span><span class="op">*</span><span class="fl">0.666</span>, offset <span class="op">=</span> <span class="fl">1</span>, width <span class="op">=</span> <span class="fl">1e-5</span><span class="op">)</span> <span class="op">-&gt;</span>
     <span class="va">st167_subtree_plot</span>
 <span class="co">#&gt; Scale for 'fill' is already present. Adding another scale for 'fill', which</span>
 <span class="co">#&gt; will replace the existing scale.</span>
@@ -18875,21 +18878,178 @@ ST167 map-to-reference global maximum likelihood, midpoint rooted tree
 <span class="co">#&gt; replace the existing scale.</span></code></pre></div>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
-<span class="va">st410_subtree_plot</span> <span class="op">+</span>
-<span class="va">st167_subtree_plot</span> <span class="op">+</span>
-<span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html">plot_annotation</a></span><span class="op">(</span>tag_levels <span class="op">=</span> <span class="st">"A"</span><span class="op">)</span> <span class="op">+</span>
-<span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html">plot_layout</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">1</span>,guides <span class="op">=</span> <span class="st">"collect"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">st410_167_subtree_plot</span>
+
 
 <span class="kw">if</span> <span class="op">(</span><span class="va">write_figs</span><span class="op">)</span> <span class="op">{</span>
-
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html">ggsave</a></span><span class="op">(</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"figures/ecoli-genomics/st410_167_subtreeplot.svg"</span><span class="op">)</span>,
-       <span class="va">st410_167_subtree_plot</span>, width <span class="op">=</span> <span class="fl">10</span>, height <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>
-
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html">ggsave</a></span><span class="op">(</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"figures/ecoli-genomics/st410_167_subtreeplot.pdf"</span><span class="op">)</span>,
-       <span class="va">st410_167_subtree_plot</span>, width <span class="op">=</span> <span class="fl">10</span>, height <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>
+<span class="va">btESBL_ecoli_st131_metadata</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Country</span> <span class="op">!=</span> <span class="st">"Malawi"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://readr.tidyverse.org/reference/write_delim.html">write_csv</a></span><span class="op">(</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"tables/ecoli-genomics/SUPP_T_st131_accession_numbers_and_metadata.csv"</span><span class="op">)</span><span class="op">)</span>
 <span class="op">}</span>
+<span class="va">btESBL_ecoli_st131_metadata</span><span class="op">$</span><span class="va">malawi</span> <span class="op">&lt;-</span> <span class="va">btESBL_ecoli_st131_metadata</span><span class="op">$</span><span class="va">Country</span> <span class="op">==</span> <span class="st">"Malawi"</span>
 
-<span class="va">st410_167_subtree_plot</span>
+
+<span class="va">btESBL_ecoli_st131_metadata</span><span class="op">$</span><span class="va">Continent</span> <span class="op">&lt;-</span> 
+  <span class="fu"><a href="https://vincentarelbundock.github.io/countrycode/reference/countrycode.html">countrycode</a></span><span class="op">(</span>
+    sourcevar <span class="op">=</span> <span class="va">btESBL_ecoli_st131_metadata</span><span class="op">$</span><span class="va">Country</span>,
+    origin <span class="op">=</span> <span class="st">"country.name"</span>,
+    destination <span class="op">=</span> <span class="st">"un.region.name"</span>
+  <span class="op">)</span>
+<span class="co">#&gt; Warning in countrycode_convert(sourcevar = sourcevar, origin = origin, destination = dest, : Some values were not matched unambiguously: Czech, Taiwan</span>
+
+<span class="va">btESBL_ecoli_st131_metadata</span><span class="op">$</span><span class="va">Continent</span><span class="op">[</span>
+  <span class="va">btESBL_ecoli_st131_metadata</span><span class="op">$</span><span class="va">Country</span> <span class="op">==</span> <span class="st">"Czech"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"Europe"</span>
+
+<span class="va">btESBL_ecoli_st131_metadata</span><span class="op">$</span><span class="va">Continent</span><span class="op">[</span>
+  <span class="va">btESBL_ecoli_st131_metadata</span><span class="op">$</span><span class="va">Country</span> <span class="op">==</span> <span class="st">"Taiwan"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"Asia"</span>
+
+
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">btESBL_ecoli_st131_metadata</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">btESBL_ecoli_st131_metadata</span><span class="op">$</span><span class="va">Accession_number</span>
+
+
+<span class="va">btESBL_ecoli_st131_amr</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">gene</span>, 
+              values_from <span class="op">=</span> <span class="va">gene</span>,
+              values_fn <span class="op">=</span> <span class="va">length</span>,
+              values_fill <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">as.character</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span>
+  <span class="va">amr.ariba131</span>
+
+
+
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">amr.ariba131</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">amr.ariba131</span><span class="op">$</span><span class="va">name</span>
+
+<span class="va">btESBL_ecoli_st131_plasmids</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html">grepl</a></span><span class="op">(</span><span class="st">"Inc"</span>, <span class="va">ref_seq</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider</a></span><span class="op">(</span>
+    id_cols <span class="op">=</span> <span class="va">name</span>,
+    names_from <span class="op">=</span> <span class="va">ref_seq</span>,
+    values_from <span class="op">=</span> <span class="va">ref_seq</span>,
+    values_fn <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="st">"Present"</span><span class="op">)</span>,
+    values_fill <span class="op">=</span> <span class="cn">NA_character_</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">st131_plasm_onehot</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">st131_plasm_onehot</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">st131_plasm_onehot</span><span class="op">$</span><span class="va">name</span>
+
+<span class="va">esbl_cols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://scales.r-lib.org/reference/viridis_pal.html">viridis_pal</a></span><span class="op">(</span>option <span class="op">=</span> <span class="st">"magma"</span><span class="op">)</span><span class="op">(</span><span class="fl">5</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span><span class="op">]</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">esbl_cols</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span> <span class="st">"Carbapenemase"</span>, <span class="st">"ESBL/AmpC"</span><span class="op">)</span>
+
+<span class="va">btESBL_ecoli_st131_amr</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">btESBL_NCBI_phenotypic_bl</span>, <span class="va">allele_name</span>, <span class="va">class</span><span class="op">)</span>,
+    by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"gene"</span> <span class="op">=</span> <span class="st">"allele_name"</span><span class="op">)</span>
+  <span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>class <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/grep.html">grepl</a></span><span class="op">(</span><span class="st">"CMY"</span>, <span class="va">name</span><span class="op">)</span> <span class="op">~</span> <span class="st">"ESBL/AmpC"</span>,
+    <span class="va">class</span> <span class="op">==</span> <span class="st">"ESBL"</span> <span class="op">~</span> <span class="st">"ESBL/AmpC"</span>,
+    <span class="cn">TRUE</span> <span class="op">~</span> <span class="va">class</span>
+        <span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">class</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"ESBL/AmpC"</span>, <span class="st">"Carbapenemase"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>gene <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html">gsub</a></span><span class="op">(</span><span class="st">"_"</span>, <span class="st">"-"</span>, <span class="va">gene</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">class</span>, <span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_inorder.html">fct_infreq</a></span><span class="op">(</span><span class="va">gene</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider</a></span><span class="op">(</span>id_cols <span class="op">=</span> <span class="st">"name"</span>,
+              names_from <span class="op">=</span> <span class="va">gene</span>,
+              values_from <span class="op">=</span> <span class="va">class</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> 
+<span class="co">#  select(-`TEM-15`) -&gt;    # not in df?</span>
+  <span class="va">esbl_cpe.ariba131</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">esbl_cpe.ariba131</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">esbl_cpe.ariba131</span><span class="op">$</span><span class="va">name</span>
+
+<span class="op">(</span>
+<span class="op">(</span>
+<span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/ggtree.html">ggtree</a></span><span class="op">(</span><span class="va">btESBL_ecoli_globalst131_tree</span>, size <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">%&lt;+%</span> 
+   <span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">btESBL_ecoli_st131_metadata</span>, <span class="va">Accession_number</span>, <span class="va">Country</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else</a></span><span class="op">(</span><span class="va">Country</span> <span class="op">==</span> <span class="st">"Malawi"</span>, <span class="st">"Malawi"</span>,<span class="cn">NA_character_</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>  <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">btESBL_ecoli_st131_metadata</span>, <span class="va">`Year`</span><span class="op">)</span>,
+      font.size <span class="op">=</span> <span class="fl">4</span>,
+      width <span class="op">=</span> <span class="fl">0.03</span>,
+      colnames_position <span class="op">=</span> <span class="st">"top"</span>,
+      color <span class="op">=</span> <span class="cn">NA</span>,
+      colnames_offset_y <span class="op">=</span> <span class="fl">5</span>,
+      colnames_angle <span class="op">=</span> <span class="fl">90</span>,
+      hjust <span class="op">=</span> <span class="fl">0</span>
+    <span class="op">)</span>  <span class="op">+</span> 
+     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html">scale_fill_viridis_c</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Year"</span>, limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1965</span>,<span class="fl">2020</span><span class="op">)</span>,
+                          na.value <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggnewscale/man/new_scale.html">new_scale_fill</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">btESBL_ecoli_st131_metadata</span>, <span class="va">Continent</span><span class="op">)</span>,
+    font.size <span class="op">=</span> <span class="fl">4</span>,
+    width <span class="op">=</span> <span class="fl">0.03</span>,
+    colnames_position <span class="op">=</span> <span class="st">"top"</span>,
+    color <span class="op">=</span> <span class="cn">NA</span>,
+    colnames_offset_y <span class="op">=</span> <span class="fl">5</span>,
+    colnames_angle <span class="op">=</span> <span class="fl">90</span>,
+    offset <span class="op">=</span> <span class="fl">0.000004</span>,
+    hjust <span class="op">=</span> <span class="fl">0</span>
+  <span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html">scale_fill_viridis_d</a></span><span class="op">(</span>option <span class="op">=</span> <span class="st">"plasma"</span>, name <span class="op">=</span> <span class="st">"Continent"</span>, 
+                       na.translate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_tippoint.html">geom_tippoint</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">Country</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span>, size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_color_manual</a></span><span class="op">(</span>values  <span class="op">=</span> <span class="st">"red"</span>, na.translate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggnewscale/man/new_scale.html">new_scale_fill</a></span><span class="op">(</span><span class="op">)</span> 
+<span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">esbl_cpe.ariba131</span>, <span class="op">-</span><span class="va">name</span><span class="op">)</span>,
+  font.size <span class="op">=</span> <span class="fl">3</span>,
+  width <span class="op">=</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">esbl_cpe.ariba131</span><span class="op">)</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">*</span><span class="fl">0.03</span>,
+  colnames_position <span class="op">=</span> <span class="st">"top"</span>,
+  color <span class="op">=</span> <span class="cn">NA</span>,
+  colnames_offset_y <span class="op">=</span> <span class="fl">5</span>,
+  colnames_angle <span class="op">=</span> <span class="fl">90</span>,
+  offset <span class="op">=</span> <span class="fl">0.000008</span>,
+  hjust <span class="op">=</span> <span class="fl">0</span>
+<span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">esbl_cols</span>,
+                      na.translate <span class="op">=</span> <span class="cn">FALSE</span>,
+                      name <span class="op">=</span> <span class="st">"Beta-\nlactamase"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/ggnewscale/man/new_scale.html">new_scale_fill</a></span><span class="op">(</span><span class="op">)</span>
+<span class="op">)</span>   <span class="op">%&gt;%</span>   <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">st131_plasm_onehot</span>, <span class="op">-</span><span class="va">name</span><span class="op">)</span>,
+    font.size <span class="op">=</span> <span class="fl">3</span>,
+    width <span class="op">=</span> <span class="fl">0.03</span><span class="op">*</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">st131_plasm_onehot</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span> <span class="fl">0.1</span>,
+    colnames_position <span class="op">=</span> <span class="st">"top"</span>,
+    color <span class="op">=</span> <span class="cn">NA</span>,
+    colnames_offset_y <span class="op">=</span> <span class="fl">5</span>,
+    colnames_angle <span class="op">=</span> <span class="fl">90</span>,
+    offset <span class="op">=</span> <span class="fl">0.000058</span>,
+    hjust <span class="op">=</span> <span class="fl">0</span>
+  <span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/viridis_pal.html">viridis_pal</a></span><span class="op">(</span>option <span class="op">=</span> <span class="st">"cividis"</span><span class="op">)</span><span class="op">(</span><span class="fl">7</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>,
+                        na.translate <span class="op">=</span> <span class="cn">FALSE</span>,
+                        name <span class="op">=</span> <span class="st">"Plasmid\nreplicon"</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">ylim</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">1000</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_treescale.html">geom_treescale</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">0.00002</span>, y <span class="op">=</span> <span class="fl">1000</span><span class="op">*</span><span class="fl">0.666</span>, offset <span class="op">=</span> <span class="fl">5</span>, width <span class="op">=</span> <span class="fl">0.00001</span><span class="op">)</span>   <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">-&gt;</span>
+  <span class="va">st131_globaltree_plot</span>
+<span class="co">#&gt; Scale for 'fill' is already present. Adding another scale for 'fill', which</span>
+<span class="co">#&gt; will replace the existing scale.</span>
+<span class="co">#&gt; Scale for 'fill' is already present. Adding another scale for 'fill', which</span>
+<span class="co">#&gt; will replace the existing scale.</span>
+<span class="co">#&gt; Scale for 'fill' is already present. Adding another scale for 'fill', which</span>
+<span class="co">#&gt; will replace the existing scale.</span>
+<span class="co">#&gt; Scale for 'fill' is already present. Adding another scale for 'fill', which</span>
+<span class="co">#&gt; will replace the existing scale.</span>
+<span class="co">#&gt; Scale for 'y' is already present. Adding another scale for 'y', which will</span>
+<span class="co">#&gt; replace the existing scale.</span>
+
+<span class="va">st131_globaltree_plot</span></code></pre></div>
+<div class="figure">
+<img src="analysis-ecoli_files/figure-html/st131-plots-1.png" alt="ST131 map-to-reference global maximum likelihood, midpoint rooted tree" width="960"><p class="caption">
+ST131 map-to-reference global maximum likelihood, midpoint rooted tree
+</p>
+</div>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="va">st410_subtree_plot</span> <span class="op">+</span> <span class="va">st167_subtree_plot</span>  <span class="op">+</span> <span class="va">st131_globaltree_plot</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html">plot_layout</a></span><span class="op">(</span>widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1.5</span><span class="op">)</span>,
+              design <span class="op">=</span> <span class="st">"AACCC
+                        BBCCC"</span><span class="op">)</span> <span class="op">+</span>
+<span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html">plot_annotation</a></span><span class="op">(</span>tag_levels <span class="op">=</span> <span class="st">"A"</span><span class="op">)</span> <span class="op">+</span>
+<span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html">plot_layout</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"collect"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">st410_167_131_subtree_plot</span>
+
+<span class="va">st410_167_131_subtree_plot</span>
 <span class="co">#&gt; Warning in FUN(X[[i]], ...): NAs introduced by coercion</span>
 
 <span class="co">#&gt; Warning in FUN(X[[i]], ...): NAs introduced by coercion</span>
@@ -18898,20 +19058,30 @@ ST167 map-to-reference global maximum likelihood, midpoint rooted tree
 
 <span class="co">#&gt; Warning in FUN(X[[i]], ...): NAs introduced by coercion</span></code></pre></div>
 <div class="figure">
-<img src="analysis-ecoli_files/figure-html/subrtree-plots-1.png" alt="E. coli ST140 (A) and ST167 (B) subtrees showing ESBL/CPE genes and plasmid mreplicons" width="960"><p class="caption">
-E. coli ST140 (A) and ST167 (B) subtrees showing ESBL/CPE genes and plasmid mreplicons
+<img src="analysis-ecoli_files/figure-html/subrtree-plots-1.png" alt="E. coli ST140 (A) and ST167 (B) subtrees and (C) ST131 tree showing ESBL/CPE genes and plasmid replicons" width="1920"><p class="caption">
+E. coli ST140 (A) and ST167 (B) subtrees and (C) ST131 tree showing ESBL/CPE genes and plasmid replicons
 </p>
 </div>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="kw">if</span> <span class="op">(</span><span class="va">write_figs</span><span class="op">)</span> <span class="op">{</span>
+
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html">ggsave</a></span><span class="op">(</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"figures/ecoli-genomics/st410_167_131_subtreeplot.svg"</span><span class="op">)</span>,
+       <span class="va">st410_167_131_subtree_plot</span>, width <span class="op">=</span> <span class="fl">20</span>, height <span class="op">=</span> <span class="fl">11</span><span class="op">)</span>
+
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html">ggsave</a></span><span class="op">(</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"figures/ecoli-genomics/st410_167_131_subtreeplot.pdf"</span><span class="op">)</span>,
+       <span class="va">st410_167_131_subtree_plot</span>, width <span class="op">=</span> <span class="fl">20</span>, height <span class="op">=</span> <span class="fl">11</span><span class="op">)</span>
+<span class="op">}</span></code></pre></div>
 </div>
 <div id="reproducibility---packages-r-version-and-os-used" class="section level3">
 <h3 class="hasAnchor">
 <a href="#reproducibility---packages-r-version-and-os-used" class="anchor"></a>Reproducibility - packages, R version and OS used</h3>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; R version 4.1.1 (2021-08-10)</span>
 <span class="co">#&gt; Platform: aarch64-apple-darwin20 (64-bit)</span>
-<span class="co">#&gt; Running under: macOS Big Sur 11.6</span>
+<span class="co">#&gt; Running under: macOS Monterey 12.0.1</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Matrix products: default</span>
 <span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.1-arm64/Resources/lib/libRblas.0.dylib</span>
@@ -18926,41 +19096,41 @@ E. coli ST140 (A) and ST167 (B) subtrees showing ESBL/CPE genes and plasmid mrep
 <span class="co">#&gt; other attached packages:</span>
 <span class="co">#&gt;  [1] viridis_0.6.1      viridisLite_0.4.0  countrycode_1.3.0  ggstance_0.3.5    </span>
 <span class="co">#&gt;  [5] scales_1.1.1       here_1.0.1         patchwork_1.1.1    kableExtra_1.3.4  </span>
-<span class="co">#&gt;  [9] ggnewscale_0.4.5   lubridate_1.7.10   blantyreESBL_1.1.0 stringr_1.4.0     </span>
+<span class="co">#&gt;  [9] ggnewscale_0.4.5   lubridate_1.7.10   blantyreESBL_1.1.1 stringr_1.4.0     </span>
 <span class="co">#&gt; [13] forcats_0.5.1      ggplot2_3.3.5      readr_2.0.1        tidyr_1.1.3       </span>
 <span class="co">#&gt; [17] dplyr_1.0.7        phytools_0.7-80    maps_3.3.0         ape_5.5           </span>
 <span class="co">#&gt; [21] ggtree_3.0.4      </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; loaded via a namespace (and not attached):</span>
-<span class="co">#&gt;  [1] nlme_3.1-152            fs_1.5.0                webshot_0.5.2          </span>
-<span class="co">#&gt;  [4] httr_1.4.2              rprojroot_2.0.2         numDeriv_2016.8-1.1    </span>
-<span class="co">#&gt;  [7] tools_4.1.1             bslib_0.2.5.1           utf8_1.2.2             </span>
-<span class="co">#&gt; [10] R6_2.5.1                DBI_1.1.1               lazyeval_0.2.2         </span>
-<span class="co">#&gt; [13] colorspace_2.0-2        withr_2.4.2             gridExtra_2.3          </span>
-<span class="co">#&gt; [16] tidyselect_1.1.1        mnormt_2.0.2            phangorn_2.7.1         </span>
-<span class="co">#&gt; [19] compiler_4.1.1          cli_3.0.1               textshaping_0.3.5      </span>
-<span class="co">#&gt; [22] rvest_1.0.1             expm_0.999-6            xml2_1.3.2             </span>
-<span class="co">#&gt; [25] desc_1.3.0              labeling_0.4.2          sass_0.4.0             </span>
-<span class="co">#&gt; [28] quadprog_1.5-8          pkgdown_1.6.1           systemfonts_1.0.2      </span>
-<span class="co">#&gt; [31] digest_0.6.27           yulab.utils_0.0.2       rmarkdown_2.10         </span>
-<span class="co">#&gt; [34] svglite_2.0.0           pkgconfig_2.0.3         htmltools_0.5.2        </span>
-<span class="co">#&gt; [37] plotrix_3.8-1           highr_0.9               fastmap_1.1.0          </span>
-<span class="co">#&gt; [40] rlang_0.4.11            rstudioapi_0.13         farver_2.1.0           </span>
-<span class="co">#&gt; [43] jquerylib_0.1.4         generics_0.1.0          combinat_0.0-8         </span>
-<span class="co">#&gt; [46] jsonlite_1.7.2          magrittr_2.0.1          Matrix_1.3-4           </span>
-<span class="co">#&gt; [49] Rcpp_1.0.7              munsell_0.5.0           fansi_0.5.0            </span>
-<span class="co">#&gt; [52] lifecycle_1.0.0         scatterplot3d_0.3-41    stringi_1.7.4          </span>
-<span class="co">#&gt; [55] yaml_2.2.1              clusterGeneration_1.3.7 MASS_7.3-54            </span>
-<span class="co">#&gt; [58] grid_4.1.1              parallel_4.1.1          crayon_1.4.1           </span>
-<span class="co">#&gt; [61] lattice_0.20-44         hms_1.1.0               tmvnsim_1.0-2          </span>
-<span class="co">#&gt; [64] knitr_1.33              pillar_1.6.2            igraph_1.2.6           </span>
-<span class="co">#&gt; [67] codetools_0.2-18        fastmatch_1.1-3         glue_1.4.2             </span>
-<span class="co">#&gt; [70] evaluate_0.14           ggfun_0.0.3             vctrs_0.3.8            </span>
-<span class="co">#&gt; [73] treeio_1.16.2           tzdb_0.1.2              gtable_0.3.0           </span>
-<span class="co">#&gt; [76] purrr_0.3.4             assertthat_0.2.1        cachem_1.0.6           </span>
-<span class="co">#&gt; [79] xfun_0.25               tidytree_0.3.4          coda_0.19-4            </span>
-<span class="co">#&gt; [82] ragg_1.1.3              tibble_3.1.4            aplot_0.0.6            </span>
-<span class="co">#&gt; [85] memoise_2.0.0           ellipsis_0.3.2</span></code></pre></div>
+<span class="co">#&gt;  [1] nlme_3.1-152            fs_1.5.0                RColorBrewer_1.1-2     </span>
+<span class="co">#&gt;  [4] webshot_0.5.2           httr_1.4.2              rprojroot_2.0.2        </span>
+<span class="co">#&gt;  [7] numDeriv_2016.8-1.1     tools_4.1.1             bslib_0.2.5.1          </span>
+<span class="co">#&gt; [10] utf8_1.2.2              R6_2.5.1                DBI_1.1.1              </span>
+<span class="co">#&gt; [13] lazyeval_0.2.2          colorspace_2.0-2        withr_2.4.2            </span>
+<span class="co">#&gt; [16] gridExtra_2.3           tidyselect_1.1.1        mnormt_2.0.2           </span>
+<span class="co">#&gt; [19] phangorn_2.7.1          compiler_4.1.1          cli_3.0.1              </span>
+<span class="co">#&gt; [22] textshaping_0.3.5       rvest_1.0.1             expm_0.999-6           </span>
+<span class="co">#&gt; [25] xml2_1.3.2              desc_1.3.0              labeling_0.4.2         </span>
+<span class="co">#&gt; [28] sass_0.4.0              quadprog_1.5-8          pkgdown_1.6.1          </span>
+<span class="co">#&gt; [31] systemfonts_1.0.2       digest_0.6.27           yulab.utils_0.0.2      </span>
+<span class="co">#&gt; [34] rmarkdown_2.10          svglite_2.0.0           pkgconfig_2.0.3        </span>
+<span class="co">#&gt; [37] htmltools_0.5.2         plotrix_3.8-1           highr_0.9              </span>
+<span class="co">#&gt; [40] fastmap_1.1.0           rlang_0.4.11            rstudioapi_0.13        </span>
+<span class="co">#&gt; [43] farver_2.1.0            jquerylib_0.1.4         generics_0.1.0         </span>
+<span class="co">#&gt; [46] combinat_0.0-8          jsonlite_1.7.2          magrittr_2.0.1         </span>
+<span class="co">#&gt; [49] Matrix_1.3-4            Rcpp_1.0.7              munsell_0.5.0          </span>
+<span class="co">#&gt; [52] fansi_0.5.0             lifecycle_1.0.0         scatterplot3d_0.3-41   </span>
+<span class="co">#&gt; [55] stringi_1.7.4           yaml_2.2.1              clusterGeneration_1.3.7</span>
+<span class="co">#&gt; [58] MASS_7.3-54             grid_4.1.1              parallel_4.1.1         </span>
+<span class="co">#&gt; [61] crayon_1.4.1            lattice_0.20-44         hms_1.1.0              </span>
+<span class="co">#&gt; [64] tmvnsim_1.0-2           knitr_1.33              pillar_1.6.2           </span>
+<span class="co">#&gt; [67] igraph_1.2.6            codetools_0.2-18        fastmatch_1.1-3        </span>
+<span class="co">#&gt; [70] glue_1.4.2              evaluate_0.14           ggfun_0.0.3            </span>
+<span class="co">#&gt; [73] vctrs_0.3.8             treeio_1.16.2           tzdb_0.1.2             </span>
+<span class="co">#&gt; [76] gtable_0.3.0            purrr_0.3.4             assertthat_0.2.1       </span>
+<span class="co">#&gt; [79] cachem_1.0.6            xfun_0.25               tidytree_0.3.4         </span>
+<span class="co">#&gt; [82] coda_0.19-4             ragg_1.1.3              tibble_3.1.4           </span>
+<span class="co">#&gt; [85] aplot_0.0.6             memoise_2.0.0           ellipsis_0.3.2</span></code></pre></div>
 </div>
   </div>
 

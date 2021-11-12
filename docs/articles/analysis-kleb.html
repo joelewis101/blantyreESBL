@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">blantyreESBL</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.1</span>
       </span>
     </div>
 
@@ -4099,7 +4099,7 @@ KL9
       colnames_position <span class="op">=</span> <span class="st">"top"</span>, 
       hjust <span class="op">=</span> <span class="fl">0</span>,
       colnames_offset_y <span class="op">=</span> <span class="fl">0</span>,
-      offset <span class="op">=</span> <span class="fl">0.006</span> <span class="op">)</span> <span class="op">%&gt;%</span> 
+      offset <span class="op">=</span> <span class="fl">0</span> <span class="op">)</span> <span class="op">%&gt;%</span> 
     <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">mlst.onehot</span>,<span class="op">-</span><span class="va">lane</span><span class="op">)</span>,
       width <span class="op">=</span> <span class="fl">3</span>, 
@@ -4109,7 +4109,7 @@ KL9
       colnames_position <span class="op">=</span> <span class="st">"top"</span>, 
       colnames_offset_y <span class="op">=</span> <span class="fl">0</span>,
       hjust <span class="op">=</span> <span class="fl">0</span>,
-      offset <span class="op">=</span> <span class="fl">0.05</span> 
+      offset <span class="op">=</span> <span class="fl">0.008</span> 
     <span class="op">)</span> <span class="op">+</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">ylim</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">220</span><span class="op">)</span> <span class="op">+</span>
@@ -4123,7 +4123,8 @@ KL9
 <span class="co">#&gt; Scale for 'fill' is already present. Adding another scale for 'fill', which</span>
 <span class="co">#&gt; will replace the existing scale.</span>
   
-  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/ggtree.html">ggtree</a></span><span class="op">(</span><span class="fu">treeio</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/treeio/reference/tree_subset.html">tree_subset</a></span><span class="op">(</span><span class="va">btESBL_coregene_tree_kleb</span>, <span class="fl">218</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/ggtree.html">ggtree</a></span><span class="op">(</span><span class="fu">treeio</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/treeio/reference/tree_subset.html">tree_subset</a></span><span class="op">(</span><span class="va">btESBL_coregene_tree_kleb</span>, <span class="fl">210</span>, 
+                             levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
     <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">mlst.onehot</span>,<span class="op">-</span><span class="va">lane</span><span class="op">)</span>,
       width <span class="op">=</span> <span class="fl">2</span>, 
@@ -4430,7 +4431,8 @@ SUPPLEMENTARY FIGURE X: Jaccard-distance heatmap of presence of ARIBA-identified
                         <span class="co">#     filter(class != "Fosfomycin") %&gt;% </span>
                              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">class</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/ggtree.html">ggtree</a></span><span class="op">(</span><span class="fu">treeio</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/treeio/reference/tree_subset.html">tree_subset</a></span><span class="op">(</span><span class="va">btESBL_coregene_tree_kleb</span>, <span class="fl">218</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/ggtree.html">ggtree</a></span><span class="op">(</span><span class="fu">treeio</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/treeio/reference/tree_subset.html">tree_subset</a></span><span class="op">(</span><span class="va">btESBL_coregene_tree_kleb</span>, <span class="fl">210</span>, 
+                           levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
 <span class="co">#ggtree(tree) %&gt;% </span>
     <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html">gheatmap</a></span><span class="op">(</span>
         <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">amr.ariba.maptotree</span>,<span class="op">-</span><span class="va">lane</span><span class="op">)</span>,
@@ -6210,7 +6212,7 @@ Unknown
 <span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; R version 4.1.1 (2021-08-10)</span>
 <span class="co">#&gt; Platform: aarch64-apple-darwin20 (64-bit)</span>
-<span class="co">#&gt; Running under: macOS Big Sur 11.6</span>
+<span class="co">#&gt; Running under: macOS Monterey 12.0.1</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Matrix products: default</span>
 <span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.1-arm64/Resources/lib/libRblas.0.dylib</span>
@@ -6223,7 +6225,7 @@ Unknown
 <span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; other attached packages:</span>
-<span class="co">#&gt;  [1] ggnewscale_0.4.5   stringr_1.4.0      blantyreESBL_1.1.0 ggplotify_0.1.0   </span>
+<span class="co">#&gt;  [1] ggnewscale_0.4.5   stringr_1.4.0      blantyreESBL_1.1.1 ggplotify_0.1.0   </span>
 <span class="co">#&gt;  [5] pheatmap_1.0.12    viridis_0.6.1      viridisLite_0.4.0  scales_1.1.1      </span>
 <span class="co">#&gt;  [9] patchwork_1.1.1    kableExtra_1.3.4   here_1.0.1         tidyr_1.1.3       </span>
 <span class="co">#&gt; [13] forcats_0.5.1      dplyr_1.0.7        ggpubr_0.4.0       ggplot2_3.3.5     </span>
