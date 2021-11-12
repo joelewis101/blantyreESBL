@@ -17,6 +17,8 @@ the study:
 beta-lactamase producing Enterobacterales in
 Malawi**](https://joelewis101.github.io/blantyreESBL/articles/analysis.html)
 
+Preprint available at MedRxiv [here](https://doi.org/10.1101/2021.10.08.21264775)
+
 Joseph M Lewis<sup>1,2,3,4</sup>, , Madalitso Mphasa<sup>1</sup>, Rachel
 Banda<sup>1</sup>, Matthew Beale<sup>4</sup>, Eva Heinz<sup>2</sup>,
 Jane Mallewa<sup>5</sup>, Christopher Jewell<sup>6</sup>, Nicholas R
@@ -26,6 +28,8 @@ Thomson<sup>4,7</sup>, Nicholas A Feasey<sup>1,2</sup>
 Escherichia coli colonising adults in Blantyre, Malawi reveals
 previously undescribed
 diversity**](https://joelewis101.github.io/blantyreESBL/articles/analysis-ecoli.html)
+
+Preprint available at BioRxiv [here](https://doi.org/10.1101/2021.10.07.463523)
 
 Joseph M Lewis<sup>1,2,3,4</sup>, , Madalitso Mphasa<sup>1</sup>, Rachel
 Banda<sup>1</sup>, Matthew Beale<sup>4</sup>, Jane Mallewa<sup>5</sup>,
@@ -40,6 +44,8 @@ Joseph M Lewis<sup>1,2,3,4</sup>, , Madalitso Mphasa<sup>1</sup>, Rachel
 Banda<sup>1</sup>, Matthew Beale<sup>4</sup>, Jane Mallewa<sup>5</sup>,
 Eva Heinz<sup>2</sup>, Nicholas Thomson<sup>4,7</sup>, Nicholas A
 Feasey<sup>1,2</sup>
+
+Available at BioRxiv [here](https://doi.org/10.1101/2021.10.07.463515)
 
 ### Installing and accessing data
 

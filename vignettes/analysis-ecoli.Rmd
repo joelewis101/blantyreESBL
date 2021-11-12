@@ -12,6 +12,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
 ### Introduction
@@ -2141,17 +2142,13 @@ st167_plasm_onehot %>%
 
 ```
 
-```{r st131-plots}
+```{r st131-plots, fig.width=10, fig.height=10, fig.cap = "ST131 map-to-reference global maximum likelihood, midpoint rooted tree"}
 
 
 
 if (write_figs) {
 btESBL_ecoli_st131_metadata %>% 
   filter(Country != "Malawi") %>% 
-  transmute(accession = accession,
-            source = `Source Niche`,
-            country = Country,
-            year = Year) %>% 
   write_csv(here("tables/ecoli-genomics/SUPP_T_st131_accession_numbers_and_metadata.csv"))
 }
 btESBL_ecoli_st131_metadata$malawi <- btESBL_ecoli_st131_metadata$Country == "Malawi"
@@ -2240,7 +2237,8 @@ rownames(esbl_cpe.ariba131) <- esbl_cpe.ariba131$name
       colnames_angle = 90,
       hjust = 0
     )  + 
-     scale_fill_viridis(name = "Year", limits = c(1965,2020)) +
+     scale_fill_viridis_c(name = "Year", limits = c(1965,2020),
+                          na.value = "white") +
     new_scale_fill()) %>% 
   gheatmap(
     select(btESBL_ecoli_st131_metadata, Continent),
@@ -2307,10 +2305,12 @@ st410_subtree_plot + st167_subtree_plot  + st131_globaltree_plot +
 plot_annotation(tag_levels = "A") +
 plot_layout(guides = "collect") -> st410_167_131_subtree_plot
 
+st410_167_131_subtree_plot
+
 if (write_figs) {
 
-ggsave(here("figures/ecoli-genomics/st410_167_subtreeplot.svg"),
-       st410_167_subtree_plot, width = 20, height = 11)
+ggsave(here("figures/ecoli-genomics/st410_167_131_subtreeplot.svg"),
+       st410_167_131_subtree_plot, width = 20, height = 11)
 
 ggsave(here("figures/ecoli-genomics/st410_167_131_subtreeplot.pdf"),
        st410_167_131_subtree_plot, width = 20, height = 11)
