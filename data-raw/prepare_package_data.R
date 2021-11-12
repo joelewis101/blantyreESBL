@@ -1010,6 +1010,7 @@ bind_rows(
 ) %>%
   as.data.frame() -> btESBL_ecoli_st131_metadata
 
+use_data(btESBL_ecoli_st131_metadata, overwrite = TRUE)
 # amr
 
 
