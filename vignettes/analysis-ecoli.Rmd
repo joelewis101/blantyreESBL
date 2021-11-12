@@ -1777,18 +1777,29 @@ esbl_cpe.ariba410 %>%
     c(TRUE, apply(esbl_cpe.ariba410_subset[-1], 2,function(x) !all(is.na(x))))] ->
     esbl_cpe.ariba410_subset
 
-st410_plasm_onehot %>%  
-  subset(name %in% st410_subtree$tip.label) %>% 
-  as.data.frame() ->
-  st410_plasm_onehot_subset
-  
-  st410_plasm_onehot_subset[
-    c(TRUE, apply(st410_plasm_onehot_subset[-1], 2,function(x) !all(is.na(x))))] ->
-    st410_plasm_onehot_subset
-  
+btESBL_ecoli_st410_plasmids %>% 
+  filter(grepl("Inc", ref_seq)) %>% 
+  filter(name %in% st410_subtree$tip.label) %>% 
+  unique() %>% 
+  group_by(ref_seq) %>% 
+  mutate(n = n()) %>% 
+  filter(n > 2) %>% 
+  ungroup() %>% 
+  select(-n) %>% 
+  arrange(fct_infreq(ref_seq)) %>% 
+  pivot_wider(
+    id_cols = name,
+    names_from = ref_seq,
+    values_from = ref_seq,
+    values_fn = function(x) return("Present"),
+    values_fill = NA_character_) %>% 
+  as.data.frame() -> st410_plasm_onehot_subset
+
+rownames(st410_plasm_onehot_subset) <- st410_plasm_onehot_subset$name
+
   (
   (  
-  (ggtree(st410_subtree) %<+% (select(st410_metadata, accession, Country) %>% mutate(Country = if_else(Country == "Malawi", "Malawi",NA_character_)))  %>%
+  (ggtree(st410_subtree, size = 0.3) %<+% (select(st410_metadata, accession, Country) %>% mutate(Country = if_else(Country == "Malawi", "Malawi",NA_character_)))  %>%
      gheatmap(
        select(st410_metadata, `Year`),
        font.size = 4,
@@ -1820,7 +1831,7 @@ st410_plasm_onehot %>%
 ) %>% 
   gheatmap(
     select(esbl_cpe.ariba410_subset, -name),
-    font.size = 3,
+    font.size = 2.5,
     width = 0.5,
     colnames_position = "top",
     color = NA,
@@ -1833,9 +1844,9 @@ st410_plasm_onehot %>%
                         name = "Beta-\nlactamase") +
       new_scale_fill() 
     ) %>%   gheatmap(
-    select(st410_plasm_onehot, -name),
-    font.size = 3,
-    width = 1.71,
+    select(st410_plasm_onehot_subset, -name),
+    font.size = 2.5,
+    width = 0.781,
     colnames_position = "top",
     color = NA,
     colnames_offset_y = 5,
@@ -2000,7 +2011,7 @@ rownames(esbl_cpe.ariba) <- esbl_cpe.ariba$sample
     hjust = 0
   ) + 
   scale_fill_viridis_d(option = "plasma", name = "Continent") + 
-  geom_tippoint(aes(color = Country), na.rm = TRUE, size = 0.5) + 
+  geom_tippoint(aes(color = Country), na.rm = TRUE, size = 1) + 
   scale_color_manual(values  = "red", na.translate = FALSE) +
     new_scale_fill() 
 ) %>% 
@@ -2066,19 +2077,32 @@ esbl_cpe.ariba %>%
   esbl_cpe.ariba167_subset[
     c(TRUE, apply(esbl_cpe.ariba167_subset[-1], 2,function(x) !all(is.na(x))))] ->
     esbl_cpe.ariba167_subset
-
-st167_plasm_onehot %>%  
-  subset(name %in% st167_subtree$tip.label) %>% 
-  as.data.frame() ->
-  st167_plasm_onehot_subset
   
-  st167_plasm_onehot_subset[
-    c(TRUE, apply(st167_plasm_onehot_subset[-1], 2,function(x) !all(is.na(x))))] ->
-    st167_plasm_onehot_subset
+  
+btESBL_ecoli_st167_plasmids %>% 
+  filter(grepl("Inc", ref_seq)) %>% 
+  filter(name %in% st167_subtree$tip.label) %>% 
+  unique() %>% 
+  group_by(ref_seq) %>% 
+  mutate(n = n()) %>% 
+  filter(n > 2) %>% 
+  ungroup() %>% 
+  select(-n) %>% 
+  arrange(fct_infreq(ref_seq)) %>% 
+  pivot_wider(
+    id_cols = name,
+    names_from = ref_seq,
+    values_from = ref_seq,
+    values_fn = function(x) return("Present"),
+    values_fill = NA_character_) %>% 
+  as.data.frame() -> st167_plasm_onehot_subset
+
+
+rownames(st167_plasm_onehot_subset) <- st167_plasm_onehot_subset$name
   
   (
   (  
-  (ggtree(st167_subtree) %<+% (select(st167_metadata, accession, Country) %>% mutate(Country = if_else(Country == "Malawi", "Malawi",NA_character_)))  %>%
+  (ggtree(st167_subtree, size = 0.3) %<+% (select(st167_metadata, accession, Country) %>% mutate(Country = if_else(Country == "Malawi", "Malawi",NA_character_)))  %>%
      gheatmap(
        select(st167_metadata, `Year`),
        font.size = 4,
@@ -2104,13 +2128,13 @@ st167_plasm_onehot %>%
     ) + 
     scale_fill_viridis_d(option = "plasma", name = "Continent") + 
       geom_point2(aes(subset = as.numeric(label) < 95 & !isTip), size = 1) +
-    geom_tippoint(aes(color = Country), na.rm = TRUE, size = 0.5) + 
+    geom_tippoint(aes(color = Country), na.rm = TRUE, size = 1) + 
     scale_color_manual(values  = "red", na.translate = FALSE) +
     new_scale_fill() 
 ) %>% 
   gheatmap(
     select(esbl_cpe.ariba167_subset, -sample),
-    font.size = 3,
+    font.size = 2.5,
     width = 0.0668*(ncol(esbl_cpe.ariba167_subset) - 1),
     colnames_position = "top",
     color = NA,
@@ -2123,9 +2147,9 @@ st167_plasm_onehot %>%
                         name = "Beta-\nlactamase") +
       new_scale_fill() 
     ) %>%   gheatmap(
-    select(st167_plasm_onehot, -name),
-    font.size = 3,
-    width = 0.0668*(ncol(st167_plasm_onehot) - 1) + 0.1,
+    select(st167_plasm_onehot_subset, -name),
+    font.size = 2.5,
+    width = 0.0668*(ncol(st167_plasm_onehot_subset) - 1) + 0.1,
     colnames_position = "top",
     color = NA,
     colnames_offset_y = 0,
@@ -2187,6 +2211,12 @@ rownames(amr.ariba131) <- amr.ariba131$name
 btESBL_ecoli_st131_plasmids %>% 
   filter(grepl("Inc", ref_seq)) %>% 
   unique() %>% 
+  group_by(ref_seq) %>% 
+  mutate(n = n()) %>% 
+  filter(n >= 10) %>% 
+  ungroup() %>% 
+  select(-n) %>% 
+  arrange(fct_infreq(ref_seq)) %>% 
   pivot_wider(
     id_cols = name,
     names_from = ref_seq,
@@ -2224,13 +2254,13 @@ rownames(esbl_cpe.ariba131) <- esbl_cpe.ariba131$name
 
 (
 (
-(ggtree(btESBL_ecoli_globalst131_tree, size = 0.3) %<+% 
+(ggtree(btESBL_ecoli_globalst131_tree, size = 0.2) %<+% 
    (select(btESBL_ecoli_st131_metadata, Accession_number, Country) %>% 
       mutate(Country = if_else(Country == "Malawi", "Malawi",NA_character_)))  %>%
     gheatmap(
       select(btESBL_ecoli_st131_metadata, `Year`),
       font.size = 4,
-      width = 0.03,
+      width = 0.035,
       colnames_position = "top",
       color = NA,
       colnames_offset_y = 5,
@@ -2243,29 +2273,29 @@ rownames(esbl_cpe.ariba131) <- esbl_cpe.ariba131$name
   gheatmap(
     select(btESBL_ecoli_st131_metadata, Continent),
     font.size = 4,
-    width = 0.03,
+    width = 0.035,
     colnames_position = "top",
     color = NA,
     colnames_offset_y = 5,
     colnames_angle = 90,
-    offset = 0.000004,
+    offset = 0.000005,
     hjust = 0
   ) + 
   scale_fill_viridis_d(option = "plasma", name = "Continent", 
                        na.translate = FALSE) + 
-  geom_tippoint(aes(color = Country), na.rm = TRUE, size = 0.5) + 
+  geom_tippoint(aes(color = Country), na.rm = TRUE, size = 1) + 
   scale_color_manual(values  = "red", na.translate = FALSE) +
     new_scale_fill() 
 ) %>% 
   gheatmap(
   select(esbl_cpe.ariba131, -name),
-  font.size = 3,
+  font.size = 2.5,
   width = (ncol(esbl_cpe.ariba131) -1)*0.03,
   colnames_position = "top",
   color = NA,
   colnames_offset_y = 5,
   colnames_angle = 90,
-  offset = 0.000008,
+  offset = 0.0000103,
   hjust = 0
 ) + scale_fill_manual(values = esbl_cols,
                       na.translate = FALSE,
@@ -2273,20 +2303,21 @@ rownames(esbl_cpe.ariba131) <- esbl_cpe.ariba131$name
   new_scale_fill()
 )   %>%   gheatmap(
     select(st131_plasm_onehot, -name),
-    font.size = 3,
+    font.size = 2.5,
     width = 0.03*(ncol(st131_plasm_onehot) - 1) + 0.1,
     colnames_position = "top",
     color = NA,
     colnames_offset_y = 5,
     colnames_angle = 90,
-    offset = 0.000058,
+    offset = 0.000059,
     hjust = 0
   ) + scale_fill_manual(values = viridis_pal(option = "cividis")(7)[2],
                         na.translate = FALSE,
                         name = "Plasmid\nreplicon") + 
   ylim(NA, 1000) +
   geom_treescale(x = 0.00002, y = 1000*0.666, offset = 5, width = 0.00001)   +
-  theme(legend.position = "none") ->
+  theme(legend.position = "none") + 
+      geom_point2(aes(subset = as.numeric(label) < 95 & !isTip), size = 0.5)  ->
   st131_globaltree_plot
 
 st131_globaltree_plot
@@ -2296,12 +2327,12 @@ st131_globaltree_plot
 
 ```
 
-```{r subrtree-plots, fig.height= 11, fig.width = 20, fig.cap = "E. coli ST140 (A) and ST167 (B) subtrees and (C) ST131 tree showing ESBL/CPE genes and plasmid replicons"}
+```{r subrtree-plots, fig.height= 8.2, fig.width = 12, fig.cap = "E. coli ST140 (A) and ST167 (B) subtrees and (C) ST131 tree showing ESBL/CPE genes and plasmid replicons"}
 
 st410_subtree_plot + st167_subtree_plot  + st131_globaltree_plot + 
   plot_layout(widths = c(1,1.5),
-              design = "AACCC
-                        BBCCC") +
+              design = "AAAAACCCCCCCC
+                        BBBBBCCCCCCCC") +
 plot_annotation(tag_levels = "A") +
 plot_layout(guides = "collect") -> st410_167_131_subtree_plot
 
@@ -2310,10 +2341,10 @@ st410_167_131_subtree_plot
 if (write_figs) {
 
 ggsave(here("figures/ecoli-genomics/st410_167_131_subtreeplot.svg"),
-       st410_167_131_subtree_plot, width = 20, height = 11)
+       st410_167_131_subtree_plot, width = 12, height = 8.2)
 
 ggsave(here("figures/ecoli-genomics/st410_167_131_subtreeplot.pdf"),
-       st410_167_131_subtree_plot, width = 20, height = 11)
+       st410_167_131_subtree_plot, width = 12, height = 8.2)
 }
 
 
