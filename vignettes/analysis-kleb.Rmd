@@ -15,7 +15,6 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-# library(dassimKlebs)
 library(rstatix)
 library(phytools)
 library(ggtree)
@@ -35,27 +34,35 @@ library(ggplotify)
 library(blantyreESBL)
 library(stringr)
 library(ggnewscale)
+library(vegan)
+
+# helper to reliably round numbers
 
 sp_dc <- function(x, k) {
   trimws(format(round(x, k), nsmall = k))
 }
+
+# flag - save figs to file?
+
 write_figs <- FALSE
 
 if (write_figs) {
-  if (!dir.exists(here("figures"))) {dir.create(here("figures"))}
-  if (!dir.exists(here("tables"))) {dir.create(here("tables"))}
-  
-    if (!dir.exists(here("figures/kleb-genomics"))) {
+  if (!dir.exists(here("figures"))) {
+    dir.create(here("figures"))
+  }
+
+  if (!dir.exists(here("tables"))) {
+    dir.create(here("tables"))
+  }
+
+  if (!dir.exists(here("figures/kleb-genomics"))) {
     dir.create(here("figures/kleb-genomics"))
   }
-  
+
   if (!dir.exists(here("tables/kleb-genomics"))) {
     dir.create(here("tables/kleb-genomics"))
-    }
-  
+  }
 }
-
-
 ```
 
 ## Introduction
@@ -64,7 +71,7 @@ This document generates the tables and figures for the manuscript:
 
 <br />
 
-*Genomic and antigenic diversity of carried _Klebsiella pneumoniae_ isolates mirrors that of invasive isolates in Blantyre, Malawi *
+*Genomic and antigenic diversity of colonising _Klebsiella pneumoniae_ isolates mirrors that of invasive isolates in Blantyre, Malawi *
 
 <br />
 
@@ -83,11 +90,11 @@ Joseph M Lewis^1,2,3,4^, , Madalitso Mphasa^1^, Rachel Banda^1^,  Matthew Beale^
 # load accessions and assembly stats
 
 btESBL_sequence_sample_metadata %>%
-  filter(grepl("Klebsiella", species)) %>% 
+  filter(grepl("Klebsiella", species)) %>%
   transmute("Sample accession" = accession,
          "Lane name" = lane,
          "No. contigs" = number_of_contigs,
-         "N50" = N50) %>% 
+         "N50" = N50) %>%
   kbl(caption = "Accession numbers and assembly statistics for included samples") %>% 
   kable_classic(full_width = FALSE)
 
@@ -96,42 +103,42 @@ btESBL_sequence_sample_metadata %>%
 ## MLST, K and O loci
 
 ```{r mlst, fig.width=8, fig.height= 11, fig.cap = "FIGURE X: Diversity of Klebsiella chromasomal sequence type (ST, A), K-type (B) and O-type (C). (D) shows cumulative prevalence for ST, K-type and O-types for all isolates in the collection as a function of the number of K-types, O-types, or STs, with each category ordered in size from largest to smallest. (E) and (F) show ST association of O-type and K-type respectively, where area of point is proportional to number of samples in the study. STs with only a single representative in the collection are excluded from plots A, B, C,E, F."}
-
+  
 btESBL_sequence_sample_metadata %>%
-  filter(grepl("Klebsiella", species)) %>% 
-  rename_with(~ gsub("kleb_", "", .x)) %>% 
-  rename_with(~ gsub("k_locus", "K_locus", .x)) %>% 
+  filter(grepl("Klebsiella", species)) %>%
+  rename_with(~ gsub("kleb_", "", .x)) %>%
+  rename_with(~ gsub("k_locus", "K_locus", .x)) %>%
   rename_with(~ gsub("o_locus", "O_locus", .x))  ->
   dassimKleb_BTKleb.diversity
   
-dassimKleb_BTKleb.diversity %>% 
-  group_by(ST) %>% 
+dassimKleb_BTKleb.diversity %>%
+  group_by(ST) %>%
   mutate(n = n(),
-         ST = paste0("ST",ST)) %>% 
-  filter(n > 1, ST != "STNovel") %>%  
+         ST = paste0("ST", ST)) %>%
+  filter(n > 1, ST != "STNovel") %>%
   ggplot(aes(fct_infreq(ST))) +
   geom_bar(fill = viridis_pal()(4)[3]) +
-  coord_flip() + 
+  coord_flip() +
   labs(y = "Number", x = element_blank()) +
   theme_bw()  -> a
 
-dassimKleb_BTKleb.diversity %>% 
+dassimKleb_BTKleb.diversity %>%
   mutate(K_locus = case_when(
-    K_locus_confidence %in% 
+    K_locus_confidence %in%
            c("Good",
-             "High",             
+             "High",
              "Very high") ~ K_locus,
-    TRUE ~ "Unknown")) %>% 
-  group_by(K_locus) %>% 
-  mutate(n = n()) %>% 
-  filter(n > 1) %>%  
+    TRUE ~ "Unknown")) %>%
+  group_by(K_locus) %>%
+  mutate(n = n()) %>%
+  filter(n > 1) %>%
   ggplot(aes(fct_infreq(K_locus))) +
   geom_bar(fill = viridis_pal()(4)[2]) +
   coord_flip()  +
   labs(y = "Number", x = element_blank()) +
   theme_bw()  -> b
 
-dassimKleb_BTKleb.diversity%>% 
+dassimKleb_BTKleb.diversity %>% 
   mutate(O_locus = case_when(
     O_locus_confidence %in% 
            c("Good",
@@ -149,7 +156,6 @@ dassimKleb_BTKleb.diversity%>%
 
 # cum K and O serotypes
 bind_rows(
-  
   dassimKleb_BTKleb.diversity %>%
     group_by(K_locus) %>%
     summarise(n = n()) %>%
@@ -158,33 +164,34 @@ bind_rows(
     mutate(
       n_loci = 1:n(),
       cum_n = cumsum(n),
-      cum_prop = cum_n / (max(cum_n)+9),
+      cum_prop = cum_n / (max(cum_n) + 9),
       type = "K-type"
-    ) %>% 
+    ) %>%
     rename(Locus = K_locus),
-  
   dassimKleb_BTKleb.diversity %>%
     group_by(O_locus) %>%
-      mutate(O_locus = case_when(
-    O_locus_confidence %in% 
-           c("Good",
-             "High",             
-             "Very high") ~ O_locus,
-    TRUE ~ "Unknown")) %>% 
-    filter(O_locus != "Unknown") %>% 
+    mutate(O_locus = case_when(
+      O_locus_confidence %in%
+        c(
+          "Good",
+          "High",
+          "Very high"
+        ) ~ O_locus,
+      TRUE ~ "Unknown"
+    )) %>%
+    filter(O_locus != "Unknown") %>%
     summarise(n = n()) %>%
     ungroup() %>%
     arrange(desc(n)) %>%
     mutate(
       n_loci = 1:n(),
       cum_n = cumsum(n),
-      cum_prop = cum_n / (max(cum_n)+6),     # fudge for unknown O tyoe
+      cum_prop = cum_n / (max(cum_n) + 6), # fudge for unknown O tyoe
       type = "O-type"
-    ) %>% 
+    ) %>%
     rename(Locus = O_locus),
-  
   dassimKleb_BTKleb.diversity %>%
-    filter(ST != "Novel")  %>% 
+    filter(ST != "Novel") %>%
     group_by(ST) %>%
     summarise(n = n()) %>%
     ungroup() %>%
@@ -194,73 +201,87 @@ bind_rows(
       cum_n = cumsum(n),
       cum_prop = cum_n / max(cum_n),
       type = "ST"
-    ) %>% 
+    ) %>%
     rename(Locus = ST)
-) %>% 
-  mutate(type = factor(type, levels = 
-                         c("O-type",
-                           "K-type",
-                           "ST"))) %>% 
+) %>%
+  mutate(type = factor(type,
+    levels =
+      c(
+        "O-type",
+        "K-type",
+        "ST"
+      )
+  )) %>%
   ggplot(aes(n_loci, cum_prop, color = type)) +
   geom_line() +
   theme_bw() +
   scale_color_manual(values = viridis_pal()(4)[1:3]) +
-  labs(x= "Number of K/O-type/ST", y = "Cum. prevalence") + 
+  labs(x = "Number of K/O-type/ST", y = "Cum. prevalence") +
   theme(legend.title = element_blank()) -> d
 
-dassimKleb_BTKleb.diversity %>% 
-  mutate(O_locus = case_when(
-    O_locus_confidence %in% 
-           c("Good",
-             "High",             
-             "Very high") ~ O_locus,
-    TRUE ~ "Unknown"),
-    ST = paste0("ST", ST)) %>% 
-  filter(ST != "STNovel") %>% 
-    group_by(ST) %>% 
-  mutate(n = n()) %>% 
-  filter(n > 1) %>% 
-  ungroup() %>% 
+dassimKleb_BTKleb.diversity %>%
+  mutate(
+    O_locus = case_when(
+      O_locus_confidence %in%
+        c("Good",
+          "High",
+          "Very high") ~ O_locus,
+      TRUE ~ "Unknown"
+    ),
+    ST = paste0("ST", ST)
+  ) %>%
+  filter(ST != "STNovel") %>%
+  group_by(ST) %>%
+  mutate(n = n()) %>%
+  filter(n > 1) %>%
+  ungroup() %>%
   mutate(O_locus = fct_infreq(O_locus),
-         ST = fct_infreq(ST)) %>% 
-  group_by(O_locus, ST) %>% 
-  summarise(n = n()) %>% 
-  ggplot(aes(ST,O_locus, size = n)) +
+         ST = fct_infreq(ST)) %>%
+  group_by(O_locus, ST) %>%
+  summarise(n = n()) %>%
+  ggplot(aes(ST, O_locus, size = n)) +
   geom_point(color = viridis_pal()(4)[1]) +
   theme_bw() +
-  labs(y = "O-type") + 
+  labs(y = "O-type") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         legend.title = element_blank()) -> e
 
-dassimKleb_BTKleb.diversity %>% 
-  mutate(K_locus = case_when(
-    K_locus_confidence %in% 
-           c("Good",
-             "High",             
-             "Very high") ~ K_locus,
-    TRUE ~ "Unknown"),
-    ST = paste0("ST", ST)) %>% 
-  filter(ST != "STNovel") %>% 
-  group_by(ST) %>% 
-  mutate(n = n()) %>% 
-  filter(n > 1) %>% 
-  ungroup() %>% 
-  mutate(K_locus = fct_infreq(K_locus),
-         ST = fct_infreq(ST)) %>% 
-  group_by(K_locus, ST) %>% 
-  summarise(n = n()) %>% 
-  ggplot(aes(ST,K_locus, size = n)) +
+dassimKleb_BTKleb.diversity %>%
+  mutate(
+    K_locus = case_when(
+      K_locus_confidence %in%
+        c(
+          "Good",
+          "High",
+          "Very high"
+        ) ~ K_locus,
+      TRUE ~ "Unknown"
+    ),
+    ST = paste0("ST", ST)
+  ) %>%
+  filter(ST != "STNovel") %>%
+  group_by(ST) %>%
+  mutate(n = n()) %>%
+  filter(n > 1) %>%
+  ungroup() %>%
+  mutate(
+    K_locus = fct_infreq(K_locus),
+    ST = fct_infreq(ST)
+  ) %>%
+  group_by(K_locus, ST) %>%
+  summarise(n = n()) %>%
+  ggplot(aes(ST, K_locus, size = n)) +
   geom_point(color = viridis_pal()(4)[2]) +
   theme_bw() +
-  labs(y = "K-type") + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        legend.title = element_blank()) +
-  scale_size(breaks = c(5,10,15))-> f
+  labs(y = "K-type") +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.title = element_blank()
+  ) +
+  scale_size(breaks = c(5, 10, 15)) -> f
 
-
-
-((a + b + (c / d)) / e / f) + 
-  plot_layout(heights = c(2,1,2))  + 
+((a + b + (c / d)) / e / f) +
+  plot_layout(heights = c(2, 1, 2)) +
   plot_annotation(tag_levels = "A") -> stplot
 stplot
 
@@ -270,7 +291,6 @@ if (write_figs) {
     plot = stplot,
     width = 8,
     height = 11
-    
   )
   ggsave(
     filename = here("figures/kleb-genomics/F1_stplot.pdf"),
@@ -280,34 +300,36 @@ if (write_figs) {
   )
 }
 
- 
-
 ```
 
 ```{r O_type_table}
 
-
-dassimKleb_BTKleb.diversity %>% 
-    mutate(O_locus = case_when(
-        O_locus_confidence %in% 
-            c("Good",
-              "High",             
-              "Very high") ~ O_locus,
-        TRUE ~ "Unknown")) %>% 
-    group_by(O_locus) %>% 
-    summarise(n = n()) %>% 
-  arrange(desc(n)) %>% 
-  mutate(csum = cumsum(n)) %>% 
-  mutate(n = paste0(n, " (", sp_dc(100*n/max(csum),1),"%)")) %>% 
-  mutate(prop = paste0(csum, " (", sp_dc(100*csum /max(csum),1), "%)")) %>% 
-  select(O_locus, n, prop) %>% 
-  kbl(caption = "O-types of carriage isolates",
-      col.names = c("O-type",
-                    "n (%)",
-                    "Cumulative n (%)")) %>% 
+dassimKleb_BTKleb.diversity %>%
+  mutate(O_locus = case_when(
+    O_locus_confidence %in%
+      c(
+        "Good",
+        "High",
+        "Very high"
+      ) ~ O_locus,
+    TRUE ~ "Unknown"
+  )) %>%
+  group_by(O_locus) %>%
+  summarise(n = n()) %>%
+  arrange(desc(n)) %>%
+  mutate(csum = cumsum(n)) %>%
+  mutate(n = paste0(n, " (", sp_dc(100 * n / max(csum), 1), "%)")) %>%
+  mutate(prop = paste0(csum, " (", sp_dc(100 * csum / max(csum), 1), "%)")) %>%
+  select(O_locus, n, prop) %>%
+  kbl(
+    caption = "O-types of carriage isolates",
+    col.names = c(
+      "O-type",
+      "n (%)",
+      "Cumulative n (%)"
+    )
+  ) %>%
   kable_classic(full_width = FALSE)
-  
-  
 
 ```
 
@@ -316,26 +338,31 @@ dassimKleb_BTKleb.diversity %>%
 dassimKleb_BTKleb.diversity %>%
   mutate(K_locus = case_when(
     K_locus_confidence %in%
-      c("Good",
+      c(
+        "Good",
         "High",
-        "Very high") ~ K_locus,
+        "Very high"
+      ) ~ K_locus,
     TRUE ~ "Unknown"
   )) %>%
   group_by(K_locus) %>%
   summarise(n = n()) %>%
   arrange(desc(n)) %>%
-  mutate(csum = cumsum(n)) %>% 
+  mutate(csum = cumsum(n)) %>%
   mutate(n = paste0(n, " (", sp_dc(100 * n / max(csum), 1), "%)")) %>%
   mutate(prop = paste0(csum, " (", sp_dc(100 * csum / max(csum), 1), "%)")) %>%
   select(K_locus, n, prop) %>%
-  kbl(caption = "K-types of carriage isolates",
-      col.names = c("K-type",
-                    "n (%)",
-                    "Cumulative n (%)")) %>%
+  kbl(
+    caption = "K-types of carriage isolates",
+    col.names = c(
+      "K-type",
+      "n (%)",
+      "Cumulative n (%)"
+    )
+  ) %>%
   kable_classic(full_width = FALSE)
 
 ```
-
 
 ## Species and population structure
 
@@ -346,33 +373,36 @@ dassimKleb_BTKleb.diversity %>%
 table(dassimKleb_BTKleb.diversity$species)
 dassimKleb_trees.BTcarriage <- btESBL_coregene_tree_kleb
 
+dassimKleb_BTKleb.diversity %>%
+  select(ST, lane) %>%
+  mutate(ST = paste0("ST", ST)) %>%
+  pivot_wider(
+    id_cols = lane,
+    names_from = ST,
+    values_from = ST,
+    values_fn = length,
+    values_fill = 0
+  ) %>%
+  mutate(lane = gsub("#", "_", lane)) %>%
+  as.data.frame() ->
+mlst.onehot
 
-dassimKleb_BTKleb.diversity %>% 
-  select(ST, lane) %>% 
-  mutate(ST = paste0("ST", ST)) %>% 
-  pivot_wider(id_cols = lane ,
-              names_from = ST, 
-              values_from = ST,
-              values_fn = length,
-              values_fill = 0) %>% 
-  mutate(lane = gsub("#","_", lane)) %>% 
-  as.data.frame() -> 
-  mlst.onehot
-
-
-mlst.onehot[, c("lane",
-                names(sort(apply(mlst.onehot[-1], 2, sum),
-                           decreasing = TRUE)))] -> mlst.onehot
+mlst.onehot[, c(
+  "lane",
+  names(sort(apply(mlst.onehot[-1], 2, sum),
+    decreasing = TRUE
+  ))
+)] -> mlst.onehot
 
 mlst.onehot[-1] <- lapply(mlst.onehot[-1], as.factor)
 rownames(mlst.onehot) <- mlst.onehot$lane
 
-dassimKleb_BTKleb.diversity %>% 
-  rename(strain = lane) %>% 
-  mutate(strain = gsub("#","_", strain)) %>% 
-  select(strain, species) %>% 
+dassimKleb_BTKleb.diversity %>%
+  rename(strain = lane) %>%
+  mutate(strain = gsub("#", "_", strain)) %>%
+  select(strain, species) %>%
   as.data.frame() ->
-  spec_hm
+spec_hm
 rownames(spec_hm) <- spec_hm$strain
 
   get_legend(
@@ -399,7 +429,7 @@ rownames(spec_hm) <- spec_hm$strain
       color = NA, 
       font.size = 3, 
       colnames_angle = 90, 
-      colnames_position = "top", 
+      colnames_position = "top",   
       hjust = 0,
       colnames_offset_y = 0,
       offset = 0 ) %>% 
@@ -546,7 +576,6 @@ dassimKleb_BTKleb.amr %>%
 ### Plot overall prevalence
 
 
-
 dassimKleb_BTKleb.amr %>%
   filter(!grepl("Oqx", gene)) %>%  # remove efflux and intrinsic K pnemo
   group_by(class) %>%              # penicillinase
@@ -639,7 +668,7 @@ dassimKleb_BTKleb.amr %>%
 names(amr.ariba.onehot) <- gsub("_","-",names(amr.ariba.onehot))
 
 as.data.frame(
-  1- as.matrix(
+  1 - as.matrix(
     dist(t(amr.ariba.onehot[-1]), method = "binary")
   )
 ) -> clust.amr
@@ -775,6 +804,217 @@ if (write_figs) {
 
 ## Diversity of Malawian carriage isolates in a global context
 
+Plot table of metadata acorss studies
+
+```{r metadata-table-global-isolates, fig.width = 9, fig.height = 5, fig.cap = "ST distribution stratified by Malawian samples" }
+
+# function to boostrap confidence intervals for diversity indices from
+# vegan package
+
+bootstrap_diveristy_cis <-
+  function(df,
+           n_reps = 100,
+           diversity_measure = "shannon",
+           output = "string") {
+    outlist <- list()
+    
+    if (all(is.na(df$ST))) {
+      if (output == "string") {
+        out <- "NA"
+      } else {
+        out <- data.frame(mid = NA,
+                          lci = NA,
+                          uci = NA)
+      }
+
+    } else {
+    for (i in 1:n_reps) {
+      df_resample <-
+        df %>% 
+        ungroup() %>% 
+        slice_sample(n = nrow(df), replace = TRUE) %>%
+        select(ST) %>%
+        filter(!is.na(ST)) %>%
+        pivot_wider(
+          names_from = ST,
+          values_from = ST,
+          values_fn = length,
+          values_fill = 0
+        )
+      outlist[[i]] <-
+        vegan::diversity(df_resample, index = diversity_measure)
+    }
+    results <- unlist(outlist)
+    outdf <- data.frame(mid = median(results, na.rm = TRUE),
+                         lci = quantile(results, 0.025, na.rm = TRUE),
+                         uci = quantile(results, 0.975, na.rm = TRUE))
+    outstr = paste0(
+      sp_dc(median(results, na.rm = TRUE),2),
+      " 95% CI (",
+      sp_dc(quantile(results, 0.025, na.rm = TRUE), 2),
+      "-",
+      sp_dc(quantile(results, 0.975, na.rm = TRUE), 2),
+      ")"
+    )
+    rownames(outdf) <- NULL
+    if (output == "string") {
+      out <- outstr
+    } else {
+      out <- outdf
+    }
+    }
+    return(out)
+  }
+
+
+# by group
+
+
+
+left_join(
+  btESBL_kleb_global_metadata %>%
+    filter(name %in% btESBL_kleb_globaltree$tip.label) %>%
+    mutate(
+      `Isolate Type` = case_when(
+        `Isolate Type` == "Carriage" ~ "Colonising",
+        `Isolate Type` == "Infection" ~ "Invasive",
+        TRUE ~ `Isolate Type`
+      )
+    ) %>%
+    group_by(study) %>%
+    summarise(
+      n = n(),
+      invasive = paste0(
+        sum(`Isolate Type` == "Invasive", na.rm = TRUE),
+        "/",
+        sum(!is.na(`Isolate Type`)),
+        " (",
+        sp_dc(100 * (
+          sum(`Isolate Type` == "Invasive", na.rm = TRUE) /
+            sum(!is.na(`Isolate Type`))
+        ),
+        0),
+        " %)"
+      ),
+      esbl = paste0(
+        sum(ESBL == "ESBL", na.rm = TRUE),
+        "/",
+        sum(!is.na(ESBL)),
+        " (",
+        sp_dc(100 * (
+          sum(ESBL == "ESBL", na.rm = TRUE) /
+            sum(!is.na(ESBL))
+        ),
+        0),
+        " %)"
+      ),
+    ),
+  btESBL_kleb_global_metadata %>%
+    filter(name %in% btESBL_kleb_globaltree$tip.label) %>%
+    mutate(
+      `Isolate Type` = case_when(
+        `Isolate Type` == "Carriage" ~ "Colonising",
+        `Isolate Type` == "Infection" ~ "Invasive",
+        TRUE ~ `Isolate Type`
+      )
+    ) %>%
+    group_by(study) %>%
+    group_modify(
+      ~ bootstrap_diveristy_cis(
+        .x,
+        diversity_measure = "shannon",
+        output = "df",
+        n_reps = 1000
+      )
+    ) %>%
+    mutate(st_diversity  =
+             if_else(
+               is.na(mid),
+               "-",
+               paste0(sp_dc(mid, 2),
+                      " 95% CI (",
+                      sp_dc(lci, 2),
+                      "-",
+                      sp_dc(uci, 2),
+                      ")")
+             )) %>%
+    select(study, st_diversity),
+  by = c("study")
+) %>%
+  mutate(
+    study = case_when(
+      study == "cornick" ~ "Cornick et al 2021",
+      study == "DASSIM" ~ "This study",
+      study == "global" ~ "Holt et al 2015",
+      study == "kenya" ~  "Henson et el 2017",
+      study == "musciha" ~ "Musicha et al 2019"
+    )
+  ) %>%
+  kbl(
+    col.names = c(
+      "Study",
+      "Included genomes",
+      "Invasive",
+      "ESBL",
+      "Shannon diversity in ST (95% CI)"
+    ),
+    caption = "Characteristics of included genomes"
+  ) %>%
+  add_header_above(c(
+    " " = 2,
+    "Proportion of samples that are" = 2,
+    " " = 1
+  )) %>%
+  kable_classic(full_width = FALSE) %>%
+  footnote(
+    general = c(
+      "Invasive is defined as cultured from a sterile site",
+      "ESBL is defined as presence of any recognised ESBL gene"
+    )
+  )
+
+btESBL_kleb_global_metadata %>% 
+  select(study, ST, `Isolate Type`) %>% 
+  filter(!is.na(ST)) %>% 
+  mutate(`Isolate Type` = case_when(
+    `Isolate Type` == "Carriage" ~ "Colonising",
+    `Isolate Type` == "Infection" ~ "Invasive",
+    TRUE ~ `Isolate Type`)) %>% 
+  mutate(
+    study = case_when(
+      study == "cornick" ~ "Cornick et al 2021",
+      study == "DASSIM" ~ "This study",
+      study == "global" ~ "Holt et al 2015",
+      study == "kenya" ~  "Henson et el 2017",
+      study == "musciha" ~ "Musicha et al 2019"
+    )) %>% 
+  ggplot(aes(fct_infreq(ST), fill = `Isolate Type`)) +
+  geom_bar() +
+  facet_wrap(~ study, ncol = 1, scales = "free_y") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 4)) +
+  labs(x = "ST", y = "Number of samples") ->
+  st_dist_plot_malawi
+
+st_dist_plot_malawi
+
+if (write_figs) {
+  ggsave(
+    filename = here("figures/kleb-genomics/SUP_F_malawi_st_by_study.pdf"),
+    plot = globaltree_plot,
+    width = 9,
+    height = 5
+  )
+  ggsave(
+    filename = here("figures/kleb-genomics/SUP_F_malawi_st_by_study.pdf"),
+    plot = globaltree_plot,
+    width = 9,
+    height = 5
+  )
+}
+```
+
+
 ``` {r global-tree, fig.height = 12, fig.width = 8}
 
 btESBL_kleb_global_metadata %>% 
@@ -797,8 +1037,6 @@ names(col) <-
     "Invasive",
     "Colonising",
     "ESBL") 
-
-
 
   (
     (
@@ -948,22 +1186,23 @@ if (write_figs) {
     height = 12
   )
 }
+
 ```
-
-
 
 ## Malawian isolates: comparing carriage and infection
 
-
 ```{r malawitree, fig.height = 10, fig.width = 8, fig.cap = "Midpoint rooted core gene maximum likelihood phylogenetic tree of Malawian isolates."}
-
-
-
 
 # 627  = ST 218
 (
   (
-    ggtree(treeio::tree_subset(btESBL_kleb_malawi_allisolate_core_gene_tree, 372, levels_back = 0)) %>%
+    ggtree(
+      treeio::tree_subset(
+        btESBL_kleb_malawi_allisolate_core_gene_tree,
+        372,
+        levels_back = 0
+      )
+    ) %>%
       gheatmap(
         select(dassimKleb_globalKleb.metadata, `Isolate Type`),
         width = 0.03,
@@ -974,7 +1213,7 @@ if (write_figs) {
         colnames_offset_y = 5,
         hjust = 0,
         offset = 0.0002
-      ) + 
+      ) +
       scale_fill_manual(
         values =
           c(
@@ -985,7 +1224,7 @@ if (write_figs) {
         name = "Isolate\nType",
         guide = guide_legend(order = 2)
       ) +
-      new_scale_fill() 
+      new_scale_fill()
   ) %>%   gheatmap(
     select(dassimKleb_globalKleb.metadata, ESBL)  %>%
       mutate(ESBL = if_else(ESBL == "ESBL", "Present", NA_character_)),
@@ -1007,9 +1246,11 @@ if (write_figs) {
     ) +
     new_scale_fill()
 ) %>%   gheatmap(
-  select(dassimKleb_globalKleb.metadata, ybt,clb,iuc,iro,rmpA,rmpA2) %>% 
-    mutate(across(everything(), ~ 
-                    if_else(.x == "1", "Present", NA_character_))),
+  select(dassimKleb_globalKleb.metadata, ybt, clb, iuc, iro, rmpA, rmpA2) %>%
+    mutate(across(
+      everything(), ~
+        if_else(.x == "1", "Present", NA_character_)
+    )),
   width = 0.18,
   color = "lightgrey",
   font.size = 4,
@@ -1018,75 +1259,113 @@ if (write_figs) {
   colnames_offset_y = 5,
   hjust = 0,
   offset = 0.0005
-)  + 
-  scale_fill_manual(values = c("Present" = "grey30"),
-                    name = "Virulence\nGene", na.translate = FALSE,
-                    guide = guide_legend(order = 3)) + 
+)  +
+  scale_fill_manual(
+    values = c("Present" = "grey30"),
+    name = "Virulence\nGene",
+    na.translate = FALSE,
+    guide = guide_legend(order = 3)
+  ) +
   ylim(NA, 370) +
-  geom_cladelabel(node = 516, label = "ST268", align = TRUE, offset = - 0.0011,
-                  fontsize = 3) +
-  geom_cladelabel(node = 629, label = "ST218", align = TRUE, offset = - 0.00163,
-                  fontsize = 3) +
-  geom_cladelabel(node = 376, label = "ST14", align = TRUE, offset = - 0.00062,
-                  fontsize = 3) +
-  geom_cladelabel(node = 412, label = "ST15", align = TRUE, offset = - 0.00074,
-                  fontsize = 3) +
-  geom_cladelabel(node = 585, label = "ST340", align = TRUE, offset = - 0.00158,
-                  fontsize = 3) +
-  geom_cladelabel(node = 523, label = "ST307", align = TRUE, offset = - 0.0013,
-                  fontsize = 3) +
-  geom_treescale(x = 0.0003, y = 330, offset = 2, width = 0.001,
-                  fontsize = 3) -> malawi_tree_plot_final
+  geom_cladelabel(
+    node = 516,
+    label = "ST268",
+    align = TRUE,
+    offset = -0.0011,
+    fontsize = 3
+  ) +
+  geom_cladelabel(
+    node = 629,
+    label = "ST218",
+    align = TRUE,
+    offset = -0.00163,
+    fontsize = 3
+  ) +
+  geom_cladelabel(
+    node = 376,
+    label = "ST14",
+    align = TRUE,
+    offset = -0.00062,
+    fontsize = 3
+  ) +
+  geom_cladelabel(
+    node = 412,
+    label = "ST15",
+    align = TRUE,
+    offset = -0.00074,
+    fontsize = 3
+  ) +
+  geom_cladelabel(
+    node = 585,
+    label = "ST340",
+    align = TRUE,
+    offset = -0.00158,
+    fontsize = 3
+  ) +
+  geom_cladelabel(
+    node = 523,
+    label = "ST307",
+    align = TRUE,
+    offset = -0.0013,
+    fontsize = 3
+  ) +
+  geom_treescale(
+    x = 0.0003,
+    y = 330,
+    offset = 2,
+    width = 0.001,
+    fontsize = 3
+  ) -> malawi_tree_plot_final
 
 malawi_tree_plot_final
 
 if (write_figs) {
-ggsave(filename = here("figures/kleb-genomics/F4_malawitree.pdf"),
-       plot = malawi_tree_plot_final,
-       width =8,
-       height = 10
-)
-ggsave(filename = here("figures/kleb-genomics/F4_malawitree.svg"),
-       plot = malawi_tree_plot_final,
-       width =8,
-       height = 10
-)
+  ggsave(
+    filename = here("figures/kleb-genomics/F4_malawitree.pdf"),
+    plot = malawi_tree_plot_final,
+    width = 8,
+    height = 10
+  )
+  ggsave(
+    filename = here("figures/kleb-genomics/F4_malawitree.svg"),
+    plot = malawi_tree_plot_final,
+    width = 8,
+    height = 10
+  )
 }
-
 
 ```
 
 
 ```{r inv_vs_carriage, fig.width = 5, fig.height= 5}
 
-dassimKleb_globalKleb.metadata %>% 
-  filter(location == "Malawi") %>% 
-  mutate(ESBL = if_else(ESBL== "ESBL","ESBL","Not ESBL")) %>% 
-  select(`Isolate Type`, ESBL, ybt,clb,iuc,iro,rmpA, rmpA2) %>% 
-  pivot_longer(-c(`Isolate Type`, ESBL)) %>% 
-  mutate(value = if_else(value == 1, "Present", "Absent")) %>% 
-  filter(!is.na(value)) %>%  
+dassimKleb_globalKleb.metadata %>%
+  filter(location == "Malawi") %>%
+  mutate(ESBL = if_else(ESBL == "ESBL", "ESBL", "Not ESBL")) %>%
+  select(`Isolate Type`, ESBL, ybt, clb, iuc, iro, rmpA, rmpA2) %>%
+  pivot_longer(-c(`Isolate Type`, ESBL)) %>%
+  mutate(value = if_else(value == 1, "Present", "Absent")) %>%
+  filter(!is.na(value)) %>%
   ggplot(aes(name, fill = value)) + geom_bar(position = "fill") +
-  facet_grid(~`Isolate Type`) +
+  facet_grid( ~ `Isolate Type`) +
   theme_bw() +
-  scale_fill_viridis_d() + 
-  theme(axis.text.x = element_text(angle = 45, hjust =1),
+  scale_fill_viridis_d() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
         legend.title = element_blank()) +
-  labs(y = "Proportion", x = "")-> a
+  labs(y = "Proportion", x = "") -> a
 
-dassimKleb_globalKleb.metadata %>% 
-  filter(location == "Malawi",
-         !is.na(ESBL)) %>% 
-  mutate(ESBL = if_else(ESBL== "ESBL","ESBL","Not ESBL")) %>% 
-  select(`Isolate Type`, ESBL, ybt,clb,iuc,iro,rmpA, rmpA2) %>% 
-  pivot_longer(-c(`Isolate Type`, ESBL)) %>% 
-  mutate(value = if_else(value == 1, "Present", "Absent")) %>% 
-  filter(!is.na(value)) %>% 
+dassimKleb_globalKleb.metadata %>%
+  filter(location == "Malawi",!is.na(ESBL)) %>%
+  mutate(ESBL = if_else(ESBL == "ESBL", "ESBL", "Not ESBL")) %>%
+  select(`Isolate Type`, ESBL, ybt, clb, iuc, iro, rmpA, rmpA2) %>%
+  pivot_longer(-c(`Isolate Type`, ESBL)) %>%
+  mutate(value = if_else(value == 1, "Present", "Absent")) %>%
+  filter(!is.na(value)) %>%
   ggplot(aes(name, fill = value)) + geom_bar(position = "fill") +
-  facet_grid(~ESBL) +
+  facet_grid( ~ ESBL) +
   theme_bw() +
-  scale_fill_viridis_d() + 
-  theme(axis.text.x = element_text(angle = 45, hjust =1),
+  scale_fill_viridis_d() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
         legend.title = element_blank()) +
   labs(y = "Proportion", x = "") -> b
 
@@ -1146,51 +1425,54 @@ dassimKleb_globalKleb.metadata %>%
   geom_point(position = position_dodge(width = 0.5)) +
   geom_errorbar(width = 0, position = position_dodge(width = 0.5)) +
   theme_bw() +
-  theme(axis.text.x = element_text(angle = 45, hjust= 1)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   labs(x = "O-type", y = "Proportion of samples") +
   scale_color_manual(values = hue_pal()(2)[c(2,1)]) ->
   o_type_distn_plot
 
-
-
 dassimKleb_globalKleb.metadata %>%
-  filter(study %in% c("cornick", "DASSIM","musciha"),
-         !is.na(O_locus)) %>% 
+  filter(study %in% c("cornick", "DASSIM", "musciha"),!is.na(O_locus)) %>%
   mutate(O_locus = case_when(
-    O_locus_confidence %in% 
-           c("Good",
-             "High",             
-             "Very high") ~ O_locus,
-    TRUE ~ "Unknown")) %>% 
-   mutate(K_locus = case_when(
-    K_locus_confidence %in% 
-           c("Good",
-             "High",             
-             "Very high") ~ K_locus,
-    TRUE ~ "Unknown")) %>% 
+    O_locus_confidence %in%
+      c("Good",
+        "High",
+        "Very high") ~ O_locus,
+    TRUE ~ "Unknown"
+  )) %>%
+  mutate(K_locus = case_when(
+    K_locus_confidence %in%
+      c("Good",
+        "High",
+        "Very high") ~ K_locus,
+    TRUE ~ "Unknown"
+  )) %>%
   mutate(K_locus = as.factor(K_locus),
-         `Isolate Type` = as.factor(`Isolate Type`)) %>% 
-  count(K_locus, `Isolate Type`, .drop = FALSE) %>% 
-  group_by(`Isolate Type`) %>% 
-  mutate(total = sum(n)) %>% 
-  group_by(K_locus) %>% 
-  filter(sum(n) > 2) %>% 
-  group_by(K_locus, `Isolate Type`) %>% 
-  summarise(prop = n/unique(total),
-            lci = binom.test(n, unique(total))$conf.int[1],
-            uci = binom.test(n, unique(total))$conf.int[2]) %>% 
-  ggplot(aes(fct_rev(fct_reorder(K_locus,prop)), 
-             prop, 
-             color = `Isolate Type`,
-             shape = `Isolate Type`,
-             ymin = lci,
-             ymax = uci)) +
+         `Isolate Type` = as.factor(`Isolate Type`)) %>%
+  count(K_locus, `Isolate Type`, .drop = FALSE) %>%
+  group_by(`Isolate Type`) %>%
+  mutate(total = sum(n)) %>%
+  group_by(K_locus) %>%
+  filter(sum(n) > 2) %>%
+  group_by(K_locus, `Isolate Type`) %>%
+  summarise(
+    prop = n / unique(total),
+    lci = binom.test(n, unique(total))$conf.int[1],
+    uci = binom.test(n, unique(total))$conf.int[2]
+  ) %>%
+  ggplot(aes(
+    fct_rev(fct_reorder(K_locus, prop)),
+    prop,
+    color = `Isolate Type`,
+    shape = `Isolate Type`,
+    ymin = lci,
+    ymax = uci
+  )) +
   geom_point(position = position_dodge(width = 0.5)) +
   geom_errorbar(width = 0, position = position_dodge(width = 0.5)) +
   theme_bw() +
-  theme(axis.text.x = element_text(angle = 45, hjust= 1)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   labs(x = "K-type", y = "Proportion of samples") +
-  scale_color_manual(values = hue_pal()(2)[c(2,1)]) ->
+  scale_color_manual(values = hue_pal()(2)[c(2, 1)]) ->
   k_type_distn_plot
 
 o_type_distn_plot + k_type_distn_plot +
@@ -1215,7 +1497,6 @@ if (write_figs) {
     height = 4
   )
 }
-
 
 ```
 
@@ -1276,7 +1557,6 @@ tab %>%
   kable_classic(full_width = FALSE) %>% 
   row_spec(which(tab$p.adj < 0.05), bold = TRUE)
 
-
 ```
 
 ## Odds and ends to calculate for manuscript
@@ -1285,14 +1565,16 @@ tab %>%
 ```{r odds-and-ends}
 length(unique(dassimKleb_BTKleb.diversity$ST))
 
-dassimKleb_BTKleb.diversity %>% 
-  group_by(ST) %>% 
-  summarise(n = n()) %>% 
-  ungroup() %>% 
-  summarise(median = median(n),
-            lqi = quantile(n, 0.25),
-            uqi = quantile(n, 0.75),
-            n_singletons = sum(n==1))
+dassimKleb_BTKleb.diversity %>%
+  group_by(ST) %>%
+  summarise(n = n()) %>%
+  ungroup() %>%
+  summarise(
+    median = median(n),
+    lqi = quantile(n, 0.25),
+    uqi = quantile(n, 0.75),
+    n_singletons = sum(n == 1)
+  )
 
 length(unique(dassimKleb_BTKleb.diversity$K_locus))
 
