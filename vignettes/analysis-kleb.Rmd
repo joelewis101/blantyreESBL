@@ -100,6 +100,164 @@ btESBL_sequence_sample_metadata %>%
 
 ```
 
+Look at within-participant correlation of STs
+
+```{r within-participant-st, fig.width = 12 , fig.height = 8, fig.cap = "Distribution of ST, O- and K- loci for all samples, and excluding all but  one sample in cases where a participant has two samples where the same ST was identified." }
+
+# plot ST distribution; then exclude all samples that are
+# 1) within one participant
+# 2) have same ST
+# and plot
+
+ bind_rows(
+   btESBL_sequence_sample_metadata %>%
+     filter(grepl("Klebsiella", species)) %>%
+     group_by(ST, pid) %>%
+     mutate(
+       ST = paste0("ST", ST),
+       group = "All samples"
+     ) %>%
+     arrange(pid, ST),
+   btESBL_sequence_sample_metadata %>%
+     filter(grepl("Klebsiella", species)) %>%
+     group_by(ST, pid) %>%
+     mutate(
+       ST = paste0("ST", ST),
+       group = "Within-participant\nDuplicate STs exlcuded"
+     ) %>%
+     arrange(pid, ST) %>%
+     slice(n = 1)
+ ) %>%
+   select(pid, ST, group, kleb_k_locus, kleb_o_locus) %>%
+   rename_with(~ gsub("kleb_", "", .x)) %>%
+   rename_with(~ gsub("k_locus", "K locus", .x)) %>%
+   rename_with(~ gsub("o_locus", "O locus", .x)) %>%
+   pivot_longer(-c(pid, group)) %>%
+   ggplot(aes(fct_infreq(value), fill = group)) +
+   geom_bar(position = "dodge") +
+   facet_wrap(~name, scales = "free", ncol = 1) +
+   theme_bw() +
+   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+   labs(fill = "", x = "", y = "Number of samples")
+   
+  bind_rows(
+   btESBL_sequence_sample_metadata %>%
+     filter(grepl("Klebsiella", species)) %>%
+     group_by(ST, pid) %>%
+     mutate(
+       ST = paste0("ST", ST),
+       group = "All samples"
+     ) %>%
+     arrange(pid, ST),
+   btESBL_sequence_sample_metadata %>%
+     filter(grepl("Klebsiella", species)) %>%
+     group_by(ST, pid) %>%
+     mutate(
+       ST = paste0("ST", ST),
+       group = "Within-participant\nDuplicate STs exlcuded"
+     ) %>%
+     arrange(pid, ST) %>%
+     slice(n = 1)
+ ) %>%
+   select(pid, ST, group, kleb_k_locus, kleb_o_locus) %>%
+   rename_with(~ gsub("kleb_", "", .x)) %>%
+   rename_with(~ gsub("k_locus", "K locus", .x)) %>%
+   rename_with(~ gsub("o_locus", "O locus", .x)) %>%
+   pivot_longer(-c(pid, group)) %>%
+    ungroup() %>% 
+    group_by(name) %>% 
+    summarise(chi = fisher.test(table(group, value), simulate.p.value = TRUE)$p.value)
+ 
+# median number of STs per participant
+  
+btESBL_sequence_sample_metadata %>%
+    filter(grepl("Kleb", species)) %>%
+    select(pid, ST) %>% 
+    group_by(pid) %>% 
+    mutate(n = length(unique(ST))) %>% 
+  ungroup() %>% 
+  summarise(med_STs_per_participant = median(n), lq = quantile(n, 0.25), uq = quantile(n, 0.75))
+
+# Functions to calculate % of within- and between- participants samples
+# that have same
+
+prop_same_ST_within <- function(df) {
+
+  full_join(
+    df %>% 
+  filter(grepl("Kleb", species)) %>%
+    select(pid, ST) %>% 
+    mutate(key = 1:nrow(.)),
+  df %>% 
+  filter(grepl("Kleb", species)) %>%
+    select(pid, ST) %>% 
+    mutate(key = 1:nrow(.)),
+  by = character()
+  ) %>% 
+    filter(key.x != key.y) -> d
+  d[!duplicated(apply(d[c(3,6)], 1, sort), MARGIN = 2), ] -> d
+  
+  outdf <-
+    data.frame(
+      n_same_ST = sum(d$pid.x == d$pid.y & d$ST.x == d$ST.y, na.rm = TRUE),
+      n_total_comparisons = sum(d$pid.x == d$pid.y, na.rm = TRUE)) %>% 
+    rowwise() %>% 
+     mutate(prop = n_same_ST / n_total_comparisons,
+            lci = binom.test(n_same_ST,
+                            n_total_comparisons)$conf.int[1],
+            uci = binom.test(n_same_ST,
+                            n_total_comparisons)$conf.int[2] )
+  return(outdf)
+   
+}
+
+prop_same_ST_between <- function(df) {
+
+  full_join(
+    df %>% 
+  filter(grepl("Kleb", species)) %>%
+    select(pid, ST) %>% 
+    mutate(key = 1:nrow(.)),
+  df %>% 
+  filter(grepl("Kleb", species)) %>%
+    select(pid, ST) %>% 
+    mutate(key = 1:nrow(.)),
+  by = character()
+  ) %>% 
+    filter(key.x != key.y) -> d
+  d[!duplicated(apply(d[c(3,6)], 1, sort), MARGIN = 2), ] -> d
+    
+  outdf <-
+    data.frame(
+      n_same_ST = sum(d$ST.x == d$ST.y & d$pid.x != d$pid.y, na.rm = TRUE),
+      n_total_comparisons = sum(d$pid.x != d$pid.y, na.rm = TRUE)) %>% 
+    rowwise() %>% 
+     mutate(prop = n_same_ST / n_total_comparisons,
+            lci = binom.test(n_same_ST,
+                            n_total_comparisons)$conf.int[1],
+            uci = binom.test(n_same_ST,
+                            n_total_comparisons)$conf.int[2] )
+  return(outdf)
+}
+
+# calculate 
+
+prop_same_ST_between(btESBL_sequence_sample_metadata)
+prop_same_ST_within(btESBL_sequence_sample_metadata)
+  
+
+# if we sdample one of each duplicated within-particpant ST how many left
+
+btESBL_sequence_sample_metadata %>%
+  filter(grepl("Kleb", species)) %>%
+  group_by(pid, ST) %>%
+  slice(n = 1) %>%
+  nrow()
+
+
+   
+```
+
 ## MLST, K and O loci
 
 ```{r mlst, fig.width=8, fig.height= 11, fig.cap = "FIGURE X: Diversity of Klebsiella chromasomal sequence type (ST, A), K-type (B) and O-type (C). (D) shows cumulative prevalence for ST, K-type and O-types for all isolates in the collection as a function of the number of K-types, O-types, or STs, with each category ordered in size from largest to smallest. (E) and (F) show ST association of O-type and K-type respectively, where area of point is proportional to number of samples in the study. STs with only a single representative in the collection are excluded from plots A, B, C,E, F."}
