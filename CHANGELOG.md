@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased [1.1.4]
 ### Added
 - Table of Kleb isolates showing ESBL status and which study they came from
+- Within-participant Kleb ST correlation plots
+- Sensitivity analysis plots
 
 ## [1.1.3] - 2021-11-12
 ### Changed
