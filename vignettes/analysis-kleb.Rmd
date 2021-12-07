@@ -2203,201 +2203,248 @@ if (write_figs) {
 ```{r vfdb-tab}
 
 bind_rows(
-left_join(
-  btESBL_kleb_global_metadata %>%
-    filter(location == "Malawi") %>%
-    select(name, `Isolate Type`),
-  btESBL_kleb_malawi_vfdb_output %>%
-    filter(
-      vf != "VF0560",      #capsule
-      vf != "VF0561",       #O type
-      vf != "VF0564",    # yersinabactin
-      vf != "VF0562" ,   # enterobactin
-      vf != "VF0228", # enterobactin
-      vf != "VF0564", # enterobactin
-      vf != "VF0136", # yresiniabactin
-      vf != "VF0565",
-      !grepl("rmpA|rmpA2|ybt|iuc|iro|clb", gene)) %>%
-    mutate(VF_Name = if_else(
-      !is.na(VF_FullName), VF_FullName,
-      VF_Name)) %>%
-    select(name, VF_Name) %>%
-    unique() %>%
-    filter(!is.na(VF_Name)) %>%
-    pivot_wider(id_cols = name,
-                names_from = VF_Name,
-                values_from = VF_Name,
-                values_fn = length,
-                values_fill = 0)) %>%
-  mutate(across(is.numeric, ~ if_else(is.na(.x),
-                                      as.integer(0),
-                                      .x))) %>%
-  pivot_longer(-c(name,`Isolate Type`), names_to = "gene") %>%
-  group_by(gene) %>%
-  mutate(p = fisher.test(`Isolate Type`,value)$p.value) %>%
-  summarise(total = paste0(
-    sum(value),
-    "/",
-    length(value),
-    " (",
-    sp_dc(100 * sum(value)/length(value), 0),
-    "%)"
-  ),
-  sorter = sum(value),
-  invasive = paste0(
-    sum(value == 1 & `Isolate Type` == "Infection"),
-    "/",
-    sum(`Isolate Type` == "Infection"),
-    " (",
-    sp_dc(100 *
-            sum(value == 1 & `Isolate Type` == "Infection") /
-            sum(`Isolate Type` == "Infection"), 0),
-    "%)"
-  ),
-  carriage = paste0(
-    sum(value == 1 & `Isolate Type` == "Carriage"),
-    "/",
-    sum(`Isolate Type` == "Carriage"),
-    " (",
-    sp_dc(100 *
-            sum(value == 1 & `Isolate Type` == "Carriage") /
-            sum(`Isolate Type` == "Carriage"), 0),
-    "%)"
-  ),
-  p = unique(p)
-  ) %>%
-  arrange(-sorter) %>%
-  select(-sorter) %>%
   left_join(
-    btESBL_kleb_malawi_vfdb_output %>%  mutate(VF_Name = if_else(
-      !is.na(VF_FullName), VF_FullName,
-      VF_Name)) %>%  group_by(VF_Name) %>%
-      summarise(genes = paste(sort(unique(gene)), collapse  = ", ")),
-    by = c("gene" = "VF_Name")
+    btESBL_kleb_global_metadata %>%
+      filter(location == "Malawi") %>%
+      select(name, `Isolate Type`),
+    btESBL_kleb_malawi_vfdb_output %>%
+      filter(
+        vf != "VF0560", # capsule
+        vf != "VF0561", # O type
+        vf != "VF0564", # yersinabactin
+        vf != "VF0562", # enterobactin
+        vf != "VF0228", # enterobactin
+        vf != "VF0564", # enterobactin
+        vf != "VF0136", # yresiniabactin
+        vf != "VF0565",
+        !grepl("rmpA|rmpA2|ybt|iuc|iro|clb", gene)
+      ) %>%
+      mutate(
+        VF_Name = if_else(
+          !is.na(VF_FullName), VF_FullName,
+          VF_Name
+        ),
+        VF_Name = case_when(
+          VF_Name == "Type I fimbriae" ~ "Type 1 fimbriae",
+          TRUE ~ VF_Name
+        )
+      ) %>%
+      select(name, VF_Name) %>%
+      unique() %>%
+      filter(!is.na(VF_Name)) %>%
+      pivot_wider(
+        id_cols = name,
+        names_from = VF_Name,
+        values_from = VF_Name,
+        values_fn = length,
+        values_fill = 0
+      )
   ) %>%
-  transmute(
-    "Virulence Factor" = gene,
-    Genes = genes,
-    "All isolates" = total,
-    "Invasive isolates" = invasive,
-    "Colonising Isolates" = carriage,
-    "p-value" = p,
-    type = "all"),
-left_join(
-  btESBL_kleb_global_metadata %>%
-    filter(study %in% c("cornick", "DASSIM","musciha"),
-           !is.na(O_locus),
-           ESBL == "ESBL") %>% 
-    anti_join(
-      btESBL_sequence_sample_metadata %>% 
-        filter(grepl("Klebsiella", species)) %>% 
-        group_by(pid,ST) %>% 
-        mutate(n = 1:n()) %>% 
-        filter(n > 1),
-      by = c("name" = "lane")) %>% 
-    filter(!(study == "cornick" & ST == "ST340")) %>%  
-    mutate(O_locus = case_when(
-      O_locus_confidence %in% 
-        c("Good",
-          "High",             
-          "Very high") ~ O_locus,
-      TRUE ~ "Unknown")) %>% 
-    mutate(K_locus = case_when(
-      K_locus_confidence %in% 
-        c("Good",
-          "High",             
-          "Very high") ~ K_locus,
-      TRUE ~ "Unknown")) %>%
-    filter(location == "Malawi") %>%
-    select(name, `Isolate Type`),
-  btESBL_kleb_malawi_vfdb_output %>%
-    filter(
-      vf != "VF0560",      #capsule
-      vf != "VF0561",       #O type
-      vf != "VF0564",    # yersinabactin
-      vf != "VF0562" ,   # enterobactin
-      vf != "VF0228", # enterobactin
-      vf != "VF0564", # enterobactin
-      vf != "VF0136", # yresiniabactin
-      vf != "VF0565",
-      !grepl("rmpA|rmpA2|ybt|iuc|iro|clb", gene)) %>%
-    mutate(VF_Name = if_else(
-      !is.na(VF_FullName), VF_FullName,
-      VF_Name)) %>%
-    select(name, VF_Name) %>%
-    unique() %>%
-    filter(!is.na(VF_Name)) %>%
-    pivot_wider(id_cols = name,
-                names_from = VF_Name,
-                values_from = VF_Name,
-                values_fn = length,
-                values_fill = 0)) %>%
-  mutate(across(is.numeric, ~ if_else(is.na(.x),
-                                      as.integer(0),
-                                      .x))) %>%
-  pivot_longer(-c(name,`Isolate Type`), names_to = "gene") %>%
-  group_by(gene) %>%
+    mutate(across(is.numeric, ~ if_else(is.na(.x),
+      as.integer(0),
+      .x
+    ))) %>%
+    pivot_longer(-c(name, `Isolate Type`), names_to = "gene") %>%
+    group_by(gene) %>%
+    mutate(p = fisher.test(`Isolate Type`, value)$p.value) %>%
+    summarise(
+      total = paste0(
+        sum(value),
+        "/",
+        length(value),
+        " (",
+        sp_dc(100 * sum(value) / length(value), 0),
+        "%)"
+      ),
+      sorter = sum(value),
+      invasive = paste0(
+        sum(value == 1 & `Isolate Type` == "Infection"),
+        "/",
+        sum(`Isolate Type` == "Infection"),
+        " (",
+        sp_dc(100 *
+          sum(value == 1 & `Isolate Type` == "Infection") /
+          sum(`Isolate Type` == "Infection"), 0),
+        "%)"
+      ),
+      carriage = paste0(
+        sum(value == 1 & `Isolate Type` == "Carriage"),
+        "/",
+        sum(`Isolate Type` == "Carriage"),
+        " (",
+        sp_dc(100 *
+          sum(value == 1 & `Isolate Type` == "Carriage") /
+          sum(`Isolate Type` == "Carriage"), 0),
+        "%)"
+      ),
+      p = unique(p)
+    ) %>%
+    arrange(-sorter) %>%
+    select(-sorter) %>%
+    left_join(
+      btESBL_kleb_malawi_vfdb_output %>% mutate(VF_Name = if_else(
+        !is.na(VF_FullName), VF_FullName,
+        VF_Name
+      )) %>% group_by(VF_Name) %>%
+        summarise(genes = paste(sort(unique(gene)), collapse = ", ")),
+      by = c("gene" = "VF_Name")
+    ) %>%
+    transmute(
+      "Virulence Factor" = gene,
+      Genes = genes,
+      "All isolates" = total,
+      "Invasive isolates" = invasive,
+      "Colonising Isolates" = carriage,
+      "p-value" = p,
+      type = "all"
+    ),
+  left_join(
+    btESBL_kleb_global_metadata %>%
+      filter(
+        study %in% c("cornick", "DASSIM", "musciha"),
+        !is.na(O_locus),
+        ESBL == "ESBL"
+      ) %>%
+      anti_join(
+        btESBL_sequence_sample_metadata %>%
+          filter(grepl("Klebsiella", species)) %>%
+          group_by(pid, ST) %>%
+          mutate(n = 1:n()) %>%
+          filter(n > 1),
+        by = c("name" = "lane")
+      ) %>%
+      filter(!(study == "cornick" & ST == "ST340")) %>%
+      mutate(O_locus = case_when(
+        O_locus_confidence %in%
+          c(
+            "Good",
+            "High",
+            "Very high"
+          ) ~ O_locus,
+        TRUE ~ "Unknown"
+      )) %>%
+      mutate(K_locus = case_when(
+        K_locus_confidence %in%
+          c(
+            "Good",
+            "High",
+            "Very high"
+          ) ~ K_locus,
+        TRUE ~ "Unknown"
+      )) %>%
+      filter(location == "Malawi") %>%
+      select(name, `Isolate Type`),
+    btESBL_kleb_malawi_vfdb_output %>%
+      filter(
+        vf != "VF0560", # capsule
+        vf != "VF0561", # O type
+        vf != "VF0564", # yersinabactin
+        vf != "VF0562", # enterobactin
+        vf != "VF0228", # enterobactin
+        vf != "VF0564", # enterobactin
+        vf != "VF0136", # yresiniabactin
+        vf != "VF0565",
+        !grepl("rmpA|rmpA2|ybt|iuc|iro|clb", gene)
+      ) %>%
+      mutate(
+        VF_Name = if_else(
+          !is.na(VF_FullName), VF_FullName,
+          VF_Name
+        ),
+        VF_Name = case_when(
+          VF_Name == "Type I fimbriae" ~ "Type 1 fimbriae",
+          TRUE ~ VF_Name
+        )
+      ) %>%
+      select(name, VF_Name) %>%
+      unique() %>%
+      filter(!is.na(VF_Name)) %>%
+      pivot_wider(
+        id_cols = name,
+        names_from = VF_Name,
+        values_from = VF_Name,
+        values_fn = length,
+        values_fill = 0
+      )
+  ) %>%
+    mutate(across(is.numeric, ~ if_else(is.na(.x),
+      as.integer(0),
+      .x
+    ))) %>%
+    pivot_longer(-c(name, `Isolate Type`), names_to = "gene") %>%
+    group_by(gene) %>%
+    mutate(
+      value2 = as.factor(value),
+      p = fisher.test(`Isolate Type`, value2)$p.value
+    ) %>%
+    summarise(
+      total = paste0(
+        sum(value),
+        "/",
+        length(value),
+        " (",
+        sp_dc(100 * sum(value) / length(value), 0),
+        "%)"
+      ),
+      sorter = sum(value),
+      invasive = paste0(
+        sum(value == 1 & `Isolate Type` == "Infection"),
+        "/",
+        sum(`Isolate Type` == "Infection"),
+        " (",
+        sp_dc(100 *
+          sum(value == 1 & `Isolate Type` == "Infection") /
+          sum(`Isolate Type` == "Infection"), 0),
+        "%)"
+      ),
+      carriage = paste0(
+        sum(value == 1 & `Isolate Type` == "Carriage"),
+        "/",
+        sum(`Isolate Type` == "Carriage"),
+        " (",
+        sp_dc(100 *
+          sum(value == 1 & `Isolate Type` == "Carriage") /
+          sum(`Isolate Type` == "Carriage"), 0),
+        "%)"
+      ),
+      p = unique(p)
+    ) %>%
+    arrange(-sorter) %>%
+    select(-sorter) %>%
+    left_join(
+      btESBL_kleb_malawi_vfdb_output %>% mutate(VF_Name = if_else(
+        !is.na(VF_FullName), VF_FullName,
+        VF_Name
+      )) %>% group_by(VF_Name) %>%
+        summarise(genes = paste(sort(unique(gene)), collapse = ", ")),
+      by = c("gene" = "VF_Name")
+    ) %>%
+    transmute(
+      "Virulence Factor" = gene,
+      Genes = genes,
+      "All isolates" = total,
+      "Invasive isolates" = invasive,
+      "Colonising Isolates" = carriage,
+      "p-value" = p,
+      type = "sens"
+    )
+) %>%
   mutate(
-    value2 = as.factor(value),
-    p = fisher.test(`Isolate Type`,value2)$p.value) %>%
-  summarise(total = paste0(
-    sum(value),
-    "/",
-    length(value),
-    " (",
-    sp_dc(100 * sum(value)/length(value), 0),
-    "%)"
-  ),
-  sorter = sum(value),
-  invasive = paste0(
-    sum(value == 1 & `Isolate Type` == "Infection"),
-    "/",
-    sum(`Isolate Type` == "Infection"),
-    " (",
-    sp_dc(100 *
-            sum(value == 1 & `Isolate Type` == "Infection") /
-            sum(`Isolate Type` == "Infection"), 0),
-    "%)"
-  ),
-  carriage = paste0(
-    sum(value == 1 & `Isolate Type` == "Carriage"),
-    "/",
-    sum(`Isolate Type` == "Carriage"),
-    " (",
-    sp_dc(100 *
-            sum(value == 1 & `Isolate Type` == "Carriage") /
-            sum(`Isolate Type` == "Carriage"), 0),
-    "%)"
-  ),
-  p = unique(p)
+    `p-value` = sp_dc(`p-value`, 3),
+    `p-value` = if_else(`p-value` == "0.000", "<0.001", `p-value`),
+    Genes = gsub("VFG048736", "tle1", Genes),
+    Genes = gsub("_(?![0-9])", "\\/", Genes, perl = TRUE),
+    `Virulence Factor` = gsub(
+      "K1 capsule", "E. coli K1 capsule",
+      `Virulence Factor`
+    )
   ) %>%
-  arrange(-sorter) %>%
-  select(-sorter) %>%
-  left_join(
-    btESBL_kleb_malawi_vfdb_output %>%  mutate(VF_Name = if_else(
-      !is.na(VF_FullName), VF_FullName,
-      VF_Name)) %>%  group_by(VF_Name)  %>%
-      summarise(genes = paste(sort(unique(gene)), collapse  = ", ")),
-    by = c("gene" = "VF_Name")
-  ) %>%
-  transmute(
-    "Virulence Factor" = gene,
-    Genes = genes,
-    "All isolates" = total,
-    "Invasive isolates" = invasive,
-    "Colonising Isolates" = carriage,
-    "p-value" = p,
-    type = "sens")
-) %>% 
-  mutate(`p-value` = sp_dc(`p-value`,3),
-         `p-value` = if_else(`p-value` == "0.000", "<0.001",`p-value`),
-         Genes = gsub("_","\\/", Genes)) %>% 
-  as.data.frame() %>% 
-  select(-type) %>% 
-  kbl() %>% 
+  as.data.frame() %>%
+  select(-type) %>%
+  kbl() %>%
   kable_classic(full_width = FALSE) %>%
-  pack_rows("All samples", 1, 18) %>%
-  pack_rows("Sensitivity analysis population", 19,36)
+  pack_rows("All samples", 1, 17) %>%
+  pack_rows("Sensitivity analysis population", 18, 34)
 
 ```
 
@@ -2409,15 +2456,16 @@ left_join(
     select(name, `Isolate Type`, ESBL),
   btESBL_kleb_malawi_vfdb_output %>%
     filter(
-      vf != "VF0560",      #capsule
-      vf != "VF0561",       #O type
-      vf != "VF0564",    # yersinabactin
-      vf != "VF0562" ,   # enterobactin
+      vf != "VF0560", # capsule
+      vf != "VF0561", # O type
+      vf != "VF0564", # yersinabactin
+      vf != "VF0562", # enterobactin
       vf != "VF0228", # enterobactin
       vf != "VF0564", # enterobactin
       vf != "VF0136", # yresiniabactin
       vf != "VF0565",
-      !grepl("rmpA|rmpA2|ybt|iuc|iro|clb", gene)) %>%
+      !grepl("rmpA|rmpA2|ybt|iuc|iro|clb", gene)
+    ) %>%
     select(name, VF_Name) %>%
     unique() %>%
     filter(!is.na(VF_Name)) %>%
@@ -2425,23 +2473,31 @@ left_join(
     mutate(n = n()) %>%
     filter(n > 5) %>%
     select(-n) %>%
-    pivot_wider(id_cols = name,
-                names_from = VF_Name,
-                values_from = VF_Name,
-                values_fn = length,
-                values_fill = 0)) %>%
+    pivot_wider(
+      id_cols = name,
+      names_from = VF_Name,
+      values_from = VF_Name,
+      values_fn = length,
+      values_fill = 0
+    )
+) %>%
   mutate(across(is.numeric, ~ case_when(
     .x == 0 ~ NA_character_,
     .x == 1 ~ "Present",
-    TRUE ~ NA_character_))) %>%
-  mutate(`Isolate Type` =
-           case_when(
-             `Isolate Type` == "Infection" ~ "Invasive",
-             `Isolate Type` == "Carriage" ~ "Colonising",
-             TRUE ~ NA_character_),
-         ESBL = if_else(ESBL == 0,
-                        NA_character_,
-                        ESBL)) %>%
+    TRUE ~ NA_character_
+  ))) %>%
+  mutate(
+    `Isolate Type` =
+      case_when(
+        `Isolate Type` == "Infection" ~ "Invasive",
+        `Isolate Type` == "Carriage" ~ "Colonising",
+        TRUE ~ NA_character_
+      ),
+    ESBL = if_else(ESBL == 0,
+      NA_character_,
+      ESBL
+    )
+  ) %>%
   relocate(matches("ECP|Allanti")) %>%
   as.data.frame() -> vfdb_onehot
 
@@ -2511,7 +2567,7 @@ rownames(vfdb_onehot) <- vfdb_onehot$name
    scale_fill_manual(values = c("Present" = "grey30"),
                      na.translate = FALSE,
                     name = "Virulence\nLocus") +
-  ylim(NA, 450) ->
+  ylim(NA, 370) ->
   vfdb_malawi_tree_plot
 
 vfdb_malawi_tree_plot
