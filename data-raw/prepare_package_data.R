@@ -1122,3 +1122,87 @@ use_data(btESBL_ecoli_horesh_metadata, overwrite = TRUE)
 
 use_data(btESBL_sequence_sample_metadata, overwrite = TRUE)
 use_data(btESBL_ecoli_musicha_metadata, overwrite = TRUE)
+
+
+# load vfdb klebsiella output -------------------------------
+
+vfdb <- read_csv("data-raw/kleb-genomics-paper/vfdb_core_ariba_summary.csv")
+
+vfdb_genes <- read_lines("data-raw/kleb-genomics-paper/vfdb_core_gene_names.txt")
+
+listout <- list()
+for (i in 1:length(vfdb_genes)) {
+  # print(i)
+  strsplit(vfdb_genes[i], " |\\(|//)|>") -> split
+  vfg <- grep("VFG", split[[1]], value = TRUE)
+  vf <- grep("VF[0-9]", split[[1]], value = TRUE)
+  desc <- str_extract(vfdb_genes[i], "(?<=\\) )[A-Za-z].*(?= \\[)")
+  desc <- gsub("\\[.*$","", desc)
+  if (length(vfg) == 0) {
+    vfg <- NA_character_
+  }
+  if (length(vf) == 0) {
+    vf <- NA_character_
+  }
+  listout[[i]] <-
+    data.frame(
+      vfg = vfg,
+      vf = vf,
+      description = desc
+    )
+}
+
+do.call(rbind,listout) %>%
+  mutate(vf = gsub("\\)\\]", "", vf)) %>%
+  unique() ->
+  vfdb_vf_lookup
+
+vfdb %>%
+  select(contains("name") |
+           contains("match") |
+           contains("assembled") |
+           contains("ref_seq")) %>%
+  pivot_longer(-name,
+               names_to = c("cluster_name", ".value"),
+               names_sep = "\\.") %>%
+  filter(match == "yes") %>%
+  mutate(ref_seq2 = sapply(strsplit(ref_seq, split = "\\."), function(x)
+    x[1]),
+    vfg = sapply(strsplit(ref_seq, split = "\\."), function(x)
+      x[2])) %>%
+  mutate(name = gsub("\\./|/report\\.tsv", "", name),
+         name = gsub("#","_", name),
+         vfg = gsub("_.*$","", vfg)) %>%
+  select(name, ref_seq2, vfg) %>%
+  mutate(vfg = if_else(is.na(vfg), ref_seq2, vfg)) -> vfdb_results
+
+
+left_join(vfdb_results, vfdb_vf_lookup, by = "vfg")  -> vfdb_results
+
+vfdb_results %>%
+  mutate(ref_seq2 = gsub("afaE_I","afaE-I", ref_seq2)) %>%
+  select(name,ref_seq2, vf, vfg) %>%
+  # filter(
+  #   vf != "VF0560",      #capsule
+  #   vf != "VF0561",       #O type
+  #   vf != "VF0564",    # yersinabactin
+  #   vf != "VF0562" ,   # enterobactin
+  #   vf != "VF0228", # enterobactin
+  #   vf != "VF0564", # enterobactin
+  #   !grepl("rmpA|rmpA2|ybt|iuc|iro|clb", ref_seq2)) %>%
+  # select(name, vf, ref_seq2) %>%
+  unique() %>%
+  left_join(
+    select(vfid_descriptions,
+           VFID,
+           VF_Name,
+           VF_FullName),
+    by = c("vf" = "VFID")) %>%
+  rename(
+    gene = ref_seq2) ->
+  # mutate(VF_Name = if_else(
+  #   !is.na(VF_FullName), VF_FullName,
+  #   VF_Name)) %>%
+  btESBL_kleb_malawi_vfdb_output
+
+use_data(btESBL_kleb_malawi_vfdb_output, overwrite = TRUE)
