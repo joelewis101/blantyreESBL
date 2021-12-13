@@ -46,7 +46,7 @@ sp_dc <- function(x, k) {
 
 # flag - save figs to file?
 
-write_figs <- TRUE
+write_figs <- FALSE
 
 if (write_figs) {
   if (!dir.exists(here("figures"))) {
@@ -86,25 +86,15 @@ Joseph M Lewis^1,2,3,4^, , Madalitso Mphasa^1^, Rachel Banda^1^,  Matthew Beale^
 5. College of Medicine, University of Malawi, Malawi
 6. London School of Tropical Medicine and Hygiene, London, UK   
 
-## Assembly stats and accession numbers
 
-```{r assembly_stats}
-# load accessions and assembly stats
 
-btESBL_sequence_sample_metadata %>%
-  filter(grepl("Klebsiella", species)) %>%
-  transmute("Sample accession" = accession,
-         "Lane name" = lane,
-         "No. contigs" = number_of_contigs,
-         "N50" = N50) %>%
-  kbl(caption = "Accession numbers and assembly statistics for included samples") %>% 
-  kable_classic(full_width = FALSE)
-
-```
-
-Look at within-participant correlation of STs
+## Look at within-participant correlation of STs
 
 ```{r within-participant-st, fig.width = 12 , fig.height = 8, fig.cap = "Distribution of ST, O- and K- loci for all samples, and excluding all but  one sample in cases where a participant has two samples where the same ST was identified." }
+
+btESBL_sequence_sample_metadata %>% 
+  mutate(ST = if_else(is.na(ST), NA_character_, ST)) ->
+  btESBL_sequence_sample_metadata
 
 # plot ST distribution; then exclude all samples that are
 # 1) within one participant
@@ -553,7 +543,9 @@ dassimKleb_trees.BTcarriage <- btESBL_coregene_tree_kleb
 
 dassimKleb_BTKleb.diversity %>%
   select(ST, lane) %>%
-  mutate(ST = paste0("ST", ST)) %>%
+  mutate(ST = if_else(ST == "Novel",
+                      "Novel",
+                      paste0("ST", ST))) %>%
   pivot_wider(
     id_cols = lane,
     names_from = ST,
@@ -1152,6 +1144,7 @@ left_join(
 
 btESBL_kleb_global_metadata %>% 
   select(study, ST, `Isolate Type`) %>% 
+  mutate(ST = if_else(grepl("Novel|Unknown", ST), NA_character_, ST)) %>% 
   filter(!is.na(ST)) %>% 
   mutate(`Isolate Type` = case_when(
     `Isolate Type` == "Carriage" ~ "Colonising",
@@ -2722,7 +2715,83 @@ dassimKleb_BTKleb.diversity %>%
 
 ```
 
+## Metadata table
 
+```{r metadata-table}
+# load accessions and assembly stats
+
+btESBL_kleb_global_metadata %>%
+  transmute(
+    name,
+    Sample_accession = `Sample accession`,
+    Run_accession = `Lane accession`,
+    Year = if_else(is.na(Year), "Unknown", as.character(Year)),
+    Study = case_when(
+      study == "kenya" ~ "Henson et al",
+      study == "musciha" ~ "Musicha et al",
+      study == "global" ~ "Holt et al",
+      study == "DASSIM" ~ "This study",
+      study == "cornick" ~ "Cornick et al"
+    ),
+    Sample_source = `Sample Source`,
+    Isolate_type = case_when(
+      `Isolate Type` == "Infection" ~ "Invasive",
+      `Isolate Type` == "Carriage" ~ "Colonising",
+      TRUE ~ "Unknown"
+    ),
+    ST = ST,
+    O_locus = O_locus,
+    O_locus_confidence = O_locus_confidence,
+    K_locus = K_locus,
+    K_locus_confidence = K_locus_confidence,
+    ybt = ybt,
+    clb = clb,
+    iuc = iuc,
+    iro = iro,
+    rmpA = rmpA,
+    rmpA2 = rmpA2,
+    ESBL = if_else(ESBL == "ESBL", 1, 0)
+  ) %>%
+  mutate(across(
+    matches("O_locus|K_locus|ST|ybt|clb|iuc|iro|rmpA"),
+    ~ if_else(is.na(.x), "-", as.character(.x))
+  )) %>%
+  mutate(Study = factor(
+    Study,
+    c(
+      "This study",
+      "Cornick et al",
+      "Musicha et al",
+      "Henson et al",
+      "Holt et al"
+    )
+  )) %>%
+  arrange(Study) %>%
+  left_join(
+    btESBL_kleb_malawi_vfdb_output %>% group_by(name) %>% summarise(vfdb_genes = paste(sort(unique(gene)), collapse = ", ")),
+    by = "name"
+  ) %>%
+  left_join(
+    btESBL_amrgenes %>% group_by(lane) %>% summarise(amr_genes = paste(sort(unique(ref_seq)), collapse = ", ")),
+    by = c("name" = "lane")
+  ) -> metadata_table
+
+metadata_table %>% 
+  kbl(caption = "Accession numbers and metadata for included samples") %>% 
+  kable_classic(full_width = FALSE)
+
+
+if (write_figs) {
+
+  write.csv(metadata_table,
+            here("tables/kleb-genomics/metadata_table.csv"),
+            row.names = FALSE
+  )
+  
+  }
+
+
+```
 
 ### Reproducability, session info
 
