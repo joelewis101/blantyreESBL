@@ -195,7 +195,10 @@ klebs %>%
   )  %>%
   rename("lane" = "name")  %>%
   mutate(lane = gsub("#", "_", lane)) %>%
-  filter(lane %in% btESBL_sequence_sample_metadata$lane) ->
+  filter(lane %in% btESBL_sequence_sample_metadata$lane) %>%
+  mutate(ref_seq = if_else(ref_seq == "TEM_95",
+                        "TEM_1",
+                        ref_seq)) ->
   btESBL_amrgenes
 
 use_data(btESBL_amrgenes, overwrite = TRUE)
@@ -425,7 +428,7 @@ samp_metadata <- load_DASSIM3_metadata(
     "/Users/joelewis/Documents/PhD/Thesis/bookdown/final_cleaning_scripts/load_and_clean_lims.R",
   lanes_to_include =
     "/Users/joelewis/Documents/Sanger/DASSIM3/data_raw/metadata/all_DASSIM_kleb_and_esco_lanes.txt",
-  sanger_metadata_file <- "/Users/joelewis/Documents/Sanger/DASSIM3/data_raw/metadata/all_DASSIM_kleb_and_esco_metadata.csv",
+  sanger_metadata_file = "/Users/joelewis/Documents/Sanger/DASSIM3/data_raw/metadata/all_DASSIM_kleb_and_esco_metadata.csv",
   recent_dc_def = 120 )
 
 outcome %>%
@@ -1206,3 +1209,267 @@ vfdb_results %>%
   btESBL_kleb_malawi_vfdb_output
 
 use_data(btESBL_kleb_malawi_vfdb_output, overwrite = TRUE)
+
+## kleb global metadata ------------------
+
+# load and clean global AMR - aim: ESBL vs not
+
+amr.global <- read_csv(here("data-raw/kleb-genomics-paper/GLOBAL_ariba_amr.csv"))
+
+amr.global %>%
+  mutate(name = gsub("\\./", "", name),
+         name = gsub("/report.tsv", "", name)) %>%
+  pivot_longer(-name,
+               names_to= c( "cluster", ".value"),
+               names_sep = "\\.") %>%
+  mutate(gene = sapply(str_split(ref_seq, "__"), function(x) x[3])) %>%
+  filter(match == "yes") %>%
+  mutate(gene = case_when(
+    gene == "TEM_95" ~ "TEM_1",
+    TRUE ~ gene
+  )) %>%
+  select(name, gene) %>%
+  pivot_wider(names_from = gene,
+              values_from = gene,
+              values_fn = length,
+              values_fill = 0) ->
+  amr.global
+
+amr.global %>%
+  pivot_longer(-name, names_to = "gene") %>%
+  filter(value == 1)  %>%
+  left_join(select(btESBL_NCBI_phenotypic_bl, allele_name, class),
+            by = c("gene" = "allele_name")) %>%
+  mutate(class = case_when(
+    gene == "SHV_12" ~ "ESBL",
+    TRUE ~ class)
+  ) %>%
+  group_by(name) %>%
+  summarise(ESBL =
+              case_when(
+                any(class == "ESBL") ~ "ESBL",
+                TRUE ~ "0"
+              )
+  ) %>%
+  # add accesssion
+  left_join(
+    bind_rows(
+      read_csv(here("data-raw/kleb-genomics-paper/context_genomes/global_accession.csv")),
+      read_csv(here("data-raw/kleb-genomics-paper/context_genomes/malawi_accession.csv"))
+    ) %>%
+      select(`Lane name`,
+             `Sample accession`,
+             `Lane accession`),
+    by = c("name" = "Lane name")
+  ) -> metadata_global
+
+
+
+# merge in other data
+
+
+musicha <- read_lines(here("data-raw/kleb-genomics-paper/context_genomes/musicha_klebs_list.txt"))
+cornick <- read_lines(here("data-raw/kleb-genomics-paper/context_genomes/chathinka_kleb_lanes.txt"))
+global <- read_lines(here("data-raw/kleb-genomics-paper/context_genomes/global_context_lanes.txt"))
+kenya <- read_lines(here("data-raw/kleb-genomics-paper/context_genomes/kenya_lanes.txt"))
+
+
+metadata_global %>%
+  mutate(study =
+           case_when(
+             name %in% musicha ~ "musciha",
+             name %in% cornick ~ "cornick",
+             name %in% kenya ~ "kenya",
+             name %in% global ~ "global",
+             TRUE ~ "DASSIM"
+           )) -> metadata_global
+
+holt_metadata <-
+  read_csv(here("data-raw/kleb-genomics-paper/context_genomes/holt_global_kleb_metadata.csv"))
+
+holt_metadata %>%
+  filter(!grepl("Kleb", File_ID)) %>%
+  mutate(
+    Year = if_else(
+      Year_isolated == "Unknown",
+      NA_real_,
+      as.numeric(Year_isolated)),
+    Infection_status =
+           case_when(Source_Host == "Human" &
+                       is.na(Infection_status) &
+                       Sample_note %in% c(
+                         "blood",
+                         "sputum",
+                         "urine",
+                         "pus",
+                         "bronchial alveolar lavage") ~ "Human_invasive",
+                     Source_Host == "Human" &
+                       is.na(Infection_status) &
+                       Clinical_note == "Carriage" ~ "Human_carriage",
+                     Source_Host == "Human" &
+                       is.na(Infection_status) ~ "Unknown",
+                     TRUE ~ Infection_status),
+         sample_source = case_when(
+           Source_Host == "Environmental" ~ "Environmental",
+           Source_Host != "Human" ~ "Animal",
+           TRUE ~ "Human"),
+         isolate_type = case_when(
+           Source_Host == "Human" &
+             Infection_status == "Human_carriage" ~ "Carriage",
+           Source_Host == "Human" &
+             Infection_status %in% c(
+               "Human_infection",
+               "Human_invasive") ~ "Infection",
+           Source_Host == "Human"  ~ NA_character_,
+           TRUE ~ NA_character_)) -> holt_metadata
+
+musicha_metadata <-
+  read_csv(here("data-raw/kleb-genomics-paper/context_genomes/musciha_sample_metadata.csv"))
+
+musicha_metadata %>%
+  mutate(
+    Year = Year,
+    sample_source = "Human",
+         isolate_type = case_when(
+           Source == "RS" ~ "Carriage",
+           TRUE~ "Infection")) -> musicha_metadata
+
+left_join(
+  metadata_global %>%
+    mutate(name = gsub("#","_", name)),
+  bind_rows(
+    select(holt_metadata, File_ID,sample_source,isolate_type, Year),
+    select(musicha_metadata, File_ID,sample_source,isolate_type, Year)
+  ) %>%
+    mutate(File_ID = gsub("#","_", File_ID)),
+  by = c("name" = "File_ID")) %>%
+  mutate(location =
+           case_when(study %in% c(
+             "musciha",
+             "cornick",
+             "DASSIM") ~ "Malawi",
+             study == "kenya" ~ "Kenya",
+             TRUE ~ "Global"),
+         isolate_type =
+           case_when(
+             study %in% c("musicha","cornick", "kenya") ~ "Infection",
+             study == "DASSIM" ~ "Carriage",
+             TRUE ~ isolate_type),
+         sample_source = case_when(
+           study %in% c("musicha","cornick", "DASSIM","kenya") ~ "Human",
+           TRUE ~ sample_source)
+  ) %>%
+  rename("Sample Source" = sample_source,
+         "Isolate Type" = isolate_type) ->
+  metadata_global
+
+metadata_global %>%
+  left_join(
+    bind_rows(
+      read_tsv(
+        here("data-raw/kleb-genomics-paper/DASSIM3_kleborate.all.txt")) %>%
+        mutate(strain = gsub("\\.contigs_spades","",strain)) %>%
+        mutate(strain = gsub("\\.contigs_velvet", "", strain),
+               ST = if_else(is.na(ST), "Unknown", ST)) %>%
+        filter(ST != "ST") %>%
+        select(
+          strain,
+          ST,
+          YbST,
+          CbST,
+          AbST,
+          SmST,
+          rmpA,
+          rmpA2,
+          O_locus,
+          K_locus,
+          K_locus_confidence,
+          O_locus_confidence
+        ) %>%
+        mutate(strain = gsub("#", "_", strain),
+               ST = paste0("ST",ST)),
+      read_tsv(
+        here(
+          "data-raw/kleb-genomics-paper/MALAWI_all_malawi_context_assemblies_kleborate_output.txt"
+        )
+      ) %>%
+        mutate(strain = gsub("\\.contigs_velvet", "", strain),
+               ST = if_else(is.na(ST), "Unknown", ST)) %>%
+        filter(ST != "ST") %>%
+        select(
+          strain,
+          ST,
+          K_locus,
+          K_locus_confidence,
+          O_locus,
+          O_locus_confidence,
+          YbST,
+          CbST,
+          AbST,
+          SmST,
+          rmpA,
+          rmpA2
+        ) %>%
+        mutate(ST = gsub("-.*$","", ST))
+    ) %>%
+      mutate(
+        strain = gsub("#", "_", strain),
+        ybt = if_else(YbST != "0", "1", "0"),
+        clb = if_else(CbST != "0", "1", "0"),
+        iuc = if_else(AbST != "0", "1", "0"),
+        iro = if_else(SmST != "0", "1", "0"),
+        rmpA = if_else(rmpA != "-", "1", "0"),
+        rmpA2 = if_else(rmpA2 != "-", "1", "0")),
+    by = c("name" = "strain")
+  ) -> metadata_global
+
+# add in malawi accessions
+left_join(
+  metadata_global,
+  read_csv(
+    here("data-raw/kleb-genomics-paper/DASSIM3_accessions_with_ERR.csv")
+  ) %>%
+    transmute(
+      name = gsub("#", "_", `Lane name`),
+      s_accession = `Sample name`,
+      l_accession = `Lane accession`
+    ),
+  by = c("name" = "name")
+) %>%
+  left_join(
+  btESBL_sequence_sample_metadata %>%
+  transmute(
+    lane = lane,
+    year_dassim = lubridate::year(data_date),
+    ST_ariba = if_else(ST == "Novel", "Novel",paste0("ST", ST))),
+  by = c("name" = "lane")) %>%
+  mutate(
+    `Lane accession` =  if_else(is.na(`Lane accession`),
+                 l_accession,
+                 `Lane accession`),
+    `Sample accession` =  if_else(is.na(`Sample accession`),
+                 s_accession,
+                 `Sample accession`),
+    Year = if_else(
+       study == "DASSIM",
+       year_dassim,
+       Year),
+         ST = if_else(
+           study == "DASSIM",
+           ST_ariba,
+           ST)) %>%
+  select(-c(l_accession,s_accession, ST_ariba, -year_dassim)) ->
+  metadata_global
+
+metadata_global <- as.data.frame(metadata_global)
+rownames(metadata_global) <- metadata_global$name
+metadata_global$Malawi <- ifelse(metadata_global$location == "Malawi","1","0")
+metadata_global$ST[metadata_global$ST == "0"] <- "Unknown"
+
+metadata_global$ESBL <- as.character(metadata_global$ESBL)
+
+btESBL_kleb_global_metadata <- metadata_global
+
+
+use_data(btESBL_kleb_global_metadata, overwrite = TRUE)
+
