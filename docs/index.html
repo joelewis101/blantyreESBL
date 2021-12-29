@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">blantyreESBL</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.4</span>
       </span>
     </div>
 
@@ -102,7 +102,7 @@
 <p>If you just want the data, then all the data to replicate the analysis are bundled with the package. To install the package from GitHub:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"https://github.com/joelewis101/blantyreESBL"</span><span class="op">)</span></code></pre></div>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"https://github.com/joelewis101/blantyreESBL"</span><span class="op">)</span></code></pre></div>
 <p>The various data objects are described in the <a href="https://joelewis101.github.io/blantyreESBL/">pkgdown</a> site for this package <a href="https://joelewis101.github.io/blantyreESBL/reference/index.html">here</a>, and available via R in the usual way (i.e. <code><a href="reference/btESBL_participants.html">?btESBL_participants</a></code> brings up the definitions for the <code>btESBL_participants</code> data. They are all lazy loaded so will be available for use immediately; they all start with <code>btESBL_</code> to make it easy to choose the one you want using autocomplete.</p>
 </div>
 <div id="whole-genome-sequence-accession-numbers-and-metadata" class="section level3">
@@ -115,7 +115,7 @@
 <a href="#analysis-scripts" class="anchor"></a>Analysis scripts</h3>
 <p>The analysis scripts to reproduce tables and figures for each manuscript are available as package vignettes; these can be built when downloading the package by running:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span>
+<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html">install_github</a></span><span class="op">(</span>
   <span class="st">"https://github.com/joelewis101/blantyreESBL"</span>, 
   build_vignettes <span class="op">=</span> <span class="cn">TRUE</span>, 
   dependencies <span class="op">=</span> <span class="cn">TRUE</span> <span class="op">)</span></code></pre></div>
