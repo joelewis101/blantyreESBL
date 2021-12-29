@@ -1866,7 +1866,7 @@ if (write_figs) {
 
 ```
 
-## Testing independence of distributions of K- and O-types
+### Testing independence of distributions of K- and O-types
 
 ```{r fisher_k_o_types}
 
@@ -1984,7 +1984,7 @@ dassimKleb_globalKleb.metadata %>%
         legend.title = element_blank()) +
   labs(y = "Proportion", x = "") -> c
 
-(b  /c/ a) + plot_annotation(tag_levels = "A") +
+(b  / c / a) + plot_annotation(tag_levels = "A") +
   plot_layout(guides = "collect") -> virulence_sensax_plot
 
 virulence_sensax_plot
