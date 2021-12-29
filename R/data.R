@@ -142,6 +142,21 @@
 "btESBL_model1posterior"
 
 
+#' Data: Posterior of fitted carriage model (seperate ceftriaxone effect)
+#'
+#' Posterior of fitted longitudinal model of ESBL colonisation incorporating
+#' an effect of antimicrobial exposure that exponentially decays following
+#' cessation of exposure, with ceftriaxone effect seperate from
+#' all otehr antimicrobials
+#'
+#' See manuscript for interpretation of parameters etc.
+#'
+#'
+#' @format An S4 stanfit object (package "rstan") including model log-likelihood
+#'
+#'
+"btESBL_model3posterior"
+
 #' Data: Results of simulations from the model posterior
 #'
 #' These simulations set the antimicrobial and hospital exposure to

@@ -34,7 +34,7 @@ Joseph M Lewis^1,2,3,4^, , Madalitso Mphasa^1^, Rachel Banda^1^,  Matthew Beale^
 6. University of Lancaster, Lanaster, UK
 7. London School of Tropical Medicine and Hygiene, London, UK 
 
-### Installing and accessing data
+## Installing and accessing data
 
 If you just want the data, then all the data to replicate the analysis are bundled with the package. To install the package from GitHub:
 
@@ -56,10 +56,11 @@ The `dependencies = TRUE` option will install all the packages necessary to run 
 Alternatively the source code for the vignette is `analysis.Rmd` in the `vignettes/` folder of the [GitHub](https://github.com/joelewis101/blantyreESBL)
  repo or the [pkgdown](https://joelewis101.github.io/blantyreESBL/) site for this package has a rendered version.
 
+## Descriptions of participants, exposures, baseline ESBL colonisation
 
 ### Setup, load packages
 
-```{r, include = FALSE}
+```{r, packages-and-whatnot}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -67,7 +68,6 @@ knitr::opts_chunk$set(
 library(here)
 library(igraph)
 library(ggraph)
-#library(tidyverse)
 library(dplyr)
 library(tidyr)
 library(stringr)
@@ -85,9 +85,7 @@ library(pheatmap)
 library(viridis)
 library(ggtree)
 library(kableExtra)
-#library(rstan)
 library(blantyreESBL)
-# load_all()
 
 specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall = k))
 
@@ -121,8 +119,6 @@ if (write_figs) {
 ### Baseline characteristics
 
 ```{r setup}
-#library(blantyreESBL)
-
 btESBL_participants %>%
   mutate(unprotected_water_source = case_when(
     watersource %in% c("Unprotected well/spring", 
@@ -538,8 +534,6 @@ btESBL_exposures %>%
 
 ```
 
-
-
 ### Timing of sample collection
 
 ```{r sample_timing, fig.cap = "Timing of sample collection showing long tails around sample collection time.", fig.height = 4, fig.width= 6 }
@@ -571,9 +565,7 @@ if (write_figs) {
 }
 ```
 
-### Species plot
-
-
+### Species of cultured bacteria from stool 
 
 ```{r ESBLspecies, fig.width=6, fig.height =4, fig.cap = "Species cultured from stool."}
 
@@ -770,7 +762,9 @@ log_regESBL %>%
 
 ```
 
-### Longitudinal carriage
+## Describing and modelling longitudinal ESBL carriage
+
+### Longitudinal carriage plot
 
 ```{r esbl-prev-tab}
 
@@ -919,6 +913,7 @@ ggplot(aes(t, as.numeric(ESBL == "Positive"),
         legend.position = "top") -> ESBLprevplot
 
 ```
+
 Describe carriage prevalence; plot model parameters; plot predicted prevalence.
 
 ```{r markov-model-panel-plot, fig.cap = "Determinants of ESBL-E carriage. A: Prevalence of ESBL-E carriage stratified by study arm. Inpatients without sepsis are censored at first antimicrobial exposure and community members censored at first antimicrobial exposure or hospital admission. Estimated prevalence and 95% confience intervals derived from a nonparametric LOESS regression with span parameter 0.8. B: Simulated probability of ESBL colonisation generated from the posterior parameter estimates of the fitted model with a starting probability of colonisation of 0.5 and seven days of hospitalisation with either seven, two, or no days antimicrobial exposure. In this model, truncated courses of antimicrobials havelittle effect on reducing ESBL-E carriage. C-E: Density plots of parameter estimates form fitted model with median (line) and 95% credible intervals (shading) shown. A: log hazard ratios of ESBL-E gain and loss for hospialisation and antimicrobial exposure: hospitalisation acts to acts to increase both acquisition and loss of ESBL-E whereas antmicrobial exposure acts to prevent loss. D: mean time in state for uncolonised and colonised states. E: Half life of decay of effecr of antimicrobials, showing that the effect of antimicrobials, in this model, acts for many days after exposure has finished.", fig.width = 12, fig.height=6  }
@@ -1190,6 +1185,122 @@ if (write_figs) {
 
 ```
 
+### Compare model with ceftriaxone vs non-ceftraixone exposure 
+
+
+```{r cro_vs_not_models, fig.height = 5, fig.width = 10, fig.cap = "Parameter estimates from model considering ceftriaxone (CRO) exposure seperately to all other antimicrobials (A-C) versus all antimicrobials together (D-F)."}
+
+mcmc_intervals(btESBL_model3posterior, 
+               prob_outer = 0.9,
+               regex_pars = "alpha|betas",
+               outer_size = 1) +
+  theme_bw() +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  scale_y_discrete(
+    limits = c(
+      "betas[3]", "alphas[3]",
+      "betas[2]", "alphas[2]",
+      "betas[1]", "alphas[1]"
+    ),
+    labels = c(
+      "betas[3]" = expression(beta ~ "[hosp]"),
+      "alphas[3]" = expression(alpha ~ "[hosp]"),
+      "betas[1]" = expression(beta ~ "[CRO]"),
+      "alphas[1]" = expression(alpha ~ "[CRO]"),
+      "betas[2]" = expression(beta ~ "[non-CRO]"),
+      "alphas[2]" = expression(alpha ~ "[non-CRO]")
+    )
+  ) +
+  theme(axis.title.y = element_blank(), axis.text.y = element_text(size = 10)) +
+  xlab("Parameter value") +
+  xlim(c(-3,5)) +
+
+mcmc_intervals(btESBL_model3posterior,
+               prob_outer = 0.9,
+               regex_pars = "lambda|mu",
+               outer_size = 1) +
+  theme_bw() +
+  scale_y_discrete(limits = c("lambda", "mu"), 
+                   labels = c('lambda' =  expression(lambda), 
+                              'mu' =  expression(mu))) + 
+  theme(axis.title.y = element_blank(), 
+        axis.text.y = element_text(size = 10)) + xlab("Parameter value") +
+  xlim(c(0,0.5)) +
+
+mcmc_intervals(btESBL_model3posterior,
+               prob_outer = 0.9,
+               regex_pars = "gamma",
+               outer_size = 1) +
+  theme_bw() + 
+  scale_y_discrete(limits = rev(c("gammas[1]", "gammas[2]")), 
+                   labels = c( 'gammas[2]' =  expression(gamma~"[non-CRO]"),
+                              'gammas[1]' =  expression(gamma~"[CRO]") )) + 
+  theme(axis.title.y = element_blank(),axis.text.y = element_text(size = 10)) + 
+  xlab("Parameter value") +
+  xlim(c(0,200)) +
+# original models 
+
+mcmc_intervals(btESBL_model2posterior,
+               prob_outer = 0.9,
+               regex_pars = "alpha|betas",
+               outer_size = 1) +
+  theme_bw() +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  scale_y_discrete(
+    limits = c(
+      "betas[2]", "alphas[2]",
+      "betas[1]", "alphas[1]"
+    ),
+    labels = c(
+      "betas[1]" = expression(beta ~ "[abx]"),
+      "alphas[1]" = expression(alpha ~ "[abx]"),
+      "betas[2]" = expression(beta ~ "[hosp]"),
+      "alphas[2]" = expression(alpha ~ "[hosp]")
+    )
+  ) +
+  theme(axis.title.y = element_blank(), axis.text.y = element_text(size = 10)) +
+  xlab("Parameter value") +
+  xlim(c(-3,5)) +
+  
+mcmc_intervals(btESBL_model2posterior,
+               prob_outer = 0.9,
+               regex_pars = "lambda|mu",
+               outer_size = 1) +
+  theme_bw() +
+  scale_y_discrete(limits = c("lambda", "mu"), 
+                   labels = c('lambda' =  expression(lambda), 
+                              'mu' =  expression(mu))) + 
+  theme(axis.title.y = element_blank(), 
+        axis.text.y = element_text(size = 10)) + xlab("Parameter value") +
+  xlim(c(0,0.5)) +
+  
+mcmc_intervals(btESBL_model2posterior,
+               prob_outer = 0.9,
+               regex_pars = "gamma",
+               outer_size = 1) +
+  theme_bw() + 
+  scale_y_discrete(limits = rev(c("gammas[1]")), 
+                   labels = c('gammas[1]' =  expression(gamma~"[abx]") )) + 
+  theme(axis.title.y = element_blank(),axis.text.y = element_text(size = 10)) + 
+  xlab("Parameter value") +
+  xlim(c(0,200)) +
+  plot_annotation(tag_levels = "A") -> cro_vs_not_model_plot
+
+cro_vs_not_model_plot
+
+if (write_figs) {
+  ggsave(here("figures/long-modelling/SUP_FIG_cro_vs_not_modelsplots.svg"),
+         cro_vs_not_model_plot,
+         width = 10,
+         height = 5)
+  ggsave(here("figures/long-modelling/SUP_FIG_cro_vs_not_modelsplots.pdf"),
+         cro_vs_not_model_plot,
+         width = 10, 
+         height = 5)
+}
+
+
+```
 
 ### Table of model parameter values
 
@@ -1265,6 +1376,8 @@ loo_mod2 <- loo(ll_m2, r_eff = r_eff_m2)
 loo_compare(loo_mod1, loo_mod2)
 
 ```
+
+## Contig cluster analysis
 
 ### Contig cluster associations with lineage and genus
 
@@ -1424,6 +1537,8 @@ if (write_figs) {
 }
 ```
 
+## popPUNK cluster analysis
+
 ### popPUNK clusters mapped to phylogeny
 
 ```{r popPUNK+map_to_phylogeny, fig.width= 12, fig.height=10, fig.cap = "PopPUNK clusters mapped to core gene maximum-likelihood phylogeny"}
@@ -1521,7 +1636,7 @@ pp.maptotree
 
 ```
 
-### Within-participant temporal correlation
+## Within-participant temporal correlation of SNP cluster, contig and popPUNK clusters
 
 ```{r autocorrelation-plot, fig.height = 7, fig.width = 9, fig.cap = "Within participant correlation of organism, lineage, mobile genetic element (MGE) and clone. A-B show proportions of participants that have a detectible E. coli (A), K. pneumoniae (B) at t time t=0 and the same organism at a time t later. Dashed lines show the proportion of samples in the collection that would be expected to have the same organism by chance: the proportion of between-participant samples that have the same organism. C shows (E. coli only) and D (for K. pneumoniae complex) the proportion of participants who are colonised with at time t=0 and the proportion of those who have the same lineage (as defined by popPUNK cluster), clone (as defined by <6 SNPs), or mobile genetic element (defined by ESBl-contig cluster) detectible a at time t later. Dashed lined again show the between-participant proportion of samples that contain the same lineage, clone or MGE to show the chance of obtaining any result ny chance. Fitted lines are from a nonparametric LOESS fit with 95% confidence intervals. D shows odds ratios of any within-participant E. coli pair containing the same popPUNK cluster only, ESBL-contig cluster, or both, compared to between-participant pairs, and E the same data for K. pneumoniae. It is more likely that both lineage (popPUNK cluster) and MGE (ESBL-cluster) are conserved together than either seperately, suggesting that the lineage-MGE combination is the conserved unit within this system." }
 
@@ -2148,7 +2263,9 @@ autocorrelation_plot
 
 ```
 
-### Hospital associated lineages and MGE
+## Hospital associations of lineages and MGE
+
+### Hospital associations of popPUNK and contig clusters
 
 ```{r hosp-assoc-lineages, fig.height = 8, fig.width = 9}
 
@@ -2307,7 +2424,9 @@ if (write_figs) {
 }
 ```
 
-### Construct and fit SNP-clusters
+### Hospital association of SNP clusters
+
+First, construct SNP clusters.
 
 ```{r snp-clusts, fig.width = 13.2, fig.height = 7.5, fig.cap = "Network plot of SNP-clusters (i.e. putative transmission clusters) for E. coli (A) and K. pneumoniae (B) showing that putative transmission clusters are not purely hospital associated. Points are samples, coloured by place of isolation (in-hospital [black], community [white], or up to 120 days post-discharge [grey]). Red lines link samples that are within a single participant. Blue lines link samples that are differ by five or fewer SNPs. The plot shows that most samples are not members of a SNP-cluster; that most SNP clusters are made up of samples from different participants (rather than multiple samples from the same participant); and that SNP-clusters are not strongly hospital-associated (i.e. they contain black, white, and grey points)."}
 
@@ -3247,26 +3366,6 @@ if (write_figs) {
 }
 ```
 
-### Model posterior pairs plot
-
-```{r posterior-pairs-plot, fig.width= 12, fig.height=12, fig.cap = "Pairs plots of posterior of final model showing nonidentifiability of gain and loss parameters."}
-
-mcmc_pairs(btESBL_model2posterior, pars = c("alphas[1]", "betas[1]", "alphas[2]", "betas[2]", "lambda", "mu", "gammas[1]")) -> pairsplot
-
-pairsplot
-
-if (write_figs) {
-  ggsave(here("figures/long-modelling/SUPP_FIG_pairsplot.pdf"),
-         pairsplot,
-         width = 12,
-         height = 12)
-  ggsave(here("figures/long-modelling/SUPP_FIG_pairsplot.svg"),
-         pairsplot,
-         width = 12,
-         height = 12)
-}
-
-```
 
 ### SNP cluster comparisons sensitivity analysis
 
@@ -3336,7 +3435,7 @@ if (write_figs) {
 }
 ```
 
-### Reproducibility: packages used
+## Reproducibility: packages used
 
 ```{r pkgs}
 

@@ -65,7 +65,7 @@ enroll %>%
 
 use_data(btESBL_participants, overwrite = TRUE)
 
-### longitudinal exposure (covariate) data ---------------------------------
+# longitudinal exposure (covariate) data ---------------------------------
 
 read_csv(
   "~/Documents/PhD/Thesis/bookdown/data/longit_covariate_data.csv") ->
@@ -103,7 +103,7 @@ lims_orgs %>%
 
 use_data(btESBL_stoolorgs, overwrite = TRUE)
 
-# stan_data
+# stan_data -------------------------------
 
 readRDS("data-raw/stan_data_m2.rds") ->
   btESBL_stanmodeldata
@@ -125,6 +125,19 @@ readRDS("/Users/joelewis/Documents/PhD/Thesis/bookdown/chapter_9/stan_models/mod
   btESBL_model1posterior
 
 use_data(btESBL_model1posterior, overwrite = TRUE)
+
+# model3 -
+
+list.files(here("data-raw/review_comment_work/models/"),
+           pattern = "csv") -> csvfiles
+
+rstan::read_stan_csv(
+  paste0(here("data-raw/review_comment_work/models/"),
+              csvfiles)
+) -> btESBL_model3posterior
+
+
+use_data(btESBL_model3posterior, overwrite = TRUE)
 
 # simulations from posterior
 
@@ -748,7 +761,7 @@ bind_rows(
 
 use_data(btESBL_plasmidreplicons, overwrite = TRUE)
 
-### ST410 data ----------------------------
+# ST410 data ----------------------------
 
 st410_metadata <-
   read_tsv(here("data-raw/ecoli-genomics-paper/st410/st410.tsv"))
@@ -1210,7 +1223,7 @@ vfdb_results %>%
 
 use_data(btESBL_kleb_malawi_vfdb_output, overwrite = TRUE)
 
-## kleb global metadata ------------------
+# kleb global metadata ------------------
 
 # load and clean global AMR - aim: ESBL vs not
 
