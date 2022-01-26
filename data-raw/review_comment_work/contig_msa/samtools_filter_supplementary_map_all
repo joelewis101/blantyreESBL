@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# get all samfiles in a dir
+# filter supplementary matches
+# make MSA fasta
+ 
+REF_ARRAY=($(ls -1 *sam))
+
+for CURRENTREF in "${REF_ARRAY[@]}"
+do
+echo "Filtering supplemental matches from" $CURRENTREF ", writing " $OUTPREFIX.filtered.sam
+OUTPREFIX=$(echo $CURRENTREF | rev | cut -c5- | rev) 
+samtools view -h -F 2048 $CURRENTREF > $OUTPREFIX.filtered.sam
+echo "Making fasta MSA using" ${OUTPREFIX}_rep.fa "as reference and" $CURRENTREF ", writing" $OUTPREFIX.aln
+sam2fasta.py ${OUTPREFIX}_rep.fa $OUTPREFIX.filtered.sam $OUTPREFIX.aln
+done

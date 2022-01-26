@@ -1,0 +1,3 @@
+"cluster"	"id"	"length"	"contig"	"identity"	"Lane"	"filename"	"dir"
+0	"0"	"334171"	"34154_7_306.8"	"*"	"34154_7_306"	"contigs-SHV_40.clust.clstr"	"seq_ident_0.97"
+0	"1"	"179994"	"34154_7_375.11"	"100.00"	"34154_7_375"	"contigs-SHV_40.clust.clstr"	"seq_ident_0.97"

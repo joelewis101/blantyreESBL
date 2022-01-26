@@ -1,0 +1,8 @@
+"cluster"	"id"	"length"	"contig"	"identity"	"Lane"	"filename"	"dir"
+0	"0"	"106704"	"28099_1_159.15"	"*"	"28099_1_159"	"contigs-CTX_M_16.clust.clstr"	"seq_ident_1.0"
+1	"0"	"45069"	"28099_1_23.28"	"*"	"28099_1_23"	"contigs-CTX_M_16.clust.clstr"	"seq_ident_1.0"
+2	"0"	"45067"	"28099_1_330.31"	"*"	"28099_1_330"	"contigs-CTX_M_16.clust.clstr"	"seq_ident_1.0"
+3	"0"	"44415"	"26141_1_141.33"	"*"	"26141_1_141"	"contigs-CTX_M_16.clust.clstr"	"seq_ident_1.0"
+4	"0"	"40596"	"28099_1_18.33"	"*"	"28099_1_18"	"contigs-CTX_M_16.clust.clstr"	"seq_ident_1.0"
+5	"0"	"18302"	"28099_1_249.45"	"*"	"28099_1_249"	"contigs-CTX_M_16.clust.clstr"	"seq_ident_1.0"
+6	"0"	"3656"	"28099_1_144.72"	"*"	"28099_1_144"	"contigs-CTX_M_16.clust.clstr"	"seq_ident_1.0"

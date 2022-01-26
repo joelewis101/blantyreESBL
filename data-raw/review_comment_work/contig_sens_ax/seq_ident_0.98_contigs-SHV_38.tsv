@@ -1,0 +1,8 @@
+"cluster"	"id"	"length"	"contig"	"identity"	"Lane"	"filename"	"dir"
+0	"0"	"375577"	"34154_7_130.2"	"*"	"34154_7_130"	"contigs-SHV_38.clust.clstr"	"seq_ident_0.98"
+0	"1"	"375572"	"34154_7_136.3"	"100.00"	"34154_7_136"	"contigs-SHV_38.clust.clstr"	"seq_ident_0.98"
+0	"2"	"375572"	"34154_7_138.3"	"100.00"	"34154_7_138"	"contigs-SHV_38.clust.clstr"	"seq_ident_0.98"
+0	"3"	"375453"	"34154_7_20.3"	"100.00"	"34154_7_20"	"contigs-SHV_38.clust.clstr"	"seq_ident_0.98"
+0	"4"	"375576"	"34154_7_22.3"	"100.00"	"34154_7_22"	"contigs-SHV_38.clust.clstr"	"seq_ident_0.98"
+0	"5"	"375572"	"34154_7_239.2"	"100.00"	"34154_7_239"	"contigs-SHV_38.clust.clstr"	"seq_ident_0.98"
+0	"6"	"375573"	"34154_7_318.3"	"100.00"	"34154_7_318"	"contigs-SHV_38.clust.clstr"	"seq_ident_0.98"
