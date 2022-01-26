@@ -682,4 +682,26 @@
 "btESBL_ecoli_st131_plasmids"
 
 
+#' Data: Contig cluster assignment in sensitivity analyses
+#'
+#' Contig cluster assignment varying cd-hit sequence identity from
+#' 0.95 - 1.00 and length cutoff from 0-0.8
+#' Care! The cluster ids are not unqiue! Only the
+#' cluster id-len_diff_cutoff-ident_cutoff combination is unique. See
+#' the code for how this is managed in practice
+#' See manuscript for further details
+#'
+#' @format A tidy data frame with 6426 rows and 8 variables:
+#' \describe{
+#'   \item{cluster}{Cluster id from cd-hit}
+#'   \item{id}{Sequence id within cluster from cd-hit}
+#'   \item{length}{Length of sequence, bases}
+#'   \item{contig}{Contid unique identfier}
+#'   \item{lane}{sample ID}
+#'   \item{len_diff_cutoff}{Length difference cutoff (-s in cd-hit)}
+#'   \item{ident_cutoff}{Sequence identity cutoff (-c in cd hit}
+#' }
+"btESBL_contigclusters_sensax"
+
+
 

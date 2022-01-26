@@ -2,6 +2,8 @@
 # loads contig sens ax data
 # load dat data ---------------------------------------
 
+load_contig_sens_ax_data <- function() {
+
 do.call(
   bind_rows,
   map(
@@ -45,4 +47,5 @@ df %>%
     gene = gsub("contigs-|\\.clust\\.clstr", "", filename)
   ) -> df
 
-cat("Data loaded in df")
+return(df)
+}

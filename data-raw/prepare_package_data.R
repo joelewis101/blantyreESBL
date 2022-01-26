@@ -1486,3 +1486,10 @@ btESBL_kleb_global_metadata <- metadata_global
 
 use_data(btESBL_kleb_global_metadata, overwrite = TRUE)
 
+# contig sens ax ----------------------------------
+
+# function to load and prep data
+source(here("data-raw/review_comment_work/contig_sens_ax/load_contig_sens_ax_data_fn.R"))
+ btESBL_contigclusters_sensax <- load_contig_sens_ax_data()
+
+ use_data(btESBL_contigclusters_sensax, overwrite = TRUE)
