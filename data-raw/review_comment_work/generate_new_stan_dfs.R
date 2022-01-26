@@ -139,31 +139,17 @@ write_stan_json(
   "~/.cmdstanr/cmdstan-2.28.2/models/DASSIM_CROvsall/CROvsall_data.json"
 )
 
+# actually fitted these with cmdstan in dir bvelow
+
 mod <- cmdstan_model("~/.cmdstanr/cmdstan-2.28.2/models/DASSIM_CROvsall/ESBLmod_finalV1.0_rk45.stan")
 
-mod$sample(
-  data = stan_data,
-  chains = 1,
-  parallel_chains = 1,
-  iter_warmup = 1,
-  iter_sampling = 1) -> fitz
+# but to fit do
 
-mod$sample(
-  data = btESBL_stanmodeldata,
-  chains = 1,
-  parallel_chains = 4,
-  iter_warmup = 500,
-  iter_sampling = 500) -> fitz2
-
-file = system.file("extdata",
-                   "ESBLmod_finalV1.0_rk45.stan",
-                   package = "blantyreESBL")
-
-rstan::stan(
-  file = "~/.cmdstanr/cmdstan-2.28.2/models/DASSIM_CROvsall/ESBLmod_finalV1.0_rk45.stan",
-  data = btESBL_stanmodeldata,
-  warmup = 1,
-  iter = 2,
-  chains = 1) -> fitz
+# mod$sample(
+#   data = btESBL_stanmodeldata,
+#   chains = 1,
+#   parallel_chains = 4,
+#   iter_warmup = 500,
+#   iter_sampling = 500) -> fitz2
 
 
