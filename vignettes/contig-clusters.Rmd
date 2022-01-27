@@ -12,6 +12,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+options(dplyr.summarise.inform = FALSE)
 ```
 
 ## Introduction and Methods
@@ -34,6 +35,7 @@ library(dplyr)
 library(ggplot2)
 library(stringr)
 library(forcats)
+library(purrr)
 
 write_figs <- FALSE
 
@@ -52,6 +54,14 @@ if (write_figs) {
 }
 
 ```
+
+## Results
+
+### Varying length and sequence identity cutoff in clsutering algorithm
+
+#### Cumulative cluster membership plots
+
+Clusters are stable to increasing length cutoff, and increasing sequence identity - up to 100%, when the clusters fragment.
 
 
 ```{r plot-cum-membership, fig.height = 6, fig.width = 9, fig.cap = "Cumulative proportion of samples that are included in a cluster as a function of number of clusters, stratified by ESBL gene. CLusters are ordered on the x-axis from smallest to largest. Number of samples in which a given ESBL geen was found is shown in the panel header. The coloured lines show the effect of varying the sequence length cutoff in the clustering algorithm." }
@@ -239,5 +249,287 @@ if (write_figs) {
   ggsave(here("figures/long-modelling/SUP_FIG_contig_sensax_identplot.svg"),
          ident_plot_plot,width = 9, height = 6)
 }
+
+```
+
+#### Directed acyclic graphs of cluster membership
+
+
+```{r plotting-functions}
+
+# plotting functions ----------------------
+return_cluster_plot_df <-
+  function(sample_cluster_df, gene_to_plot, cluster_cutoff,
+           len_cutoff_vec = c(0, 0.2, 0.4, 0.6, 0.8),
+           ident_cutoff_vec = c(0.95, 0.95, 0.95, 0.95, 0.95)) {
+    if (length(len_cutoff_vec) != length(ident_cutoff_vec)) {
+      stop("Different vector lengths in return_cluster_plot_df")
+    }
+    if (length(len_cutoff_vec) < 2) {
+      stop("Need at least 2 len_ and ident_ cutoff values")
+    }
+
+    # assume a data frame with
+    # id = cntig id
+    # clstre = cluster id
+    # gene = gene
+    # len_dfiff_cutoff
+    # idnet_cutoff
+    # l
+    # This will plot 5 layers - a is top, defined by the len and ident_cutoffs
+    # provided; b next, -> c , etc
+    # clsuter_cutoff will plot only clusters in row a of size >= cluster cutoff
+    # the len_cut
+    # the strategy:
+    # 1) make a df of each unique set of len and  ident_cutoffs
+    # 2) left join df a to df b by sample id - the clusters in dfa become
+    # clst.x and the clsuters in dfb become clst.y.
+    # 3) group by clust.x and xlust y and tally
+    # 4) Add in other dfs in same way
+
+    dfa <-
+      sample_cluster_df %>%
+      filter(
+        gene == gene_to_plot,
+        len_diff_cutoff == len_cutoff_vec[1],
+        ident_cutoff == ident_cutoff_vec[1]
+      )
+
+    dfb <- sample_cluster_df %>%
+      dplyr::filter(
+        gene == gene_to_plot,
+        len_diff_cutoff == len_cutoff_vec[2],
+        ident_cutoff == ident_cutoff_vec[2]
+      )
+
+    left_join(
+      dfa %>%
+        select(id, clstr) %>%
+        group_by(clstr) %>%
+        mutate(clst.size = n()) %>%
+        filter(clst.size >= cluster_cutoff),
+      dfb %>%
+        select(id, clstr) %>%
+        group_by(clstr) %>%
+        mutate(clst.size = n()),
+      by = "id"
+    ) %>%
+      group_by(clstr.x, clst.size.x, clstr.y, clst.size.y) %>%
+      tally() %>%
+      transmute(
+        from_clst_size = clst.size.x,
+        from = clstr.x,
+        to_clst_size = clst.size.y,
+        to = clstr.y,
+        n = n
+      ) ->
+    edges
+
+    bind_rows(
+      dfa %>%
+        filter(clstr %in% edges$from),
+      dfb %>%
+        filter(clstr %in% edges$to)
+    ) %>%
+      group_by(
+        clstr, len_diff_cutoff,
+        ident_cutoff
+      ) %>%
+      summarise(size = n()) -> nodes
+
+    if (length(len_cutoff_vec) > 2) {
+      for (i in 3:length(len_cutoff_vec)) {
+        sample_cluster_df %>%
+          filter(
+            len_diff_cutoff == len_cutoff_vec[i],
+            ident_cutoff == ident_cutoff_vec[i],
+            gene == gene_to_plot
+          ) -> dfc
+        add_next_edge_layer(edges, dfb, dfc) -> newedges
+        add_new_nodes(newedges, dfc) -> newnodes
+        nodes <- bind_rows(nodes, newnodes)
+        edges <- bind_rows(edges, newedges)
+        dfb <- dfc
+      }
+    }
+
+    tbl_graph(
+      nodes = nodes,
+      edges = edges,
+      directed = TRUE
+    ) -> out_graph_df
+    return(out_graph_df)
+  }
+
+add_next_edge_layer <- function(edges, dfb, dfc) {
+  left_join(
+    dfb %>%
+      filter(clstr %in% edges$to) %>%
+      select(id, clstr) %>%
+      group_by(clstr) %>%
+      mutate(clst.size = n()),
+    dfc %>%
+      select(id, clstr) %>%
+      group_by(clstr) %>%
+      mutate(clst.size = n()),
+    by = "id"
+  ) %>%
+    group_by(clstr.x, clst.size.x, clstr.y, clst.size.y) %>%
+    tally() %>%
+    transmute(
+      from_clst_size = clst.size.x,
+      from = clstr.x,
+      to_clst_size = clst.size.y,
+      to = clstr.y,
+      n = n
+    ) ->
+  edges_new
+
+  return(edges_new)
+}
+
+add_new_nodes <- function(edges, dfc) {
+  dfc %>%
+    filter(clstr %in% edges$to) %>%
+    group_by(clstr, len_diff_cutoff, ident_cutoff) %>%
+    summarise(size = n()) -> nodes_new
+  return(nodes_new)
+}
+
+min_cluster_size_picker <-  function(df, gene , cutoff = 20, size = 5, len = 0, seq = 0.95) {
+ df %>%  
+    filter(gene == {{gene}},
+           len_diff_cutoff == len,
+           ident_cutoff == seq) -> df
+ 
+    if (length(unique(df$clstr)) > cutoff) {
+      returnval <- size
+    } else {
+      returnval <- 1
+  }
+  
+  
+return(returnval)
+}
+
+```
+
+
+```{r prepare-plot-clsuters}
+
+### prepare data -----------------------------------------
+
+btESBL_contigclusters_sensax %>%
+  transmute(
+    id = gsub("^\\.", "", contig),
+    clstr = as.character(cluster),
+    gene = gsub("_", "", gene),
+    len_diff_cutoff = len_diff_cutoff,
+    ident_cutoff = ident_cutoff
+  ) %>%
+  mutate(clstr = paste0(
+    clstr,
+    "_",
+    gsub("_", "", gene),
+    "_l",
+    len_diff_cutoff,
+    "_i",
+    ident_cutoff
+  )) %>%
+  bind_rows(
+    btESBL_contigclusters %>%
+      transmute(
+        id = gsub("^\\.", "", id),
+        gene = gsub("_", "", gene),
+        len_diff_cutoff = 0,
+        ident_cutoff = 0.95,
+        clstr = paste0(
+          str_extract(clstr_name, "(?<=\\.)[0-9]*$"),
+          "_",
+          str_extract(clstr_name, ".*(?=\\.)"),
+          "_l",
+          len_diff_cutoff,
+          "_i",
+          ident_cutoff
+        )
+      )
+  ) -> sample_cluster_df
+
+
+genes <- sample_cluster_df %>% 
+  group_by(gene) %>% 
+  tally() %>% 
+  arrange(desc(n)) %>% 
+  pull(gene)
+
+purrr::map(genes,
+    ~ return_cluster_plot_df(
+      sample_cluster_df, .x, 
+      min_cluster_size_picker(sample_cluster_df,.x,20,5),
+      len_cutoff_vec = c(0,0,0,0,0),
+      ident_cutoff_vec = c(0.95, 0.97, 0.98, 0.99, 1.00)) %>% 
+      ggraph(layout = "sugiyama") +
+      geom_edge_link(aes(edge_width = n), alpha = 0.7, show.legend = FALSE) +
+      geom_node_point(aes(size = size, color = as.factor(ident_cutoff))) +
+      labs(color = "CD-HIT\nsequence\nidentity", 
+        size = "Cluster\nsize",
+        title = .x,
+        subtitle = 
+          if_else(
+            min_cluster_size_picker(sample_cluster_df,.x,20,5) > 1,
+            paste0("Restricted to clusters of at least ", 
+              min_cluster_size_picker(sample_cluster_df,.x,20,5), 
+              " samples"),
+            "All clusters shown")) +
+      scale_color_viridis_d() +
+      theme_void() 
+) -> seq_ident_dag_plots
+
+purrr::map(genes,
+    ~ return_cluster_plot_df(
+      sample_cluster_df, .x, 
+      min_cluster_size_picker(sample_cluster_df,.x,20,5),
+      len_cutoff_vec = c(0,0.2,0.4,0.6,0.8),
+      ident_cutoff_vec = c(0.95, 0.95, 0.95, 0.95, 0.95)) %>% 
+      ggraph(layout = "sugiyama") +
+      geom_edge_link(aes(edge_width = n), alpha = 0.7, show.legend = FALSE) +
+      geom_node_point(aes(size = size, color = as.factor(len_diff_cutoff))) +
+      labs(color = "CD-HIT\nlength\ncutoff", 
+        size = "Cluster\nsize",
+         subtitle = 
+          if_else(
+            min_cluster_size_picker(sample_cluster_df,.x,20,5) > 1,
+            paste0("Restricted to clusters of at least ", 
+              min_cluster_size_picker(sample_cluster_df,.x,20,5), 
+              " samples"),
+            "All clusters shown"),
+        title = .x) +
+      scale_color_viridis_d() +
+      theme_void() 
+) -> len_cutoff_dag_plots
+
+
+```
+
+
+##### Varying sequence identity
+
+```{r plot-seq-ident, fig.width = 6, fig.height = 4}
+
+for (i in 1:length(seq_ident_dag_plots)) {
+  print(seq_ident_dag_plots[[i]])
+        }
+
+
+```
+
+##### Varying length cutoff
+
+```{r plot-len-cutoff, fig.width = 6, fig.height = 4}
+
+for (i in 1:length(len_cutoff_dag_plots)) {
+  print(len_cutoff_dag_plots[[i]])
+        }
+
 
 ```
