@@ -42,7 +42,7 @@ library(viridis)
 library(patchwork)
 library(here)
 
-write_figs <- FALSE
+write_figs <- TRUE
 
 
 if (write_figs) {
