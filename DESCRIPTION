@@ -39,6 +39,7 @@ Suggests:
     pheatmap,
     pheatmap,
     phytools,
+    PopGenome
     purrr,
     readr,
     rmarkdown,
