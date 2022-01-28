@@ -688,7 +688,7 @@
 #' 0.95 - 1.00 and length cutoff from 0-0.8
 #' Care! The cluster ids are not unqiue! Only the
 #' cluster id-len_diff_cutoff-ident_cutoff combination is unique. See
-#' the code for how this is managed in practice
+#' the code for how this is managed in practice.
 #' See manuscript for further details
 #'
 #' @format A tidy data frame with 6426 rows and 8 variables:
@@ -699,9 +699,43 @@
 #'   \item{contig}{Contid unique identfier}
 #'   \item{lane}{sample ID}
 #'   \item{len_diff_cutoff}{Length difference cutoff (-s in cd-hit)}
-#'   \item{ident_cutoff}{Sequence identity cutoff (-c in cd hit}
+#'   \item{ident_cutoff}{Sequence identity cutoff (-c in cd hit)}
 #' }
 "btESBL_contigclusters_sensax"
 
 
+#' Data: Contig cluster multiple sequence alignment .paf files
+#'
+#' Multiple sequence alignments of ten largest contig clusters, generated
+#' using minimap2, mapping all cluster sequences to the longest sequence (i.e.
+#' the cluster representative sequenc from cd hit).
+#'
+#' @format A named list of ten data frames, where name is cluster id. Columns are:
+#' \describe{
+#'   \item{qname}{Query sequence name}
+#'   \item{qlen}{Query sequence length, bases}
+#'   \item{qstart}{Query start coordinate (0-based)}
+#'   \item{qend}{Query end coordinate (0-based)}
+#'   \item{strand}{‘+’ if query/target on the same strand; ‘-’ if opposite}
+#'   \item{tname}{Target sequence name}
+#'   \item{tlen}{Target sequence length, bases}
+#'   \item{tstart}{Target start coordinate on orignal strand}
+#'   \item{tend}{Target end coordinate on orignal strand}
+#'   \item{nmatch}{Number of matching bases in the mapping}
+#'   \item{alen}{Number of bases, including gaps, in the mapping}
+#'   \item{mapq}{Mapping quality (0-255, with 255 if missing)}
+#' }
+"btESBL_contigclusters_msa_paf_files"
 
+
+#' Data: Contig cluster multiple sequence alignments as PopGenome GENOME objects
+#'
+#' Multiple sequence alignments of ten largest contig clusters, generated
+#' using minimap2, mapping all cluster sequences to the longest sequence (i.e.
+#' the cluster representative sequenc from cd hit). Sequence alignments have
+#' been generated as .fasta files from the minimap2 .SAM files, then the
+#' fastas loaded using the PopGenome::readData function.
+#'
+#' @format A named list of ten data GENOME objects, where name is cluster id.
+#'
+"btESBL_contigclusters_msa_alignments"

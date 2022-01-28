@@ -6,6 +6,7 @@ library(tidyverse)
 library(lubridate)
 library(phytools)
 library(devtools)
+library(PopGenome)
 
 source("/Users/joelewis/Documents/PhD/Thesis/bookdown/final_cleaning_scripts/load_PhD_data.R")
 
@@ -1493,3 +1494,45 @@ source(here("data-raw/review_comment_work/contig_sens_ax/load_contig_sens_ax_dat
  btESBL_contigclusters_sensax <- load_contig_sens_ax_data()
 
  use_data(btESBL_contigclusters_sensax, overwrite = TRUE)
+
+ # contig msa ----------------------------------------------------
+
+ list.files(here("data-raw/review_comment_work/contig_msa"),
+            pattern = "paf$",
+            full.names = TRUE) -> paffiles
+ list.files(here("data-raw/review_comment_work/contig_msa"),
+            pattern = "paf$") -> paffile_names
+
+ purrr::map(paffiles, read_tsv, col_select = 1:12,
+     col_names =
+       c("qname",
+         "qlen",
+         "qstart",
+         "qend",
+         "strand",
+         "tname",
+         "tlen",
+         "tstart",
+         "tend",
+         "nmatch",
+         "alen",
+         "mapq")
+ ) -> paf_file_list
+
+ names(paf_file_list) <- gsub("\\.paf", "", paffile_names)
+
+ btESBL_contigclusters_msa_paf_files <- paf_file_list
+
+ list.dirs(here("data-raw/review_comment_work/contig_msa/alignments/"),
+           recursive = FALSE) -> msa_dirs
+ purrr::map(msa_dirs,
+     PopGenome::readData,
+     format = "fasta",
+     include.unknown = TRUE) -> msa_list
+
+ names(msa_list) <- gsub("\\.paf", "", paffile_names)
+
+ btESBL_contigclusters_msa_alignments <- msa_list
+
+use_data(btESBL_contigclusters_msa_paf_files, overwrite = TRUE)
+use_data(btESBL_contigclusters_msa_alignments, overwrite = TRUE)
