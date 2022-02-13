@@ -1536,3 +1536,69 @@ source(here("data-raw/review_comment_work/contig_sens_ax/load_contig_sens_ax_dat
 
 use_data(btESBL_contigclusters_msa_paf_files, overwrite = TRUE)
 use_data(btESBL_contigclusters_msa_alignments, overwrite = TRUE)
+
+
+# BLAST results for msa ---------------------------------
+
+blast_colnames <- c(
+  "qseqid",
+  "sseqid",
+  "pident",
+  "slen",
+  "length",
+  "mismatch",
+  "gapopen",
+  "qstart",
+  "qend",
+  "sstart",
+  "send",
+  "evalue",
+  "bitscore"
+)
+
+bind_rows(
+  read_csv(
+    here(paste0(
+      "data-raw/review_comment_work/plot_contigs/",
+      "cluster_reps_srst2_blast.csv"
+    )),
+    col_names = blast_colnames
+  ) %>%
+    separate(sseqid,
+             sep = "__",
+             into = c(NA, "sseqid_group", "sseqid_gene", NA),
+             remove = FALSE
+    ) %>%
+    mutate(type = "amr"),
+  read_csv(
+    here(paste0(
+      "data-raw/review_comment_work/plot_contigs/",
+      "cluster_reps_plasmidfinder_blast.csv"
+    )),
+    col_names = blast_colnames
+  ) %>%
+    mutate(sseqid = gsub("_.+$", "", sseqid)) %>%
+    separate(sseqid,
+             sep = "\\(",
+             into = c("sseqid_group", "sseqid_gene"),
+             remove = FALSE
+    ) %>%
+    mutate(sseqid_gene = gsub("\\)", "", sseqid_gene)) %>%
+    mutate(type = "plasmid"),
+  read_csv(
+    here(paste0(
+      "data-raw/review_comment_work/plot_contigs/",
+      "cluster_reps_isfinder_blast.csv"
+    )),
+    col_names = blast_colnames
+  ) %>%
+    separate(sseqid,
+             sep = "_",
+             into = c("sseqid_gene", "sseqid_group", NA),
+             remove = FALSE
+    ) %>%
+    mutate(type = "is")
+) -> btESBL_contigclusters_msa_blastoutput
+
+use_data(btESBL_contigclusters_msa_blastoutput, overwrite = TRUE)
+

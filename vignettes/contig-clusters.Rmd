@@ -41,6 +41,9 @@ library(PopGenome)
 library(viridis)
 library(patchwork)
 library(here)
+library(IRanges)
+library(ggnewscale)
+library(ggrepel)
 
 write_figs <- FALSE
 
@@ -577,22 +580,115 @@ for (i in 1:length(len_cutoff_dag_plots)) {
 
 ### Multiple sequence alignments
 
+```{r clean-up-blast-df}
+
+# The blast output contains lots of genes which overlap
+# need to pick one for each position
+
+# functions for cleaning up blast output for plotting -----------------
+
+# this will merge all overlapping matches
+# then label them with range_group id using IRanges
+add_range_group_ids <- function(qstart, qend, sseqid) {
+  ir <- IRanges(qstart, qend, names = sseqid)
+  range_group <- subjectHits(findOverlaps(ir, reduce(ir)))
+  return(range_group)
+}
+
+
+# This should be passed each range_group df
+# if only one top bitscore
+# select that_
+# if ties - selct sseqid_group if they are all one group
+# if they are different groups, give a warning
+
+pick_best_fitting_gene <- function(df) {
+  # restrict only to top fittinmg bitscoire
+  df %>%
+    ungroup() %>%
+    filter(bitscore == max(bitscore)) -> df
+  if (nrow(df) == 1) {
+    # if only one - set gene to sseqid gene
+    df %>%
+      mutate(
+        gene = sseqid_gene,
+        duplicate_flag = 0
+      ) %>%
+      select(-c(sseqid_group, sseqid_gene)) -> df
+  } else {
+    # if more than one top bitscore
+    if (length(unique(df$sseqid_group)) == 1) {
+      # if they are all same group, use group
+      df %>%
+        arrange(desc(pident), desc(length)) %>%
+        dplyr::slice(n = 1) %>%
+        mutate(
+          gene = paste0(sseqid_group, "*"),
+          duplicate_flag = 0
+        ) %>%
+        select(-c(sseqid_group, sseqid_gene)) -> df
+    } else {
+      df %>%
+        group_by(sseqid_group) %>%
+        arrange(sseqid_group, desc(pident), desc(length)) %>%
+        dplyr::slice(n = 1) %>%
+        mutate(
+          gene = paste0(sseqid_group, "*"),
+          duplicate_flag = 1
+        ) %>%
+        ungroup() %>%
+        select(-c(sseqid_group, sseqid_gene)) -> df
+      warning(
+        paste0(
+          "Watch out! qseqid: ", df$qseqid, " range_group: ",
+          df$range_group, " have multiple genes in one location.\n"
+        )
+      )
+    }
+  }
+  return(df)
+}
+
+# tidy up and plot -----------------------------------
+
+btESBL_contigclusters_msa_blastoutput %>%
+  group_by(qseqid, type) %>%
+  mutate(
+    range_group = paste0(
+      type,
+      add_range_group_ids(qstart, qend, sseqid)
+    )
+  ) %>%
+  ungroup() %>%
+  group_by(qseqid, range_group) %>%
+  filter(sseqid != "ISEc9_IS1380_unknown") %>%
+  do(pick_best_fitting_gene(.)) ->
+blast_processed
+
+left_join(
+  blast_processed,
+  btESBL_contigclusters %>% 
+    select(id, clstr_name) %>% 
+    unique(),
+  by = c("qseqid" = "id")) -> blast_processed
+
+```
+
 ```{r msa-plotting fn}
 
 
-# PopGenome::readData("data-raw/review_comment_work/contig_msa/alignments/CTXM27/",
-#                     format = "fasta",
-#                     include.unknown = TRUE) -> msa
+ # START HERE - ADD BLAST DF TO THIS GN
 
 # This function takes
 #
 # 1) A tibble with alignment in paf format
 # 2) A multiple sequence alignment fasta in GENOME format from
 #    PopGenome
+# 3) The BLAST dataframe of IS, amr, and plasmid replicons
 #
 # And returns a ggplot with nucleotide diversity and the
 # queries shown mapped to target with colours indicating coverage
-# - the colour shows whether + or - mapped (as defined by PAF file)
+# and the IS, AMR and plasmid replicon gebes mapped to 
 #
 # The paf tibble should have colnames as per pafR package
 #     c("qname","qlen","qstart","qend","strand","tname", "tlen", "tstart",
@@ -607,6 +703,7 @@ for (i in 1:length(len_cutoff_dag_plots)) {
 
 return_contig_cluster_plots <- function(paf_df,
                                         msa,
+                                        blast_df,
                                         plot_title,
                                         window_val = 1,
                                         jump_val = 1) {
@@ -685,7 +782,25 @@ return_contig_cluster_plots <- function(paf_df,
     ) -> df
 
   # plot alignments
-  ggplot(df, aes(
+  blast_df %>%
+    mutate(
+      qname = "Cluster Reference",
+      reference = NA
+      ) -> blast_df
+
+
+  
+  df %>% 
+    mutate(
+      across(starts_with("axis"),
+                         ~ if_else(qname == "Cluster Reference",
+                                   .x + 1, .x)
+      )) -> df
+  df %>% 
+    mutate(reference = 
+             if_else(strand %in% c("+", "-"),
+                     "Covered", strand)) %>% 
+  ggplot(aes(
     xmin = qstart_coord,
     xmax = qend_coord,
     y = 1:length(qname_map),
@@ -701,12 +816,12 @@ return_contig_cluster_plots <- function(paf_df,
     color = NA,
     size = 1,
     ) +
-    geom_rect(
-      color = "black",
-      fill = "white",
-      size = 0.5,
-      alpha = 0
-    ) +
+     geom_rect(
+       color = "black",
+       fill = "white",
+       size = 0.5,
+       alpha = 0
+     ) +
     scale_y_continuous(
       labels = df$qname,
       breaks = df$axis_location
@@ -727,21 +842,52 @@ return_contig_cluster_plots <- function(paf_df,
     ) +
     scale_fill_manual(values = c(
       "Reference" = "grey",
-      "+" = viridis_pal()(4)[3],
-      "-" = viridis_pal()(4)[2]
+      "Covered" = viridis_pal()(4)[3]
     ),
     na.value = "grey") +
     scale_linetype_manual(values = c(
-      "Primary" = "solid",
-      "Secondary" = "dashed"),
-      na.value = "grey"
-      ) +
+       "Primary" = "solid",
+       "Secondary" = "dashed"),
+       ) +
     labs(
       x = "Position on cluster reference assembly",
       y = "Contig ID",
       fill = "Mapped\nStrand"
     ) +
-    guides(linetype = "none")  -> p
+    guides(linetype = "none") +
+    new_scale_fill() +
+    geom_rect(aes(
+      xmin = qstart, xmax = qend,
+      ymin = max(df$axis_scale_pos) - 0.2,
+      ymax = max(df$axis_scale_pos) + 0.2,
+      y = max(df$axis_scale_pos),
+      fill = type,
+      linetype = "solid"),
+      alpha = 0.6,
+      data = blast_df,
+    ) +
+    geom_text_repel(
+      aes(y=max(df$axis_scale_pos),
+          x = qstart + (qend-qstart)/2,
+          xmin = qstart, xmax = qend,
+          ymin = max(df$axis_scale_pos) - 0.2,
+          ymax = max(df$axis_scale_pos) + 0.2,
+          label = gene,
+          fill = type,
+          linetype = "solid",
+          label_padding = 0.35,
+          color = type),
+      direction = "y",
+      data = blast_df) +
+    scale_fill_manual(
+      values = c("is" = "blue",
+      "amr" = "red",
+      "plasmid" = "green")) +
+    scale_color_manual(
+      values = c("is" = "blue",
+                 "amr" = "red")) +
+    labs(fill = "Gene\nType",
+         color = "Gene\nType") -> p
 
   # now nucleotide diversity
   sliding.window.transform(msa,
@@ -795,10 +941,14 @@ for (i in 1:length(btESBL_contigclusters_msa_paf_files)) {
   return_contig_cluster_plots(
     btESBL_contigclusters_msa_paf_files[[i]],
     btESBL_contigclusters_msa_alignments[[i]],
+   blast_processed %>% 
+    filter(clstr_name == 
+    names(btESBL_contigclusters_msa_paf_files)[[i]]),
     names(btESBL_contigclusters_msa_paf_files)[[i]]
   ) ->
   listout[[i]]
 }
+
 
 ```
 
