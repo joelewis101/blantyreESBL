@@ -45,7 +45,7 @@ library(IRanges)
 library(ggnewscale)
 library(ggrepel)
 
-write_figs <- FALSE
+write_figs <- TRUE
 
 
 if (write_figs) {
@@ -652,6 +652,11 @@ pick_best_fitting_gene <- function(df) {
 # tidy up and plot -----------------------------------
 
 btESBL_contigclusters_msa_blastoutput %>%
+  mutate(
+    sseqid_gene = 
+      if_else(type == "plasmid",
+              sseqid_group,
+              sseqid_gene)) %>% 
   group_by(qseqid, type) %>%
   mutate(
     range_group = paste0(
@@ -672,12 +677,14 @@ left_join(
     unique(),
   by = c("qseqid" = "id")) -> blast_processed
 
+
+    
+
 ```
 
 ```{r msa-plotting fn}
 
 
- # START HERE - ADD BLAST DF TO THIS GN
 
 # This function takes
 #
@@ -706,7 +713,10 @@ return_contig_cluster_plots <- function(paf_df,
                                         blast_df,
                                         plot_title,
                                         window_val = 1,
-                                        jump_val = 1) {
+                                        jump_val = 1,
+                                        xlim_min = NA_real_,
+                                        xlim_max = NA_real_,
+                                        geom_repel_xlim_max = NA) {
   # Add start and end query locations on target
   # Need to flip if negative strand
 
@@ -716,7 +726,20 @@ return_contig_cluster_plots <- function(paf_df,
   require(stringr)
   require(patchwork)
 
-   paf_df %>%
+  genecols_1 <-
+    c(
+      "IS" = viridis_pal(option = "plasma")(6)[1],
+      "AMR" = viridis_pal(option = "plasma")(6)[4],
+      "Plasmid\nreplicon" = viridis_pal(option = "plasma")(6)[3]
+    )
+
+  genecols_2 <- c(
+    "IS" = "blue",
+    "AMR" = "red",
+    "Plasmid\nreplicon" = "green"
+  )
+
+  paf_df %>%
     mutate(
       qstart_coord = if_else(
         strand == "+",
@@ -758,7 +781,7 @@ return_contig_cluster_plots <- function(paf_df,
     mutate(axis_scale_pos = nrow(df) - axis_scale_pos) %>%
     group_by(qname) %>%
     mutate(axis_location = mean(axis_scale_pos)) -> df
-# Add in reference
+  # Add in reference
   bind_rows(
     data.frame(
       qname = "Cluster Reference",
@@ -781,25 +804,56 @@ return_contig_cluster_plots <- function(paf_df,
         )
     ) -> df
 
-  # plot alignments
   blast_df %>%
     mutate(
       qname = "Cluster Reference",
       reference = NA
-      ) -> blast_df
+    ) -> blast_df
 
-
-  
-  df %>% 
+# couple of nudges of position for plot elements
+  df %>%
     mutate(
-      across(starts_with("axis"),
-                         ~ if_else(qname == "Cluster Reference",
-                                   .x + 1, .x)
-      )) -> df
-  df %>% 
-    mutate(reference = 
-             if_else(strand %in% c("+", "-"),
-                     "Covered", strand)) %>% 
+      across(
+        starts_with("axis"),
+        ~ if_else(qname == "Cluster Reference",
+          .x + 1, .x
+        )
+      )
+    ) -> df
+
+  blast_df %>%
+    mutate(
+      nudge =
+        if_else(type == "amr", 1, -1),
+      type = case_when(
+        type == "is" ~ "IS",
+        type == "amr" ~ "AMR",
+        type == "plasmid" ~ "Plasmid\nreplicon")
+    ) ->
+  blast_df
+
+
+# set xlimit vals
+    if (is.na(xlim_min)) {
+      xlim_min <- 0 - max(df$tlen, na.rm = TRUE) / 10
+    }
+
+  if (is.na(xlim_max)) {
+    xlim_max <- max(df$tlen, na.rm = TRUE) +
+      max(df$tlen, na.rm = TRUE) / 10
+  }
+  
+    if (is.na(geom_repel_xlim_max)) {
+    geom_repel_xlim_max <- xlim_max
+  }
+  
+  df %>%
+    mutate(
+      reference =
+        if_else(strand %in% c("+", "-"),
+          "Covered on\nmapped strand", strand
+        )
+    ) %>%
   ggplot(aes(
     xmin = qstart_coord,
     xmax = qend_coord,
@@ -816,12 +870,12 @@ return_contig_cluster_plots <- function(paf_df,
     color = NA,
     size = 1,
     ) +
-     geom_rect(
-       color = "black",
-       fill = "white",
-       size = 0.5,
-       alpha = 0
-     ) +
+    geom_rect(
+      color = "black",
+      fill = "white",
+      size = 0.5,
+      alpha = 0
+    ) +
     scale_y_continuous(
       labels = df$qname,
       breaks = df$axis_location
@@ -831,28 +885,28 @@ return_contig_cluster_plots <- function(paf_df,
     coord_cartesian(
       xlim =
         c(
-          0 - max(df$tlen, na.rm = TRUE) / 10,
-          max(df$tlen, na.rm = TRUE) +
-            max(df$tlen, na.rm = TRUE) / 10
+          xlim_min, xlim_max
         ),
       ylim = c(
         min(df$axis_scale_pos) - 0.25,
-        max(df$axis_scale_pos) + 0.25
+        max(df$axis_scale_pos) + 2
       )
     ) +
-    scale_fill_manual(values = c(
-      "Reference" = "grey",
-      "Covered" = viridis_pal()(4)[3]
-    ),
-    na.value = "grey") +
+    scale_fill_manual(
+      values = c(
+        "Reference" = "grey",
+        "Covered on\nmapped strand" = viridis_pal()(4)[3]
+      ),
+      na.value = "grey"
+    ) +
     scale_linetype_manual(values = c(
-       "Primary" = "solid",
-       "Secondary" = "dashed"),
-       ) +
+      "Primary" = "solid",
+      "Secondary" = "dashed"
+    ), ) +
     labs(
       x = "Position on cluster reference assembly",
       y = "Contig ID",
-      fill = "Mapped\nStrand"
+      fill = "Mapped\nRegions"
     ) +
     guides(linetype = "none") +
     new_scale_fill() +
@@ -862,38 +916,47 @@ return_contig_cluster_plots <- function(paf_df,
       ymax = max(df$axis_scale_pos) + 0.2,
       y = max(df$axis_scale_pos),
       fill = type,
-      linetype = "solid"),
-      alpha = 0.6,
-      data = blast_df,
+      linetype = "solid"
+    ),
+    alpha = 0.6,
+    data = blast_df,
     ) +
     geom_text_repel(
-      aes(y=max(df$axis_scale_pos),
-          x = qstart + (qend-qstart)/2,
-          xmin = qstart, xmax = qend,
-          ymin = max(df$axis_scale_pos) - 0.2,
-          ymax = max(df$axis_scale_pos) + 0.2,
-          label = gene,
-          fill = type,
-          linetype = "solid",
-          label_padding = 0.35,
-          color = type),
-      direction = "y",
-      data = blast_df) +
+      aes(
+        y = max(df$axis_scale_pos),
+        x = qstart + (qend - qstart) / 2,
+        xmin = qstart, xmax = qend,
+        ymin = max(df$axis_scale_pos) - 0.2,
+        ymax = max(df$axis_scale_pos) + 0.2,
+        label = gene,
+        fill = type,
+        linetype = "solid",
+        label_padding = 0.35,
+        color = type
+      ),
+      nudge_y = blast_df$nudge,
+      direction = "both",
+      xlim = c(xlim_min, geom_repel_xlim_max),
+      data = blast_df
+    ) +
     scale_fill_manual(
-      values = c("is" = "blue",
-      "amr" = "red",
-      "plasmid" = "green")) +
+      values = genecols_2
+    ) +
     scale_color_manual(
-      values = c("is" = "blue",
-                 "amr" = "red")) +
-    labs(fill = "Gene\nType",
-         color = "Gene\nType") -> p
+      values = genecols_2,
+      guide = "none"
+    ) +
+    labs(
+      fill = "Gene\nType",
+      color = "Gene\nType"
+    ) -> p
 
   # now nucleotide diversity
   sliding.window.transform(msa,
-                           width = window_val,
-                           jump = jump_val,
-                           type = 2) -> shv2
+    width = window_val,
+    jump = jump_val,
+    type = 2
+  ) -> shv2
   diversity.stats(shv2) -> msa2
   data.frame(msa2@nuc.diversity.within) -> nuc_div
   nuc_div$window <- rownames(nuc_div)
@@ -917,9 +980,7 @@ return_contig_cluster_plots <- function(paf_df,
     coord_cartesian(
       xlim =
         c(
-          0 - max(df$tlen, na.rm = TRUE) / 10,
-          max(df$tlen, na.rm = TRUE) +
-            max(df$tlen, na.rm = TRUE) / 10
+          xlim_min, xlim_max
         )
     ) +
     labs(
@@ -928,7 +989,7 @@ return_contig_cluster_plots <- function(paf_df,
       title = {{ plot_title }}
     ) +
     theme(axis.text.x = element_blank()) +
-    ylim(c(0,1)) -> p2
+    ylim(c(0, 1)) -> p2
   plot_out <- (p2 + p) + plot_layout(ncol = 1, heights = c(1, 3))
   return(plot_out)
 }
@@ -938,6 +999,20 @@ return_contig_cluster_plots <- function(paf_df,
 ```{r generate-msa-plots}
 listout <- list()
 for (i in 1:length(btESBL_contigclusters_msa_paf_files)) {
+  if (names(btESBL_contigclusters_msa_paf_files)[[i]] == "CTX_M_15.10") {
+    return_contig_cluster_plots(
+    btESBL_contigclusters_msa_paf_files[[1]],
+    btESBL_contigclusters_msa_alignments[[1]],
+    blast_processed %>% 
+        filter(clstr_name == 
+                   names(btESBL_contigclusters_msa_paf_files)[[1]]),
+    names(btESBL_contigclusters_msa_paf_files)[[1]], 
+    xlim_min = -10000, 
+    xlim_max = 50000,
+    geom_repel_xlim_max = 100000
+)  -> listout[[i]] 
+  } else {
+  
   return_contig_cluster_plots(
     btESBL_contigclusters_msa_paf_files[[i]],
     btESBL_contigclusters_msa_alignments[[i]],
@@ -947,13 +1022,14 @@ for (i in 1:length(btESBL_contigclusters_msa_paf_files)) {
     names(btESBL_contigclusters_msa_paf_files)[[i]]
   ) ->
   listout[[i]]
+  }
 }
 
 
 ```
 
 
-```{r plot-contig-msas, fig.height = 10,fig.width = 8}
+```{r plot-contig-msas, fig.height = 9,fig.width = 12}
 for (i in order(purrr::map_int(btESBL_contigclusters_msa_paf_files, nrow), 
                 decreasing = TRUE)) {
   
@@ -966,7 +1042,7 @@ for (i in order(purrr::map_int(btESBL_contigclusters_msa_paf_files, nrow),
         names(btESBL_contigclusters_msa_paf_files)[[i]],
         ".pdf"
       )), listout[[i]],
-      width = 8, height = 10
+      width = 10, height = 10
     )
     ggsave(here(
       paste0(
@@ -974,7 +1050,7 @@ for (i in order(purrr::map_int(btESBL_contigclusters_msa_paf_files, nrow),
         names(btESBL_contigclusters_msa_paf_files)[[i]],
         ".svg"
       )), listout[[i]],
-      width = 8, height = 10
+      width = 10, height = 10
     )
   }
 }
