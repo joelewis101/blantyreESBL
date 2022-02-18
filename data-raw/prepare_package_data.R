@@ -1025,6 +1025,11 @@ bind_rows(
               Country = "Malawi") %>%
     filter(Accession_number %in% btESBL_ecoli_globalst131_tree$tip.label)
 ) %>%
+  bind_rows(btESBL_ecoli_musicha_metadata %>%
+              transmute(Accession_number = lane,
+                        Year = Year,
+                        Country = "Malawi")) %>%
+    filter(Accession_number %in% btESBL_ecoli_globalst131_tree$tip.label) %>%
   as.data.frame() -> btESBL_ecoli_st131_metadata
 
 use_data(btESBL_ecoli_st131_metadata, overwrite = TRUE)
