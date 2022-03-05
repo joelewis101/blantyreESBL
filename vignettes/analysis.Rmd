@@ -671,6 +671,49 @@ if (write_figs) {
 
 ```
 
+### Plasmid replicons
+
+```{r plasmid-replicons, fig.height=5, fig.width=5, fig.cap="Distribution of plasmid incompatibility groups in the isolates. KpSC = Klebsiella pneumoniae sequence complex."}
+
+btESBL_plasmidreplicons %>% 
+    mutate(ref_seq = gsub("_.+$","", ref_seq),
+           ref_seq = gsub("\\.[0-9]","", ref_seq),
+           species = if_else(
+             grepl("K. pneum", species),
+             "KpSC",
+             species)
+           # ,
+           # ref_seq = case_when(
+           #     grepl("Col", ref_seq) ~ "Col",
+           #     grepl("rep", ref_seq) ~ "rep",
+           #     grepl("^FIA", ref_seq) ~ "IncFIA",
+           #     !grepl("Inc", ref_seq) ~ "Other",
+           #     TRUE ~ ref_seq
+           ) %>%
+    filter(grepl("Inc", ref_seq)) %>%
+    ggplot(aes(fct_rev(fct_infreq(ref_seq)))) +
+    geom_bar() +
+    coord_flip() +
+    theme_bw() +
+    labs(y = "Number of samples",
+         x = "Plasmid replicon") + 
+  facet_wrap(~species, scales = "free_x") -> plasmid_replicons_plot
+
+plasmid_replicons_plot
+
+if (write_figs) {
+  ggsave(here("figures/long-modelling/SUP_FIG_plasm.pdf"),
+         plasmid_replicons_plot,
+         width = 5,
+         height = 5)
+  ggsave(here("figures/long-modelling/SUP_FIG_plasm.svg"),
+         plasmid_replicons_plot,
+         width = 5, 
+         height = 5)
+}
+
+
+```
 
 ### Baseline associations of ESBL colonisation
 
