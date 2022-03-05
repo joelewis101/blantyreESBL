@@ -739,3 +739,22 @@
 #' @format A named list of ten data GENOME objects, where name is cluster id.
 #'
 "btESBL_contigclusters_msa_alignments"
+
+#' Data: Antimicrobial sensitivity testing for a suvet of isolates
+#'
+#' Results from disc antimicrobial sensitivity testing (AST) according
+#' to BSAC guidelines for six antimicrobials. Only a subset of isolates
+#' underwent AST: 442 E. coli and 167 K. pnemoniae sequence complex (KpSC).
+#'
+#'@format A dataframe with 609 rows and 8 variables
+#'\describe{
+#'   \item{supplier_name}{Unique sample ID}
+#'   \item{Organism}{E. coli or KpSC}
+#'   \item{amikacin}{AST result to amikacin}
+#'   \item{chloramphenicol}{AST result to chloramphenicol}
+#'   \item{ciprofloxacin}{AST result to ciprofloxacin}
+#'   \item{cotrimoxazole}{AST result to cotrimoxazole}
+#'   \item{gentamicin}{AST result to gentamicin}
+#'   \item{meropenem}{AST result to meropenem}
+#' }
+"btESBL_AST"

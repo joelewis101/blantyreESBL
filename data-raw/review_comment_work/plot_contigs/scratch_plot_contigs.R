@@ -356,7 +356,7 @@ genes_df <- filter(blast_all_processed, qseqid == ".28099_1_127.68")
           linetype = "solid",
           label_padding = 0.35,
           color = type),
-      direction = "y",
+      direction = "both",
       data = genes_df) +
     scale_fill_manual(
       values = c("is" = "blue",

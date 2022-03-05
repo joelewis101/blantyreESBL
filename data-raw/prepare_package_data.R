@@ -2,16 +2,17 @@
 
 # the load_phd_data scripts are from the Thesis repo https://github.com/joelewis101/thesis
 #library(tidyverse)
-library(tidyverse)
-library(lubridate)
-library(phytools)
-library(devtools)
-library(PopGenome)
+
 
 source("/Users/joelewis/Documents/PhD/Thesis/bookdown/final_cleaning_scripts/load_PhD_data.R")
 
 source("/Users/joelewis/Documents/PhD/Thesis/bookdown/final_cleaning_scripts/load_and_clean_lims.R")
 
+library(tidyverse)
+library(lubridate)
+library(phytools)
+library(devtools)
+library(PopGenome)
 library(here)
 library(ape)
 
@@ -1607,3 +1608,46 @@ bind_rows(
 
 use_data(btESBL_contigclusters_msa_blastoutput, overwrite = TRUE)
 
+
+# phenotypic AST data ------------------------------------------
+
+btESBL_AST <-
+  read_csv(
+    "data-raw/review_comment_work/phenotypic_sens/ESBL_orgs.csv"
+  )
+
+btESBL_AST  %>%
+  filter(profile_name == "DASSIM Culture") %>%
+  transmute(
+    supplier_name = sample_number,
+    organism = organism,
+    amikacin = `Amikacin 30`,
+    chloramphenicol = `Chloramphenicol 30`,
+    ciprofloxacin = `Ciprofloxacin 1`,
+    cotrimoxazole = `Cotrimoxazole 25`,
+    gentamicin = `Gentamicin 10`,
+    meropenem = Meropenam) %>%
+  unique() %>%
+  filter(grepl("Escheric|ella pneum", organism)) %>%
+  semi_join(
+    btESBL_sequence_sample_metadata %>%
+    mutate(
+      organism = if_else(
+        grepl("coli", species),
+        "Escherichia coli",
+        "Klebsiella pneumoniae")),
+      by = c("supplier_name", "organism")
+  )  %>%
+  mutate(
+    organism =
+      case_when(
+        organism == "Escherichia coli" ~ "E. coli",
+        organism == "Klebsiella pneumoniae" ~ "KpSC")) %>%
+  filter(!(is.na(amikacin) &
+                 is.na(chloramphenicol) &
+                 is.na(ciprofloxacin) &
+                 is.na(cotrimoxazole) &
+                 is.na(gentamicin) &
+                 is.na(meropenem))) -> btESBL_AST
+
+use_data(btESBL_AST, overwrite = TRUE)

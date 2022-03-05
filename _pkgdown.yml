@@ -11,6 +11,7 @@ reference:
   desc: "Results of selective stool culture for ESBL"
 - contents:
   - matches("stool")
+  - btESBL_AST
 - title: "Whole genome sequence metadata and analysis"
   desc: "Accession numbers of isolates and results of sequencing analysis"
 - contents:
@@ -25,7 +26,6 @@ reference:
   - btESBL_snpdists_kleb
   - btESBL_NCBI_phenotypic_bl
   - btESBL_CARD_qrdr_mutations
-
 - title: "Results of modelling and simulations"
   desc: "Outputs from longituinal modelling of ESBL carriage"
 - contents:

@@ -97,7 +97,7 @@ p.uci <- function(x,n) {
   return(binom.test(x,n)$conf.int[[2]])
 }
 
-write_figs <- FALSE
+write_figs <- TRUE
 
 
 if (write_figs) {
@@ -597,6 +597,10 @@ btESBL_stoolorgs %>%
       ))
                   } -> stool_spec
 
+stool_spec  +
+  scale_fill_manual(values = viridis_pal(option = "cividis")(4)[c(3,1)]) ->
+  stool_spec
+
 stool_spec
 
 if (write_figs) {
@@ -611,6 +615,62 @@ if (write_figs) {
 }
 
 ```
+
+### Antimicrobial sensitivity testins (AST) of *E. coli* and *K. pneumoniae* isolates
+
+```{r AST, fig.cap = "Results of antimicrobial sensitivity testing of cultured E. coli and K. pneumoniae sequence complex (KpSC) isolates using the disc diffusion method.", fig.width = 7, fig.height = 3 }
+
+# sorting fn
+
+res <- function(x) {
+return(sum(x == "Resistant", na.rm = TRUE))
+  }
+
+btESBL_AST %>% 
+  select(-supplier_name) %>% 
+  pivot_longer(-organism) %>% 
+  mutate(value = if_else(is.na(value), "Missing", value),
+         value = factor(value,
+                        levels = 
+                          rev(c("Resistant",
+                            "Intermediate",
+                            "Sensitive",
+                            "Missing"))),
+         name = str_to_title(name)) %>% 
+  ggplot(aes(fct_reorder(name, value, .fun = res), fill = value)) +
+  geom_bar() +
+  facet_wrap(~organism, scales = "free_x") +
+  coord_flip() +
+  scale_fill_manual(values = viridis_pal(option = "cividis")(4),
+                    breaks = c("Resistant",
+                            "Intermediate",
+                            "Sensitive",
+                            "Missing")
+                      ) +
+  theme_bw() +
+  labs(
+    x = "Antimicrobial",
+    y = "Number of isolates",
+    fill = "" ) -> ast_plot
+
+ast_plot
+
+
+
+if (write_figs) {
+  ggsave(here("figures/long-modelling/SUP_FIG_AST.pdf"),
+         ast_plot,
+         width = 7,
+         height = 3)
+  ggsave(here("figures/long-modelling/SUP_FIG_AST.svg"),
+         ast_plot,
+         width = 7, 
+         height = 3)
+}
+
+
+```
+
 
 ### Baseline associations of ESBL colonisation
 
