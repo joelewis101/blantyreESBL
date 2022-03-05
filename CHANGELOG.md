@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Longitudinal carriage model ceftriaxone vs all other abx
 - bTESBL_AST: phenotypic AST data and plots in carriage paper
 
+### Fixed
+- bTESBL_plasmidreplicons didn't include kleb in error - fixed
+
 ### Changed
 - Correct typos throughout
 

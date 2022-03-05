@@ -750,7 +750,7 @@ bind_rows(
     mutate(name = gsub("\\./","", name),
            name = gsub("/report\\.tsv","",name),
            name = gsub("#","_", name)) %>%
-    filter(name %in% dassim.klebs) %>%
+    filter(name %in% gsub("#","_",dassim.klebs)) %>%
     pivot_longer(-name,
                  names_to = c("cluster_name", ".value"),
                  names_sep = "\\.") %>%
