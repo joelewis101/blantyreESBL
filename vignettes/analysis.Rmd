@@ -1017,6 +1017,63 @@ ggplot(aes(t, as.numeric(ESBL == "Positive"),
 
 ```
 
+Plot number of samples collected u to D7 with estimated prevalence
+
+```{r d7-prevplot, fig.width = 6, fig.height =4, fig.cap = "A: Number of stools samples collected per day stratified by arm. B: Proportion of samples per day in which ESBLE was identfied, stratified by arm." }
+
+btESBL_stoolESBL %>%
+  mutate(arm = paste("Arm",arm)) %>% 
+  ggplot(aes(t)) +
+  geom_bar() +
+  facet_wrap(arm ~ .) +
+  xlim(c(-1, 11)) +
+  labs(
+    x = "Day post enrollment",
+    y = "Number of samples"
+  ) +
+  theme_bw() -> a
+
+btESBL_stoolESBL %>%
+  mutate(arm = paste("Arm",arm)) %>% 
+  group_by(arm, t) %>%
+  summarise(
+    n_tot = length(t),
+    n_esbl = sum(ESBL == "Positive", na.rm = TRUE),
+    prop = n_esbl / n_tot,
+    lci = binom.test(n_esbl, n_tot)$conf.int[1],
+    uci = binom.test(n_esbl, n_tot)$conf.int[2]
+  ) %>%
+  filter(t <= 10) %>%
+  ggplot(aes(x = t, y = prop, ymin = lci, ymax = uci, group = arm)) +
+  geom_point() +
+  geom_errorbar(width = 0) +
+  facet_wrap(arm ~ .) +
+  labs(
+    x = "Day post enrollment",
+    y = "Proportion ESBL+"
+  ) +
+  xlim(c(-1, 11)) +
+  theme_bw() -> b
+
+(a / b) + plot_annotation(tag_levels = "A") -> ESBLprev_uptod7_plot
+
+ESBLprev_uptod7_plot
+
+
+if (write_figs) {
+  ggsave(here("figures/long-modelling/SUP_FIG_ESBLprevD7.pdf"),
+         ESBLprev_uptod7_plot,
+         width = 6,
+         height = 4)
+  ggsave(here("figures/long-modelling/SUP_FIG_ESBLprevD7.svg"),
+         ESBLprev_uptod7_plot,
+         width = 6, 
+         height = 4)
+}
+
+```
+
+
 Describe carriage prevalence; plot model parameters; plot predicted prevalence.
 
 ```{r markov-model-panel-plot, fig.cap = "Determinants of ESBL-E carriage. A: Prevalence of ESBL-E carriage stratified by study arm. Inpatients without sepsis are censored at first antimicrobial exposure and community members censored at first antimicrobial exposure or hospital admission. Estimated prevalence and 95% confience intervals derived from a nonparametric LOESS regression with span parameter 0.8. B: Simulated probability of ESBL colonisation generated from the posterior parameter estimates of the fitted model with a starting probability of colonisation of 0.5 and seven days of hospitalisation with either seven, two, or no days antimicrobial exposure. In this model, truncated courses of antimicrobials havelittle effect on reducing ESBL-E carriage. C-E: Density plots of parameter estimates form fitted model with median (line) and 95% credible intervals (shading) shown. A: log hazard ratios of ESBL-E gain and loss for hospialisation and antimicrobial exposure: hospitalisation acts to acts to increase both acquisition and loss of ESBL-E whereas antmicrobial exposure acts to prevent loss. D: mean time in state for uncolonised and colonised states. E: Half life of decay of effecr of antimicrobials, showing that the effect of antimicrobials, in this model, acts for many days after exposure has finished.", fig.width = 12, fig.height=6  }
