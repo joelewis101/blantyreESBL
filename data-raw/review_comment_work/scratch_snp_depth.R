@@ -10,9 +10,15 @@ read_tsv("~/Documents/PhD/Manuscripts/esbl_carriage/manuscript/nature_microbiolo
 ) -> snp_depths
 
 snp_depths  %>%
-  group_by(sample) %>%
-  summarise(mean_dep = mean(snp_depth),
-            sd = sd(snp_depths))
+  group_by(species) %>%
+  summarise(mean_dep = mean(snp_depth, na.rm = TRUE),
+            sd = sd(snp_depth, na.rm = TRUE))
+#
+# snp_depths %>%
+#   group_by(position) %>%
+# mutate(mean_dep = mean(snp_depth, na.rm = TRUE),
+#             sd = sd(snp_depth, na.rm = TRUE)) %>%
+#   ggplot(aes(position, mean_dep)) + geom_point()
 
 snp_depths %>%
 ggplot(aes(snp_depth, fill = species)) +
@@ -27,6 +33,11 @@ bind_rows(
   core_all
 
 core_all %>%
+  ungroup() %>%
+  summarise(med = median(LOWCOV),
+         lq = quantile(LOWCOV, 0.25))
+
+core_all %>%
   mutate(prop_ambiguous = LOWCOV/ALIGNED) %>%
   ggplot(aes(prop_ambiguous, fill = species)) +
   geom_histogram(bins = 1000, position = "dodge") +
@@ -34,7 +45,14 @@ core_all %>%
 
 core_all %>%
   mutate(prop_ambiguous = LOWCOV/ALIGNED) %>%
-  pull(prop_ambiguous) |> quantile()
+  group_by(species) %>%
+  summarise(median = median(prop_ambiguous),
+            lci = quantile(prop_ambiguous, 0.25),
+            uci = quantile(prop_ambiguous, 0.75))
+
+  summarise(mean = mean(prop_ambiguous),
+            sd = sd(prop_ambiguous))
+
 
 core_all %>%
   mutate(prop_ambiguous = LOWCOV/VARIANT) %>%
