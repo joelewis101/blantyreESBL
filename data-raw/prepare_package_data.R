@@ -1651,3 +1651,47 @@ btESBL_AST  %>%
                  is.na(meropenem))) -> btESBL_AST
 
 use_data(btESBL_AST, overwrite = TRUE)
+
+## Further simulations to compare antimicrobials vs hospitalisation ---------
+
+# This file is not included in the repo - too large
+ readRDS(here("data-raw/btESBL_model2simulations_2.rda")) ->
+   btESBL_model2simulations_2
+
+ bind_rows(
+ btESBL_model2simulations_2 %>%
+   group_by(time, abx_days, hosp_days) %>%
+   summarise(
+     med = median(pr_esbl_pos),
+     lq = quantile(pr_esbl_pos, 0.025)[[1]],
+     uq = quantile(pr_esbl_pos, 0.975)[[1]]
+   ) %>%
+   filter(hosp_days == 0) %>%
+   ungroup() %>%
+   transmute(
+     time = time,
+     days = abx_days,
+     exposure = "Antimicrobials",
+     median = med,
+     lq = lq,
+     uq = uq),
+
+ btESBL_model2simulation_2 %>%
+   group_by(time, abx_days, hosp_days) %>%
+   summarise(
+     med = median(pr_esbl_pos),
+     lq = quantile(pr_esbl_pos, 0.025)[[1]],
+     uq = quantile(pr_esbl_pos, 0.975)[[1]]
+   ) %>%
+   filter(abx_days == 0) %>%
+   ungroup() %>%
+   transmute(
+     time = time,
+     days = hosp_days,
+     exposure = "Hospitalisation",
+     median = med,
+     lq = lq,
+     uq = uq)
+   ) -> btESBL_model2simulations_2
+
+ use_data(btESBL_model2simulations_2, overwrite = TRUE)

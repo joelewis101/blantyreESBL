@@ -758,3 +758,21 @@
 #'   \item{meropenem}{AST result to meropenem}
 #' }
 "btESBL_AST"
+
+#' Data: Summary of results of simulations from model2 posterior to compare antimicrobials and hospitalisation
+#'
+#' These simulations summarise the effects of 1-7 days of antimicrobial and
+#' hospital exposure from fitted model 2 to compare their effects
+#' Unlike the other simulation dataframes these are summaries - the full raw
+#' data is too large. This assumes a probability of 0.5 at time 0.
+#'
+#' @format A data frame with 1,400 rows and 6 variables:
+#' \describe{
+#'   \item{time}{Time/days}
+#'   \item{days}{Number of days of exposure of the covariate in the exposure variable}
+#'   \item{exposure}{Exposure of interest: Antimicrobials or Hospitalisation}
+#'   \item{median}{Median probability of colonisation with ESBL}
+#'   \item{lq}{Lower bound of 95% CrI of colonisation probability}
+#'   \item{uq}{Upper bound of 95% CrI of colonisation probability}
+#' }
+"btESBL_model2simulations_2"

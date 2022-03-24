@@ -65,6 +65,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+library(DescTools)
 library(here)
 library(igraph)
 library(ggraph)
@@ -1345,6 +1346,81 @@ if (write_figs) {
 
 ```
 
+### Plot effects of antimicrobials and hospitalisation for model 2
+
+```{r hosp-vs-antibx-plot}
+
+btESBL_model2simulations_2 %>% 
+filter(days <= 5) %>% 
+  # mutate(
+  #   days = if_else(
+  #     days == 1, paste0(days, " day"),
+  #     paste0(days, " days"))) %>% 
+   ggplot(aes(
+     time,
+     median,
+     ymin = lq,
+     ymax = uq,
+     color = days,
+     fill = days,
+     group = days
+   )) +
+   geom_line() + 
+      geom_ribbon(alpha = 0.1, color = NA) +
+   theme_bw() +
+   facet_wrap(~ exposure) +
+  scale_color_viridis(option = "magma") +
+  scale_fill_viridis(option = "magma") +
+  xlim(c(0,50)) +
+  labs(
+    x = "Time(days)",
+    y = "Probability\nof ESBL colonisation",
+    color = "Exposure\nduration\n(Days)",
+    fill = "Exposure\nduration\n(Days)"
+  )  -> a
+
+btESBL_model2simulations_2 %>%
+  group_by(days, exposure) %>%
+  summarise(
+    auc = AUC(time, median),
+    auc.lci = AUC(time, lq),
+    auc.uci = AUC(time, uq)
+  ) %>%
+  ggplot(aes(days, auc,
+    ymin = auc.lci, ymax = auc.uci,
+    linetype = exposure,
+    shape = exposure
+  )) +
+  geom_point() +
+  geom_line() +
+  geom_errorbar(width = 0) +
+  theme_bw() +
+  labs(x = "Days of exposure",
+       y = "Mean person-days\nof ESBL colonisation",
+       linetype = "Exposure",
+       shape = "Exposure") -> b
+
+(a / b) + plot_annotation(tag_levels = "A") -> antimicrob_vs_hosp_plot
+
+
+
+if (write_figs) {
+  ggsave(here("figures/long-modelling/SUP_FIG_antimicrob_vs_hosp_plot.pdf"),
+    antimicrob_vs_hosp_plot,
+    width = 6,
+    height = 5
+  )
+  ggsave(here("figures/long-modelling/SUP_FIG_antimicrob_vs_hosp_plot.svg"),
+    antimicrob_vs_hosp_plot,
+    width = 6,
+    height = 5
+  )
+}
+
+
+
+```
+
 ### Compare model with ceftriaxone vs non-ceftraixone exposure 
 
 
@@ -2434,6 +2510,12 @@ btESBL_sequence_sample_metadata %>%
 
 rownames(clusts) <- clusts$lane
 
+plotcols <- viridis_pal()(4)[1:3]
+names(plotcols) <- c("in_hospital","recent_dc","community")
+# c( "grey86", "black", "grey65")
+
+                    
+
 ggtree(btESBL_coregene_tree_esco) %>% 
   gheatmap(
     clusts["hosp_assoc"], 
@@ -2447,10 +2529,11 @@ ggtree(btESBL_coregene_tree_esco) %>%
   )  +
  # ylim(c(0,500)) +
   geom_hilight(node = 727, fill = "red") +
-  scale_fill_manual(values = c( "grey86", "black", "grey65"),
-                    labels = c("Community",
-                              "In hospital",
-                              "Post-discharge"),
+  scale_fill_manual(values = plotcols,
+                    labels = 
+                      c("In hospital",
+                        "Post-discharge",
+                        "Community"),
                     na.translate = FALSE)  +
   theme(legend.title = element_blank()) -> hospassoc.tree.esco
 
@@ -2467,11 +2550,11 @@ ggtree(treeio::tree_subset(btESBL_coregene_tree_kleb, 210,
   #  colnames_offset_y = 10,
   )  +
   #ylim(c(0,220)) +
-  scale_fill_manual(values = c( "grey86", "black", "grey65")) +
-  scale_fill_manual(values = c( "grey86", "black", "grey65"),
-                    labels = c("Community",
-                              "In hospital",
-                              "Post-discharge"),
+  scale_fill_manual(values = plotcols,
+                    labels = 
+                      c("In hospital",
+                        "Post-discharge",
+                        "Community"),
                     na.translate = FALSE
                               )  +
   theme(legend.title = element_blank()) -> hospassoc.tree.kleb
