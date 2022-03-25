@@ -20,6 +20,10 @@ reference:
   - btESBL_qrdr_mutations
   - btESBL_plasmidreplicons
   - btESBL_contigclusters
+  - btESBL_contigclusters_sensax
+  - btESBL_contigclusters_msa_blastoutput
+  - btESBL_contigclusters_msa_alignments
+  - btESBL_contigclusters_msa_paf_files
   - btESBL_coregene_tree_esco
   - btESBL_coregene_tree_kleb
   - btESBL_snpdists_esco

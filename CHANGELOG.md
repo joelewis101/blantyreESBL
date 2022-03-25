@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Added
 - Longitudinal carriage model ceftriaxone vs all other abx
-- bTESBL_AST: phenotypic AST data and plots in carriage paper
+- btESBL_AST: phenotypic AST data and plots in carriage paper
+- btESBL_model2simulations_2: further simulations from posterior
+- Contig cluster sensitivity analysis and mapping of ID/AMR genes/plasmid replicon 
 
 ### Fixed
 - bTESBL_plasmidreplicons didn't include kleb in error - fixed

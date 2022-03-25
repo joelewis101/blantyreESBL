@@ -5,7 +5,7 @@
 \alias{btESBL_AST}
 \title{Data: Antimicrobial sensitivity testing for a suvet of isolates}
 \format{
-A dataframe with 651 rows and 8 variables
+A dataframe with 609 rows and 8 variables
 \describe{
 \item{supplier_name}{Unique sample ID}
 \item{Organism}{E. coli or KpSC}
@@ -23,6 +23,6 @@ btESBL_AST
 \description{
 Results from disc antimicrobial sensitivity testing (AST) according
 to BSAC guidelines for six antimicrobials. Only a subset of isolates
-underwent AST: 454 E. coli and 197 K. pnemoniae sequence complex (KpSC).
+underwent AST: 442 E. coli and 167 K. pnemoniae sequence complex (KpSC).
 }
 \keyword{datasets}

@@ -704,6 +704,30 @@
 "btESBL_contigclusters_sensax"
 
 
+#' Data: Contig clusters BLASTed against ISFinder, PLasmidFinder, SRST2 databases
+#'
+#'Outputs of BLASTing contig cluster representative cluster agains the ISFinder
+#'PlasmidFinder and SRST2 databases.
+#'
+#' @format A named list of ten data frames, where name is cluster id. Columns are:
+#' \describe{
+#'   \item{qseqid}{Query sequence name}
+#'   \item{sseqid}{Source (ie. database) sequence name}
+#'   \item{sseqid_group}{Source gene family if IS/SRST2}
+#'   \item{sseqid_gene}{Source gene if IS/SRST2}
+#'   \item{pident}{Sequence identfity of query}
+#'   \item{slen}{Source gene length}
+#'   \item{length}{Length of match of query}
+#'   \item{qstart}{Query match start coordinate}
+#'   \item{qend}{Query end match coordinate}
+#'   \item{sstart}{Source match start coordinate}
+#'   \item{send}{Source end match coordinate}
+#'   \item{evalue}{BLAST e value of match}
+#'   \item{bitscore}{BLAST bitscore of match}
+#'   \item{type}{Type of database used: amr,is, plasmid}
+#' }
+"btESBL_contigclusters_msa_blastoutput"
+
 #' Data: Contig cluster multiple sequence alignment .paf files
 #'
 #' Multiple sequence alignments of ten largest contig clusters, generated
