@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,18 +33,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">blantyreESBL</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
@@ -63,7 +59,13 @@
       <a href="../articles/analysis.html">Analysis scripts: longitudinal ESBL carriage dynamics</a>
     </li>
     <li>
+      <a href="../articles/contig-clusters.html">Longitudinal carriage: validation of contig-cluster approach</a>
+    </li>
+    <li>
       <a href="../articles/fitting-stan-models.html">Fitting and simulating from Stan models</a>
+    </li>
+    <li>
+      <a href="../articles/simulations.html">Longitudinal carriage: simulations to explore impact of one colony pick</a>
     </li>
   </ul>
 </li>
@@ -78,7 +80,7 @@
 
       
 
-      </header><script src="fitting-stan-models_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Fitting and simulating from Stan models</h1>
@@ -92,10 +94,10 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">blantyreESBL</span><span class="op">)</span></code></pre></div>
-<div id="introduction" class="section level3">
-<h3 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h3>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">blantyreESBL</span><span class="op">)</span></code></pre></div>
+<div class="section level3">
+<h3 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h3>
 <p>This document provides instructions on how to locate the Stan code for the models used in the publication:</p>
 <p><br></p>
 <p><em>Dynamics of gut mucosal colonisation with extended spectrum beta-lactamase producing Enterobacterales in Malawi</em></p>
@@ -111,19 +113,19 @@
 <li>London School of Tropical Medicine and Hygiene, London, UK</li>
 </ol>
 </div>
-<div id="locating-stan-code" class="section level3">
-<h3 class="hasAnchor">
-<a href="#locating-stan-code" class="anchor"></a>Locating Stan code</h3>
+<div class="section level3">
+<h3 id="locating-stan-code">Locating Stan code<a class="anchor" aria-label="anchor" href="#locating-stan-code"></a>
+</h3>
 <p>The stan model has the filename <code>ESBLmod_finalV1.0_rk45.stan</code> are present in the `extdata/ directory of the installed package, which can be located with the following command:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, 
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, 
             <span class="st">"ESBLmod_finalV1.0_rk45.stan"</span>, 
             package <span class="op">=</span> <span class="st">"blantyreESBL"</span><span class="op">)</span>
-<span class="co">#&gt; [1] "/private/var/folders/qc/twvrz5kx0gj2lrt4n8wtk1ym0000gn/T/RtmpQk29m0/temp_libpath10f596385d4ef/blantyreESBL/extdata/ESBLmod_finalV1.0_rk45.stan"</span></code></pre></div>
+<span class="co">#&gt; [1] "/private/var/folders/qc/twvrz5kx0gj2lrt4n8wtk1ym0000gn/T/RtmpzddYd5/temp_libpath37223165f9cb/blantyreESBL/extdata/ESBLmod_finalV1.0_rk45.stan"</span></code></pre></div>
 </div>
-<div id="model-specification" class="section level3">
-<h3 class="hasAnchor">
-<a href="#model-specification" class="anchor"></a>Model specification</h3>
+<div class="section level3">
+<h3 id="model-specification">Model specification<a class="anchor" aria-label="anchor" href="#model-specification"></a>
+</h3>
 <p>The model can include covariates that are:</p>
 <ul>
 <li>Non time varying</li>
@@ -132,9 +134,9 @@
 </ul>
 <p>See the manuscript for details</p>
 </div>
-<div id="passing-data-to-the-model" class="section level3">
-<h3 class="hasAnchor">
-<a href="#passing-data-to-the-model" class="anchor"></a>Passing data to the model</h3>
+<div class="section level3">
+<h3 id="passing-data-to-the-model">Passing data to the model<a class="anchor" aria-label="anchor" href="#passing-data-to-the-model"></a>
+</h3>
 <p>The model expects the following data as input; each item is passed as a named item in a list to the rstan <code>stan</code> command to fit the model. Each</p>
 <ul>
 <li>N [integer]
@@ -203,9 +205,9 @@
 </ul>
 <p>The included data <code>btESBL_stanmodeldata</code> is set up to fit the model used in the manuscript.</p>
 </div>
-<div id="fitting-the-model" class="section level3">
-<h3 class="hasAnchor">
-<a href="#fitting-the-model" class="anchor"></a>Fitting the model</h3>
+<div class="section level3">
+<h3 id="fitting-the-model">Fitting the model<a class="anchor" aria-label="anchor" href="#fitting-the-model"></a>
+</h3>
 <p>The following code (not run in this vignette) will fit the model as in the manuscript:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstan)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(blantyreESBL)</span>
@@ -220,16 +222,16 @@
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span></span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>) <span class="ot">-&gt;</span> stanfit</span></code></pre></div>
 </div>
-<div id="simulating-from-the-model" class="section level3">
-<h3 class="hasAnchor">
-<a href="#simulating-from-the-model" class="anchor"></a>Simulating from the model</h3>
+<div class="section level3">
+<h3 id="simulating-from-the-model">Simulating from the model<a class="anchor" aria-label="anchor" href="#simulating-from-the-model"></a>
+</h3>
 <p>The script <code>simulate_from_posterior.R</code> will generate the simulations used in the analysis. It is included in the package install and again can be located by:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
-<span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, 
+<span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, 
             <span class="st">"simulate_from_posterior.R"</span>, 
             package <span class="op">=</span> <span class="st">"blantyreESBL"</span><span class="op">)</span>
-<span class="co">#&gt; [1] "/private/var/folders/qc/twvrz5kx0gj2lrt4n8wtk1ym0000gn/T/RtmpQk29m0/temp_libpath10f596385d4ef/blantyreESBL/extdata/simulate_from_posterior.R"</span></code></pre></div>
+<span class="co">#&gt; [1] "/private/var/folders/qc/twvrz5kx0gj2lrt4n8wtk1ym0000gn/T/RtmpzddYd5/temp_libpath37223165f9cb/blantyreESBL/extdata/simulate_from_posterior.R"</span></code></pre></div>
 <p>Or it is located (along withe stan model) in the <code>inst/extdata/</code> folder on the github repo.</p>
 </div>
   </div>
@@ -243,11 +245,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Joseph Lewis.</p>
+  <p></p>
+<p>Developed by Joseph Lewis.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
@@ -255,6 +259,8 @@
 
   
 
+
+  
 
   </body>
 </html>
