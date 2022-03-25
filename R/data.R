@@ -142,6 +142,21 @@
 "btESBL_model1posterior"
 
 
+#' Data: Posterior of fitted carriage model (seperate ceftriaxone effect)
+#'
+#' Posterior of fitted longitudinal model of ESBL colonisation incorporating
+#' an effect of antimicrobial exposure that exponentially decays following
+#' cessation of exposure, with ceftriaxone effect seperate from
+#' all otehr antimicrobials
+#'
+#' See manuscript for interpretation of parameters etc.
+#'
+#'
+#' @format An S4 stanfit object (package "rstan") including model log-likelihood
+#'
+#'
+"btESBL_model3posterior"
+
 #' Data: Results of simulations from the model posterior
 #'
 #' These simulations set the antimicrobial and hospital exposure to
@@ -667,4 +682,121 @@
 "btESBL_ecoli_st131_plasmids"
 
 
+#' Data: Contig cluster assignment in sensitivity analyses
+#'
+#' Contig cluster assignment varying cd-hit sequence identity from
+#' 0.95 - 1.00 and length cutoff from 0-0.8
+#' Care! The cluster ids are not unqiue! Only the
+#' cluster id-len_diff_cutoff-ident_cutoff combination is unique. See
+#' the code for how this is managed in practice.
+#' See manuscript for further details
+#'
+#' @format A tidy data frame with 6426 rows and 8 variables:
+#' \describe{
+#'   \item{cluster}{Cluster id from cd-hit}
+#'   \item{id}{Sequence id within cluster from cd-hit}
+#'   \item{length}{Length of sequence, bases}
+#'   \item{contig}{Contid unique identfier}
+#'   \item{lane}{sample ID}
+#'   \item{len_diff_cutoff}{Length difference cutoff (-s in cd-hit)}
+#'   \item{ident_cutoff}{Sequence identity cutoff (-c in cd hit)}
+#' }
+"btESBL_contigclusters_sensax"
 
+
+#' Data: Contig clusters BLASTed against ISFinder, PLasmidFinder, SRST2 databases
+#'
+#'Outputs of BLASTing contig cluster representative cluster agains the ISFinder
+#'PlasmidFinder and SRST2 databases.
+#'
+#' @format A named list of ten data frames, where name is cluster id. Columns are:
+#' \describe{
+#'   \item{qseqid}{Query sequence name}
+#'   \item{sseqid}{Source (ie. database) sequence name}
+#'   \item{sseqid_group}{Source gene family if IS/SRST2}
+#'   \item{sseqid_gene}{Source gene if IS/SRST2}
+#'   \item{pident}{Sequence identfity of query}
+#'   \item{slen}{Source gene length}
+#'   \item{length}{Length of match of query}
+#'   \item{qstart}{Query match start coordinate}
+#'   \item{qend}{Query end match coordinate}
+#'   \item{sstart}{Source match start coordinate}
+#'   \item{send}{Source end match coordinate}
+#'   \item{evalue}{BLAST e value of match}
+#'   \item{bitscore}{BLAST bitscore of match}
+#'   \item{type}{Type of database used: amr,is, plasmid}
+#' }
+"btESBL_contigclusters_msa_blastoutput"
+
+#' Data: Contig cluster multiple sequence alignment .paf files
+#'
+#' Multiple sequence alignments of ten largest contig clusters, generated
+#' using minimap2, mapping all cluster sequences to the longest sequence (i.e.
+#' the cluster representative sequenc from cd hit).
+#'
+#' @format A named list of ten data frames, where name is cluster id. Columns are:
+#' \describe{
+#'   \item{qname}{Query sequence name}
+#'   \item{qlen}{Query sequence length, bases}
+#'   \item{qstart}{Query start coordinate (0-based)}
+#'   \item{qend}{Query end coordinate (0-based)}
+#'   \item{strand}{‘+’ if query/target on the same strand; ‘-’ if opposite}
+#'   \item{tname}{Target sequence name}
+#'   \item{tlen}{Target sequence length, bases}
+#'   \item{tstart}{Target start coordinate on orignal strand}
+#'   \item{tend}{Target end coordinate on orignal strand}
+#'   \item{nmatch}{Number of matching bases in the mapping}
+#'   \item{alen}{Number of bases, including gaps, in the mapping}
+#'   \item{mapq}{Mapping quality (0-255, with 255 if missing)}
+#' }
+"btESBL_contigclusters_msa_paf_files"
+
+
+#' Data: Contig cluster multiple sequence alignments as PopGenome GENOME objects
+#'
+#' Multiple sequence alignments of ten largest contig clusters, generated
+#' using minimap2, mapping all cluster sequences to the longest sequence (i.e.
+#' the cluster representative sequenc from cd hit). Sequence alignments have
+#' been generated as .fasta files from the minimap2 .SAM files, then the
+#' fastas loaded using the PopGenome::readData function.
+#'
+#' @format A named list of ten data GENOME objects, where name is cluster id.
+#'
+"btESBL_contigclusters_msa_alignments"
+
+#' Data: Antimicrobial sensitivity testing for a suvet of isolates
+#'
+#' Results from disc antimicrobial sensitivity testing (AST) according
+#' to BSAC guidelines for six antimicrobials. Only a subset of isolates
+#' underwent AST: 442 E. coli and 167 K. pnemoniae sequence complex (KpSC).
+#'
+#'@format A dataframe with 609 rows and 8 variables
+#'\describe{
+#'   \item{supplier_name}{Unique sample ID}
+#'   \item{Organism}{E. coli or KpSC}
+#'   \item{amikacin}{AST result to amikacin}
+#'   \item{chloramphenicol}{AST result to chloramphenicol}
+#'   \item{ciprofloxacin}{AST result to ciprofloxacin}
+#'   \item{cotrimoxazole}{AST result to cotrimoxazole}
+#'   \item{gentamicin}{AST result to gentamicin}
+#'   \item{meropenem}{AST result to meropenem}
+#' }
+"btESBL_AST"
+
+#' Data: Summary of results of simulations from model2 posterior to compare antimicrobials and hospitalisation
+#'
+#' These simulations summarise the effects of 1-7 days of antimicrobial and
+#' hospital exposure from fitted model 2 to compare their effects
+#' Unlike the other simulation dataframes these are summaries - the full raw
+#' data is too large. This assumes a probability of 0.5 at time 0.
+#'
+#' @format A data frame with 1,400 rows and 6 variables:
+#' \describe{
+#'   \item{time}{Time/days}
+#'   \item{days}{Number of days of exposure of the covariate in the exposure variable}
+#'   \item{exposure}{Exposure of interest: Antimicrobials or Hospitalisation}
+#'   \item{median}{Median probability of colonisation with ESBL}
+#'   \item{lq}{Lower bound of 95% CrI of colonisation probability}
+#'   \item{uq}{Upper bound of 95% CrI of colonisation probability}
+#' }
+"btESBL_model2simulations_2"

@@ -30,7 +30,7 @@ Joseph M Lewis^1,2,3,4^, , Madalitso Mphasa^1^, Rachel Banda^1^,  Matthew Beale^
 
 Joseph M Lewis^1,2,3,4^, , Madalitso Mphasa^1^, Rachel Banda^1^,  Matthew Beale^4^, Jane Mallewa^5^, Adam P Roberts^2^, Eva Heinz^2^, Nicholas Thomson^4,7^, Nicholas A Feasey^1,2^
 
-[**Genomic and antigenic diversity of carried _Klebsiella pneumoniae_ isolates mirrors that of invasive isolates in Blantyre, Malawi**](https://joelewis101.github.io/blantyreESBL/articles/analysis-kleb.html)
+[**Genomic and antigenic diversity of colonising _Klebsiella pneumoniae_ isolates mirrors that of invasive isolates in Blantyre, Malawi**](https://joelewis101.github.io/blantyreESBL/articles/analysis-kleb.html)
 
 Joseph M Lewis^1,2,3,4^, , Madalitso Mphasa^1^, Rachel Banda^1^,  Matthew Beale^4^, Jane Mallewa^5^, Eva Heinz^2^, Nicholas Thomson^4,7^, Nicholas A Feasey^1,2^
 

@@ -11,6 +11,7 @@ reference:
   desc: "Results of selective stool culture for ESBL"
 - contents:
   - matches("stool")
+  - btESBL_AST
 - title: "Whole genome sequence metadata and analysis"
   desc: "Accession numbers of isolates and results of sequencing analysis"
 - contents:
@@ -19,19 +20,24 @@ reference:
   - btESBL_qrdr_mutations
   - btESBL_plasmidreplicons
   - btESBL_contigclusters
+  - btESBL_contigclusters_sensax
+  - btESBL_contigclusters_msa_blastoutput
+  - btESBL_contigclusters_msa_alignments
+  - btESBL_contigclusters_msa_paf_files
   - btESBL_coregene_tree_esco
   - btESBL_coregene_tree_kleb
   - btESBL_snpdists_esco
   - btESBL_snpdists_kleb
   - btESBL_NCBI_phenotypic_bl
   - btESBL_CARD_qrdr_mutations
-
 - title: "Results of modelling and simulations"
   desc: "Outputs from longituinal modelling of ESBL carriage"
 - contents:
   - btESBL_model1posterior
   - btESBL_model2posterior
+  - btESBL_model3posterior
   - btESBL_model2simulations
+  - btESBL_model2simulations_2
 - title: "Global contextual analyses"
   desc: "Metadata of context genomes and results of clustering study isolates with global isolates"
 - contents:

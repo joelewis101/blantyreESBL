@@ -69,12 +69,21 @@ as.data.frame(p.params) -> p.params
 
 t <- seq(1,100,day_cut)
 
+# use this df to generate btESBL_model2simulation
 sim.df <- data.frame(pid = c(1:6),
                      start_state = rep(c(0,1),3),
                      abx_cpt = rep(0,6),
                      tb_start = rep(-999,6),
                      hosp_days = rep(7, 6),
                      abx_days = c(0,0,2,2,7,7))
+
+# use this df to generate btESBL_model2simulation_2
+# sim.df <- data.frame(pid = c(1:56),
+#                      start_state = rep(c(0,1),28),
+#                      abx_cpt = rep(0,56),
+#                      tb_start = rep(-999,56),
+#                      hosp_days = c(rep(1:7, each = 2),rep(0,14)),
+#                      abx_days = c(rep(0,14), rep(1:7, each = 2)))
 
 sim.df$p0 <- as.numeric(sim.df$start_state == 0)
 sim.df$p1 <- as.numeric(sim.df$start_state == 1)
@@ -83,18 +92,18 @@ sim.df$abx_stop <- sim.df$abx_start + sim.df$abx_days
 sim.df$abx_stop <- ifelse(sim.df$tb_start == -999,
                           yes = sim.df$abx_stop , no = 1000 )
 sim.df$prev_abx <- 999
-sim.df$abx_start[sim.df$abx_days == 1] <- -999
-sim.df$abx_stop[sim.df$abx_days == 1] <- -999
-sim.df$abx_days[sim.df$abx_days == 1] <- 0
-sim.df$abx_days[sim.df$abx_days == 1] <- 0
+# sim.df$abx_start[sim.df$abx_days == 1] <- -999
+# sim.df$abx_stop[sim.df$abx_days == 1] <- -999
+# sim.df$abx_days[sim.df$abx_days == 1] <- 0
+# sim.df$abx_days[sim.df$abx_days == 1] <- 0
 sim.df$abx_stop <- ifelse(sim.df$abx_cpt == 0,yes = sim.df$abx_stop , no = 1000 )
 sim.df$hosp_start <- 0
 sim.df$hosp_stop <- sim.df$hosp_days
 sim.df$prev_hosp <- 999
-sim.df$hosp_start[sim.df$hosp_days == 1] <- -999
-sim.df$hosp_stop[sim.df$hosp_days == 1] <- -999
-sim.df$hosp_days[sim.df$hosp_days == 1] <- 0
-sim.df$hosp_days[sim.df$hosp_days == 1] <- 0
+# sim.df$hosp_start[sim.df$hosp_days == 1] <- -999
+# sim.df$hosp_stop[sim.df$hosp_days == 1] <- -999
+# sim.df$hosp_days[sim.df$hosp_days == 1] <- 0
+# sim.df$hosp_days[sim.df$hosp_days == 1] <- 0
 
 
 
@@ -116,7 +125,8 @@ do.call(rbind, df.out) -> df.out
 
 left_join(
   df.out %>%
-    filter(pid %in% c(1, 3, 5)) %>%
+    #filter(pid %in% c(1, 3, 5)) %>%
+    filter(pid %in% seq(1,56, by = 2)) %>%
     transmute(
       pid = pid,
       draw = draw,
@@ -124,12 +134,10 @@ left_join(
       pr_esbl_pos_t0esblneg = `2`
     ),
   df.out %>%
-    filter(pid %in% c(2, 4, 6)) %>%
+    #filter(pid %in% c(2, 4, 6)) %>%
+    filter(pid %in% seq(0,56, by = 2)) %>%
     transmute(
-      pid = case_when(
-        pid == 2 ~ 1,
-        pid == 4 ~ 3,
-        pid == 6 ~ 5),
+      pid = pid - 1,
       draw = draw,
       time = time,
       pr_esbl_pos_t0esblpos = `2`
@@ -148,9 +156,9 @@ left_join(
     by = "pid"
   ) %>%
   rename(sim_run = pid) ->
-  btESBL_model2simulations
+  btESBL_model2simulations_2
 
 # if you want to save
-# saveRDS(btESBL_model2simulations, here("data-raw/btESBL_model2simulations.rda"))
+ #saveRDS(btESBL_model2simulations, here("data-raw/btESBL_model2simulations.rda"))
 
 

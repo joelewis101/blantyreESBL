@@ -1,0 +1,3 @@
+"cluster"	"id"	"length"	"contig"	"identity"	"Lane"	"filename"	"dir"
+0	"0"	"91875"	"28099_1_281.23"	"*"	"28099_1_281"	"contigs-CTX_M_1.clust.clstr"	"seq_ident_0.99"
+1	"0"	"75661"	"26141_1_288.22"	"*"	"26141_1_288"	"contigs-CTX_M_1.clust.clstr"	"seq_ident_0.99"

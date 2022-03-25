@@ -2,15 +2,17 @@
 
 # the load_phd_data scripts are from the Thesis repo https://github.com/joelewis101/thesis
 #library(tidyverse)
-library(tidyverse)
-library(lubridate)
-library(phytools)
-library(devtools)
+
 
 source("/Users/joelewis/Documents/PhD/Thesis/bookdown/final_cleaning_scripts/load_PhD_data.R")
 
 source("/Users/joelewis/Documents/PhD/Thesis/bookdown/final_cleaning_scripts/load_and_clean_lims.R")
 
+library(tidyverse)
+library(lubridate)
+library(phytools)
+library(devtools)
+library(PopGenome)
 library(here)
 library(ape)
 
@@ -65,7 +67,7 @@ enroll %>%
 
 use_data(btESBL_participants, overwrite = TRUE)
 
-### longitudinal exposure (covariate) data ---------------------------------
+# longitudinal exposure (covariate) data ---------------------------------
 
 read_csv(
   "~/Documents/PhD/Thesis/bookdown/data/longit_covariate_data.csv") ->
@@ -103,7 +105,7 @@ lims_orgs %>%
 
 use_data(btESBL_stoolorgs, overwrite = TRUE)
 
-# stan_data
+# stan_data -------------------------------
 
 readRDS("data-raw/stan_data_m2.rds") ->
   btESBL_stanmodeldata
@@ -125,6 +127,19 @@ readRDS("/Users/joelewis/Documents/PhD/Thesis/bookdown/chapter_9/stan_models/mod
   btESBL_model1posterior
 
 use_data(btESBL_model1posterior, overwrite = TRUE)
+
+# model3 -
+
+list.files(here("data-raw/review_comment_work/models/"),
+           pattern = "csv") -> csvfiles
+
+rstan::read_stan_csv(
+  paste0(here("data-raw/review_comment_work/models/"),
+              csvfiles)
+) -> btESBL_model3posterior
+
+
+use_data(btESBL_model3posterior, overwrite = TRUE)
 
 # simulations from posterior
 
@@ -735,7 +750,7 @@ bind_rows(
     mutate(name = gsub("\\./","", name),
            name = gsub("/report\\.tsv","",name),
            name = gsub("#","_", name)) %>%
-    filter(name %in% dassim.klebs) %>%
+    filter(name %in% gsub("#","_",dassim.klebs)) %>%
     pivot_longer(-name,
                  names_to = c("cluster_name", ".value"),
                  names_sep = "\\.") %>%
@@ -748,7 +763,7 @@ bind_rows(
 
 use_data(btESBL_plasmidreplicons, overwrite = TRUE)
 
-### ST410 data ----------------------------
+# ST410 data ----------------------------
 
 st410_metadata <-
   read_tsv(here("data-raw/ecoli-genomics-paper/st410/st410.tsv"))
@@ -1011,6 +1026,11 @@ bind_rows(
               Country = "Malawi") %>%
     filter(Accession_number %in% btESBL_ecoli_globalst131_tree$tip.label)
 ) %>%
+  bind_rows(btESBL_ecoli_musicha_metadata %>%
+              transmute(Accession_number = lane,
+                        Year = Year,
+                        Country = "Malawi")) %>%
+    filter(Accession_number %in% btESBL_ecoli_globalst131_tree$tip.label) %>%
   as.data.frame() -> btESBL_ecoli_st131_metadata
 
 use_data(btESBL_ecoli_st131_metadata, overwrite = TRUE)
@@ -1210,7 +1230,7 @@ vfdb_results %>%
 
 use_data(btESBL_kleb_malawi_vfdb_output, overwrite = TRUE)
 
-## kleb global metadata ------------------
+# kleb global metadata ------------------
 
 # load and clean global AMR - aim: ESBL vs not
 
@@ -1473,3 +1493,205 @@ btESBL_kleb_global_metadata <- metadata_global
 
 use_data(btESBL_kleb_global_metadata, overwrite = TRUE)
 
+# contig sens ax ----------------------------------
+
+# function to load and prep data
+source(here("data-raw/review_comment_work/contig_sens_ax/load_contig_sens_ax_data_fn.R"))
+ btESBL_contigclusters_sensax <- load_contig_sens_ax_data()
+
+ use_data(btESBL_contigclusters_sensax, overwrite = TRUE)
+
+ # contig msa ----------------------------------------------------
+
+ list.files(here("data-raw/review_comment_work/contig_msa"),
+            pattern = "paf$",
+            full.names = TRUE) -> paffiles
+ list.files(here("data-raw/review_comment_work/contig_msa"),
+            pattern = "paf$") -> paffile_names
+
+ purrr::map(paffiles, read_tsv, col_select = 1:12,
+     col_names =
+       c("qname",
+         "qlen",
+         "qstart",
+         "qend",
+         "strand",
+         "tname",
+         "tlen",
+         "tstart",
+         "tend",
+         "nmatch",
+         "alen",
+         "mapq")
+ ) -> paf_file_list
+
+ names(paf_file_list) <- gsub("\\.paf", "", paffile_names)
+
+ btESBL_contigclusters_msa_paf_files <- paf_file_list
+
+ list.dirs(here("data-raw/review_comment_work/contig_msa/alignments/"),
+           recursive = FALSE) -> msa_dirs
+ purrr::map(msa_dirs,
+     PopGenome::readData,
+     format = "fasta",
+     include.unknown = TRUE) -> msa_list
+
+ names(msa_list) <- gsub("\\.paf", "", paffile_names)
+
+ btESBL_contigclusters_msa_alignments <- msa_list
+
+use_data(btESBL_contigclusters_msa_paf_files, overwrite = TRUE)
+use_data(btESBL_contigclusters_msa_alignments, overwrite = TRUE)
+
+
+# BLAST results for msa ---------------------------------
+
+blast_colnames <- c(
+  "qseqid",
+  "sseqid",
+  "pident",
+  "slen",
+  "length",
+  "mismatch",
+  "gapopen",
+  "qstart",
+  "qend",
+  "sstart",
+  "send",
+  "evalue",
+  "bitscore"
+)
+
+bind_rows(
+  read_csv(
+    here(paste0(
+      "data-raw/review_comment_work/plot_contigs/",
+      "cluster_reps_srst2_blast.csv"
+    )),
+    col_names = blast_colnames
+  ) %>%
+    separate(sseqid,
+             sep = "__",
+             into = c(NA, "sseqid_group", "sseqid_gene", NA),
+             remove = FALSE
+    ) %>%
+    mutate(type = "amr"),
+  read_csv(
+    here(paste0(
+      "data-raw/review_comment_work/plot_contigs/",
+      "cluster_reps_plasmidfinder_blast.csv"
+    )),
+    col_names = blast_colnames
+  ) %>%
+    mutate(sseqid = gsub("_.+$", "", sseqid)) %>%
+    separate(sseqid,
+             sep = "\\(",
+             into = c("sseqid_group", "sseqid_gene"),
+             remove = FALSE
+    ) %>%
+    mutate(sseqid_gene = gsub("\\)", "", sseqid_gene)) %>%
+    mutate(type = "plasmid"),
+  read_csv(
+    here(paste0(
+      "data-raw/review_comment_work/plot_contigs/",
+      "cluster_reps_isfinder_blast.csv"
+    )),
+    col_names = blast_colnames
+  ) %>%
+    separate(sseqid,
+             sep = "_",
+             into = c("sseqid_gene", "sseqid_group", NA),
+             remove = FALSE
+    ) %>%
+    mutate(type = "is")
+) -> btESBL_contigclusters_msa_blastoutput
+
+use_data(btESBL_contigclusters_msa_blastoutput, overwrite = TRUE)
+
+
+# phenotypic AST data ------------------------------------------
+
+btESBL_AST <-
+  read_csv(
+    "data-raw/review_comment_work/phenotypic_sens/ESBL_orgs.csv"
+  )
+
+btESBL_AST  %>%
+  filter(profile_name == "DASSIM Culture") %>%
+  transmute(
+    supplier_name = sample_number,
+    organism = organism,
+    amikacin = `Amikacin 30`,
+    chloramphenicol = `Chloramphenicol 30`,
+    ciprofloxacin = `Ciprofloxacin 1`,
+    cotrimoxazole = `Cotrimoxazole 25`,
+    gentamicin = `Gentamicin 10`,
+    meropenem = Meropenam) %>%
+  unique() %>%
+  filter(grepl("Escheric|ella pneum", organism)) %>%
+  semi_join(
+    btESBL_sequence_sample_metadata %>%
+    mutate(
+      organism = if_else(
+        grepl("coli", species),
+        "Escherichia coli",
+        "Klebsiella pneumoniae")),
+      by = c("supplier_name", "organism")
+  )  %>%
+  mutate(
+    organism =
+      case_when(
+        organism == "Escherichia coli" ~ "E. coli",
+        organism == "Klebsiella pneumoniae" ~ "KpSC")) %>%
+  filter(!(is.na(amikacin) &
+                 is.na(chloramphenicol) &
+                 is.na(ciprofloxacin) &
+                 is.na(cotrimoxazole) &
+                 is.na(gentamicin) &
+                 is.na(meropenem))) -> btESBL_AST
+
+use_data(btESBL_AST, overwrite = TRUE)
+
+## Further simulations to compare antimicrobials vs hospitalisation ---------
+
+# This file is not included in the repo - too large
+ readRDS(here("data-raw/btESBL_model2simulations_2.rda")) ->
+   btESBL_model2simulations_2
+
+ bind_rows(
+ btESBL_model2simulations_2 %>%
+   group_by(time, abx_days, hosp_days) %>%
+   summarise(
+     med = median(pr_esbl_pos),
+     lq = quantile(pr_esbl_pos, 0.025)[[1]],
+     uq = quantile(pr_esbl_pos, 0.975)[[1]]
+   ) %>%
+   filter(hosp_days == 0) %>%
+   ungroup() %>%
+   transmute(
+     time = time,
+     days = abx_days,
+     exposure = "Antimicrobials",
+     median = med,
+     lq = lq,
+     uq = uq),
+
+ btESBL_model2simulation_2 %>%
+   group_by(time, abx_days, hosp_days) %>%
+   summarise(
+     med = median(pr_esbl_pos),
+     lq = quantile(pr_esbl_pos, 0.025)[[1]],
+     uq = quantile(pr_esbl_pos, 0.975)[[1]]
+   ) %>%
+   filter(abx_days == 0) %>%
+   ungroup() %>%
+   transmute(
+     time = time,
+     days = hosp_days,
+     exposure = "Hospitalisation",
+     median = med,
+     lq = lq,
+     uq = uq)
+   ) -> btESBL_model2simulations_2
+
+ use_data(btESBL_model2simulations_2, overwrite = TRUE)

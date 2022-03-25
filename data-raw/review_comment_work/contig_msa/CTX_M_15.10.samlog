@@ -1,0 +1,10 @@
+[M::mm_idx_gen::0.024*2.04] collected minimizers
+[M::mm_idx_gen::0.036*2.04] sorted minimizers
+[M::main::0.036*2.02] loaded/built the index for 1 target sequence(s)
+[M::mm_mapopt_update::0.038*1.98] mid_occ = 100
+[M::mm_idx_stat] kmer size: 19; skip: 19; is_hpc: 0; #seq: 1
+[M::mm_idx_stat::0.039*1.96] distinct minimizers: 43252 (99.81% are singletons); average occurrences: 1.002; average spacing: 9.992
+[M::worker_pipeline::0.071*1.89] mapped 21 sequences
+[M::main] Version: 2.16-r922
+[M::main] CMD: minimap2 --secondary=no -ax asm5 -o CTX_M_15.10.sam CTX_M_15.10_rep.fa CTX_M_15.10.fa
+[M::main] Real time: 0.077 sec; CPU: 0.139 sec; Peak RSS: 0.011 GB
