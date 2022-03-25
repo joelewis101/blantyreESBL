@@ -17,9 +17,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 
 ## Introduction and Methods
 
-Reviewers of the manuscript were concerned that one colony pick per time point could miss hospital acquisitions and hence miss hospital-associated clusters. This is a possibility which is identified as a limitation. In this document we use a simulation approach to quantify how much of a problem this could be.
-
-We can use simulation to assess how much of a problem this will be.
+It is possible that one colony pick per time point could miss hospital acquisitions and hence miss hospital-associated clusters, due to a rapid flux of strains com-pared to intervals between sampling times. In this document we use a simulation approach to quantify how much of a problem this could be.
 
 To set this up we assume:
 
@@ -53,7 +51,7 @@ library(ggplot2)
 library(purrr)
 library(here)
 
-write_figs <- FALSE
+write_figs <- TRUE
 if (write_figs) {
   if (!dir.exists(here("figures"))) {dir.create(here("figures"))}
   if (!dir.exists(here("tables"))) {dir.create(here("tables"))}
@@ -248,7 +246,7 @@ simsall %>%
 
 ```
 
-```{r plot-sims, fig.width= 8, fig.height = 8, fig.cap = "Assuming daily sampling, plots show proportion of samples (red line) would estimate the true proportion of the hospital acauired ESBL strain that was present at time 0. Lambda (median number or carried ESBL strains) varies horizontally from 0 to 6; Daily probability of ESBL acquisition varies from 0 to 0.2 vertically."}
+```{r plot-sims, fig.width= 8, fig.height = 8, fig.cap = "Assuming daily sampling, plots show the estimated proportion of samples (red line) that identify the hospital acquired ESBL strain that was present at time 0 given a single colony pick. Lambda (median number or carried ESBL strains) varies horizontally from 0 to 6; Daily probability of ESBL acquisition varies from 0 to 0.2 vertically. True proportion of samples that contain the hospital acquired strain shown by blue line.."}
 
 
 sims_sum %>%
@@ -275,7 +273,7 @@ sims_sum %>%
 
 ```
 
-```{r plot-d7-sampling, fig.cap = "Probability of identifying strain present at day 0 on day 7 using a single colony pick as saily probability of acqusition of new strain (pr_gain) and initial strain diversity (defined by lambda) are varied.", fig.width = 5, fig.height = 3 }
+```{r plot-d7-sampling, fig.cap = "Probability of identifying strain present at day 0 on day 7 using a single colony pick as daily probability of acqusition of new strain (pr_gain) and initial strain diversity (defined by lambda) are varied.", fig.width = 5, fig.height = 3 }
 
 sims_sum %>%
   filter(t %in% c(7)) %>%
