@@ -3030,6 +3030,50 @@ btESBL_sequence_sample_metadata %>%
               names_from = hosp_assoc,
               values_from = n)
 
+# how many snp clusters contain 2 or more healthcare associated isolates?
+
+
+btESBL_sequence_sample_metadata %>% 
+  mutate(species = case_when(
+    lane %in% btESBL_coregene_tree_esco$tip.label  ~ "esco",
+    lane %in% btESBL_coregene_tree_kleb$tip.label  ~ "kleb"
+  )) %>% 
+  left_join(
+    bind_rows(
+      data.frame(lane = names(cut_tree_vect.e),
+                 snp_clust_name = paste0("E",cut_tree_vect.e)),
+      data.frame(lane = names(cut_tree_vect.k),
+                 snp_clust_name = paste0("K",cut_tree_vect.k))
+    )) %>% 
+  group_by(snp_clust_name) %>% 
+  mutate(
+    healthcare_associated = case_when(
+      hosp_assoc == "community" ~ "Community",
+      hosp_assoc == "in_hospital" ~ "Healthcare associated",
+      hosp_assoc == "recent_dc" ~ "Healthcare associated",
+      TRUE ~ hosp_assoc),
+    snp_cluster_member = if_else(
+      n() > 1, "SNP cluster member", "SNP cluster nonmember")) %>% 
+  group_by(snp_clust_name) %>% 
+  mutate(
+    morethan1_cluster_member_hca = 
+      case_when(
+        sum(healthcare_associated == "Healthcare associated", 
+            na.rm = TRUE) > 1 ~ ">=2 HCA samples",
+        TRUE ~ "< 2 HCA samples")
+  ) %>% 
+  group_by(snp_cluster_member, morethan1_cluster_member_hca, species) %>% 
+  filter(snp_cluster_member != "SNP cluster nonmember") %>% 
+  group_by(snp_cluster_member, morethan1_cluster_member_hca, species) %>% 
+  tally() %>% 
+  group_by(species) %>% 
+  mutate(tot = sum(n),
+         prop = n/tot) %>% 
+  filter(grepl(">=", morethan1_cluster_member_hca)) %>% 
+  group_by(species) %>% 
+  mutate( lci = binom.test(n,tot)$conf.int[1],
+         uci = binom.test(n,tot)$conf.int[2])
+
 ```
 
 ### SNP cutoff sensitivity analysis
@@ -3315,8 +3359,10 @@ outlist.k.within_vs_betweendf <- list()
 outlist.cluster_comm_vs_hosp <- list()
 
 listindex <- 0
+
 for (i in c(0,3,7,10)) {
   listindex = listindex + 1
+  # make clusters for given snp dist
   hclust(as.dist(btESBL_snpdists_esco[-1])) -> hclust_snpdists.e
   cutree(hclust_snpdists.e, h = i) -> cut_tree_vect.e
 
@@ -3662,19 +3708,86 @@ comm_vs_hosp %>%
        x = "SNP distance",
        color = "") -> b
   
-(a / b) + plot_annotation(tag_level = "A") -> sens.analysis.plot
+
+outlist <- list()
+listindex <- 0
+for (i in c(0,3,7,10)) {
+  listindex <- listindex + 1
+  # make clusters for given snp dist
+  hclust(as.dist(btESBL_snpdists_esco[-1])) -> hclust_snpdists.e
+  cutree(hclust_snpdists.e, h = i) -> cut_tree_vect.e
+  
+  
+  hclust(as.dist(btESBL_snpdists_kleb[-1])) -> hclust_snpdists.k
+  cutree(hclust_snpdists.k, h = i) -> cut_tree_vect.k
+
+btESBL_sequence_sample_metadata %>% 
+  mutate(species = case_when(
+    lane %in% btESBL_coregene_tree_esco$tip.label  ~ "E. coli",
+    lane %in% btESBL_coregene_tree_kleb$tip.label  ~ "K. pneumoniae"
+  )) %>% 
+  left_join(
+    bind_rows(
+      data.frame(lane = names(cut_tree_vect.e),
+                 snp_clust_name = paste0("E",cut_tree_vect.e)),
+      data.frame(lane = names(cut_tree_vect.k),
+                 snp_clust_name = paste0("K",cut_tree_vect.k))
+    )) %>% 
+  group_by(snp_clust_name) %>% 
+  mutate(
+    healthcare_associated = case_when(
+      hosp_assoc == "community" ~ "Community",
+      hosp_assoc == "in_hospital" ~ "Healthcare associated",
+      hosp_assoc == "recent_dc" ~ "Healthcare associated",
+      TRUE ~ hosp_assoc),
+    snp_cluster_member = if_else(
+      n() > 1, "SNP cluster member", "SNP cluster nonmember")) %>% 
+  group_by(snp_clust_name) %>% 
+  mutate(
+    morethan1_cluster_member_hca = 
+      case_when(
+        sum(healthcare_associated == "Healthcare associated", 
+            na.rm = TRUE) > 1 ~ ">=2 HCA samples",
+        TRUE ~ "< 2 HCA samples")
+  ) %>% 
+  group_by(snp_cluster_member, morethan1_cluster_member_hca, species) %>% 
+   tally()   %>% 
+  filter(snp_cluster_member != "SNP cluster nonmember") %>% 
+  group_by(species) %>% 
+  mutate(tot = sum(n),
+         prop = n/tot) %>% 
+  filter(grepl(">=", morethan1_cluster_member_hca)) %>% 
+  group_by(species) %>% 
+  mutate( lci = binom.test(n,tot)$conf.int[1],
+         uci = binom.test(n,tot)$conf.int[2],
+         snp_cutoff = i) -> dfout
+outlist[[listindex]] <- dfout
+}
+
+dfout <- do.call(rbind, outlist)
+
+dfout %>% 
+ggplot(aes(snp_cutoff, prop, ymin = lci, ymax = uci)) +
+  geom_point() +
+  geom_errorbar(width = 0) +
+  facet_wrap(~ species) +
+  theme_bw() + 
+  labs(x = "SNP distance", y = "Proportion") -> c
+
+(a / b / c) + plot_annotation(tag_levels = "A") -> sens.analysis.plot
 
 #5 x 6.5
+sens.analysis.plot
 
 if (write_figs) {
   ggsave(here("figures/long-modelling/SUPP_FIG_SNP_sens_ax_clusters.svg"),
          sens.analysis.plot,
          width = 6.5,
-         height = 5)
+         height = 7)
   ggsave(here("figures/long-modelling/SUPP_FIG_SNP_sens_ax_clusters.pdf"),
          sens.analysis.plot,
          width = 6.5,
-         height = 5)
+         height = 7)
 }
 ```
 
