@@ -2667,6 +2667,97 @@ if (write_figs) {
 }
 ```
 
+```{r manhattan-plots-sens-ax, fig.cap = "Associations of popPUNK cluster (A) and contig cluster (B) to healthcare associated isolates. Healthcare associated here is defined as either in-hospital or recent discharge (within 120 days of admission to hospital)", fig.width = 9, fig.height = 4}
+
+clusts %>%
+  ungroup() %>%
+  mutate(
+    total_in_hosp = sum(hosp_assoc == "in_hospital" |
+                          hosp_assoc == "recent_dc", na.rm = TRUE),
+    total_not_in_hosp = sum(hosp_assoc == "community", na.rm = TRUE)
+  ) %>%
+  group_by(Cluster) %>%
+  summarise(
+    clust_in_hosp = sum(hosp_assoc == "in_hospital" |
+                          hosp_assoc == "recent_dc", na.rm = TRUE),
+    clust_not_in_hosp = sum(hosp_assoc == "community", na.rm = TRUE),
+    total_in_hosp = median(total_in_hosp) - clust_in_hosp,
+    total_not_in_hosp = median(total_not_in_hosp) - clust_not_in_hosp,
+    pval = fisher.test(matrix(
+      c(clust_in_hosp, total_in_hosp, clust_not_in_hosp, total_not_in_hosp), nrow = 2
+    ), simulate.p.value = TRUE)$p.value
+  ) %>% 
+  rename(clustr = Cluster) %>% 
+  mutate(log_pval = -log10(pval)) -> df.manhattan.popPUNK_sens
+
+ggplot(df.manhattan.popPUNK_sens, aes(clustr, log_pval, color = log_pval > 
+                                   -log10(0.05 /
+                                     nrow(df.manhattan.popPUNK_sens)))) +
+  geom_point(size = 0.5) +
+  geom_hline(aes(yintercept = -log10(0.05 /
+                                     nrow(df.manhattan.popPUNK_sens))),
+             linetype = "dashed") +
+  theme_bw() +
+  theme(
+    legend.position = "none",
+    axis.text.x = element_blank()) +
+      scale_color_manual(values = c("black", "red")) +
+  labs(y = "-log(p)", x = "popPUNK cluster") ->
+  manhattanplot_popPUNK_sens
+
+clusts_esbl %>%
+  ungroup() %>%
+  mutate(
+    total_in_hosp = sum(hosp_assoc == "in_hospital" |
+                          hosp_assoc == "recent_dc", na.rm = TRUE),
+    total_not_in_hosp = sum(hosp_assoc == "community", na.rm = TRUE)
+  ) %>%
+  group_by(clstr_name) %>%
+  summarise(
+    clust_in_hosp = sum(hosp_assoc == "in_hospital" |
+                          hosp_assoc == "recent_dc", na.rm = TRUE),
+    clust_not_in_hosp = sum(hosp_assoc == "community", na.rm = TRUE),
+    total_in_hosp = median(total_in_hosp) - clust_in_hosp,
+    total_not_in_hosp = median(total_not_in_hosp) - clust_not_in_hosp,
+    pval = fisher.test(matrix(
+      c(clust_in_hosp, total_in_hosp, clust_not_in_hosp, total_not_in_hosp), nrow = 2
+    ), simulate.p.value = TRUE)$p.value
+  ) %>% 
+  mutate(log_pval = -log10(pval)) -> df.manhattan.esbl_sens
+
+ggplot(df.manhattan.esbl_sens, aes(clstr_name, log_pval, color = log_pval > 
+                                   -log10(0.05 /
+                                     nrow(df.manhattan.popPUNK)))) +
+  geom_point(size = 0.5) +
+  geom_hline(aes(yintercept = -log10(0.05 /
+                                     nrow(df.manhattan.popPUNK))),
+             linetype = "dashed") +
+  theme_bw() +
+  theme(
+    legend.position = "none",
+    axis.text.x = element_blank()) +
+      scale_color_manual(values = c("black", "red")) +
+  labs(y = "-log(p)", x = "Contig cluster") ->
+  manhattanplot_esbl_sens
+ 
+(manhattanplot_popPUNK_sens /
+manhattanplot_esbl_sens) + plot_annotation(tag_levels = "A") -> 
+  hosp_assoc_lineages_sens
+
+
+if (write_figs) {
+  ggsave(here("figures/long-modelling/SUP_F_hosp_assoc_lineages.pdf"),
+         hosp_assoc_lineages_sens,
+         width = 9,
+         height = 4)
+  ggsave(here("figures/long-modelling/SUP_F_hosp_assoc_lineages.svg"),
+         hosp_assoc_lineages_sens,
+         width = 9, 
+         height = 4 )
+}
+
+```
+
 ### Hospital association of SNP clusters
 
 First, construct SNP clusters.
