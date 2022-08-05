@@ -3121,6 +3121,52 @@ btESBL_sequence_sample_metadata %>%
               names_from = hosp_assoc,
               values_from = n)
 
+# What proportion of community isolates are members of SNP cluster 
+# vs in-hospital
+
+btESBL_sequence_sample_metadata %>% 
+  mutate(species = case_when(
+    lane %in% btESBL_coregene_tree_esco$tip.label  ~ "esco",
+    lane %in% btESBL_coregene_tree_kleb$tip.label  ~ "kleb"
+  )) %>% 
+  left_join(
+    bind_rows(
+      data.frame(lane = names(cut_tree_vect.e),
+                 clust_name = cut_tree_vect.e) %>%
+        group_by(clust_name) %>%
+        mutate(snp_clust_member = if_else(
+          n() > 1, "snp_clust_member",
+          "snp_clust_nonmember")),
+      data.frame(lane = names(cut_tree_vect.k),
+                 clust_name = cut_tree_vect.k) %>%
+        group_by(clust_name) %>%
+        mutate(snp_clust_member = if_else(
+          n() > 1, "snp_clust_member",
+          "snp_clust_nonmember")),
+    ),
+    by = "lane"
+  ) %>% 
+  mutate(hosp_assoc =
+           case_when(
+             grepl("hosp|_dc", hosp_assoc) ~ "healthcare_assoc",
+             TRUE ~ hosp_assoc)) %>% 
+  group_by(species, hosp_assoc, snp_clust_member) %>% 
+  tally() %>% 
+  filter(!is.na(hosp_assoc)) %>% 
+  group_by(species,hosp_assoc) %>% 
+  mutate(total = sum(n)) %>% 
+  filter(snp_clust_member == "snp_clust_member") %>% 
+  select(-snp_clust_member) %>% 
+  mutate(prop = n/total) %>% 
+  group_by(species) %>%  
+  nest()    %>% 
+    mutate(p = map(
+      data,
+      ~ select(.x, -c(prop, hosp_assoc)) %>%
+        fisher.test(.x,simulate.p.value = TRUE) %>%
+        tidy() %>%
+        select(p.value))) %>% 
+  unnest(cols = everything()) 
 # how many snp clusters contain 2 or more healthcare associated isolates?
 
 
