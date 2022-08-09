@@ -1879,7 +1879,7 @@ rownames(st410_plasm_onehot_subset) <- st410_plasm_onehot_subset$name
         option = "plasma", name = "Continent",
         na.translate = FALSE
       ) +
-      geom_point2(aes(subset = as.numeric(label) >= 95 & !isTip), size = 0.5) +
+      geom_point2(aes(subset = as.numeric(label) < 95 & !isTip), size = 0.5) +
       geom_tippoint(aes(color = Country), na.rm = TRUE, size = 1) +
       scale_color_manual(values = "red", na.translate = FALSE) +
       new_scale_fill()
