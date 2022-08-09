@@ -110,8 +110,8 @@ read.tree("data-raw/ecoli-genomics-paper/st167-new/clean.full.filtered_polymorph
 phytools::midpoint.root(st167tree) -> st167tree
 
 data.frame(
-           taxa = st167tree$tip.label,
-country = if_else(grepl("^2", st167tree$tip.label ), "Malawi", NA_character_)) -> dd
+           taxa = btESBL_ecoli_globalst410_tree$tip.label,
+country = if_else(grepl("^2", btESBL_ecoli_globalst410_tree$tip.label ), "Malawi", NA_character_)) -> dd
 
-ggtree(st167tree) %<+% dd + 
+ggtree(btESBL_ecoli_globalst410_tree) %<+% dd + 
   geom_tippoint(aes(color = country))
