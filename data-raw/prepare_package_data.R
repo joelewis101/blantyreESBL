@@ -776,8 +776,13 @@ btESBL_ecoli_st410_metadata <-
     host = Host,
     source = Source,
     Country = Location,
-    `Collection Year` = Year
-  )
+    `Collection Year` = if_else(
+                                Year == "-", NA_real_,
+                                as.numeric(str_extract(Year, "^.{4}"))
+  )) %>%
+    mutate(across(where(is.character), ~ if_else(is.na(.x),
+                                          NA_character_,
+                                          .x)))
             
 
 use_data(btESBL_ecoli_st410_metadata, overwrite = TRUE)
@@ -897,12 +902,19 @@ st167_metadata %>%
   ) ->
 btESBL_ecoli_st167_metadata
 
-left_join(select(st167_metadata_new, assembly),
+left_join(select(st167_metadata_new, assembly, origin),
   btESBL_ecoli_st167_metadata,
   by = c("assembly" = "accession")
-) -> btESBL_ecoli_st167_metadata
+) %>%
+  mutate(County = if_else(
+    is.na(Country) & origin != "unknown",
+    origin,
+    Country
+  )) %>%
+  select(-origin) %>%
+  rename(accession = assembly)-> btESBL_ecoli_st167_metadata
 
-use_data(btESBL_ecoli_st167_metadata, overwrite = TRUE)
+  use_data(btESBL_ecoli_st167_metadata, overwrite = TRUE)
 
 # st167 plasmids -----------------
 
