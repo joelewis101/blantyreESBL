@@ -57,7 +57,7 @@ library(blantyreESBL)
 library(countrycode)
 library(viridis)
 
-write_figs <- TRUE
+write_figs <- FALSE
 
 if (write_figs) {
   if (!dir.exists(here("figures"))) {dir.create(here("figures"))}
@@ -678,6 +678,9 @@ bind_rows(
                  ) -> df_all
 
 df_all <- as.data.frame(df_all)
+
+write_csv(df_all, here("tables/ecoli-genomics/horesh_globaltree_metadata.csv"))
+
 rownames(df_all) <- df_all$lane  
 
 ```
@@ -1508,7 +1511,21 @@ amr %>%
                 values_fn = length,
                 values_fill = 0) %>% 
     summarise(across(!contains("lane"), sum))
-    
+
+
+quinolone.amr %>%
+  group_by(lane) %>%
+  summarise(qrdr = any(grepl("Gyr|Par", gene)),
+            qnr = any(grepl("Qnr", gene)),
+            qep = any(grepl("Qep", gene))) %>%
+  ungroup() %>%
+  summarise(qrdr_alone = sum(qrdr & !qnr & !qep),
+            qnr_alone = sum(qnr & !qrdr & !qep),
+            qrdr_qnr = sum(qrdr & qnr),
+            qrdr_qep = sum(qrdr & qep),
+            qnr_qep = sum(qnr & qep)
+  )
+  
   
 ```
 
@@ -1789,10 +1806,10 @@ rownames(st410_plasm_onehot) <- st410_plasm_onehot$name
 if (write_figs) {
 
 ggsave(here("figures/ecoli-genomics/st410_globaltreeplot.svg"),
-       st410_globaltree_plot, width = 10, height = 10)
+       st410_globaltree_plot, width = 9, height = 10)
 
 ggsave(here("figures/ecoli-genomics/st410_globaltreeplot.pdf"),
-       st410_globaltree_plot, width = 10, height = 10)
+       st410_globaltree_plot, width = 9, height = 10)
 }
 st410_globaltree_plot
 
@@ -2096,8 +2113,10 @@ rownames(esbl_cpe.ariba) <- esbl_cpe.ariba$sample
                       name = "Beta-\nlactamase") +
   new_scale_fill()
 )  +  
-  ylim(NA, 160) +
-  geom_treescale(x = 0.00003, y = 160*0.666, offset = 2, width = 0.00001) ->
+  ylim(NA, 150) +
+    geom_highlight(node = 142, alpha = 0.3, fill = "steelblue",
+                   color = NA) + 
+  geom_treescale(x = 0.000015, y = 160*0.666, offset = 2, width = 0.00001) ->
   st167_globaltree_plot
 
 st167_globaltree_plot
@@ -2105,10 +2124,10 @@ st167_globaltree_plot
 if (write_figs) {
 
 ggsave(here("figures/ecoli-genomics/st167_globaltreeplot.svg"),
-       st167_globaltree_plot, width = 10, height = 10)
+       st167_globaltree_plot, width = 8, height = 10)
 
 ggsave(here("figures/ecoli-genomics/st167_globaltreeplot.pdf"),
-       st167_globaltree_plot, width = 10, height = 10)
+       st167_globaltree_plot, width = 8, height = 10)
 }
 ```
 
