@@ -95,18 +95,63 @@ btESBL_sequence_sample_metadata %>%
 if (write_figs) {
   write_csv(
     btESBL_sequence_sample_metadata %>%
-    mutate(date_of_collection = data_date) %>% 
+      mutate(date_of_collection = data_date) %>%
+      filter(species == "E. coli") %>%
       select(
         accession,
         lane,
-         supplier_name,
-         pid,
-         date_of_collection,
-         N50),
-    here("tables/ecoli-genomics/accession_numbers.csv")
+        supplier_name,
+        pid,
+        date_of_collection,
+        N50,
+        Cluster,
+        ST,
+        ecoli_phylogroup,
+        ecoli_pathotype
+      ) %>%
+      left_join(
+        btESBL_qrdr_mutations %>%
+          filter(genus == "E. coli") %>%
+          select(-genus) %>%
+          semi_join(
+            btESBL_CARD_qrdr_mutations,
+            by = c(
+              "variant" = "variant",
+              "gene" = "gene"
+            )
+          ) %>%
+          pivot_wider(,
+            id_cols = lane,
+            names_from = gene,
+            values_from = variant,
+            values_fn = function(x) paste0(x, collapse = ",")
+          )
+      ) %>%
+      mutate(ecoli_pathotype = if_else(is.na(ecoli_pathotype),
+        "none_identfied",
+        ecoli_pathotype
+      )) %>%
+      mutate(across(
+        matches("gyr|par"),
+        ~ if_else(is.na(.x), "no", .x)
+      )) %>%
+      left_join(
+        btESBL_amrgenes %>%
+          select(-genus) %>%
+          arrange(ref_seq) %>%
+          pivot_wider(
+            id_cols = lane, names_from = ref_seq,
+            values_from = ref_seq,
+            values_fn = length,
+            values_fill = 0
+          ) %>%
+          mutate(across(where(is.numeric), ~ if_else(.x == 1, "yes", "no")))
+      ),
+    here("tables/ecoli-genomics/sample_metadata.csv")
   )
 }
 
+      
 ```
 
 ### Phylogroup, MLST plasmid replicons
