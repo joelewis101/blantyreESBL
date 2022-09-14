@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">blantyreESBL</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3</span>
       </span>
     </div>
 
@@ -84,7 +84,8 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Analysis scripts: longitudinal ESBL carriage dynamics</h1>
+      <h1 data-toc-skip>Analysis scripts: longitudinal ESBL carriage
+dynamics</h1>
             
       
       
@@ -97,36 +98,58 @@
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>This document contains reproducing analysis code which generates the tables and figures for the manuscript:</p>
+<p>This document contains reproducing analysis code which generates the
+tables and figures for the manuscript:</p>
 <p><br></p>
-<p><em>Dynamics of gut mucosal colonisation with extended spectrum beta-lactamase producing Enterobacterales in Malawi</em></p>
+<p><em>Dynamics of gut mucosal colonisation with extended spectrum
+beta-lactamase producing Enterobacterales in Malawi</em></p>
 <p><br></p>
-<p>Joseph M Lewis<sup>1,2,3,4</sup>, , Madalitso Mphasa<sup>1</sup>, Rachel Banda<sup>1</sup>, Matthew Beale<sup>4</sup>, Eva Heinz<sup>2</sup>, Jane Mallewa<sup>5</sup>, Christopher Jewell<sup>6</sup>, Nicholas R Thomson<sup>4,7</sup>, Nicholas A Feasey<sup>1,2</sup></p>
+<p>Joseph M Lewis<sup>1,2,3,4</sup>, , Madalitso Mphasa<sup>1</sup>,
+Rachel Banda<sup>1</sup>, Matthew Beale<sup>4</sup>, Eva
+Heinz<sup>2</sup>, Jane Mallewa<sup>5</sup>, Christopher
+Jewell<sup>6</sup>, Nicholas R Thomson<sup>4,7</sup>, Nicholas A
+Feasey<sup>1,2</sup></p>
 <ol style="list-style-type: decimal">
-<li>Malawi Liverpool Wellcome Clinical Research Programme, Blantyre, Malawi</li>
+<li>Malawi Liverpool Wellcome Research Programme, Blantyre, Malawi</li>
 <li>Liverpool School of Tropical Medicine, Liverpool, UK</li>
-<li>Department of Clinical Infection, Microbiology and Immunology, University of Liverpool, Liverpool, UK</li>
+<li>Department of Clinical Infection, Microbiology and Immunology,
+University of Liverpool, Liverpool, UK</li>
 <li>Wellcome Sanger Institute, Hinxton, UK</li>
-<li>College of Medicine, University of Malawi, Malawi</li>
-<li>University of Lancaster, Lanaster, UK</li>
+<li>Kamuzu University of Health Sciences, Blantyre, Malawi</li>
+<li>University of Lancaster, Lancaster, UK</li>
 <li>London School of Tropical Medicine and Hygiene, London, UK</li>
 </ol>
 </div>
 <div class="section level2">
 <h2 id="installing-and-accessing-data">Installing and accessing data<a class="anchor" aria-label="anchor" href="#installing-and-accessing-data"></a>
 </h2>
-<p>If you just want the data, then all the data to replicate the analysis are bundled with the package. To install the package from GitHub:</p>
+<p>If you just want the data, then all the data to replicate the
+analysis are bundled with the package. To install the package from
+GitHub:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"devtools"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"https://github.com/joelewis101/blantyreESBL)</span></span></code></pre></div>
-<p>The various data objects are described in the <a href="https://joelewis101.github.io/blantyreESBL/" class="external-link">pkgdown</a> site for this package, and available via R in the usual way (i.e. <code><a href="../reference/btESBL_participants.html">?btESBL_participants</a></code> brings up the definitions for the <code>btESBL_participants</code> data. They are all lazy loaded so will be available for use immediately; they all start with <code>btESBL_</code> to make it easy to choose the one you want using autocomplete.</p>
-<p>The analysis is available as a package vignette; this can be built when downloading the package by typing:</p>
+<p>The various data objects are described in the <a href="https://joelewis101.github.io/blantyreESBL/" class="external-link">pkgdown</a> site for
+this package, and available via R in the usual way
+(i.e. <code><a href="../reference/btESBL_participants.html">?btESBL_participants</a></code> brings up the definitions for
+the <code>btESBL_participants</code> data. They are all lazy loaded so
+will be available for use immediately; they all start with
+<code>btESBL_</code> to make it easy to choose the one you want using
+autocomplete.</p>
+<p>The analysis is available as a package vignette; this can be built
+when downloading the package by typing:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"https://github.com/joelewis101/blantyreESBL"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span>, dependencies <span class="op">=</span> <span class="cn">TRUE</span> <span class="op">)</span></code></pre></div>
-<p>The <code>dependencies = TRUE</code> option will install all the packages necessary to run the vignettes.</p>
-<p>Alternatively the source code for the vignette is <code>analysis.Rmd</code> in the <code>vignettes/</code> folder of the <a href="https://github.com/joelewis101/blantyreESBL" class="external-link">GitHub</a> repo or the <a href="https://joelewis101.github.io/blantyreESBL/" class="external-link">pkgdown</a> site for this package has a rendered version.</p>
+<p>The <code>dependencies = TRUE</code> option will install all the
+packages necessary to run the vignettes.</p>
+<p>Alternatively the source code for the vignette is
+<code>analysis.Rmd</code> in the <code>vignettes/</code> folder of the
+<a href="https://github.com/joelewis101/blantyreESBL" class="external-link">GitHub</a> repo or
+the <a href="https://joelewis101.github.io/blantyreESBL/" class="external-link">pkgdown</a>
+site for this package has a rendered version.</p>
 </div>
 <div class="section level2">
-<h2 id="descriptions-of-participants-exposures-baseline-esbl-colonisation">Descriptions of participants, exposures, baseline ESBL colonisation<a class="anchor" aria-label="anchor" href="#descriptions-of-participants-exposures-baseline-esbl-colonisation"></a>
+<h2 id="descriptions-of-participants-exposures-baseline-esbl-colonisation">Descriptions of participants, exposures, baseline ESBL
+colonisation<a class="anchor" aria-label="anchor" href="#descriptions-of-participants-exposures-baseline-esbl-colonisation"></a>
 </h2>
 <div class="section level3">
 <h3 id="setup-load-packages">Setup, load packages<a class="anchor" aria-label="anchor" href="#setup-load-packages"></a>
@@ -577,7 +600,7 @@ Male
 40/100 (40%)
 </td>
 <td style="text-align:left;">
-0.172
+0.175
 </td>
 <td style="text-align:left;">
 205/425 (48%)
@@ -665,7 +688,7 @@ Current CPT
 7/18 (39%)
 </td>
 <td style="text-align:left;">
-0.009
+0.008
 </td>
 <td style="text-align:left;">
 110/171 (64%)
@@ -685,7 +708,7 @@ Current ART
 18/18 (100%)
 </td>
 <td style="text-align:left;">
-0.071
+0.081
 </td>
 <td style="text-align:left;">
 144/173 (83%)
@@ -705,7 +728,7 @@ ART regimen: EFV/3TC/TDF
 17/18 (94%)
 </td>
 <td style="text-align:left;">
-0.625
+0.626
 </td>
 <td style="text-align:left;">
 135/144 (94%)
@@ -770,7 +793,7 @@ Hospitalised within 28 days
 0/100 (0%)
 </td>
 <td style="text-align:left;">
-0.001
+0.002
 </td>
 <td style="text-align:left;">
 19/425 (4%)
@@ -790,7 +813,7 @@ Current TB treatment
 4/100 (4%)
 </td>
 <td style="text-align:left;">
-0.080
+0.090
 </td>
 <td style="text-align:left;">
 14/425 (3%)
@@ -951,7 +974,7 @@ Electricty in house
 58/100 (58%)
 </td>
 <td style="text-align:left;">
-0.043
+0.047
 </td>
 <td style="text-align:left;">
 218/425 (51%)
@@ -971,7 +994,7 @@ Flush toilet<sup>‡</sup>
 1/100 (1%)
 </td>
 <td style="text-align:left;">
-0.115
+0.106
 </td>
 <td style="text-align:left;">
 20/425 (5%)
@@ -991,7 +1014,7 @@ Protected water source<sup>§</sup>
 98/100 (98%)
 </td>
 <td style="text-align:left;">
-0.122
+0.127
 </td>
 <td style="text-align:left;">
 406/425 (96%)
@@ -1011,7 +1034,7 @@ Treat drinking water with chlorine
 0/100 (0%)
 </td>
 <td style="text-align:left;">
-0.002
+0.003
 </td>
 <td style="text-align:left;">
 24/425 (6%)
@@ -1026,12 +1049,21 @@ Treat drinking water with chlorine
 </tr>
 <tr>
 <td style="padding: 0; " colspan="100%">
-<sup></sup> ART = Antiretroviral therapy, CPT = Cotrimoxazole preventative therapy, EFV: Efavirenz, 3TC: Lamivudine, TDF: Tenofovir. Numeric variables are summarised as median (IQR) and categorical variables as proportions. P-values are from Fisher’s exact test (categorical variables) or Kruskal-Wallace test (continuous variables) across the three groups; p-value for HIV status compares distribution of HIV reactive, non-reactive and unknown across the three groups. In smoe cases denominator may be less than the total number of participants due to missing data.
+<sup></sup> ART = Antiretroviral therapy, CPT = Cotrimoxazole
+preventative therapy, EFV: Efavirenz, 3TC: Lamivudine, TDF: Tenofovir.
+Numeric variables are summarised as median (IQR) and categorical
+variables as proportions. P-values are from Fisher’s exact test
+(categorical variables) or Kruskal-Wallace test (continuous variables)
+across the three groups; p-value for HIV status compares distribution of
+HIV reactive, non-reactive and unknown across the three groups. In smoe
+cases denominator may be less than the total number of participants due
+to missing data.
 </td>
 </tr>
 <tr>
 <td style="padding: 0; " colspan="100%">
-<sup>*</sup> Denominator for ART status is HIV reactive participants only
+<sup>*</sup> Denominator for ART status is HIV reactive participants
+only
 </td>
 </tr>
 <tr>
@@ -1046,7 +1078,9 @@ Treat drinking water with chlorine
 </tr>
 <tr>
 <td style="padding: 0; " colspan="100%">
-<sup>§</sup> Protected water source includes borehole, water piped into or outside dwelling or public standpipe; unprotected sources include surface water or unprotected springs.
+<sup>§</sup> Protected water source includes borehole, water piped into
+or outside dwelling or public standpipe; unprotected sources include
+surface water or unprotected springs.
 </td>
 </tr>
 </tfoot>
@@ -1158,7 +1192,9 @@ Treat drinking water with chlorine
 <span class="co">#&gt; Warning: Removed 3042 row(s) containing missing values (geom_path).</span></code></pre></div>
 <div class="figure">
 <img src="analysis_files/figure-html/exp-1.png" alt="Exposures during study period. Panels show proportion of participants in each arm of the study who are hospitalised of exposed to antimicrobials on a given day" width="768"><p class="caption">
-Exposures during study period. Panels show proportion of participants in each arm of the study who are hospitalised of exposed to antimicrobials on a given day
+Exposures during study period. Panels show proportion of participants in
+each arm of the study who are hospitalised of exposed to antimicrobials
+on a given day
 </p>
 </div>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -2030,7 +2066,10 @@ Chloramphenicol
 </tr>
 <tr>
 <td style="padding: 0; " colspan="100%">
-<sup></sup> TB = tuberculosis, LA =lumefantrine artemether. Median exposure length includes only those exposed. Total at risk shows the total number of participants and participant-days of follow up included in the study.
+<sup></sup> TB = tuberculosis, LA =lumefantrine artemether. Median
+exposure length includes only those exposed. Total at risk shows the
+total number of participants and participant-days of follow up included
+in the study.
 </td>
 </tr>
 </tfoot>
@@ -2059,7 +2098,8 @@ Chloramphenicol
 <span class="co">#&gt; Warning: Removed 8 rows containing missing values (geom_bar).</span></code></pre></div>
 <div class="figure">
 <img src="analysis_files/figure-html/sample_timing-1.png" alt="Timing of sample collection showing long tails around sample collection time." width="576"><p class="caption">
-Timing of sample collection showing long tails around sample collection time.
+Timing of sample collection showing long tails around sample collection
+time.
 </p>
 </div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -2137,7 +2177,8 @@ Species cultured from stool.
 <span class="op">}</span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="antimicrobial-sensitivity-testins-ast-of-e--coli-and-k--pneumoniae-isolates">Antimicrobial sensitivity testins (AST) of <em>E. coli</em> and <em>K. pneumoniae</em> isolates<a class="anchor" aria-label="anchor" href="#antimicrobial-sensitivity-testins-ast-of-e--coli-and-k--pneumoniae-isolates"></a>
+<h3 id="antimicrobial-sensitivity-testins-ast-of-e--coli-and-k--pneumoniae-isolates">Antimicrobial sensitivity testins (AST) of <em>E. coli</em> and
+<em>K. pneumoniae</em> isolates<a class="anchor" aria-label="anchor" href="#antimicrobial-sensitivity-testins-ast-of-e--coli-and-k--pneumoniae-isolates"></a>
 </h3>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
@@ -2177,7 +2218,9 @@ Species cultured from stool.
 <span class="va">ast_plot</span></code></pre></div>
 <div class="figure">
 <img src="analysis_files/figure-html/AST-1.png" alt="Results of antimicrobial sensitivity testing of cultured E. coli and K. pneumoniae sequence complex (KpSC) isolates using the disc diffusion method." width="672"><p class="caption">
-Results of antimicrobial sensitivity testing of cultured E. coli and K. pneumoniae sequence complex (KpSC) isolates using the disc diffusion method.
+Results of antimicrobial sensitivity testing of cultured E. coli and K.
+pneumoniae sequence complex (KpSC) isolates using the disc diffusion
+method.
 </p>
 </div>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
@@ -2227,7 +2270,8 @@ Results of antimicrobial sensitivity testing of cultured E. coli and K. pneumoni
 <span class="va">plasmid_replicons_plot</span></code></pre></div>
 <div class="figure">
 <img src="analysis_files/figure-html/plasmid-replicons-1.png" alt="Distribution of plasmid incompatibility groups in the isolates. KpSC = Klebsiella pneumoniae sequence complex." width="480"><p class="caption">
-Distribution of plasmid incompatibility groups in the isolates. KpSC = Klebsiella pneumoniae sequence complex.
+Distribution of plasmid incompatibility groups in the isolates. KpSC =
+Klebsiella pneumoniae sequence complex.
 </p>
 </div>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
@@ -2393,7 +2437,8 @@ Distribution of plasmid incompatibility groups in the isolates. KpSC = Klebsiell
   <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/footnote.html" class="external-link">footnote</a></span><span class="op">(</span>general <span class="op">=</span> <span class="st">"CPT = Cotrimoxazole preventative therapy, ART = antiretroviral therapy, TB = tuberculosis. Entries in bold are those for which 95% confidence intervals do not cross 1."</span>, symbol <span class="op">=</span> <span class="st">"Antibiotics includes TB therapy but excludes CPT."</span><span class="op">)</span> </code></pre></div>
 <table class="table  lightable-classic" style='font-family: "Arial Narrow", "Source Sans Pro", sans-serif; width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;'>
 <caption>
-Univariable and multivariable associations of ESBL colonisation at enrolment
+Univariable and multivariable associations of ESBL colonisation at
+enrolment
 </caption>
 <thead>
 <tr>
@@ -2774,7 +2819,9 @@ Rainy season (vs. dry)
 </tr>
 <tr>
 <td style="padding: 0; " colspan="100%">
-<sup></sup> CPT = Cotrimoxazole preventative therapy, ART = antiretroviral therapy, TB = tuberculosis. Entries in bold are those for which 95% confidence intervals do not cross 1.
+<sup></sup> CPT = Cotrimoxazole preventative therapy, ART =
+antiretroviral therapy, TB = tuberculosis. Entries in bold are those for
+which 95% confidence intervals do not cross 1.
 </td>
 </tr>
 <tr>
@@ -2871,7 +2918,8 @@ Rainy season (vs. dry)
 <span class="co">#&gt; Joining, by = c("arm", "visit")</span></code></pre></div>
 <table class="table  lightable-classic" style='font-family: "Arial Narrow", "Source Sans Pro", sans-serif; width: auto !important; margin-left: auto; margin-right: auto;'>
 <caption>
-ESBL, E. coli and K. pneumoniae prevalence in stool at study visits, stratified by study arm.
+ESBL, E. coli and K. pneumoniae prevalence in stool at study visits,
+stratified by study arm.
 </caption>
 <thead>
 <tr>
@@ -3211,7 +3259,8 @@ Day 180
         legend.position <span class="op">=</span> <span class="st">"top"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">ESBLprevplot</span>
 <span class="co">#&gt; Joining, by = "pid"</span>
 <span class="co">#&gt; Joining, by = "pid"</span></code></pre></div>
-<p>Plot number of samples collected u to D7 with estimated prevalence</p>
+<p>Plot number of samples collected u to D7 with estimated
+prevalence</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">btESBL_stoolESBL</span> <span class="op"><a href="https://rdrr.io/pkg/igraph/man/pipe.html" class="external-link">%&gt;%</a></span>
@@ -3256,7 +3305,9 @@ Day 180
 <span class="co">#&gt; Warning: Removed 2 rows containing missing values (geom_bar).</span></code></pre></div>
 <div class="figure">
 <img src="analysis_files/figure-html/d7-prevplot-1.png" alt="A: Number of stools samples collected per day stratified by arm. B: Proportion of samples per day in which ESBLE was identfied, stratified by arm." width="576"><p class="caption">
-A: Number of stools samples collected per day stratified by arm. B: Proportion of samples per day in which ESBLE was identfied, stratified by arm.
+A: Number of stools samples collected per day stratified by arm. B:
+Proportion of samples per day in which ESBLE was identfied, stratified
+by arm.
 </p>
 </div>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
@@ -3277,7 +3328,8 @@ A: Number of stools samples collected per day stratified by arm. B: Proportion o
 <span class="co">#&gt; Warning: Removed 2 rows containing missing values (geom_bar).</span>
 <span class="co">#&gt; Warning: Removed 785 rows containing non-finite values (stat_count).</span>
 <span class="co">#&gt; Warning: Removed 2 rows containing missing values (geom_bar).</span></code></pre></div>
-<p>Describe carriage prevalence; plot model parameters; plot predicted prevalence.</p>
+<p>Describe carriage prevalence; plot model parameters; plot predicted
+prevalence.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">inv</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span>
@@ -3427,7 +3479,25 @@ A: Number of stools samples collected per day stratified by arm. B: Proportion o
 <span class="co">#&gt; `geom_smooth()` using method = 'loess' and formula 'y ~ x'</span></code></pre></div>
 <div class="figure">
 <img src="analysis_files/figure-html/markov-model-panel-plot-1.png" alt="Determinants of ESBL-E carriage. A: Prevalence of ESBL-E carriage stratified by study arm. Inpatients without sepsis are censored at first antimicrobial exposure and community members censored at first antimicrobial exposure or hospital admission. Estimated prevalence and 95% confience intervals derived from a nonparametric LOESS regression with span parameter 0.8. B: Simulated probability of ESBL colonisation generated from the posterior parameter estimates of the fitted model with a starting probability of colonisation of 0.5 and seven days of hospitalisation with either seven, two, or no days antimicrobial exposure. In this model, truncated courses of antimicrobials havelittle effect on reducing ESBL-E carriage. C-E: Density plots of parameter estimates form fitted model with median (line) and 95% credible intervals (shading) shown. A: log hazard ratios of ESBL-E gain and loss for hospialisation and antimicrobial exposure: hospitalisation acts to acts to increase both acquisition and loss of ESBL-E whereas antmicrobial exposure acts to prevent loss. D: mean time in state for uncolonised and colonised states. E: Half life of decay of effecr of antimicrobials, showing that the effect of antimicrobials, in this model, acts for many days after exposure has finished." width="1152"><p class="caption">
-Determinants of ESBL-E carriage. A: Prevalence of ESBL-E carriage stratified by study arm. Inpatients without sepsis are censored at first antimicrobial exposure and community members censored at first antimicrobial exposure or hospital admission. Estimated prevalence and 95% confience intervals derived from a nonparametric LOESS regression with span parameter 0.8. B: Simulated probability of ESBL colonisation generated from the posterior parameter estimates of the fitted model with a starting probability of colonisation of 0.5 and seven days of hospitalisation with either seven, two, or no days antimicrobial exposure. In this model, truncated courses of antimicrobials havelittle effect on reducing ESBL-E carriage. C-E: Density plots of parameter estimates form fitted model with median (line) and 95% credible intervals (shading) shown. A: log hazard ratios of ESBL-E gain and loss for hospialisation and antimicrobial exposure: hospitalisation acts to acts to increase both acquisition and loss of ESBL-E whereas antmicrobial exposure acts to prevent loss. D: mean time in state for uncolonised and colonised states. E: Half life of decay of effecr of antimicrobials, showing that the effect of antimicrobials, in this model, acts for many days after exposure has finished.
+Determinants of ESBL-E carriage. A: Prevalence of ESBL-E carriage
+stratified by study arm. Inpatients without sepsis are censored at first
+antimicrobial exposure and community members censored at first
+antimicrobial exposure or hospital admission. Estimated prevalence and
+95% confience intervals derived from a nonparametric LOESS regression
+with span parameter 0.8. B: Simulated probability of ESBL colonisation
+generated from the posterior parameter estimates of the fitted model
+with a starting probability of colonisation of 0.5 and seven days of
+hospitalisation with either seven, two, or no days antimicrobial
+exposure. In this model, truncated courses of antimicrobials havelittle
+effect on reducing ESBL-E carriage. C-E: Density plots of parameter
+estimates form fitted model with median (line) and 95% credible
+intervals (shading) shown. A: log hazard ratios of ESBL-E gain and loss
+for hospialisation and antimicrobial exposure: hospitalisation acts to
+acts to increase both acquisition and loss of ESBL-E whereas
+antmicrobial exposure acts to prevent loss. D: mean time in state for
+uncolonised and colonised states. E: Half life of decay of effecr of
+antimicrobials, showing that the effect of antimicrobials, in this
+model, acts for many days after exposure has finished.
 </p>
 </div>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
@@ -3560,7 +3630,16 @@ Determinants of ESBL-E carriage. A: Prevalence of ESBL-E carriage stratified by 
 <span class="va">model_comp_plot</span></code></pre></div>
 <div class="figure">
 <img src="analysis_files/figure-html/compare-models-plot-1.png" alt="Model comparisons for models with and without an exponentially dcaying effect of antmicrobials. A-B: Parameter estimates from stepwise-constant covariate model. C-E: parameter estimates from model with exponentially-decaying effect of antinicrobial exposure. F: Posterior predictive checks of modelsm comparing model with piecewise-constant covariates (model 1) to exponentially decaying effect of antimicrobial exposure (model 2). Dashed lines show actual ESBL-E prevalence across three study arms; probability density of predicted prevalence from the two models show that model 1 tends to underestimate ESBL-E prevalence in the antimicrobial-exposed, compared to model 2." width="1056"><p class="caption">
-Model comparisons for models with and without an exponentially dcaying effect of antmicrobials. A-B: Parameter estimates from stepwise-constant covariate model. C-E: parameter estimates from model with exponentially-decaying effect of antinicrobial exposure. F: Posterior predictive checks of modelsm comparing model with piecewise-constant covariates (model 1) to exponentially decaying effect of antimicrobial exposure (model 2). Dashed lines show actual ESBL-E prevalence across three study arms; probability density of predicted prevalence from the two models show that model 1 tends to underestimate ESBL-E prevalence in the antimicrobial-exposed, compared to model 2.
+Model comparisons for models with and without an exponentially dcaying
+effect of antmicrobials. A-B: Parameter estimates from stepwise-constant
+covariate model. C-E: parameter estimates from model with
+exponentially-decaying effect of antinicrobial exposure. F: Posterior
+predictive checks of modelsm comparing model with piecewise-constant
+covariates (model 1) to exponentially decaying effect of antimicrobial
+exposure (model 2). Dashed lines show actual ESBL-E prevalence across
+three study arms; probability density of predicted prevalence from the
+two models show that model 1 tends to underestimate ESBL-E prevalence in
+the antimicrobial-exposed, compared to model 2.
 </p>
 </div>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
@@ -3780,7 +3859,9 @@ Model comparisons for models with and without an exponentially dcaying effect of
 <span class="va">cro_vs_not_model_plot</span></code></pre></div>
 <div class="figure">
 <img src="analysis_files/figure-html/cro_vs_not_models-1.png" alt="Parameter estimates from model considering ceftriaxone (CRO) exposure seperately to all other antimicrobials (A-C) versus all antimicrobials together (D-F)." width="960"><p class="caption">
-Parameter estimates from model considering ceftriaxone (CRO) exposure seperately to all other antimicrobials (A-C) versus all antimicrobials together (D-F).
+Parameter estimates from model considering ceftriaxone (CRO) exposure
+seperately to all other antimicrobials (A-C) versus all antimicrobials
+together (D-F).
 </p>
 </div>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
@@ -3944,7 +4025,10 @@ Uncolonised (days)
 </tr>
 <tr>
 <td style="padding: 0; " colspan="100%">
-<sup></sup> Hazard ratios are the exponential of the parameters alpha and beta in the model; half life is equal to log(2) multiplied by gamma; mean time in state assumes all other covariates are equal to zero and is then the reciprocal of lambda or mu.
+<sup></sup> Hazard ratios are the exponential of the parameters alpha
+and beta in the model; half life is equal to log(2) multiplied by gamma;
+mean time in state assumes all other covariates are equal to zero and is
+then the reciprocal of lambda or mu.
 </td>
 </tr>
 </tfoot>
@@ -4076,7 +4160,11 @@ Uncolonised (days)
 <span class="va">species_lineage_mge_association</span></code></pre></div>
 <div class="figure">
 <img src="analysis_files/figure-html/plasm-amr-gene-plot-1.png" alt="Distribution of contig-clusters between and within genera. (A) shows distribution of contig clusters by genus. (B-C) show contig-cluster presence (purple)-absence (grey) mapped back to core gene maximum likelihood phylogeny for E. coli (B) and K. pneumoniae subsp. pneumoniae (C)" width="960"><p class="caption">
-Distribution of contig-clusters between and within genera. (A) shows distribution of contig clusters by genus. (B-C) show contig-cluster presence (purple)-absence (grey) mapped back to core gene maximum likelihood phylogeny for E. coli (B) and K. pneumoniae subsp. pneumoniae (C)
+Distribution of contig-clusters between and within genera. (A) shows
+distribution of contig clusters by genus. (B-C) show contig-cluster
+presence (purple)-absence (grey) mapped back to core gene maximum
+likelihood phylogeny for E. coli (B) and K. pneumoniae subsp. pneumoniae
+(C)
 </p>
 </div>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
@@ -4133,7 +4221,8 @@ Distribution of contig-clusters between and within genera. (A) shows distributio
 <span class="va">esbl_contig_stats</span></code></pre></div>
 <div class="figure">
 <img src="analysis_files/figure-html/contig-cluster-stats-1.png" alt="Size, representative cluster length, distribution of coverage and sequence identity of ESBL-contig clusters" width="864"><p class="caption">
-Size, representative cluster length, distribution of coverage and sequence identity of ESBL-contig clusters
+Size, representative cluster length, distribution of coverage and
+sequence identity of ESBL-contig clusters
 </p>
 </div>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
@@ -4265,7 +4354,8 @@ PopPUNK clusters mapped to core gene maximum-likelihood phylogeny
 </div>
 </div>
 <div class="section level2">
-<h2 id="within-participant-temporal-correlation-of-snp-cluster-contig-and-poppunk-clusters">Within-participant temporal correlation of SNP cluster, contig and popPUNK clusters<a class="anchor" aria-label="anchor" href="#within-participant-temporal-correlation-of-snp-cluster-contig-and-poppunk-clusters"></a>
+<h2 id="within-participant-temporal-correlation-of-snp-cluster-contig-and-poppunk-clusters">Within-participant temporal correlation of SNP cluster, contig and
+popPUNK clusters<a class="anchor" aria-label="anchor" href="#within-participant-temporal-correlation-of-snp-cluster-contig-and-poppunk-clusters"></a>
 </h2>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
@@ -4904,7 +4994,27 @@ PopPUNK clusters mapped to core gene maximum-likelihood phylogeny
 <span class="co">#&gt; `geom_smooth()` using formula 'y ~ x'</span></code></pre></div>
 <div class="figure">
 <img src="analysis_files/figure-html/autocorrelation-plot-1.png" alt="Within participant correlation of organism, lineage, mobile genetic element (MGE) and clone. A-B show proportions of participants that have a detectible E. coli (A), K. pneumoniae (B) at t time t=0 and the same organism at a time t later. Dashed lines show the proportion of samples in the collection that would be expected to have the same organism by chance: the proportion of between-participant samples that have the same organism. C shows (E. coli only) and D (for K. pneumoniae complex) the proportion of participants who are colonised with at time t=0 and the proportion of those who have the same lineage (as defined by popPUNK cluster), clone (as defined by &lt;6 SNPs), or mobile genetic element (defined by ESBl-contig cluster) detectible a at time t later. Dashed lined again show the between-participant proportion of samples that contain the same lineage, clone or MGE to show the chance of obtaining any result ny chance. Fitted lines are from a nonparametric LOESS fit with 95% confidence intervals. D shows odds ratios of any within-participant E. coli pair containing the same popPUNK cluster only, ESBL-contig cluster, or both, compared to between-participant pairs, and E the same data for K. pneumoniae. It is more likely that both lineage (popPUNK cluster) and MGE (ESBL-cluster) are conserved together than either seperately, suggesting that the lineage-MGE combination is the conserved unit within this system." width="864"><p class="caption">
-Within participant correlation of organism, lineage, mobile genetic element (MGE) and clone. A-B show proportions of participants that have a detectible E. coli (A), K. pneumoniae (B) at t time t=0 and the same organism at a time t later. Dashed lines show the proportion of samples in the collection that would be expected to have the same organism by chance: the proportion of between-participant samples that have the same organism. C shows (E. coli only) and D (for K. pneumoniae complex) the proportion of participants who are colonised with at time t=0 and the proportion of those who have the same lineage (as defined by popPUNK cluster), clone (as defined by &lt;6 SNPs), or mobile genetic element (defined by ESBl-contig cluster) detectible a at time t later. Dashed lined again show the between-participant proportion of samples that contain the same lineage, clone or MGE to show the chance of obtaining any result ny chance. Fitted lines are from a nonparametric LOESS fit with 95% confidence intervals. D shows odds ratios of any within-participant E. coli pair containing the same popPUNK cluster only, ESBL-contig cluster, or both, compared to between-participant pairs, and E the same data for K. pneumoniae. It is more likely that both lineage (popPUNK cluster) and MGE (ESBL-cluster) are conserved together than either seperately, suggesting that the lineage-MGE combination is the conserved unit within this system.
+Within participant correlation of organism, lineage, mobile genetic
+element (MGE) and clone. A-B show proportions of participants that have
+a detectible E. coli (A), K. pneumoniae (B) at t time t=0 and the same
+organism at a time t later. Dashed lines show the proportion of samples
+in the collection that would be expected to have the same organism by
+chance: the proportion of between-participant samples that have the same
+organism. C shows (E. coli only) and D (for K. pneumoniae complex) the
+proportion of participants who are colonised with at time t=0 and the
+proportion of those who have the same lineage (as defined by popPUNK
+cluster), clone (as defined by &lt;6 SNPs), or mobile genetic element
+(defined by ESBl-contig cluster) detectible a at time t later. Dashed
+lined again show the between-participant proportion of samples that
+contain the same lineage, clone or MGE to show the chance of obtaining
+any result ny chance. Fitted lines are from a nonparametric LOESS fit
+with 95% confidence intervals. D shows odds ratios of any
+within-participant E. coli pair containing the same popPUNK cluster
+only, ESBL-contig cluster, or both, compared to between-participant
+pairs, and E the same data for K. pneumoniae. It is more likely that
+both lineage (popPUNK cluster) and MGE (ESBL-cluster) are conserved
+together than either seperately, suggesting that the lineage-MGE
+combination is the conserved unit within this system.
 </p>
 </div>
 </div>
@@ -5466,7 +5576,17 @@ Within participant correlation of organism, lineage, mobile genetic element (MGE
 <span class="va">snp_networks</span></code></pre></div>
 <div class="figure">
 <img src="analysis_files/figure-html/snp-clusts-1.png" alt="Network plot of SNP-clusters (i.e. putative transmission clusters) for E. coli (A) and K. pneumoniae (B) showing that putative transmission clusters are not purely hospital associated. Points are samples, coloured by place of isolation (in-hospital [black], community [white], or up to 120 days post-discharge [grey]). Red lines link samples that are within a single participant. Blue lines link samples that are differ by five or fewer SNPs. The plot shows that most samples are not members of a SNP-cluster; that most SNP clusters are made up of samples from different participants (rather than multiple samples from the same participant); and that SNP-clusters are not strongly hospital-associated (i.e. they contain black, white, and grey points)." width="1267.2"><p class="caption">
-Network plot of SNP-clusters (i.e. putative transmission clusters) for E. coli (A) and K. pneumoniae (B) showing that putative transmission clusters are not purely hospital associated. Points are samples, coloured by place of isolation (in-hospital [black], community [white], or up to 120 days post-discharge [grey]). Red lines link samples that are within a single participant. Blue lines link samples that are differ by five or fewer SNPs. The plot shows that most samples are not members of a SNP-cluster; that most SNP clusters are made up of samples from different participants (rather than multiple samples from the same participant); and that SNP-clusters are not strongly hospital-associated (i.e. they contain black, white, and grey points).
+Network plot of SNP-clusters (i.e. putative transmission clusters) for
+E. coli (A) and K. pneumoniae (B) showing that putative transmission
+clusters are not purely hospital associated. Points are samples,
+coloured by place of isolation (in-hospital [black], community [white],
+or up to 120 days post-discharge [grey]). Red lines link samples that
+are within a single participant. Blue lines link samples that are differ
+by five or fewer SNPs. The plot shows that most samples are not members
+of a SNP-cluster; that most SNP clusters are made up of samples from
+different participants (rather than multiple samples from the same
+participant); and that SNP-clusters are not strongly hospital-associated
+(i.e. they contain black, white, and grey points).
 </p>
 </div>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
@@ -5570,6 +5690,60 @@ Network plot of SNP-clusters (i.e. putative transmission clusters) for E. coli 
 <span class="co">#&gt; <span style="color: #BCBCBC;">1</span> esco          117          59       145     1</span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">2</span> kleb           70          26        85     1</span>
 
+<span class="co"># What proportion of community isolates are members of SNP cluster </span>
+<span class="co"># vs in-hospital</span>
+
+<span class="va">btESBL_sequence_sample_metadata</span> <span class="op"><a href="https://rdrr.io/pkg/igraph/man/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>species <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span>
+    <span class="va">lane</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">btESBL_coregene_tree_esco</span><span class="op">$</span><span class="va">tip.label</span>  <span class="op">~</span> <span class="st">"esco"</span>,
+    <span class="va">lane</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">btESBL_coregene_tree_kleb</span><span class="op">$</span><span class="va">tip.label</span>  <span class="op">~</span> <span class="st">"kleb"</span>
+  <span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/igraph/man/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_rows</a></span><span class="op">(</span>
+      <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>lane <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">cut_tree_vect.e</span><span class="op">)</span>,
+                 clust_name <span class="op">=</span> <span class="va">cut_tree_vect.e</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/igraph/man/pipe.html" class="external-link">%&gt;%</a></span>
+        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">clust_name</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/igraph/man/pipe.html" class="external-link">%&gt;%</a></span>
+        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>snp_clust_member <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else</a></span><span class="op">(</span>
+          <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1</span>, <span class="st">"snp_clust_member"</span>,
+          <span class="st">"snp_clust_nonmember"</span><span class="op">)</span><span class="op">)</span>,
+      <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>lane <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">cut_tree_vect.k</span><span class="op">)</span>,
+                 clust_name <span class="op">=</span> <span class="va">cut_tree_vect.k</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/igraph/man/pipe.html" class="external-link">%&gt;%</a></span>
+        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">clust_name</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/igraph/man/pipe.html" class="external-link">%&gt;%</a></span>
+        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>snp_clust_member <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else</a></span><span class="op">(</span>
+          <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1</span>, <span class="st">"snp_clust_member"</span>,
+          <span class="st">"snp_clust_nonmember"</span><span class="op">)</span><span class="op">)</span>,
+    <span class="op">)</span>,
+    by <span class="op">=</span> <span class="st">"lane"</span>
+  <span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/igraph/man/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>hosp_assoc <span class="op">=</span>
+           <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span>
+             <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"hosp|_dc"</span>, <span class="va">hosp_assoc</span><span class="op">)</span> <span class="op">~</span> <span class="st">"healthcare_assoc"</span>,
+             <span class="cn">TRUE</span> <span class="op">~</span> <span class="va">hosp_assoc</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/igraph/man/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">species</span>, <span class="va">hosp_assoc</span>, <span class="va">snp_clust_member</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/igraph/man/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">tally</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/igraph/man/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">hosp_assoc</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/igraph/man/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">species</span>,<span class="va">hosp_assoc</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/igraph/man/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>total <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/igraph/man/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">snp_clust_member</span> <span class="op">==</span> <span class="st">"snp_clust_member"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/igraph/man/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">snp_clust_member</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/igraph/man/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>prop <span class="op">=</span> <span class="va">n</span><span class="op">/</span><span class="va">total</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/igraph/man/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">species</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/igraph/man/pipe.html" class="external-link">%&gt;%</a></span>  
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html" class="external-link">nest</a></span><span class="op">(</span><span class="op">)</span>    <span class="op"><a href="https://rdrr.io/pkg/igraph/man/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>p <span class="op">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span>
+      <span class="va">data</span>,
+      <span class="op">~</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">.x</span>, <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">prop</span>, <span class="va">hosp_assoc</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/igraph/man/pipe.html" class="external-link">%&gt;%</a></span>
+        <span class="fu"><a href="https://rdrr.io/r/stats/fisher.test.html" class="external-link">fisher.test</a></span><span class="op">(</span><span class="va">.x</span>,simulate.p.value <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/igraph/man/pipe.html" class="external-link">%&gt;%</a></span>
+        <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/igraph/man/pipe.html" class="external-link">%&gt;%</a></span>
+        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">p.value</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/igraph/man/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html" class="external-link">unnest</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> 
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 6</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># Groups:   species [2]</span></span>
+<span class="co">#&gt;   species hosp_assoc           n total   prop p.value</span>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> esco    community           54   171 0.316    1    </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> esco    healthcare_assoc    96   300 0.32     1    </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> kleb    community            4    74 0.054<span style="text-decoration: underline;">1</span>   0.149</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> kleb    healthcare_assoc    17   128 0.133    0.149</span>
 <span class="co"># how many snp clusters contain 2 or more healthcare associated isolates?</span>
 
 
@@ -6175,7 +6349,13 @@ Network plot of SNP-clusters (i.e. putative transmission clusters) for E. coli 
 <span class="va">esco_snp_clusters_sens_analysis_plot</span></code></pre></div>
 <div class="figure">
 <img src="analysis_files/figure-html/snp-network-sens-analysis-1.png" alt="Sensitivity analysis of network plot of putative transmission clusters for E. coli, allowing the definition of a SNP-cluster to vary from 0 (A), to 3 (B), 7 (C), or 10 (D). Points are samples, coloured by place of isolation (in-hospital [black], community [white], or up to 120 days post-discharge [grey]). Red lines link samples that are within a single participant. Blue lines link samples that are differ by the given SNP threshold." width="1267.2"><p class="caption">
-Sensitivity analysis of network plot of putative transmission clusters for E. coli, allowing the definition of a SNP-cluster to vary from 0 (A), to 3 (B), 7 (C), or 10 (D). Points are samples, coloured by place of isolation (in-hospital [black], community [white], or up to 120 days post-discharge [grey]). Red lines link samples that are within a single participant. Blue lines link samples that are differ by the given SNP threshold.
+Sensitivity analysis of network plot of putative transmission clusters
+for E. coli, allowing the definition of a SNP-cluster to vary from 0
+(A), to 3 (B), 7 (C), or 10 (D). Points are samples, coloured by place
+of isolation (in-hospital [black], community [white], or up to 120 days
+post-discharge [grey]). Red lines link samples that are within a single
+participant. Blue lines link samples that are differ by the given SNP
+threshold.
 </p>
 </div>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
@@ -6196,7 +6376,13 @@ Sensitivity analysis of network plot of putative transmission clusters for E. co
 <span class="va">kleb_snp_clusters_sens_analysis_plot</span></code></pre></div>
 <div class="figure">
 <img src="analysis_files/figure-html/snp-network-sens-analysis_kleb-1.png" alt="Sensitivity analysis of network plot of putative transmission clusters for E. coli, allowing the definition of a SNP-cluster to vary from 0 (A), to 3 (B), 7 (C), or 10 (D). Points are samples, coloured by place of isolation (in-hospital [black], community [white], or up to 120 days post-discharge [grey]). Red lines link samples that are within a single participant. Blue lines link samples that are differ by the given SNP threshold." width="1267.2"><p class="caption">
-Sensitivity analysis of network plot of putative transmission clusters for E. coli, allowing the definition of a SNP-cluster to vary from 0 (A), to 3 (B), 7 (C), or 10 (D). Points are samples, coloured by place of isolation (in-hospital [black], community [white], or up to 120 days post-discharge [grey]). Red lines link samples that are within a single participant. Blue lines link samples that are differ by the given SNP threshold.
+Sensitivity analysis of network plot of putative transmission clusters
+for E. coli, allowing the definition of a SNP-cluster to vary from 0
+(A), to 3 (B), 7 (C), or 10 (D). Points are samples, coloured by place
+of isolation (in-hospital [black], community [white], or up to 120 days
+post-discharge [grey]). Red lines link samples that are within a single
+participant. Blue lines link samples that are differ by the given SNP
+threshold.
 </p>
 </div>
 <div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
@@ -6342,7 +6528,15 @@ Sensitivity analysis of network plot of putative transmission clusters for E. co
 <span class="va">sens.analysis.plot</span></code></pre></div>
 <div class="figure">
 <img src="analysis_files/figure-html/snpclust-sens-stats-plots-1.png" alt="Sensitivity analysis examining epidemiology of SNP-clusters (i.e. putative transmission clusters) as the SNP-threshold varies from 0 to 10. (A) shows the proportion of pairwise comparisons of within-SNP-cluster isolates that are within a single participant; most putative transmission clusters are between-, rather than within- participants. (B) shows the proportion of isolates that are community associated stratified by whether they are members of a putative transmission cluster or not; the proportion is similar at all threshold values, which is not suggestive of hospital-associated transmission." width="624"><p class="caption">
-Sensitivity analysis examining epidemiology of SNP-clusters (i.e. putative transmission clusters) as the SNP-threshold varies from 0 to 10. (A) shows the proportion of pairwise comparisons of within-SNP-cluster isolates that are within a single participant; most putative transmission clusters are between-, rather than within- participants. (B) shows the proportion of isolates that are community associated stratified by whether they are members of a putative transmission cluster or not; the proportion is similar at all threshold values, which is not suggestive of hospital-associated transmission.
+Sensitivity analysis examining epidemiology of SNP-clusters
+(i.e. putative transmission clusters) as the SNP-threshold varies from 0
+to 10. (A) shows the proportion of pairwise comparisons of
+within-SNP-cluster isolates that are within a single participant; most
+putative transmission clusters are between-, rather than within-
+participants. (B) shows the proportion of isolates that are community
+associated stratified by whether they are members of a putative
+transmission cluster or not; the proportion is similar at all threshold
+values, which is not suggestive of hospital-associated transmission.
 </p>
 </div>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
@@ -6367,7 +6561,7 @@ Sensitivity analysis examining epidemiology of SNP-clusters (i.e. putative tran
 <span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; R version 4.1.1 (2021-08-10)</span>
 <span class="co">#&gt; Platform: aarch64-apple-darwin20 (64-bit)</span>
-<span class="co">#&gt; Running under: macOS Monterey 12.3</span>
+<span class="co">#&gt; Running under: macOS Monterey 12.6</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Matrix products: default</span>
 <span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.1-arm64/Resources/lib/libRblas.0.dylib</span>
@@ -6380,7 +6574,7 @@ Sensitivity analysis examining epidemiology of SNP-clusters (i.e. putative tran
 <span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; other attached packages:</span>
-<span class="co">#&gt;  [1] blantyreESBL_1.2  kableExtra_1.3.4  ggtree_3.0.4      viridis_0.6.2    </span>
+<span class="co">#&gt;  [1] blantyreESBL_1.3  kableExtra_1.3.4  ggtree_3.0.4      viridis_0.6.2    </span>
 <span class="co">#&gt;  [5] viridisLite_0.4.0 pheatmap_1.0.12   ggplotify_0.1.0   loo_2.4.1        </span>
 <span class="co">#&gt;  [9] patchwork_1.1.1   bayesplot_1.8.1   ggsci_2.9         broom_0.7.11     </span>
 <span class="co">#&gt; [13] glue_1.6.0        forcats_0.5.1     purrr_0.3.4       lubridate_1.8.0  </span>
@@ -6444,7 +6638,8 @@ Sensitivity analysis examining epidemiology of SNP-clusters (i.e. putative tran
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
       </footer>

@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">blantyreESBL</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3</span>
       </span>
     </div>
 
@@ -98,15 +98,23 @@
 <div class="section level3">
 <h3 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h3>
-<p>This document provides instructions on how to locate the Stan code for the models used in the publication:</p>
+<p>This document provides instructions on how to locate the Stan code
+for the models used in the publication:</p>
 <p><br></p>
-<p><em>Dynamics of gut mucosal colonisation with extended spectrum beta-lactamase producing Enterobacterales in Malawi</em></p>
+<p><em>Dynamics of gut mucosal colonisation with extended spectrum
+beta-lactamase producing Enterobacterales in Malawi</em></p>
 <p><br></p>
-<p>Joseph M Lewis<sup>1,2,3,4</sup>, , Madalitso Mphasa<sup>1</sup>, Rachel Banda<sup>1</sup>, Matthew Beale<sup>4</sup>, Eva Heinz<sup>2</sup>, Jane Mallewa<sup>5</sup>, Christopher Jewell<sup>6</sup>, Nicholas R Thomson<sup>4</sup>, Nicholas A Feasey<sup>1,2</sup></p>
+<p>Joseph M Lewis<sup>1,2,3,4</sup>, , Madalitso Mphasa<sup>1</sup>,
+Rachel Banda<sup>1</sup>, Matthew Beale<sup>4</sup>, Eva
+Heinz<sup>2</sup>, Jane Mallewa<sup>5</sup>, Christopher
+Jewell<sup>6</sup>, Nicholas R Thomson<sup>4</sup>, Nicholas A
+Feasey<sup>1,2</sup></p>
 <ol style="list-style-type: decimal">
-<li>Malawi Liverpool Wellcome Clinical Research Programme, Blantyre, Malawi</li>
+<li>Malawi Liverpool Wellcome Clinical Research Programme, Blantyre,
+Malawi</li>
 <li>Liverpool School of Tropical Medicine, Liverpool, UK</li>
-<li>Department of Clinical Infection, Microbiology and Immunology, University of Liverpool, Liverpool, UK</li>
+<li>Department of Clinical Infection, Microbiology and Immunology,
+University of Liverpool, Liverpool, UK</li>
 <li>Wellcome Sanger Institute, Hinxton, UK</li>
 <li>College of Medicine, University of Malawi, Malawi</li>
 <li>University of Lancaster, Lanaster, UK</li>
@@ -116,12 +124,15 @@
 <div class="section level3">
 <h3 id="locating-stan-code">Locating Stan code<a class="anchor" aria-label="anchor" href="#locating-stan-code"></a>
 </h3>
-<p>The stan model has the filename <code>ESBLmod_finalV1.0_rk45.stan</code> are present in the `extdata/ directory of the installed package, which can be located with the following command:</p>
+<p>The stan model has the filename
+<code>ESBLmod_finalV1.0_rk45.stan</code> are present in the `extdata/
+directory of the installed package, which can be located with the
+following command:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, 
             <span class="st">"ESBLmod_finalV1.0_rk45.stan"</span>, 
             package <span class="op">=</span> <span class="st">"blantyreESBL"</span><span class="op">)</span>
-<span class="co">#&gt; [1] "/private/var/folders/qc/twvrz5kx0gj2lrt4n8wtk1ym0000gn/T/RtmpzddYd5/temp_libpath37223165f9cb/blantyreESBL/extdata/ESBLmod_finalV1.0_rk45.stan"</span></code></pre></div>
+<span class="co">#&gt; [1] "/private/var/folders/qc/twvrz5kx0gj2lrt4n8wtk1ym0000gn/T/RtmpIrpUz0/temp_libpath1387649b0c918/blantyreESBL/extdata/ESBLmod_finalV1.0_rk45.stan"</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="model-specification">Model specification<a class="anchor" aria-label="anchor" href="#model-specification"></a>
@@ -129,7 +140,8 @@
 <p>The model can include covariates that are:</p>
 <ul>
 <li>Non time varying</li>
-<li>Time varying with stepwise constant effect (equivalent to the models fitted by the R package <em>msm</em>)</li>
+<li>Time varying with stepwise constant effect (equivalent to the models
+fitted by the R package <em>msm</em>)</li>
 <li>Time varying with exponential decay following exposure</li>
 </ul>
 <p>See the manuscript for details</p>
@@ -137,22 +149,30 @@
 <div class="section level3">
 <h3 id="passing-data-to-the-model">Passing data to the model<a class="anchor" aria-label="anchor" href="#passing-data-to-the-model"></a>
 </h3>
-<p>The model expects the following data as input; each item is passed as a named item in a list to the rstan <code>stan</code> command to fit the model. Each</p>
+<p>The model expects the following data as input; each item is passed as
+a named item in a list to the rstan <code>stan</code> command to fit the
+model. Each</p>
 <ul>
 <li>N [integer]
 <ul>
-<li>Number of rows of data, each row consisting of two ESBL observations separated by a time t for one patient. Each patient can have multiple rows of data.</li>
+<li>Number of rows of data, each row consisting of two ESBL observations
+separated by a time t for one patient. Each patient can have multiple
+rows of data.</li>
 </ul>
 </li>
 <li>n_covs [integer vector of length 3]
 <ul>
-<li>This specifies the number of covariates to be fitted in the model.</li>
-<li>It should be formatted: [number of nontimevarying covariates, number of stepwise constant covariates, number of exp decay covariates ]</li>
+<li>This specifies the number of covariates to be fitted in the
+model.</li>
+<li>It should be formatted: [number of nontimevarying covariates, number
+of stepwise constant covariates, number of exp decay covariates ]</li>
 </ul>
 </li>
 <li>covs_type [integer vector of length(number of covariates)]
 <ul>
-<li>Each position encodes the type of variable in the order they are presented in covs_mat (all the exp decay variables must always go first):
+<li>Each position encodes the type of variable in the order they are
+presented in covs_mat (all the exp decay variables must always go
+first):
 <ul>
 <li>3 = time varying with exponential decay of effect</li>
 <li>2 = time varying with piecewise constant</li>
@@ -163,10 +183,12 @@
 </li>
 <li>t [integer vector of length N]
 <ul>
-<li>Time separating beginning and end ESBL observations for each row of data</li>
+<li>Time separating beginning and end ESBL observations for each row of
+data</li>
 </ul>
 </li>
-<li>cov_mat [real matrix with 3*(number of covariate) columns and N rows]
+<li>cov_mat [real matrix with 3*(number of covariate) columns and N
+rows]
 <ul>
 <li>Start and stop times of covariates, ordered as per covs_type</li>
 <li>Each covariate needs three columns, in this order
@@ -183,9 +205,11 @@
 </li>
 <li>prev_stop time:
 <ul>
-<li>if covariate has exp. decay, this is the previous stop time (before current row e.g. -10 for 10 days ago)</li>
+<li>if covariate has exp. decay, this is the previous stop time (before
+current row e.g. -10 for 10 days ago)</li>
 <li>If no previous exposure, code as 999</li>
-<li>If non time varying exposure, code as 999 = present, -999 absent</li>
+<li>If non time varying exposure, code as 999 = present, -999
+absent</li>
 </ul>
 </li>
 </ul>
@@ -194,7 +218,9 @@
 </li>
 <li>start state [ matrix with N rows and two columns ]
 <ul>
-<li>each row is start state for that time period in format (ESBL-, ESBL+) ie esbl positive coded as [0,1] and ESBL negative coded as [1,0]</li>
+<li>each row is start state for that time period in format (ESBL-,
+ESBL+) ie esbl positive coded as [0,1] and ESBL negative coded as
+[1,0]</li>
 </ul>
 </li>
 <li>end state: [integer]
@@ -203,12 +229,14 @@
 </ul>
 </li>
 </ul>
-<p>The included data <code>btESBL_stanmodeldata</code> is set up to fit the model used in the manuscript.</p>
+<p>The included data <code>btESBL_stanmodeldata</code> is set up to fit
+the model used in the manuscript.</p>
 </div>
 <div class="section level3">
 <h3 id="fitting-the-model">Fitting the model<a class="anchor" aria-label="anchor" href="#fitting-the-model"></a>
 </h3>
-<p>The following code (not run in this vignette) will fit the model as in the manuscript:</p>
+<p>The following code (not run in this vignette) will fit the model as
+in the manuscript:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstan)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(blantyreESBL)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -225,14 +253,17 @@
 <div class="section level3">
 <h3 id="simulating-from-the-model">Simulating from the model<a class="anchor" aria-label="anchor" href="#simulating-from-the-model"></a>
 </h3>
-<p>The script <code>simulate_from_posterior.R</code> will generate the simulations used in the analysis. It is included in the package install and again can be located by:</p>
+<p>The script <code>simulate_from_posterior.R</code> will generate the
+simulations used in the analysis. It is included in the package install
+and again can be located by:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, 
             <span class="st">"simulate_from_posterior.R"</span>, 
             package <span class="op">=</span> <span class="st">"blantyreESBL"</span><span class="op">)</span>
-<span class="co">#&gt; [1] "/private/var/folders/qc/twvrz5kx0gj2lrt4n8wtk1ym0000gn/T/RtmpzddYd5/temp_libpath37223165f9cb/blantyreESBL/extdata/simulate_from_posterior.R"</span></code></pre></div>
-<p>Or it is located (along withe stan model) in the <code>inst/extdata/</code> folder on the github repo.</p>
+<span class="co">#&gt; [1] "/private/var/folders/qc/twvrz5kx0gj2lrt4n8wtk1ym0000gn/T/RtmpIrpUz0/temp_libpath1387649b0c918/blantyreESBL/extdata/simulate_from_posterior.R"</span></code></pre></div>
+<p>Or it is located (along withe stan model) in the
+<code>inst/extdata/</code> folder on the github repo.</p>
 </div>
   </div>
 
@@ -251,7 +282,8 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
       </footer>

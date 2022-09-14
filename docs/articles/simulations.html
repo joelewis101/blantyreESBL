@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">blantyreESBL</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3</span>
       </span>
     </div>
 
@@ -83,7 +83,8 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Longitudinal carriage: simulations to explore impact of one colony pick</h1>
+      <h1 data-toc-skip>Longitudinal carriage: simulations to explore
+impact of one colony pick</h1>
             
       
       
@@ -96,33 +97,64 @@
 <div class="section level2">
 <h2 id="introduction-and-methods">Introduction and Methods<a class="anchor" aria-label="anchor" href="#introduction-and-methods"></a>
 </h2>
-<p>It is possible that one colony pick per time point could miss hospital acquisitions and hence miss hospital-associated clusters, due to a rapid flux of strains com-pared to intervals between sampling times. In this document we use a simulation approach to quantify how much of a problem this could be.</p>
+<p>It is possible that one colony pick per time point could miss
+hospital acquisitions and hence miss hospital-associated clusters, due
+to a rapid flux of strains com-pared to intervals between sampling
+times. In this document we use a simulation approach to quantify how
+much of a problem this could be.</p>
 <p>To set this up we assume:</p>
 <ul>
-<li>A population of <span class="math inline">\(N\)</span> participant</li>
-<li>With each participant starting at time <span class="math inline">\(t=0\)</span> colonised with a number <span class="math inline">\(n_{0}\)</span> ESBL strains, where <span class="math inline">\(n_{0}\)</span> is sampled from a Poisson distribution with rate <span class="math inline">\(\lambda\)</span> (See Figure)</li>
+<li>A population of <span class="math inline">\(N\)</span>
+participant</li>
+<li>With each participant starting at time <span class="math inline">\(t=0\)</span> colonised with a number <span class="math inline">\(n_{0}\)</span> ESBL strains, where <span class="math inline">\(n_{0}\)</span> is sampled from a Poisson
+distribution with rate <span class="math inline">\(\lambda\)</span> (See
+Figure)</li>
 <li>A daily probability of loss of any ESBL strain of <span class="math inline">\(p_{loss}\)</span>
 </li>
 <li>A daily probability of gain of any ESBL strain of <span class="math inline">\(p_{gain}\)</span>
 </li>
-<li>That all ESBL strains (at <span class="math inline">\(t=0\)</span> and any gains during the simulation period) are sampled from a population of 1000 with replacement and with equal probability of any strain being selected.</li>
+<li>That all ESBL strains (at <span class="math inline">\(t=0\)</span>
+and any gains during the simulation period) are sampled from a
+population of 1000 with replacement and with equal probability of any
+strain being selected.</li>
 </ul>
-<p>We can then simulate an outbreak by spiking the population with a hospital acquired strain at time 0 and ask - what is the probability of recovering this hospital acquired strain (<span class="math inline">\(p_{recovery}\)</span>) by sampling a single colony pick at 7 (and hence identifying this sample as part of the “outbreak”)? We can run 10 simulations with say <span class="math inline">\(N=100\)</span> participants and pool estimates with 95% CI to get a feel for how much of a problem it is.</p>
-<p>In the above “strain” is deliberately vague - could consider it to be ST or a outbreak clone. IN fact in UK inpatients in Cambridge the within-ST diversity within-patient was limited (&lt; 17 SNPs) so these could possible be considered the same thing (Ludden et al 2021)?</p>
+<p>We can then simulate an outbreak by spiking the population with a
+hospital acquired strain at time 0 and ask - what is the probability of
+recovering this hospital acquired strain (<span class="math inline">\(p_{recovery}\)</span>) by sampling a single colony
+pick at 7 (and hence identifying this sample as part of the “outbreak”)?
+We can run 10 simulations with say <span class="math inline">\(N=100\)</span> participants and pool estimates
+with 95% CI to get a feel for how much of a problem it is.</p>
+<p>In the above “strain” is deliberately vague - could consider it to be
+ST or a outbreak clone. IN fact in UK inpatients in Cambridge the
+within-ST diversity within-patient was limited (&lt; 17 SNPs) so these
+could possible be considered the same thing (Ludden et al 2021)?</p>
 <p>We then need to select some reasonable parameter values:</p>
 <ol style="list-style-type: decimal">
-<li>Initial diversity; be guided by the literature; varying lambda between 1-5 seems reasonable (See Figure @ref(fig:plot-poisson))</li>
+<li>Initial diversity; be guided by the literature; varying lambda
+between 1-5 seems reasonable (See Figure @ref(fig:plot-poisson))</li>
 </ol>
 <ul>
-<li>median 4 <em>E. coli</em> STs from 16 samples per participant in Cambodian infants (Stoesser et al 2015).</li>
-<li>mean 1-2 random amplified polymorphic DNA PCR (RAPD) patterns per participant in UK (Mosavie et al. 2019).</li>
-<li>UK adult inpatients: up to 15 colony picks at each time point 70% have 1 ST; 30% contain more than 1 (Ludden et al. 2021).</li>
+<li>median 4 <em>E. coli</em> STs from 16 samples per participant in
+Cambodian infants (Stoesser et al 2015).</li>
+<li>mean 1-2 random amplified polymorphic DNA PCR (RAPD) patterns per
+participant in UK (Mosavie et al. 2019).</li>
+<li>UK adult inpatients: up to 15 colony picks at each time point 70%
+have 1 ST; 30% contain more than 1 (Ludden et al. 2021).</li>
 </ul>
 <ol start="2" style="list-style-type: decimal">
-<li><p>Probability of loss. Figure 2 in the manuscript suggests a return to baseline of probability of same-ST or SNP-cluster within participant over ~ 50 days. Hence <span class="math inline">\(p_{loss}\)</span> = 0.05 per day seems reasonable which gives a half-life of 20 days.</p></li>
-<li><p>Probability of acquisition. Given that this is a concern of the reviewer, lets vary this from 0 (no acquisition) to 0.2 per day in 0.05 steps</p></li>
+<li><p>Probability of loss. Figure 2 in the manuscript suggests a return
+to baseline of probability of same-ST or SNP-cluster within participant
+over ~ 50 days. Hence <span class="math inline">\(p_{loss}\)</span> =
+0.05 per day seems reasonable which gives a half-life of 20
+days.</p></li>
+<li><p>Probability of acquisition. Given that this is a concern of the
+reviewer, lets vary this from 0 (no acquisition) to 0.2 per day in 0.05
+steps</p></li>
 </ol>
-<p>Then run the simulation forward a day at a time; calculate loss and gain using probabilities and sampling from a binomial distribution. On days that a “sample” is taken, randomly sample from all ESBL strains present in an individual.</p>
+<p>Then run the simulation forward a day at a time; calculate loss and
+gain using probabilities and sampling from a binomial distribution. On
+days that a “sample” is taken, randomly sample from all ESBL strains
+present in an individual.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
@@ -348,7 +380,12 @@ Poisson distribution with lambda varying from zero to five
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="va">pr_gain</span> <span class="op">~</span> <span class="va">lambda</span><span class="op">)</span></code></pre></div>
 <div class="figure">
 <img src="simulations_files/figure-html/plot-sims-1.png" alt="Assuming daily sampling, plots show the estimated proportion of samples (red line) that identify the hospital acquired ESBL strain that was present at time 0 given a single colony pick. Lambda (median number or carried ESBL strains) varies horizontally from 0 to 6; Daily probability of ESBL acquisition varies from 0 to 0.2 vertically. True proportion of samples that contain the hospital acquired strain shown by blue line.." width="768"><p class="caption">
-Assuming daily sampling, plots show the estimated proportion of samples (red line) that identify the hospital acquired ESBL strain that was present at time 0 given a single colony pick. Lambda (median number or carried ESBL strains) varies horizontally from 0 to 6; Daily probability of ESBL acquisition varies from 0 to 0.2 vertically. True proportion of samples that contain the hospital acquired strain shown by blue line..
+Assuming daily sampling, plots show the estimated proportion of samples
+(red line) that identify the hospital acquired ESBL strain that was
+present at time 0 given a single colony pick. Lambda (median number or
+carried ESBL strains) varies horizontally from 0 to 6; Daily probability
+of ESBL acquisition varies from 0 to 0.2 vertically. True proportion of
+samples that contain the hospital acquired strain shown by blue line..
 </p>
 </div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
@@ -376,7 +413,9 @@ Assuming daily sampling, plots show the estimated proportion of samples (red lin
 <span class="va">simsprobplot</span></code></pre></div>
 <div class="figure">
 <img src="simulations_files/figure-html/plot-d7-sampling-1.png" alt="Probability of identifying strain present at day 0 on day 7 using a single colony pick as daily probability of acqusition of new strain (pr_gain) and initial strain diversity (defined by lambda) are varied." width="480"><p class="caption">
-Probability of identifying strain present at day 0 on day 7 using a single colony pick as daily probability of acqusition of new strain (pr_gain) and initial strain diversity (defined by lambda) are varied.
+Probability of identifying strain present at day 0 on day 7 using a
+single colony pick as daily probability of acqusition of new strain
+(pr_gain) and initial strain diversity (defined by lambda) are varied.
 </p>
 </div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -396,20 +435,39 @@ Probability of identifying strain present at day 0 on day 7 using a single colon
     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">t</span> <span class="op"><a href="https://rdrr.io/pkg/BiocGenerics/man/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-class.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">7</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>  
   <span class="co"># woooo native pipe</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">prop_median</span><span class="op">)</span> |&gt; <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-class.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt;      0%     25%     50%     75%    100% </span>
-<span class="co">#&gt; 0.15500 0.19125 0.27750 0.38625 0.69500</span></code></pre></div>
+<span class="co">#&gt;     0%    25%    50%    75%   100% </span>
+<span class="co">#&gt; 0.1450 0.1950 0.2550 0.3725 0.7200</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="interpretation">Interpretation<a class="anchor" aria-label="anchor" href="#interpretation"></a>
 </h2>
-<p>So 27% (IQR 19-39%) of simulations across all parameter values recover the original strain and would identify the “outbreak”. Of course, this approach is an oversimplification: hospital associated strains could be acquired any time between t = 0 and t = 7; in this case, they would be <em>more</em> likely to be identified at day 7. Multiple circulating hospital strains, on the other hand would be less likely to be identified. Nevertheless, this simulation suggests that there is a reasonable chance of identifying a hospital outbreak.</p>
+<p>So 27% (IQR 19-39%) of simulations across all parameter values
+recover the original strain and would identify the “outbreak”. Of
+course, this approach is an oversimplification: hospital associated
+strains could be acquired any time between t = 0 and t = 7; in this
+case, they would be <em>more</em> likely to be identified at day 7.
+Multiple circulating hospital strains, on the other hand would be less
+likely to be identified. Nevertheless, this simulation suggests that
+there is a reasonable chance of identifying a hospital outbreak.</p>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<p>Ludden, Catherine, Francesc Coll, Theodore Gouliouris, Olivier Restif, Beth Blane, Grace A Blackwell, Narender Kumar, et al. 2021. “Defining Nosocomial Transmission of Escherichia Coli and Antimicrobial Resistance Genes: A Genomic Surveillance Study.” The Lancet Microbe 2 (9): e472–80. <a href="https://doi.org/" class="external-link uri">https://doi.org/</a> 10.1016/S2666-5247(21)00117-8.</p>
-<p>Mosavie, Mia, Oliver Blandy, Elita Jauneikaite, Isabel Caldas, Matthew J. Ellington, Neil Woodford, and Shiranee Sriskandan. 2019. “Sampling and Diversity of Escherichia Coli from the Enteric Microbiota in Patients with Escherichia Coli Bacteraemia.” BMC Research Notes 12 (1): 335. <a href="https://doi.org/10.1186/" class="external-link uri">https://doi.org/10.1186/</a> s13104-019-4369-y.</p>
-<p>Stoesser, N, A E Sheppard, C E Moore, T Golubchik, C M Parry, P Nget, M Saroeun, et al. 2015. “Extensive Within-Host Diversity in Fecally Carried Extended-Spectrum-Beta-Lactamase-Producing Escherichia Coli Isolates: Implications for Transmission Analyses.” Journal of Clinical Microbiology 53 (7): 212231. <a href="https://doi.org/10.1128/JCM.00378-15" class="external-link uri">https://doi.org/10.1128/JCM.00378-15</a>.</p>
+<p>Ludden, Catherine, Francesc Coll, Theodore Gouliouris, Olivier
+Restif, Beth Blane, Grace A Blackwell, Narender Kumar, et al. 2021.
+“Defining Nosocomial Transmission of Escherichia Coli and Antimicrobial
+Resistance Genes: A Genomic Surveillance Study.” The Lancet Microbe 2
+(9): e472–80. <a href="https://doi.org/" class="external-link uri">https://doi.org/</a> 10.1016/S2666-5247(21)00117-8.</p>
+<p>Mosavie, Mia, Oliver Blandy, Elita Jauneikaite, Isabel Caldas,
+Matthew J. Ellington, Neil Woodford, and Shiranee Sriskandan. 2019.
+“Sampling and Diversity of Escherichia Coli from the Enteric Microbiota
+in Patients with Escherichia Coli Bacteraemia.” BMC Research Notes 12
+(1): 335. <a href="https://doi.org/10.1186/" class="external-link uri">https://doi.org/10.1186/</a> s13104-019-4369-y.</p>
+<p>Stoesser, N, A E Sheppard, C E Moore, T Golubchik, C M Parry, P Nget,
+M Saroeun, et al. 2015. “Extensive Within-Host Diversity in Fecally
+Carried Extended-Spectrum-Beta-Lactamase-Producing Escherichia Coli
+Isolates: Implications for Transmission Analyses.” Journal of Clinical
+Microbiology 53 (7): 212231. <a href="https://doi.org/10.1128/JCM.00378-15" class="external-link uri">https://doi.org/10.1128/JCM.00378-15</a>.</p>
 </div>
   </div>
 
@@ -430,7 +488,8 @@ Probability of identifying strain present at day 0 on day 7 using a single colon
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
       </footer>
