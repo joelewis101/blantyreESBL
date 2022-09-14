@@ -5,27 +5,21 @@
 \alias{btESBL_ecoli_st410_metadata}
 \title{Data: metadata of global E. coli ST410 isolates}
 \format{
-A dataframe with 1230 rows and 12 variables
+A dataframe with 327 rows and 5 variables
 \describe{
-\item{Uberstrain}{Uberstrain as defined by Enterobase}
-\item{Name}{Sample ID}
 \item{accession}{Sample accession}
-\item{platform}{Sequencing platform}
-\item{library}{library as defined by Enterobase}
-\item{insert_size}{insert size}
 \item{Experiment}{Experiment accession number}
-\item{Source Niche}{Source niche as defined by Enterobase e.g. human , animal}
-\item{Source Details}{Source details as defined by Enterobase e.g. species}
+\item{host}{Host species from which isolate arose, if appropriate}
+\item{source}{Sample source}
 \item{Country}{Country of sample collection}
 \item{Collection Year}{Year of sample colllection}
-\item{ST}{Multilocus sequence type}
 }
 }
 \usage{
 btESBL_ecoli_st410_metadata
 }
 \description{
-Metadata of a collection of 1230 E. coli ST410 genomes
-downloaded from Enterobase on 1st March 2021
+Metadata of a collection of 327 E. coli ST410 genomes
+from Feng et al 2019 (doi:10.1038/s42003-019-0569-1)
 }
 \keyword{datasets}

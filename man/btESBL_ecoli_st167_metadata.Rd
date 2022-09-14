@@ -5,11 +5,11 @@
 \alias{btESBL_ecoli_st167_metadata}
 \title{Data: metadata of global E. coli ST167 isolates}
 \format{
-A dataframe with 1230 rows and 12 variables
+A dataframe with 167 rows and 13 variables
 \describe{
+\item{accession}{Sample accession}
 \item{Uberstrain}{Uberstrain as defined by Enterobase}
 \item{Name}{Sample ID}
-\item{accession}{Sample accession}
 \item{platform}{Sequencing platform}
 \item{library}{library as defined by Enterobase}
 \item{insert_size}{insert size}
@@ -25,7 +25,7 @@ A dataframe with 1230 rows and 12 variables
 btESBL_ecoli_st167_metadata
 }
 \description{
-Metadata of a collection of 1230 E. coli ST167 genomes
-downloaded from Enterobase on 1st March 2021
+Metadata of a collection of 108 E. coli ST167 genomes
+Patino-Navarrete et al 2020 (doi:10.1186/s13073-019-0699-6)
 }
 \keyword{datasets}

@@ -12,9 +12,9 @@ btESBL_ecoli_globalst167_tree
 }
 \description{
 Midpoint rooted maximum likelihood core gene phylogeny for E. coli
-incorporating all ST167 study isolates and all ST167 E. coli
-downloaded from Enterobase on 1st March 2021 using multiple
-sequence alignment from mapping to reference.
+incorporating all ST167 study isolates and 108 ST167 context genomes from
+Patino-Navarrete et al 2020 (doi:10.1186/s13073-019-0699-6) obtained from
+multiple sequence alignment from mapping to reference.
 (see manuscript for details)
 }
 \keyword{datasets}

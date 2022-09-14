@@ -479,9 +479,9 @@
 #' Data: E. coli ST167 global phylogeny
 #'
 #' Midpoint rooted maximum likelihood core gene phylogeny for E. coli
-#' incorporating all ST167 study isolates and all ST167 E. coli
-#' downloaded from Enterobase on 1st March 2021 using multiple
-#' sequence alignment from mapping to reference.
+#' incorporating all ST167 study isolates and 108 ST167 context genomes from
+#' Patino-Navarrete et al 2020 (doi:10.1186/s13073-019-0699-6) obtained from
+#' multiple sequence alignment from mapping to reference.
 #'  (see manuscript for details)
 #'
 #' @format A "phylo" object ("ape" package)
@@ -490,8 +490,8 @@
 #' Data: E. coli ST410 global phylogeny
 #'
 #' Midpoint rooted maximum likelihood phylogeny for E. coli
-#' incorporating all ST410 study isolates and all ST410 E. coli
-#' downloaded from Enterobase on 1st March 2021 using multiple
+#' incorporating all ST410 study isolates 327 ST410 context genomes
+#' from Feng et al 2019 (doi:10.1038/s42003-019-0569-1) using multiple
 #' sequence alignment from mapping to reference.
 #'  (see manuscript for details)
 #'
@@ -512,35 +512,29 @@
 
 #' Data: metadata of global E. coli ST410 isolates
 #'
-#' Metadata of a collection of 1230 E. coli ST410 genomes
-#' downloaded from Enterobase on 1st March 2021
-#'@format A dataframe with 1230 rows and 12 variables
+#' Metadata of a collection of 327 E. coli ST410 genomes
+#' from Feng et al 2019 (doi:10.1038/s42003-019-0569-1)
+#'@format A dataframe with 327 rows and 5 variables
 #'\describe{
-#'   \item{Uberstrain}{Uberstrain as defined by Enterobase}
-#'   \item{Name}{Sample ID}
 #'   \item{accession}{Sample accession}
-#'   \item{platform}{Sequencing platform}
-#'   \item{library}{library as defined by Enterobase}
-#'   \item{insert_size}{insert size}
 #'   \item{Experiment}{Experiment accession number}
-#'   \item{Source Niche}{Source niche as defined by Enterobase e.g. human , animal}
-#'   \item{Source Details}{Source details as defined by Enterobase e.g. species}
+#'   \item{host}{Host species from which isolate arose, if appropriate}
+#'   \item{source}{Sample source}
 #'   \item{Country}{Country of sample collection}
 #'   \item{Collection Year}{Year of sample colllection}
-#'   \item{ST}{Multilocus sequence type}
 #' }
 "btESBL_ecoli_st410_metadata"
 
 
 #' Data: metadata of global E. coli ST167 isolates
 #'
-#' Metadata of a collection of 1230 E. coli ST167 genomes
-#' downloaded from Enterobase on 1st March 2021
-#'@format A dataframe with 1230 rows and 12 variables
+#' Metadata of a collection of 108 E. coli ST167 genomes
+#' Patino-Navarrete et al 2020 (doi:10.1186/s13073-019-0699-6) 
+#'@format A dataframe with 167 rows and 13 variables
 #'\describe{
+#'   \item{accession}{Sample accession}
 #'   \item{Uberstrain}{Uberstrain as defined by Enterobase}
 #'   \item{Name}{Sample ID}
-#'   \item{accession}{Sample accession}
 #'   \item{platform}{Sequencing platform}
 #'   \item{library}{library as defined by Enterobase}
 #'   \item{insert_size}{insert size}
@@ -559,7 +553,7 @@
 #' Identified AMR genes using ARIBA and the SRST database.
 #' See manuscript for details
 #'
-#' @format A tidy data frame with 5494 rows and 2 variables:
+#' @format A tidy data frame with 1507 rows and 2 variables:
 #' \describe{
 #'   \item{name}{Unique sample-sequencing run ID or accession}
 #'   \item{gene}{Identified AMR gene sequence}
@@ -572,7 +566,7 @@
 #' Identified AMR genes using ARIBA and the SRST database.
 #' See manuscript for details
 #'
-#' @format A tidy data frame with 7704 rows and 2 variables:
+#' @format A tidy data frame with 4416 rows and 2 variables:
 #' \describe{
 #'   \item{name}{Unique sample-sequencing run ID or accession}
 #'   \item{gene}{Identified AMR gene sequence}
@@ -584,7 +578,7 @@
 #' Identified plasmid replcions using ARIBA and the PlasmidFinder database.
 #' See manuscript for details
 #'
-#' @format A tidy data frame with 1838 rows and 2 variables:
+#' @format A tidy data frame with 535 rows and 2 variables:
 #' \describe{
 #'   \item{name}{Unique sample-sequencing run ID or accession}
 #'   \item{ref_seq}{Identified Plasmid replicon}
@@ -597,7 +591,7 @@
 #' Identified plasmid replcions using ARIBA and the PlasmidFinder database.
 #' See manuscript for details
 #'
-#' @format A tidy data frame with 3308 rows and 2 variables:
+#' @format A tidy data frame with 1740 rows and 2 variables:
 #' \describe{
 #'   \item{name}{Unique sample-sequencing run ID or accession}
 #'   \item{ref_seq}{Identified Plasmid replicon}
@@ -641,12 +635,12 @@
 
 #' Data: metadata of global E. coli ST131 isolates
 #'
-#' Metadata of a collection of 926 E. coli ST131 genomes
-#' including 862 from a study of global E. coli ST131
+#' Metadata of a collection of 918 E. coli ST131 genomes
+#' including 855 from a study of global E. coli ST131
 #' (Mcnally et at 2019 https://doi.org/10.1128/mBio.00644-19)
 #' and the remainder sequenced as part of this study
 #'
-#'@format A dataframe with 926 rows and 4 variables
+#'@format A dataframe with 918 rows and 4 variables
 #'\describe{
 #'   \item{Accession_number}{Unique sample-sequencing run ID or accession}
 #'   \item{Year}{Year of sample collection}
@@ -661,7 +655,7 @@
 #' Identified AMR genes using ARIBA and the SRST database.
 #' See manuscript for details
 #'
-#' @format A tidy data frame with 5494 rows and 2 variables:
+#' @format A tidy data frame with 8815 rows and 2 variables:
 #' \describe{
 #'   \item{name}{Unique sample-sequencing run ID or accession}
 #'   \item{gene}{Identified AMR gene sequence}
@@ -674,7 +668,7 @@
 #' Identified plasmid replcions using ARIBA and the PlasmidFinder database.
 #' See manuscript for details
 #'
-#' @format A tidy data frame with 1838 rows and 2 variables:
+#' @format A tidy data frame with 4343 rows and 2 variables:
 #' \describe{
 #'   \item{name}{Unique sample-sequencing run ID or accession}
 #'   \item{ref_seq}{Identified Plasmid replicon}

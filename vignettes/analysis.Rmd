@@ -26,12 +26,12 @@ This document contains reproducing analysis code which generates the tables and 
 
 Joseph M Lewis^1,2,3,4^, , Madalitso Mphasa^1^, Rachel Banda^1^,  Matthew Beale^4^, Eva Heinz^2^, Jane Mallewa^5^, Christopher Jewell^6^, Nicholas R Thomson^4,7^, Nicholas A Feasey^1,2^
 
-1. Malawi Liverpool Wellcome Clinical Research Programme, Blantyre, Malawi
+1. Malawi Liverpool Wellcome Research Programme, Blantyre, Malawi
 2. Liverpool School of Tropical Medicine, Liverpool, UK
 3. Department of Clinical Infection, Microbiology and Immunology, University of Liverpool, Liverpool, UK
 4. Wellcome Sanger Institute, Hinxton, UK
-5. College of Medicine, University of Malawi, Malawi
-6. University of Lancaster, Lanaster, UK
+5. Kamuzu University of Health Sciences, Blantyre, Malawi
+6. University of Lancaster, Lancaster, UK
 7. London School of Tropical Medicine and Hygiene, London, UK 
 
 ## Installing and accessing data
