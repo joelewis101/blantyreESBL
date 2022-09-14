@@ -13,39 +13,43 @@ a study into carriage of resistant bacteria in Blantyre, Malawi. It also
 includes reproducible analysis script for three manuscripts arising from
 the study:
 
-[**Dynamics of gut mucosal colonisation with extended spectrum
-beta-lactamase producing Enterobacterales in
-Malawi**](https://joelewis101.github.io/blantyreESBL/articles/analysis.html)
-
-Preprint available at MedRxiv [here](https://doi.org/10.1101/2021.10.08.21264775)
+[**Colonization dynamics of extended-spectrum beta-lactamase-producing
+Enterobacterales in the gut of Malawian
+adults**](https://joelewis101.github.io/blantyreESBL/articles/analysis.html)
 
 Joseph M Lewis<sup>1,2,3,4</sup>, , Madalitso Mphasa<sup>1</sup>, Rachel
 Banda<sup>1</sup>, Matthew Beale<sup>4</sup>, Eva Heinz<sup>2</sup>,
 Jane Mallewa<sup>5</sup>, Christopher Jewell<sup>6</sup>, Nicholas R
 Thomson<sup>4,7</sup>, Nicholas A Feasey<sup>1,2</sup>
 
+Paper available at Nature Microbiology
+[here](https://doi.org/10.1038/s41564-022-01216-7)
+
 [**Genomic analysis of extended-spectrum beta-lactamase (ESBL) producing
 Escherichia coli colonising adults in Blantyre, Malawi reveals
 previously undescribed
 diversity**](https://joelewis101.github.io/blantyreESBL/articles/analysis-ecoli.html)
 
-Preprint available at BioRxiv [here](https://doi.org/10.1101/2021.10.07.463523)
-
 Joseph M Lewis<sup>1,2,3,4</sup>, , Madalitso Mphasa<sup>1</sup>, Rachel
 Banda<sup>1</sup>, Matthew Beale<sup>4</sup>, Jane Mallewa<sup>5</sup>,
-Adam P Roberts<sup>2</sup>, Eva Heinz<sup>2</sup>, Nicholas
-Thomson<sup>4,7</sup>, Nicholas A Feasey<sup>1,2</sup>
+Catherine Anscombe<sup>1,2</sup>, Allan Zuza<sup>1</sup>, Adam P
+Roberts<sup>2</sup>, Eva Heinz*<sup>2</sup>, Nicholas
+Thomson*<sup>4,7</sup>, Nicholas A Feasey\*<sup>1,2</sup>
 
-[**Genomic and antigenic diversity of carried *Klebsiella pneumoniae*
+Preprint available at BioRxiv
+[here](https://doi.org/10.1101/2021.10.07.463523)
+
+**Genomic and antigenic diversity of colonising *Klebsiella pneumoniae*
 isolates mirrors that of invasive isolates in Blantyre,
-Malawi**](https://joelewis101.github.io/blantyreESBL/articles/analysis-kleb.html)
+Malawi**\](<https://joelewis101.github.io/blantyreESBL/articles/analysis-kleb.html>)
 
 Joseph M Lewis<sup>1,2,3,4</sup>, , Madalitso Mphasa<sup>1</sup>, Rachel
 Banda<sup>1</sup>, Matthew Beale<sup>4</sup>, Jane Mallewa<sup>5</sup>,
 Eva Heinz<sup>2</sup>, Nicholas Thomson<sup>4,7</sup>, Nicholas A
 Feasey<sup>1,2</sup>
 
-Available at BioRxiv [here](https://doi.org/10.1101/2021.10.07.463515)
+Available at Microbial Genomics
+[here](https://doi.org/10.1099/mgen.0.000778)
 
 ### Installing and accessing data
 
@@ -111,13 +115,10 @@ vignette for how to locate it.
 
 ### Author affiliations
 
-1.  Malawi Liverpool Wellcome Clinical Research Programme, Blantyre,
-    Malawi
-2.  Department of Clinical Sciences, Liverpool School of Tropical
-    Medicine, Liverpool, UK
-3.  Department of Clinical Infection, Microbiology and Immunology,
-    University of Liverpool, Liverpool, UK
+1.  Malawi Liverpool Wellcome Research Programme, Blantyre, Malawi
+2.  Liverpool School of Tropical Medicine, Liverpool, UK
+3.  University of Liverpool, Liverpool, UK
 4.  Wellcome Sanger Institute, Hinxton, UK
-5.  College of Medicine, University of Malawi, Malawi
+5.  Kamuzu University of Health Sciences, Malawi
 6.  University of Lancaster, Lancaster, UK
 7.  London School of Tropical Medicine and Hygiene, London, UK

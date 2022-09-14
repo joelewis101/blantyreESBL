@@ -25,16 +25,21 @@ This document contains reproducing analysis code which generates the tables and 
 
 <br />
 
-Joseph M Lewis^1,2,3,4^, , Madalitso Mphasa^1^, Rachel Banda^1^,  Matthew Beale^4^, Jane Mallewa^5^, Adam P Roberts^2^, Eva Heinz^2^, Nicholas Thomson^4,6^, Nicholas A Feasey^1,2^
+Joseph M Lewis^1,2,3,4^, , Madalitso Mphasa^1^, Rachel Banda^1^,  Matthew
+Beale^4^, Jane Mallewa^5^, Catherine Anscombe^1,2^, Allan Zuza^1^, Adam P Roberts^2^, Eva Heinz*^2^, Nicholas
+Thomson*^4,6^, Nicholas A Feasey*^1,2^
 
-1. Malawi Liverpool Wellcome Clinical Research Programme, Blantyre, Malawi
+1. Malawi Liverpool Wellcome Research Programme, Blantyre, Malawi
 2. Liverpool School of Tropical Medicine, Liverpool, UK
-3. Department of Clinical Infection, Microbiology and Immunology, University of Liverpool, Liverpool, UK
+3. University of Liverpool, Liverpool, UK
 4. Wellcome Sanger Institute, Hinxton, UK
-5. College of Medicine, University of Malawi, Malawi
-6. London School of Tropical Medicine and Hygiene, London, UK   
+5. Kamuzu University of Health Sciences, Malawi
+6. London School of Tropical Medicine and Hygiene, London, UK 
+
+* = contributed equally
 
 ```{r setup}
+
 library(ggtree)
 library(ape)
 library(phytools)
@@ -94,18 +99,63 @@ btESBL_sequence_sample_metadata %>%
 if (write_figs) {
   write_csv(
     btESBL_sequence_sample_metadata %>%
-    mutate(date_of_collection = data_date) %>% 
+      mutate(date_of_collection = data_date) %>%
+      filter(species == "E. coli") %>%
       select(
         accession,
         lane,
-         supplier_name,
-         pid,
-         date_of_collection,
-         N50),
-    here("tables/ecoli-genomics/accession_numbers.csv")
+        supplier_name,
+        pid,
+        date_of_collection,
+        N50,
+        Cluster,
+        ST,
+        ecoli_phylogroup,
+        ecoli_pathotype
+      ) %>%
+      left_join(
+        btESBL_qrdr_mutations %>%
+          filter(genus == "E. coli") %>%
+          select(-genus) %>%
+          semi_join(
+            btESBL_CARD_qrdr_mutations,
+            by = c(
+              "variant" = "variant",
+              "gene" = "gene"
+            )
+          ) %>%
+          pivot_wider(,
+            id_cols = lane,
+            names_from = gene,
+            values_from = variant,
+            values_fn = function(x) paste0(x, collapse = ",")
+          )
+      ) %>%
+      mutate(ecoli_pathotype = if_else(is.na(ecoli_pathotype),
+        "none_identfied",
+        ecoli_pathotype
+      )) %>%
+      mutate(across(
+        matches("gyr|par"),
+        ~ if_else(is.na(.x), "no", .x)
+      )) %>%
+      left_join(
+        btESBL_amrgenes %>%
+          select(-genus) %>%
+          arrange(ref_seq) %>%
+          pivot_wider(
+            id_cols = lane, names_from = ref_seq,
+            values_from = ref_seq,
+            values_fn = length,
+            values_fill = 0
+          ) %>%
+          mutate(across(where(is.numeric), ~ if_else(.x == 1, "yes", "no")))
+      ),
+    here("tables/ecoli-genomics/sample_metadata.csv")
   )
 }
 
+      
 ```
 
 ### Phylogroup, MLST plasmid replicons
@@ -677,6 +727,9 @@ bind_rows(
                  ) -> df_all
 
 df_all <- as.data.frame(df_all)
+
+write_csv(df_all, here("tables/ecoli-genomics/horesh_globaltree_metadata.csv"))
+
 rownames(df_all) <- df_all$lane  
 
 ```
@@ -1507,7 +1560,21 @@ amr %>%
                 values_fn = length,
                 values_fill = 0) %>% 
     summarise(across(!contains("lane"), sum))
-    
+
+
+quinolone.amr %>%
+  group_by(lane) %>%
+  summarise(qrdr = any(grepl("Gyr|Par", gene)),
+            qnr = any(grepl("Qnr", gene)),
+            qep = any(grepl("Qep", gene))) %>%
+  ungroup() %>%
+  summarise(qrdr_alone = sum(qrdr & !qnr & !qep),
+            qnr_alone = sum(qnr & !qrdr & !qep),
+            qrdr_qnr = sum(qrdr & qnr),
+            qrdr_qep = sum(qrdr & qep),
+            qnr_qep = sum(qnr & qep)
+  )
+  
   
 ```
 
@@ -1582,14 +1649,14 @@ if (write_figs) {
 
 
 btESBL_ecoli_st410_metadata %>% 
-  filter(platform == "ILLUMINA") %>% 
   filter(accession %in% btESBL_ecoli_globalst410_tree$tip.label) %>% 
   bind_rows(
     btESBL_sequence_sample_metadata %>% 
       filter(lane %in% btESBL_ecoli_globalst410_tree$tip.label) %>% 
       transmute(accession = lane,
                 `Collection Year` = year(data_date),
-                `Source Niche` = "Human",
+                host = "Homo sapiens",
+                source = "Stool",
                 Country = "Malawi")
   ) %>% 
   rename(
@@ -1600,11 +1667,11 @@ if (write_figs) {
 st410_metadata %>% 
   filter(Country != "Malawi") %>% 
   transmute(accession = accession,
-            source = `Source Niche`,
             country = Country,
             year = Year) %>% 
   write_csv(here("tables/ecoli-genomics/SUPP_T_st410_accession_numbers_and_metadata.csv"))
 }
+
 st410_metadata$malawi <- st410_metadata$Country == "Malawi"
 
 
@@ -1615,18 +1682,30 @@ st410_metadata$Continent <-
     destination = "un.region.name"
   )
 
+st410_metadata %>%
+  mutate(
+    Continent = case_when(
+      Country %in% c("Africa", "Asia", "Europe") ~
+      Country,
+      Country == "Blantyre" ~ "Africa",
+      TRUE ~ Continent
+    )
+  ) ->
+st410_metadata
+
 rownames(st410_metadata) <- st410_metadata$accession
 
 
-btESBL_ecoli_st410_amr %>% 
-  pivot_wider(names_from = gene, 
-              values_from = gene,
-              values_fn = length,
-              values_fill = 0) %>%
-  mutate(across(everything(), as.character)) %>% 
+btESBL_ecoli_st410_amr %>%
+  pivot_wider(
+    names_from = gene,
+    values_from = gene,
+    values_fn = length,
+    values_fill = 0
+  ) %>%
+  mutate(across(everything(), as.character)) %>%
   as.data.frame() ->
-  amr.ariba410
-
+amr.ariba410
 
 
 rownames(amr.ariba410) <- amr.ariba410$name
@@ -1634,48 +1713,71 @@ rownames(amr.ariba410) <- amr.ariba410$name
 
 
 
-btESBL_ecoli_st410_amr %>% 
+btESBL_ecoli_st410_amr %>%
+  bind_rows(
+    btESBL_amrgenes %>%
+      filter(genus == "E. coli") %>%
+      select(-genus) %>%
+      transmute(
+        name = lane,
+        gene = ref_seq
+      )
+  ) %>%
+  filter(name %in% btESBL_ecoli_globalst410_tree$tip.label) %>%
   left_join(
     select(btESBL_NCBI_phenotypic_bl, allele_name, class),
     by = c("gene" = "allele_name")
-  ) %>% mutate(class = case_when(
+  ) %>%
+  mutate(class = case_when(
     grepl("CMY", name) ~ "ESBL/AmpC",
     class == "ESBL" ~ "ESBL/AmpC",
     TRUE ~ class
-        )) %>% 
+  )) %>%
   filter(class %in% c("ESBL/AmpC", "Carbapenemase")) %>%
-  mutate(gene = gsub("_", "-", gene)) %>% 
-  arrange(class, fct_infreq(gene)) %>% 
-  pivot_wider(id_cols = "name",
-              names_from = gene,
-              values_from = class) %>% 
-  as.data.frame() -> 
-#  select(-`TEM-15`) ->    # not in df?
-  esbl_cpe.ariba410
-
+  mutate(gene = gsub("_", "-", gene)) %>%
+  arrange(class, fct_infreq(gene)) %>%
+  pivot_wider(
+    id_cols = "name",
+    names_from = gene,
+    values_from = class
+  ) %>%
+  as.data.frame() ->
+esbl_cpe.ariba410
 rownames(esbl_cpe.ariba410) <- esbl_cpe.ariba410$name
 
-btESBL_ecoli_st410_plasmids %>% 
-  filter(grepl("Inc", ref_seq)) %>% 
-  unique() %>% 
-  arrange(fct_infreq(ref_seq)) %>% 
+btESBL_ecoli_st410_plasmids %>%
+  bind_rows(
+    btESBL_plasmidreplicons %>%
+      mutate(
+        ref_seq = gsub("\\..*$", "", ref_seq),
+        ref_seq = gsub("_.*$", "", ref_seq),
+        ref_seq = gsub("^FIA", "IncFIA", ref_seq)
+      ) %>%
+      filter(species == "E. coli") %>%
+      select(-species) %>%
+      rename(name = lane)
+  ) %>%
+  filter(name %in% btESBL_ecoli_globalst410_tree$tip.label) %>%
+  filter(grepl("Inc", ref_seq)) %>%
+  unique() %>%
+  arrange(fct_infreq(ref_seq)) %>%
   pivot_wider(
     id_cols = name,
     names_from = ref_seq,
     values_from = ref_seq,
-    values_fn = function(x) return("Present"),
-    values_fill = NA_character_) %>% 
+    values_fn = function(x) {
+      return("Present")
+    },
+    values_fill = NA_character_
+  ) %>%
   as.data.frame() -> st410_plasm_onehot
-
 rownames(st410_plasm_onehot) <- st410_plasm_onehot$name
 
 
 (
 (  
   (ggtree(
-    treeio::tree_subset(btESBL_ecoli_globalst410_tree,
-                         1085,
-                         levels_back = 0)) %<+% 
+    btESBL_ecoli_globalst410_tree) %<+% 
      (select(st410_metadata, accession, Country) %>% 
         mutate(Country = if_else(Country == "Malawi", "Malawi",NA_character_)))  %>%
      gheatmap(
@@ -1688,7 +1790,7 @@ rownames(st410_plasm_onehot) <- st410_plasm_onehot$name
        colnames_angle = 90,
        hjust = 0
      )  + 
-     scale_fill_viridis(name = "Year") +
+     scale_fill_viridis(name = "Year", na.value = "white") +
      new_scale_fill()) %>% 
   gheatmap(
     select(st410_metadata, Continent),
@@ -1698,10 +1800,11 @@ rownames(st410_plasm_onehot) <- st410_plasm_onehot$name
     color = NA,
     colnames_offset_y = 5,
     colnames_angle = 90,
-    offset = 0.000015,
+    offset = 0.000008,
     hjust = 0
   ) + 
-  scale_fill_viridis_d(option = "plasma", name = "Continent") + 
+  scale_fill_viridis_d(option = "plasma", name = "Continent", na.translate =
+                       FALSE) + 
   geom_tippoint(aes(color = Country), na.rm = TRUE, size = 0.5) + 
   scale_color_manual(values  = "red", na.translate = FALSE) +
   new_scale_fill() 
@@ -1714,7 +1817,7 @@ rownames(st410_plasm_onehot) <- st410_plasm_onehot$name
     color = NA,
     colnames_offset_y = 5,
     colnames_angle = 90,
-    offset = 0.00003,
+    offset = 0.000016,
     hjust = 0
   ) + scale_fill_manual(values = viridis_pal(option = "magma")(5)[c(2,3)],
                         na.translate = FALSE,
@@ -1734,15 +1837,15 @@ rownames(st410_plasm_onehot) <- st410_plasm_onehot$name
   # ) + scale_fill_manual(values = viridis_pal(option = "cividis")(7)[2],
   #                       na.translate = FALSE,
   #                       name = "Plasmid\nreplicon") +
-  ylim(NA, 600) +
-  geom_treescale(x = 0.0002, y = 250, offset = 5) +
-   geom_highlight(node = 695 ,alpha = 0.3) +
+  ylim(NA, 420) +
+  geom_treescale(x = 0.00005, y = 250, offset = 5) +
+   geom_highlight(node = 391 ,alpha = 0.3) +
   geom_cladelabel(
-    node = 695,
+    node = 391,
     label = "B4/H24RxC",
     angle = 90,
     offset = 0,
-    offset.text = -0.00009,
+    offset.text = -0.000032,
     barsize = 0,
     hjust = 0.5,
     fontsize = 3,
@@ -1752,10 +1855,10 @@ rownames(st410_plasm_onehot) <- st410_plasm_onehot$name
 if (write_figs) {
 
 ggsave(here("figures/ecoli-genomics/st410_globaltreeplot.svg"),
-       st410_globaltree_plot, width = 10, height = 10)
+       st410_globaltree_plot, width = 9, height = 10)
 
 ggsave(here("figures/ecoli-genomics/st410_globaltreeplot.pdf"),
-       st410_globaltree_plot, width = 10, height = 10)
+       st410_globaltree_plot, width = 9, height = 10)
 }
 st410_globaltree_plot
 
@@ -1764,184 +1867,214 @@ st410_globaltree_plot
 ```{r st410 subtree}
 
 treeio::tree_subset(
-treeio::tree_subset(
-  btESBL_ecoli_globalst410_tree, 1085, levels_back = 0),
-695,levels_back = 0) -> st410_subtree
+  btESBL_ecoli_globalst410_tree, 390, levels_back = 0)  -> st410_subtree
 
-esbl_cpe.ariba410 %>%  
-  subset(name %in% st410_subtree$tip.label) %>% 
+esbl_cpe.ariba410 %>%
+  subset(name %in% st410_subtree$tip.label) %>%
   as.data.frame() ->
-  esbl_cpe.ariba410_subset
+esbl_cpe.ariba410_subset
   
   esbl_cpe.ariba410_subset[
-    c(TRUE, apply(esbl_cpe.ariba410_subset[-1], 2,function(x) !all(is.na(x))))] ->
-    esbl_cpe.ariba410_subset
+    c(TRUE, apply(esbl_cpe.ariba410_subset[-1], 2, function(x) !all(is.na(x))))
+  ] ->
+  esbl_cpe.ariba410_subset
 
-btESBL_ecoli_st410_plasmids %>% 
-  filter(grepl("Inc", ref_seq)) %>% 
-  filter(name %in% st410_subtree$tip.label) %>% 
-  unique() %>% 
-  group_by(ref_seq) %>% 
-  mutate(n = n()) %>% 
-  filter(n > 2) %>% 
-  ungroup() %>% 
-  select(-n) %>% 
-  arrange(fct_infreq(ref_seq)) %>% 
+btESBL_ecoli_st410_plasmids %>%
+  bind_rows(
+    btESBL_plasmidreplicons %>%
+      mutate(
+        ref_seq = gsub("\\..*$", "", ref_seq),
+        ref_seq = gsub("_.*$", "", ref_seq),
+        ref_seq = gsub("^FIA", "IncFIA", ref_seq)
+      ) %>%
+      filter(species == "E. coli") %>%
+      select(-species) %>%
+      rename(name = lane)
+  ) %>%
+  filter(grepl("Inc", ref_seq)) %>%
+  filter(name %in% st410_subtree$tip.label) %>%
+  unique() %>%
+  group_by(ref_seq) %>%
+  mutate(n = n()) %>%
+  filter(n > 2) %>%
+  ungroup() %>%
+  select(-n) %>%
+  arrange(fct_infreq(ref_seq)) %>%
   pivot_wider(
     id_cols = name,
     names_from = ref_seq,
     values_from = ref_seq,
-    values_fn = function(x) return("Present"),
-    values_fill = NA_character_) %>% 
+    values_fn = function(x) {
+      return("Present")
+    },
+    values_fill = NA_character_
+  ) %>%
   as.data.frame() -> st410_plasm_onehot_subset
-
 rownames(st410_plasm_onehot_subset) <- st410_plasm_onehot_subset$name
 
+(
   (
-  (  
-  (ggtree(st410_subtree, size = 0.3) %<+% (select(st410_metadata, accession, Country) %>% mutate(Country = if_else(Country == "Malawi", "Malawi",NA_character_)))  %>%
-     gheatmap(
-       select(st410_metadata, `Year`),
-       font.size = 4,
-       width = 0.071,
-       colnames_position = "top",
-       color = NA,
-       colnames_offset_y = 5,
-       colnames_angle = 90,
-       hjust = 0
-     )  + 
-     scale_fill_viridis(name = "Year", limits = c(1965,2020)) +
-     new_scale_fill()) %>% 
+    (ggtree(st410_subtree, size = 0.3) %<+% (select(st410_metadata, accession, Country) %>% mutate(Country = if_else(Country == "Malawi", "Malawi", NA_character_))) %>%
+      gheatmap(
+        select(st410_metadata, `Year`),
+        font.size = 4,
+        width = 0.06,
+        colnames_position = "top",
+        color = NA,
+        colnames_offset_y = 0,
+        colnames_angle = 90,
+        hjust = 0
+      ) +
+      scale_fill_viridis(
+        name = "Year", limits = c(1978, 2020),
+        na.value = "white"
+      ) +
+      new_scale_fill()) %>%
+      gheatmap(
+        select(st410_metadata, Continent),
+        font.size = 4,
+        width = 0.06,
+        colnames_position = "top",
+        color = NA,
+        colnames_offset_y = 0,
+        colnames_angle = 90,
+        offset = 0.0000015,
+        hjust = 0
+      ) +
+      scale_fill_viridis_d(
+        option = "plasma", name = "Continent",
+        na.translate = FALSE
+      ) +
+      geom_point2(aes(subset = as.numeric(label) < 95 & !isTip), size = 0.5) +
+      geom_tippoint(aes(color = Country), na.rm = TRUE, size = 1) +
+      scale_color_manual(values = "red", na.translate = FALSE) +
+      new_scale_fill()
+  ) %>%
     gheatmap(
-      select(st410_metadata, Continent),
-      font.size = 4,
-      width = 0.071,
+      select(esbl_cpe.ariba410_subset, -name),
+      font.size = 2.5,
+      width = 0.4,
       colnames_position = "top",
       color = NA,
-      colnames_offset_y = 5,
+      colnames_offset_y = 0,
       colnames_angle = 90,
-      offset = 0.000002,
+      offset = 0.0000031,
       hjust = 0
-    ) + 
-    scale_fill_viridis_d(option = "plasma", name = "Continent") + 
-      geom_point2(aes(subset = as.numeric(label) < 95 & !isTip), size = 1) +
-    geom_tippoint(aes(color = Country), na.rm = TRUE, size = 0.5) + 
-    scale_color_manual(values  = "red", na.translate = FALSE) +
-    new_scale_fill() 
-) %>% 
+    ) + scale_fill_manual(
+      values = viridis_pal(option = "magma")(5)[c(2, 3)],
+      na.translate = FALSE,
+      name = "Beta-\nlactamase"
+    ) +
+    new_scale_fill()
+) %>%
   gheatmap(
-    select(esbl_cpe.ariba410_subset, -name),
-    font.size = 2.5,
-    width = 0.5,
-    colnames_position = "top",
-    color = NA,
-    colnames_offset_y = 5,
-    colnames_angle = 90,
-    offset = 0.000004,
-    hjust = 0
-  ) + scale_fill_manual(values = viridis_pal(option = "magma")(5)[c(2,3)],
-                        na.translate = FALSE,
-                        name = "Beta-\nlactamase") +
-      new_scale_fill() 
-    ) %>%   gheatmap(
     select(st410_plasm_onehot_subset, -name),
     font.size = 2.5,
-    width = 0.781,
+    width = 0.45,
     colnames_position = "top",
     color = NA,
-    colnames_offset_y = 5,
+    colnames_offset_y = 0,
     colnames_angle = 90,
-    offset = 0.000016,
+    offset = 0.0000125,
     hjust = 0
-  ) + scale_fill_manual(values = viridis_pal(option = "cividis")(7)[2],
-                        na.translate = FALSE,
-                        name = "Plasmid\nreplicon") +
-  ylim(NA, 180) +
-  geom_treescale(x = 0.000002, y = 165, offset = 2,width = 1e-5) -> st410_subtree_plot
-    # geom_highlight(node = 149 , alpha = 0.3) +
-    # geom_cladelabel(
-    #   node = 149,
-    #   label = "B4/H24RxC",
-    #   angle = 90,
-    #   offset = 0,
-    #   barsize = 0,
-    #   hjust = 0.5,
-    #   fontsize = 4,
-    #   offset.text = 0,
-    #   color = "steelblue"
-    # ) -> st410_subtree_plot
-  
-
+  ) + scale_fill_manual(
+    values = viridis_pal(option = "cividis")(7)[2],
+    na.translate = FALSE,
+    name = "Plasmid\nreplicon"
+  ) +
+  ylim(NA, 100) +
+  geom_treescale(x = 0.000004, y = 66, offset = 2, width = 1e-6) ->
+st410_subtree_plot
 
 ```
 
 ```{r st167globaltree, fig.height = 10, fig.width = 10, fig.cap = "ST167 map-to-reference global maximum likelihood, midpoint rooted tree" }
 
-btESBL_ecoli_st167_plasmids %>% 
-  filter(grepl("Inc", ref_seq)) %>% 
-  unique() %>% 
+btESBL_ecoli_st167_plasmids %>%
+  bind_rows(
+    btESBL_plasmidreplicons %>%
+      mutate(
+        ref_seq = gsub("\\..*$", "", ref_seq),
+        ref_seq = gsub("_.*$", "", ref_seq),
+        ref_seq = gsub("^FIA", "IncFIA", ref_seq)
+      ) %>%
+      filter(species == "E. coli") %>%
+      select(-species) %>%
+      rename(name = lane)
+  ) %>%
+  filter(grepl("Inc", ref_seq)) %>%
+  filter(name %in% btESBL_ecoli_globalst167_tree$tip.label) %>%
+  unique() %>%
   pivot_wider(
     id_cols = name,
     names_from = ref_seq,
     values_from = ref_seq,
-    values_fn = function(x) return("Present"),
-    values_fill = NA_character_) %>% 
+    values_fn = function(x) {
+      return("Present")
+    },
+    values_fill = NA_character_
+  ) %>%
   as.data.frame() -> st167_plasm_onehot
 
 rownames(st167_plasm_onehot) <- st167_plasm_onehot$name
 
-#    ggtree(treeio::tree_subset (st167_tree, 320, levels_back = 0)) %>%  gheatmap(
-#       select(st167_plasm_onehot, -name), font.size = 2,
-##        width = 2,
-#        colnames_position = "top",
-#        color = NA,
-##        colnames_offset_y = 5,hjust = 0,
-#        colnames_angle = 90,) + ylim(NA, 500) 
 
 
 
 
-btESBL_ecoli_st167_metadata %>% 
-  filter(platform == "ILLUMINA") %>% 
-  filter(accession %in% btESBL_ecoli_globalst167_tree$tip.label) %>% 
+btESBL_ecoli_st167_metadata %>%
+  filter(accession %in% btESBL_ecoli_globalst167_tree$tip.label) %>%
   bind_rows(
-    btESBL_sequence_sample_metadata %>% 
-      filter(lane %in% btESBL_ecoli_globalst167_tree$tip.label) %>% 
-      transmute(accession = lane,
-                `Collection Year` = year(data_date),
-                `Source Niche` = "Human",
-                Country = "Malawi")
-  ) %>% 
-  rename(Year = `Collection Year`) %>% 
+    btESBL_sequence_sample_metadata %>%
+      filter(lane %in% btESBL_ecoli_globalst167_tree$tip.label) %>%
+      transmute(
+        accession = lane,
+        `Collection Year` = year(data_date),
+        `Source Niche` = "Human",
+        Country = "Malawi"
+      )
+  ) %>%
+  rename(Year = `Collection Year`) %>%
   as.data.frame() -> st167_metadata
 
 if (write_figs) {
-
-st167_metadata %>% 
-  filter(Country != "Malawi") %>% 
-  transmute(accession = accession,
-            source = `Source Niche`,
-            country = Country,
-            year = Year) %>% 
-  write_csv(here("tables/ecoli-genomics/st167_accession_numbers_and_metadata.csv"))
-}            
-            
+  st167_metadata %>%
+    filter(Country != "Malawi") %>%
+    transmute(
+      accession = accession,
+      source = `Source Niche`,
+      country = Country,
+      year = Year
+    ) %>%
+    write_csv(
+      here("tables/ecoli-genomics/st167_accession_numbers_and_metadata.csv")
+    )
+}
 
 st167_metadata$malawi <- st167_metadata$Country == "Malawi"
 
-st167_metadata$Continent <- 
+st167_metadata$Continent <-
   countrycode(
     sourcevar = st167_metadata$Country,
     origin = "country.name",
     destination = "un.region.name"
   )
-
 rownames(st167_metadata) <- st167_metadata$accession
 
 
 
 
 btESBL_ecoli_st167_amr %>% 
+  bind_rows(
+    btESBL_amrgenes %>%
+      filter(genus == "E. coli") %>%
+      select(-genus) %>%
+      transmute(
+        name = lane,
+        gene = ref_seq
+      )
+  ) %>%
+  filter(name %in% btESBL_ecoli_globalst167_tree$tip.label) %>%
   pivot_wider(names_from = gene, 
               values_from = gene,
               values_fn = length,
@@ -1975,16 +2108,14 @@ amr.ariba %>%
   pivot_wider(id_cols = "sample",
               names_from = name,
               values_from = class) %>% 
-  as.data.frame() %>% 
-  select(-`TEM-15`) ->    # not in df?
+  as.data.frame() ->
   esbl_cpe.ariba
 
 rownames(esbl_cpe.ariba) <- esbl_cpe.ariba$sample
 
 (
 (
-(ggtree(treeio::tree_subset(
-  btESBL_ecoli_globalst167_tree, 321, levels_back = 0)) %<+% 
+(ggtree(btESBL_ecoli_globalst167_tree) %<+% 
    (select(st167_metadata, accession, Country) %>% 
       mutate(Country = if_else(Country == "Malawi", "Malawi",NA_character_)))  %>%
     gheatmap(
@@ -1993,11 +2124,11 @@ rownames(esbl_cpe.ariba) <- esbl_cpe.ariba$sample
       width = 0.03,
       colnames_position = "top",
       color = NA,
-      colnames_offset_y = 5,
+      colnames_offset_y = 0,
       colnames_angle = 90,
       hjust = 0
     )  + 
-    scale_fill_viridis(name = "Year") +
+    scale_fill_viridis(name = "Year", na.value = "white") +
     new_scale_fill()) %>% 
   gheatmap(
     select(st167_metadata, Continent),
@@ -2005,12 +2136,13 @@ rownames(esbl_cpe.ariba) <- esbl_cpe.ariba$sample
     width = 0.03,
     colnames_position = "top",
     color = NA,
-    colnames_offset_y = 5,
+    colnames_offset_y = 0,
     colnames_angle = 90,
-    offset = 0.000004,
+    offset = 0.000003,
     hjust = 0
   ) + 
-  scale_fill_viridis_d(option = "plasma", name = "Continent") + 
+  scale_fill_viridis_d(option = "plasma", name = "Continent", na.translate =
+                       FALSE) + 
   geom_tippoint(aes(color = Country), na.rm = TRUE, size = 1) + 
   scale_color_manual(values  = "red", na.translate = FALSE) +
     new_scale_fill() 
@@ -2021,32 +2153,19 @@ rownames(esbl_cpe.ariba) <- esbl_cpe.ariba$sample
   width = (ncol(esbl_cpe.ariba) -1)*0.03,
   colnames_position = "top",
   color = NA,
-  colnames_offset_y = 5,
+  colnames_offset_y = 0,
   colnames_angle = 90,
-  offset = 0.000008,
+  offset = 0.000006,
   hjust = 0
 ) + scale_fill_manual(values = viridis_pal(option = "magma")(5)[c(2,3)],
                       na.translate = FALSE,
                       name = "Beta-\nlactamase") +
   new_scale_fill()
-)  + # %>% 
-  # gheatmap(
-  #   select(st167_plasm_onehot, -name),
-  #   font.size = 3,
-  #   width = 0.5,
-  #   colnames_position = "top",
-  #   color = NA,
-  #   colnames_offset_y = 5,
-  #   colnames_angle = 90,
-  #   offset = 0.00046,
-  #   hjust = 0
-  # ) + 
-  # scale_fill_manual(values = viridis_pal(option = "cividis")(7)[2],
-  #                       na.translate = FALSE,
-  #                       name = "Plasmid\nreplicon") +
-  ylim(NA, 370) +
-  geom_treescale(x = 0.00002, y = 370*0.666, offset = 2, width = 0.00001)   +
-   geom_highlight(node = 321 ,alpha = 0.3) ->
+)  +  
+  ylim(NA, 150) +
+    geom_highlight(node = 142, alpha = 0.3, fill = "steelblue",
+                   color = NA) + 
+  geom_treescale(x = 0.000015, y = 160*0.666, offset = 2, width = 0.00001) ->
   st167_globaltree_plot
 
 st167_globaltree_plot
@@ -2054,79 +2173,97 @@ st167_globaltree_plot
 if (write_figs) {
 
 ggsave(here("figures/ecoli-genomics/st167_globaltreeplot.svg"),
-       st167_globaltree_plot, width = 10, height = 10)
+       st167_globaltree_plot, width = 8, height = 10)
 
 ggsave(here("figures/ecoli-genomics/st167_globaltreeplot.pdf"),
-       st167_globaltree_plot, width = 10, height = 10)
+       st167_globaltree_plot, width = 8, height = 10)
 }
 ```
 
 ```{r st167subtree}
 
 treeio::tree_subset(
-treeio::tree_subset(
-  btESBL_ecoli_globalst167_tree, 321, levels_back = 0),
-321,
-levels_back = 0) -> st167_subtree
+  btESBL_ecoli_globalst167_tree, 142, levels_back = 0) -> st167_subtree
 
-esbl_cpe.ariba %>%  
-  subset(sample %in% st167_subtree$tip.label) %>% 
+esbl_cpe.ariba %>%
+  subset(sample %in% st167_subtree$tip.label) %>%
   as.data.frame() ->
-  esbl_cpe.ariba167_subset
-  
-  esbl_cpe.ariba167_subset[
-    c(TRUE, apply(esbl_cpe.ariba167_subset[-1], 2,function(x) !all(is.na(x))))] ->
-    esbl_cpe.ariba167_subset
-  
-  
-btESBL_ecoli_st167_plasmids %>% 
-  filter(grepl("Inc", ref_seq)) %>% 
-  filter(name %in% st167_subtree$tip.label) %>% 
-  unique() %>% 
-  group_by(ref_seq) %>% 
-  mutate(n = n()) %>% 
-  filter(n > 2) %>% 
-  ungroup() %>% 
-  select(-n) %>% 
-  arrange(fct_infreq(ref_seq)) %>% 
+esbl_cpe.ariba167_subset
+
+esbl_cpe.ariba167_subset[
+  c(TRUE, apply(esbl_cpe.ariba167_subset[-1], 2, function(x) !all(is.na(x))))
+] ->
+esbl_cpe.ariba167_subset
+
+
+btESBL_ecoli_st167_plasmids %>%
+  bind_rows(
+    btESBL_plasmidreplicons %>%
+      mutate(
+        ref_seq = gsub("\\..*$", "", ref_seq),
+        ref_seq = gsub("_.*$", "", ref_seq),
+        ref_seq = gsub("^FIA", "IncFIA", ref_seq)
+      ) %>%
+      filter(species == "E. coli") %>%
+      select(-species) %>%
+      rename(name = lane)
+  ) %>%
+  filter(grepl("Inc", ref_seq)) %>%
+  filter(name %in% st167_subtree$tip.label) %>%
+  unique() %>%
+  group_by(ref_seq) %>%
+  mutate(n = n()) %>%
+  filter(n > 2) %>%
+  ungroup() %>%
+  select(-n) %>%
+  arrange(fct_infreq(ref_seq)) %>%
   pivot_wider(
     id_cols = name,
     names_from = ref_seq,
     values_from = ref_seq,
-    values_fn = function(x) return("Present"),
-    values_fill = NA_character_) %>% 
+    values_fn = function(x) {
+      return("Present")
+    },
+    values_fill = NA_character_
+  ) %>%
   as.data.frame() -> st167_plasm_onehot_subset
 
-
 rownames(st167_plasm_onehot_subset) <- st167_plasm_onehot_subset$name
-  
+
+cont_cols <- viridis_pal(option = "plasma")(4)
+names(cont_cols) <- c("Africa","Americas", "Asia","Europe")
+
   (
   (  
   (ggtree(st167_subtree, size = 0.3) %<+% (select(st167_metadata, accession, Country) %>% mutate(Country = if_else(Country == "Malawi", "Malawi",NA_character_)))  %>%
      gheatmap(
        select(st167_metadata, `Year`),
        font.size = 4,
-       width = 0.0668,
+       width = 0.06,
        colnames_position = "top",
        color = NA,
        colnames_offset_y = 0,
        colnames_angle = 90,
        hjust = 0
      )  + 
-     scale_fill_viridis(name = "Year", limits = c(1965,2020)) +
+     scale_fill_viridis(name = "Year", limits = c(1978,2020),
+                        na.value = "white") +
      new_scale_fill()) %>% 
     gheatmap(
       select(st167_metadata, Continent),
       font.size = 4,
-      width = 0.0668,
+      width = 0.06,
       colnames_position = "top",
       color = NA,
       colnames_offset_y = 0,
       colnames_angle = 90,
-      offset = 0.000004,
+      offset = 0.000005,
       hjust = 0
     ) + 
-    scale_fill_viridis_d(option = "plasma", name = "Continent") + 
+    scale_fill_manual(values = cont_cols,
+                      name = "Continent",
+                      na.translate =
+                      FALSE) + 
       geom_point2(aes(subset = as.numeric(label) < 95 & !isTip), size = 1) +
     geom_tippoint(aes(color = Country), na.rm = TRUE, size = 1) + 
     scale_color_manual(values  = "red", na.translate = FALSE) +
@@ -2135,12 +2272,12 @@ rownames(st167_plasm_onehot_subset) <- st167_plasm_onehot_subset$name
   gheatmap(
     select(esbl_cpe.ariba167_subset, -sample),
     font.size = 2.5,
-    width = 0.0668*(ncol(esbl_cpe.ariba167_subset) - 1),
+    width = 0.06*(ncol(esbl_cpe.ariba167_subset) - 1),
     colnames_position = "top",
     color = NA,
     colnames_offset_y = 0,
     colnames_angle = 90,
-    offset = 0.000008,
+    offset = 0.00001,
     hjust = 0
   ) + scale_fill_manual(values = viridis_pal(option = "magma")(5)[c(2,3)],
                         na.translate = FALSE,
@@ -2149,18 +2286,18 @@ rownames(st167_plasm_onehot_subset) <- st167_plasm_onehot_subset$name
     ) %>%   gheatmap(
     select(st167_plasm_onehot_subset, -name),
     font.size = 2.5,
-    width = 0.0668*(ncol(st167_plasm_onehot_subset) - 1) + 0.1,
+    width = 0.045*(ncol(st167_plasm_onehot_subset) - 1) + 0.1,
     colnames_position = "top",
     color = NA,
     colnames_offset_y = 0,
     colnames_angle = 90,
-    offset = 0.00004,
+    offset = 0.000029,
     hjust = 0
   ) + scale_fill_manual(values = viridis_pal(option = "cividis")(7)[2],
                         na.translate = FALSE,
                         name = "Plasmid\nreplicon") +
-  ylim(NA, 70) +
-  geom_treescale(x = 0.000006, y = 70*0.666, offset = 1, width = 1e-5) ->
+  ylim(NA, 60) +
+  geom_treescale(x = 0.00001, y = 60*0.666, offset = 1, width = 1e-5) ->
     st167_subtree_plot
   
 
@@ -2171,14 +2308,14 @@ rownames(st167_plasm_onehot_subset) <- st167_plasm_onehot_subset$name
 
 
 if (write_figs) {
-btESBL_ecoli_st131_metadata %>% 
-  filter(Country != "Malawi") %>% 
-  write_csv(here("tables/ecoli-genomics/SUPP_T_st131_accession_numbers_and_metadata.csv"))
+  btESBL_ecoli_st131_metadata %>%
+    filter(Country != "Malawi") %>%
+    write_csv(here("tables/ecoli-genomics/SUPP_T_st131_accession_numbers_and_metadata.csv"))
 }
 btESBL_ecoli_st131_metadata$malawi <- btESBL_ecoli_st131_metadata$Country == "Malawi"
 
 
-btESBL_ecoli_st131_metadata$Continent <- 
+btESBL_ecoli_st131_metadata$Continent <-
   countrycode(
     sourcevar = btESBL_ecoli_st131_metadata$Country,
     origin = "country.name",
@@ -2186,70 +2323,79 @@ btESBL_ecoli_st131_metadata$Continent <-
   )
 
 btESBL_ecoli_st131_metadata$Continent[
-  btESBL_ecoli_st131_metadata$Country == "Czech"] <- "Europe"
+  btESBL_ecoli_st131_metadata$Country == "Czech"
+] <- "Europe"
 
 btESBL_ecoli_st131_metadata$Continent[
-  btESBL_ecoli_st131_metadata$Country == "Taiwan"] <- "Asia"
+  btESBL_ecoli_st131_metadata$Country == "Taiwan"
+] <- "Asia"
 
 
 rownames(btESBL_ecoli_st131_metadata) <- btESBL_ecoli_st131_metadata$Accession_number
 
 
-btESBL_ecoli_st131_amr %>% 
-  pivot_wider(names_from = gene, 
-              values_from = gene,
-              values_fn = length,
-              values_fill = 0) %>%
-  mutate(across(everything(), as.character)) %>% 
+btESBL_ecoli_st131_amr %>%
+  pivot_wider(
+    names_from = gene,
+    values_from = gene,
+    values_fn = length,
+    values_fill = 0
+  ) %>%
+  mutate(across(everything(), as.character)) %>%
   as.data.frame() ->
-  amr.ariba131
+amr.ariba131
 
 
 
 rownames(amr.ariba131) <- amr.ariba131$name
 
-btESBL_ecoli_st131_plasmids %>% 
-  filter(grepl("Inc", ref_seq)) %>% 
-  unique() %>% 
-  group_by(ref_seq) %>% 
-  mutate(n = n()) %>% 
-  filter(n >= 10) %>% 
-  ungroup() %>% 
-  select(-n) %>% 
-  arrange(fct_infreq(ref_seq)) %>% 
+btESBL_ecoli_st131_plasmids %>%
+  filter(grepl("Inc", ref_seq)) %>%
+  unique() %>%
+  group_by(ref_seq) %>%
+  mutate(n = n()) %>%
+  filter(n >= 10) %>%
+  ungroup() %>%
+  select(-n) %>%
+  arrange(fct_infreq(ref_seq)) %>%
   pivot_wider(
     id_cols = name,
     names_from = ref_seq,
     values_from = ref_seq,
-    values_fn = function(x) return("Present"),
-    values_fill = NA_character_) %>% 
+    values_fn = function(x) {
+      return("Present")
+    },
+    values_fill = NA_character_
+  ) %>%
   as.data.frame() -> st131_plasm_onehot
 
 rownames(st131_plasm_onehot) <- st131_plasm_onehot$name
 
-esbl_cols <- viridis_pal(option = "magma")(5)[c(2,3)]
+esbl_cols <- viridis_pal(option = "magma")(5)[c(2, 3)]
 
-names(esbl_cols) <- c( "Carbapenemase", "ESBL/AmpC")
+names(esbl_cols) <- c("Carbapenemase", "ESBL/AmpC")
 
-btESBL_ecoli_st131_amr %>% 
+btESBL_ecoli_st131_amr %>%
   left_join(
     select(btESBL_NCBI_phenotypic_bl, allele_name, class),
     by = c("gene" = "allele_name")
-  ) %>% mutate(class = case_when(
+  ) %>%
+  mutate(class = case_when(
     grepl("CMY", name) ~ "ESBL/AmpC",
     class == "ESBL" ~ "ESBL/AmpC",
     TRUE ~ class
-        )) %>% 
+  )) %>%
   filter(class %in% c("ESBL/AmpC", "Carbapenemase")) %>%
-  mutate(gene = gsub("_", "-", gene)) %>% 
-  arrange(class, fct_infreq(gene)) %>% 
-  pivot_wider(id_cols = "name",
-              names_from = gene,
-              values_from = class) %>% 
-  as.data.frame() -> 
+  mutate(gene = gsub("_", "-", gene)) %>%
+  arrange(class, fct_infreq(gene)) %>%
+  pivot_wider(
+    id_cols = "name",
+    names_from = gene,
+    values_from = class
+  ) %>%
+  as.data.frame() ->
 #  select(-`TEM-15`) ->    # not in df?
-  esbl_cpe.ariba131
-
+esbl_cpe.ariba131
 rownames(esbl_cpe.ariba131) <- esbl_cpe.ariba131$name
 
 (
@@ -2304,7 +2450,7 @@ rownames(esbl_cpe.ariba131) <- esbl_cpe.ariba131$name
 )   %>%   gheatmap(
     select(st131_plasm_onehot, -name),
     font.size = 2.5,
-    width = 0.03*(ncol(st131_plasm_onehot) - 1) + 0.1,
+    width = 0.026*(ncol(st131_plasm_onehot) - 1) + 0.1,
     colnames_position = "top",
     color = NA,
     colnames_offset_y = 5,

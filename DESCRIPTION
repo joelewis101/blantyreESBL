@@ -1,6 +1,6 @@
 Package: blantyreESBL
 Title: Data and Code Repository For a Study Describing Antimicrobial Resistance in Blantyre, Malawi
-Version: 1.2
+Version: 1.3
 Authors@R: 
     person(given = "Joseph",
            family = "Lewis",

@@ -5,7 +5,7 @@
 \alias{btESBL_ecoli_st131_amr}
 \title{Data: AMR genes identified in global ST131 isolates}
 \format{
-A tidy data frame with 5494 rows and 2 variables:
+A tidy data frame with 8815 rows and 2 variables:
 \describe{
 \item{name}{Unique sample-sequencing run ID or accession}
 \item{gene}{Identified AMR gene sequence}

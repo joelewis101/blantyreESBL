@@ -5,7 +5,7 @@
 \alias{btESBL_ecoli_st167_plasmids}
 \title{Data: Plasmid replicons identified in global ST167 isolates}
 \format{
-A tidy data frame with 1838 rows and 2 variables:
+A tidy data frame with 535 rows and 2 variables:
 \describe{
 \item{name}{Unique sample-sequencing run ID or accession}
 \item{ref_seq}{Identified Plasmid replicon}

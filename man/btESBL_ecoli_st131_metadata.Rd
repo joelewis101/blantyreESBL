@@ -5,7 +5,7 @@
 \alias{btESBL_ecoli_st131_metadata}
 \title{Data: metadata of global E. coli ST131 isolates}
 \format{
-A dataframe with 926 rows and 4 variables
+A dataframe with 918 rows and 4 variables
 \describe{
 \item{Accession_number}{Unique sample-sequencing run ID or accession}
 \item{Year}{Year of sample collection}
@@ -17,8 +17,8 @@ A dataframe with 926 rows and 4 variables
 btESBL_ecoli_st131_metadata
 }
 \description{
-Metadata of a collection of 926 E. coli ST131 genomes
-including 862 from a study of global E. coli ST131
+Metadata of a collection of 918 E. coli ST131 genomes
+including 855 from a study of global E. coli ST131
 (Mcnally et at 2019 https://doi.org/10.1128/mBio.00644-19)
 and the remainder sequenced as part of this study
 }

@@ -15,6 +15,7 @@ library(devtools)
 library(PopGenome)
 library(here)
 library(ape)
+library(readxl)
 
 source(here("data-raw/load_metadata_fn.R"))
 
@@ -765,35 +766,24 @@ use_data(btESBL_plasmidreplicons, overwrite = TRUE)
 
 # ST410 data ----------------------------
 
-st410_metadata <-
-  read_tsv(here("data-raw/ecoli-genomics-paper/st410/st410.tsv"))
-
-st410_metadata %>%
-  select(
-    Uberstrain,
-    Name,
-    `Data Source(Accession No.;Sequencing Platform;Sequencing Library;Insert Size;Experiment;Status)`,
-    `Source Niche`,
-    `Source Details`,
-    Country,
-    `Collection Year`,
-    ST
-  ) %>%  separate_rows(
-    `Data Source(Accession No.;Sequencing Platform;Sequencing Library;Insert Size;Experiment;Status)`,
-    sep = ","
-  ) %>%
-  separate(
-    `Data Source(Accession No.;Sequencing Platform;Sequencing Library;Insert Size;Experiment;Status)`,
-    into = c(
-      "accession",
-      "platform",
-      "library",
-      "insert_size",
-      "experiment"
-    ),
-    sep = ";"
-  ) ->
-  btESBL_ecoli_st410_metadata
+btESBL_ecoli_st410_metadata <-
+  read_xlsx(here(
+    "data-raw/ecoli-genomics-paper/st410-new/42003_2019_569_MOESM4_ESM.xlsx"
+  )) %>%
+  filter(Notes != "excluded" | is.na(Notes)) %>%
+  transmute(
+    accession = SRA,
+    host = Host,
+    source = Source,
+    Country = Location,
+    `Collection Year` = if_else(
+                                Year == "-", NA_real_,
+                                as.numeric(str_extract(Year, "^.{4}"))
+  )) %>%
+    mutate(across(where(is.character), ~ if_else(is.na(.x),
+                                          NA_character_,
+                                          .x)))
+            
 
 use_data(btESBL_ecoli_st410_metadata, overwrite = TRUE)
 
@@ -801,7 +791,7 @@ use_data(btESBL_ecoli_st410_metadata, overwrite = TRUE)
 
 st410_plasm <-
   read_csv(
-    here("data-raw/ecoli-genomics-paper/st410/st410_pf_ariba_summary.csv"))
+    here("data-raw/ecoli-genomics-paper/st410-new/st410-ariba-plasmidfinder-summary.csv"))
 
 
 st410_plasm %>%
@@ -825,8 +815,10 @@ use_data(btESBL_ecoli_st410_plasmids, overwrite = TRUE)
 
 read.tree(
   here(
-    "data-raw/ecoli-genomics-paper/st410/clean_full.filtered_pollymorphic_sites.ref_removed.snpsites.fasta.treefile")) ->
-  st410_tree
+    "data-raw/ecoli-genomics-paper/st410-new/clean.full.filtered_polymorphic_sites.fasta.treefile"
+  )
+) ->
+st410_tree
 
 midpoint.root(st410_tree) -> btESBL_ecoli_globalst410_tree
 
@@ -835,18 +827,7 @@ btESBL_ecoli_globalst410_tree$tip.label <-
 
 use_data(btESBL_ecoli_globalst410_tree, overwrite = TRUE)
 
-# non-ASC tree
 
-read.tree(
-  here(
-    "data-raw/ecoli-genomics-paper/st410/non_ASC_trees/clean.full.filtered_polymorphic_sites.fasta.treefile")) ->
-  btESBL_ecoli_globalst410_tree_noASC
-
-midpoint.root(btESBL_ecoli_globalst410_tree_noASC) -> btESBL_ecoli_globalst410_tree_noASC
-btESBL_ecoli_globalst410_tree_noASC$tip.label <-
-  gsub("_filtered","", btESBL_ecoli_globalst410_tree_noASC$tip.label)
-
-use_data(btESBL_ecoli_globalst410_tree_noASC, overwrite = TRUE)
 
 # st410 amr ---------------------------------------------------
 
@@ -854,16 +835,21 @@ use_data(btESBL_ecoli_globalst410_tree_noASC, overwrite = TRUE)
 amr.ariba410 <-
   read_csv(
     here(
-      "data-raw/ecoli-genomics-paper/st410/st410_ariba_srst2_summary.csv"))
+      "data-raw/ecoli-genomics-paper/st410-new/st410-ariba-srst2-summary.csv"
+    )
+  )
 
 amr.ariba410 %>%
-  mutate(name = gsub("\\./", "", name),
-         name = gsub("/report.tsv", "", name),
-         name = gsub("_filtered", "", name),
-         name = gsub("#","_", name)) %>%
+  mutate(
+    name = gsub("\\./", "", name),
+    name = gsub("/report.tsv", "", name),
+    name = gsub("_filtered", "", name),
+    name = gsub("#", "_", name)
+  ) %>%
   pivot_longer(-name,
-               names_to= c( "cluster", ".value"),
-               names_sep = "\\.") %>%
+    names_to = c("cluster", ".value"),
+    names_sep = "\\."
+  ) %>%
   mutate(gene = sapply(str_split(ref_seq, "__"), function(x) x[3])) %>%
   filter(match == "yes") %>%
   mutate(gene = case_when(
@@ -871,12 +857,19 @@ amr.ariba410 %>%
     TRUE ~ gene
   )) %>%
   select(name, gene) ->
-  btESBL_ecoli_st410_amr
-
+btESBL_ecoli_st410_amr
 use_data(btESBL_ecoli_st410_amr, overwrite = TRUE)
 
 ### st167
 
+
+st167_metadata_new <-
+  read_xls(
+    here("data-raw/ecoli-genomics-paper/st167-new/13073_2019_699_MOESM2_ESM.xls")
+  ) %>%
+  filter(ST == 167) %>%
+  filter(!grepl("^G", Assembly) & !grepl("_", Assembly)) %>%
+  janitor::clean_names()
 
 st167_metadata <-
   read_tsv(here("data-raw/ecoli-genomics-paper/st167/st167.tsv"))
@@ -891,7 +884,8 @@ st167_metadata %>%
     Country,
     `Collection Year`,
     ST
-  ) %>%  separate_rows(
+  ) %>%
+  separate_rows(
     `Data Source(Accession No.;Sequencing Platform;Sequencing Library;Insert Size;Experiment;Status)`,
     sep = ","
   ) %>%
@@ -906,15 +900,27 @@ st167_metadata %>%
     ),
     sep = ";"
   ) ->
-  btESBL_ecoli_st167_metadata
+btESBL_ecoli_st167_metadata
 
-use_data(btESBL_ecoli_st167_metadata, overwrite = TRUE)
+left_join(select(st167_metadata_new, assembly, origin),
+  btESBL_ecoli_st167_metadata,
+  by = c("assembly" = "accession")
+) %>%
+  mutate(County = if_else(
+    is.na(Country) & origin != "unknown",
+    origin,
+    Country
+  )) %>%
+  select(-origin) %>%
+  rename(accession = assembly)-> btESBL_ecoli_st167_metadata
+
+  use_data(btESBL_ecoli_st167_metadata, overwrite = TRUE)
 
 # st167 plasmids -----------------
 
 st167_plasm <-
   read_csv(
-    here("data-raw/ecoli-genomics-paper/st167/st167_pf_ariba_summary.csv"))
+    here("data-raw/ecoli-genomics-paper/st167-new/st167-ariba-plasmidfinder-summary.csv"))
 
 
 st167_plasm %>%
@@ -937,9 +943,9 @@ use_data(btESBL_ecoli_st167_plasmids, overwrite = TRUE)
 # st167 tree -----------------------------------------------
 
 read.tree(
-  here(
-    "data-raw/ecoli-genomics-paper/st167/clean.full.filtered_polymorphic_sites.ref_removed.snpsites.fasta.treefile")) ->
-  st167_tree
+  "data-raw/ecoli-genomics-paper/st167-new/clean.full.filtered_polymorphic_sites.fasta.treefile"
+) ->
+st167_tree
 
 st167_tree$tip.label <- gsub("_filtered","", st167_tree$tip.label)
 
@@ -949,28 +955,11 @@ use_data(btESBL_ecoli_globalst167_tree, overwrite = TRUE)
 
 # non ASC tree
 
-read.tree(
-  here("data-raw/ecoli-genomics-paper/st167/tree_no_ASC/clean.full.filtered_polymorphic_sites.fasta.treefile")
-) -> btESBL_ecoli_globalst167_tree_noASC
 
 
-midpoint.root(btESBL_ecoli_globalst167_tree_noASC) ->
-  btESBL_ecoli_globalst167_tree_noASC
 
-btESBL_ecoli_globalst167_tree_noASC$tip.label <-
-  gsub("_filtered","", btESBL_ecoli_globalst167_tree_noASC$tip.label)
 
-use_data(btESBL_ecoli_globalst167_tree_noASC, overwrite = TRUE)
 
-# overwrite non ASC trees
-
-btESBL_ecoli_globalst410_tree <- btESBL_ecoli_globalst410_tree_noASC
-
-use_data(btESBL_ecoli_globalst410_tree, overwrite = TRUE)
-
-btESBL_ecoli_globalst167_tree <- btESBL_ecoli_globalst167_tree_noASC
-
-use_data(btESBL_ecoli_globalst167_tree, overwrite = TRUE)
 
 # st167 amr ---------------------------------------------------
 
@@ -978,16 +967,21 @@ use_data(btESBL_ecoli_globalst167_tree, overwrite = TRUE)
 amr.ariba167 <-
   read_csv(
     here(
-      "data-raw/ecoli-genomics-paper/st167/st167_ariba_srst2_summary.csv"))
+      "data-raw/ecoli-genomics-paper/st167-new/st167-ariba-srst2-summary.csv"
+    )
+  )
 
 amr.ariba167 %>%
-  mutate(name = gsub("\\./", "", name),
-         name = gsub("/report.tsv", "", name),
-         name = gsub("_filtered", "", name),
-         name = gsub("#","_", name)) %>%
+  mutate(
+    name = gsub("\\./", "", name),
+    name = gsub("/report.tsv", "", name),
+    name = gsub("_filtered", "", name),
+    name = gsub("#", "_", name)
+  ) %>%
   pivot_longer(-name,
-               names_to = c( "cluster", ".value"),
-               names_sep = "\\.") %>%
+    names_to = c("cluster", ".value"),
+    names_sep = "\\."
+  ) %>%
   mutate(gene = sapply(str_split(ref_seq, "__"), function(x) x[3])) %>%
   filter(match == "yes") %>%
   mutate(gene = case_when(
@@ -995,7 +989,7 @@ amr.ariba167 %>%
     TRUE ~ gene
   )) %>%
   select(name, gene) ->
-  btESBL_ecoli_st167_amr
+btESBL_ecoli_st167_amr
 
 use_data(btESBL_ecoli_st167_amr, overwrite = TRUE)
 

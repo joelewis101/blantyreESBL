@@ -12,8 +12,8 @@ btESBL_ecoli_globalst410_tree
 }
 \description{
 Midpoint rooted maximum likelihood phylogeny for E. coli
-incorporating all ST410 study isolates and all ST410 E. coli
-downloaded from Enterobase on 1st March 2021 using multiple
+incorporating all ST410 study isolates 327 ST410 context genomes
+from Feng et al 2019 (doi:10.1038/s42003-019-0569-1) using multiple
 sequence alignment from mapping to reference.
 (see manuscript for details)
 }

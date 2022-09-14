@@ -22,17 +22,28 @@ knitr::opts_chunk$set(
 
 The blantyreESBL R package is a repository for data generated as part of a study into carriage of resistant bacteria in Blantyre, Malawi. It also includes reproducible analysis script for three manuscripts arising from the study:
   
-[**Dynamics of gut mucosal colonisation with extended spectrum beta-lactamase producing Enterobacterales in Malawi**](https://joelewis101.github.io/blantyreESBL/articles/analysis.html)
+[**Colonization dynamics of extended-spectrum beta-lactamase-producing Enterobacterales in the gut of Malawian adults**](https://joelewis101.github.io/blantyreESBL/articles/analysis.html)
 
 Joseph M Lewis^1,2,3,4^, , Madalitso Mphasa^1^, Rachel Banda^1^,  Matthew Beale^4^, Eva Heinz^2^, Jane Mallewa^5^, Christopher Jewell^6^, Nicholas R Thomson^4,7^, Nicholas A Feasey^1,2^
 
+Paper available at Nature Microbiology [here](https://doi.org/10.1038/s41564-022-01216-7)
+
 [**Genomic analysis of extended-spectrum beta-lactamase (ESBL) producing Escherichia coli colonising adults in Blantyre, Malawi reveals previously undescribed diversity**](https://joelewis101.github.io/blantyreESBL/articles/analysis-ecoli.html)
 
-Joseph M Lewis^1,2,3,4^, , Madalitso Mphasa^1^, Rachel Banda^1^,  Matthew Beale^4^, Jane Mallewa^5^, Adam P Roberts^2^, Eva Heinz^2^, Nicholas Thomson^4,7^, Nicholas A Feasey^1,2^
+Joseph M Lewis^1,2,3,4^, , Madalitso Mphasa^1^, Rachel Banda^1^,  Matthew
+Beale^4^, Jane Mallewa^5^, Catherine Anscombe^1,2^, Allan Zuza^1^, Adam P Roberts^2^, Eva Heinz*^2^, Nicholas
+Thomson*^4,7^, Nicholas A Feasey*^1,2^
 
-[**Genomic and antigenic diversity of colonising _Klebsiella pneumoniae_ isolates mirrors that of invasive isolates in Blantyre, Malawi**](https://joelewis101.github.io/blantyreESBL/articles/analysis-kleb.html)
+* = contributed equally
+
+Preprint available at BioRxiv [here](https://doi.org/10.1101/2021.10.07.463523)
+
+**Genomic and antigenic diversity of colonising _Klebsiella pneumoniae_ isolates mirrors that of invasive isolates in Blantyre, Malawi**](https://joelewis101.github.io/blantyreESBL/articles/analysis-kleb.html)
 
 Joseph M Lewis^1,2,3,4^, , Madalitso Mphasa^1^, Rachel Banda^1^,  Matthew Beale^4^, Jane Mallewa^5^, Eva Heinz^2^, Nicholas Thomson^4,7^, Nicholas A Feasey^1,2^
+
+Available at Microbial Genomics [here](https://doi.org/10.1099/mgen.0.000778)
+
 
 ### Installing and accessing data
 
@@ -71,10 +82,10 @@ The longitudinal modelling paper uses models fit with Stan, the probabilistic pr
  
 ### Author affiliations
  
-1. Malawi Liverpool Wellcome Clinical Research Programme, Blantyre, Malawi
-2. Department of Clinical Sciences, Liverpool School of Tropical Medicine, Liverpool, UK
-3. Department of Clinical Infection, Microbiology and Immunology, University of Liverpool, Liverpool, UK
+1. Malawi Liverpool Wellcome Research Programme, Blantyre, Malawi
+2. Liverpool School of Tropical Medicine, Liverpool, UK
+3. University of Liverpool, Liverpool, UK
 4. Wellcome Sanger Institute, Hinxton, UK
-5. College of Medicine, University of Malawi, Malawi
+5. Kamuzu University of Health Sciences, Malawi
 6. University of Lancaster, Lancaster, UK
 7. London School of Tropical Medicine and Hygiene, London, UK 
