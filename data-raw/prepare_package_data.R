@@ -1140,6 +1140,10 @@ use_data(btESBL_ecoli_horesh_metadata, overwrite = TRUE)
 use_data(btESBL_sequence_sample_metadata, overwrite = TRUE)
 use_data(btESBL_ecoli_musicha_metadata, overwrite = TRUE)
 
+# add horesh AMR
+
+source(here("data-raw/ecoli-genomics-paper/parse_horesh_amr.R"))
+
 
 # load vfdb klebsiella output -------------------------------
 
