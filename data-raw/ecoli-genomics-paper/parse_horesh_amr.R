@@ -4,7 +4,7 @@ library(pheatmap)
 
 parse_ariba_file <- function(filepath) {
   read_csv(filepath, show_col_types = FALSE) %>%
-    mutate(name = gsub("./ariba_amr_results/|/report.tsv", "", name)) %>%
+    mutate(name = gsub("./(redo_failed_)?ariba_amr_results/|/report.tsv", "", name)) %>%
     select(contains("name") |
       contains("match") |
       contains("assembled") |
