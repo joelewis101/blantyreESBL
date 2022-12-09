@@ -366,9 +366,9 @@
 #' Identified AMR genes using ARIBA and the SRST2 database.
 #' See manuscript for details
 #'
-#' @format A tidy data frame with 57303 rows and 2 variables:
+#' @format A tidy data frame with 58446 rows and 2 variables:
 #' \describe{
-#'   \item{lane}{Unique sample-sequencing run ID}
+#'   \item{name}{Unique sample identifier}
 #'   \item{ref_seq}{Identified AMR gene sequence}
 #' }
 "btESBL_ecoli_horesh_amr"

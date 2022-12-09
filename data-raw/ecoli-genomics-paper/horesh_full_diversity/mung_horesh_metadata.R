@@ -147,12 +147,17 @@ df %>%
     into = paste0(1:4,
       "reads"),
     sep = ",") %>%
-  select(ID, contains("reads")) %>%
-  pivot_longer(-ID) %>%
+  select(ID, Assembly_Location,contains("reads")) %>%
+  pivot_longer(-c(ID, Assembly_Location)) %>%
   group_by(ID) %>%
   arrange(ID, value) %>%
   slice(1:2) %>%
   filter(!is.na(value)) %>%
   group_by(ID) %>%
-  filter(n() == 2) %>%
-  filter(grepl("fastq$", value))
+  filter(n() < 2) %>%
+  separate(Assembly_Location, into = "assembly", sep = ",") %>%
+  pull(assembly) %>%
+  write_lines(here("data-raw/ecoli-genomics-paper/horesh_full_diversity/read_filepaths_for_shreddding.txt"))
+
+
+

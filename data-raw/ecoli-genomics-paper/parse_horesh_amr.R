@@ -2,9 +2,16 @@ library(tidyverse)
 library(here)
 library(pheatmap)
 
-parse_ariba_file <- function(filepath) {
-  read_csv(filepath, show_col_types = FALSE) %>%
-    mutate(name = gsub("./(redo_failed_)?ariba_amr_results/|/report.tsv", "", name)) %>%
+parse_ariba_file <- function(filepath, show_col_types = FALSE) {
+  read_csv(filepath, show_col_types = show_col_types) %>%
+    mutate(
+      name =
+        gsub(
+          "./(redo_failed_)?(ariba_amr_results)?/|^\\./|/report.tsv",
+          "",
+          name
+        )
+    ) %>%
     select(contains("name") |
       contains("match") |
       contains("assembled") |
@@ -23,8 +30,8 @@ parse_ariba_file <- function(filepath) {
 
 ariba_dir <- "data-raw/ecoli-genomics-paper/horesh_full_diversity/ariba_amr/"
 
-ariba_files <- paste0(ariba_dir,list.files(ariba_dir))
-           
+ariba_files <- here(paste0(ariba_dir, list.files(ariba_dir)))
+
 map_df(ariba_files, parse_ariba_file) -> btESBL_ecoli_horesh_amr
 
 usethis::use_data(btESBL_ecoli_horesh_amr, overwrite = TRUE)
