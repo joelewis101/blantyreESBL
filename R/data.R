@@ -368,8 +368,9 @@
 #'
 #' @format A tidy data frame with 58446 rows and 2 variables:
 #' \describe{
-#'   \item{name}{Unique sample identifier}
-#'   \item{ref_seq}{Identified AMR gene sequence}
+#'   \item{read_id}{Unique identfier of read file used as input to ARIBA}\
+#'   \item{ref_seq}{Identified AMR gene sequence}\
+#'   \item{ID}{Unique sample identifier to match horesh metadata table}\
 #' }
 "btESBL_ecoli_horesh_amr"
 
