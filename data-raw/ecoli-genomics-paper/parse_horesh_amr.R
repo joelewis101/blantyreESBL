@@ -55,7 +55,8 @@ btESBL_ecoli_horesh_amr %>%
       group_by(ID) %>%
       arrange(ID, value) %>%
       slice(1) %>%
-      mutate(value = gsub("^/.*/|(_1)?\\.fastq(\\.gz)?", "", value)) %>%
+      mutate(value = gsub("^/.*/|(_1)?\\.fastq(\\.gz)?", "", value),
+             ID = toupper(ID)) %>%
       select(-name),
     by = c("name" = "value")
   ) %>%
