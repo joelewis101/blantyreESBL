@@ -61,7 +61,7 @@ library(blantyreESBL)
 library(countrycode)
 library(viridis)
 
-write_figs <- FALSE
+write_figs <- TRUE
 
 if (write_figs) {
   if (!dir.exists(here("figures"))) {dir.create(here("figures"))}
@@ -448,8 +448,8 @@ bind_rows(
       source = case_when(
         Isolation == "Unknown" ~ "Unknown",
         Isolation %in% c("Feces", "Rectal", "Rectal
-                                                Swab") ~ "Colonising",
-        TRUE ~ "Infecting"
+                                                Swab") ~ "Stool",
+        TRUE ~ "Invasive"
       )
     ),
   btESBL_sequence_sample_metadata %>%
@@ -458,7 +458,7 @@ bind_rows(
       Study = "This Study",
       Phylogroup = ecoli_phylogroup,
       res = "ESBL/AmpC/Carbapenemase",
-      source = "Colonising"
+      source = "Stool"
     )
 ) %>%
   mutate(
@@ -473,7 +473,10 @@ bind_rows(
   #  mutate(across(everything(), as.factor)) %>% */
   count(Study, Phylogroup, res, source, .drop = FALSE) %>%
   group_by(Study, res, source) %>%
-  mutate(prop = n / sum(n)) %>%
+  mutate(prop = n / sum(n),
+         source = factor(source,
+                      levels = c("Stool","Invasive","Unknown")
+         )) %>%
   ggplot(aes(Phylogroup,
     prop,
     group = Study,
