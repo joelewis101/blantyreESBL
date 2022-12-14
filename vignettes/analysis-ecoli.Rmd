@@ -27,7 +27,7 @@ This document contains reproducing analysis code which generates the tables and 
 
 Joseph M Lewis^1,2,3,4^, , Madalitso Mphasa^1^, Rachel Banda^1^,  Matthew
 Beale^4^, Jane Mallewa^5^, Catherine Anscombe^1,2^, Allan Zuza^1^, Adam P Roberts^2^, Eva Heinz*^2^, Nicholas
-Thomson*^4,6^, Nicholas A Feasey*^1,2^
+Thomson\*^4,6^, Nicholas A Feasey\*^1,2^
 
 1. Malawi Liverpool Wellcome Research Programme, Blantyre, Malawi
 2. Liverpool School of Tropical Medicine, Liverpool, UK
@@ -241,6 +241,119 @@ if (write_figs) {
 mlst_plot 
 ```
 
+### Compare within- to between- patient diversity
+
+```{r within-vs-between-diveristy, fig.width = 6, fig.height = 6, fig.cap = "Comparing within- to between- participant diversity. A: Heatmap showing number of samples per participant versus number of STs per participant demonstrating that most participants have either one sample or more than one sample with different STs. B: Histogram of pairwise core genome SNP difference comparing only sample pairs that are of the same ST, stratified by whether sample pair is between-participant (left panel) or within-participant (right panel), demonstrating a similar distribution for each." }
+
+
+
+btESBL_sequence_sample_metadata %>%
+  filter(species == "E. coli") %>%
+  group_by(pid) %>%
+  summarise(
+    n_sts_per_participant = length(unique(ST)),
+    n_samples_per_participant = n()
+  ) %>%
+  mutate(
+    n_samples_per_participant = factor(n_samples_per_participant,
+      levels = 1:5
+    ),
+    n_sts_per_participant = factor(n_sts_per_participant, levels = 1:5)
+  ) %>%
+  count(n_sts_per_participant, n_samples_per_participant, .drop = FALSE) %>%
+  filter(as.numeric(as.character(n_samples_per_participant)) >=
+    as.numeric(as.character(n_sts_per_participant))) %>%
+  ggplot(aes(n_samples_per_participant, n_sts_per_participant,
+    label = n, fill = n, color = -n
+  )) +
+  geom_tile(color = NA) +
+  geom_text() +
+  scale_fill_viridis_c() +
+  scale_color_gradient(low = "black", high = "white") +
+  guides(color = "none") +
+  labs(
+    x = "No. of samples per participant",
+    y = "No. of STs per participant",
+    fill = ""
+  ) +
+  theme_bw() -> samples_vs_st_plot
+
+
+btESBL_snpdists_esco %>%
+  rename(sample1 = sample) %>%
+  pivot_longer(-sample1,
+    names_to = "sample2",
+    values_to = "snpdist"
+  ) %>%
+  left_join(
+    btESBL_sequence_sample_metadata %>%
+      filter(species == "E. coli") %>%
+      transmute(
+        pid1 = pid,
+        ST1 = ST,
+        sample1 = lane
+      )
+  ) %>%
+  left_join(
+    btESBL_sequence_sample_metadata %>%
+      filter(species == "E. coli") %>%
+      transmute(
+        pid2 = pid,
+        ST2 = ST,
+        sample2 = lane
+      )
+  ) %>%
+  rowwise() %>%
+  mutate(filter_var = paste(sort(c(sample1, sample2)), collapse = ",")) -> df
+
+df[!duplicated(df$filter_var), ] -> df
+
+df %>%
+  filter(sample1 != sample2) %>%
+  filter(ST1 == ST2) %>%
+  filter(!is.na(pid1) & !is.na(pid2)) %>%
+  mutate(btwn_var = if_else(pid1 == pid2, "Within-participant, same ST",
+    "Between-participant, same ST"
+  )) %>%
+  ggplot(aes(snpdist)) +
+  # geom_density() +
+  geom_histogram(bins = 50, color = "black", size = 0.4) +
+  xlim(0, 200) +
+  facet_wrap(~btwn_var, scales = "free") +
+  theme_bw() +
+  guides(fill = "none") +
+  labs(
+    x = "Core genome SNP distance",
+    y = "Number of sample-pairs"
+  ) +
+  scale_fill_viridis_d(option = "cividis") -> snpdist_plot
+    
+
+if (write_figs) {
+
+  ggsave(
+    here("figures/ecoli-genomics/within_participant_diversity_plot.pdf"),
+    mlst_plot,
+    width = 6,
+    height = 6)
+ 
+  ggsave(
+    here("figures/ecoli-genomics/within_participant_diversity_plot.svg"),
+    mlst_plot,
+    width = 6,
+    height = 6)
+}
+((samples_vs_st_plot + plot_spacer()) /
+ snpdist_plot) +
+plot_annotation(tag_levels = "A") -> within_participant_diversity_plot
+
+within_participant_diversity_plot
+
+
+
+```
+
+
 ### Compare phylogroup to horesh collection
 
 As per reviewer's comments - stratify Horesh **collection** by invasive vs carriage
@@ -270,9 +383,6 @@ btESBL_ecoli_horesh_metadata %>%
     by = c("ID" = "ID")
   ) -> btESBL_ecoli_horesh_metadata
 
-btESBL_ecoli_horesh_metadata %>%
-ggplot(aes(fct_infreq(res))) + 
-geom_bar()
 
 
 ```
