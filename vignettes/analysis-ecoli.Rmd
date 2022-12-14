@@ -329,27 +329,27 @@ df %>%
   scale_fill_viridis_d(option = "cividis") -> snpdist_plot
     
 
+((samples_vs_st_plot + plot_spacer()) /
+  snpdist_plot) +
+  plot_annotation(tag_levels = "A") -> within_participant_diversity_plot
+
+within_participant_diversity_plot
+
+
 if (write_figs) {
 
   ggsave(
     here("figures/ecoli-genomics/within_participant_diversity_plot.pdf"),
-    mlst_plot,
+  within_participant_diversity_plot,
     width = 6,
     height = 6)
  
   ggsave(
     here("figures/ecoli-genomics/within_participant_diversity_plot.svg"),
-    mlst_plot,
+    within_participant_diversity_plot,
     width = 6,
     height = 6)
 }
-((samples_vs_st_plot + plot_spacer()) /
- snpdist_plot) +
-plot_annotation(tag_levels = "A") -> within_participant_diversity_plot
-
-within_participant_diversity_plot
-
-
 
 ```
 
