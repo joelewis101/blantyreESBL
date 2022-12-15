@@ -274,7 +274,7 @@ btESBL_sequence_sample_metadata %>%
   labs(
     x = "No. of samples per participant",
     y = "No. of STs per participant",
-    fill = ""
+    fill = "No. of\nParticipants"
   ) +
   theme_bw() -> samples_vs_st_plot
 
@@ -329,7 +329,7 @@ df %>%
   scale_fill_viridis_d(option = "cividis") -> snpdist_plot
     
 
-((samples_vs_st_plot + plot_spacer()) /
+((samples_vs_st_plot + plot_spacer() + plot_layout(widths = c(1.5,1))) /
   snpdist_plot) +
   plot_annotation(tag_levels = "A") -> within_participant_diversity_plot
 
@@ -349,6 +349,7 @@ if (write_figs) {
     within_participant_diversity_plot,
     width = 6,
     height = 6)
+
 }
 
 ```
