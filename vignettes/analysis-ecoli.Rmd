@@ -2958,6 +2958,129 @@ ggsave(here("figures/ecoli-genomics/st410_167_131_subtreeplot.pdf"),
 
 ```
 
+```{r st131-subtree-plot, fig.width = 7, fig.height = 6.5, fig.cap = "E. coli ST131 subtree showing detail of CTX-M-27 isolates and one area in which Malawian isolates are monophyletic"}
+
+
+# ----------------------------------------------------------------------
+# plot subtree of ST131
+
+treeio::tree_subset(btESBL_ecoli_globalst131_tree, 1090) -> st131_subtree
+
+
+esbl_cpe.ariba131 %>%
+  subset(name %in% st131_subtree$tip.label) %>%
+  as.data.frame() ->
+esbl_cpe.ariba131_subset
+
+esbl_cpe.ariba131_subset[
+  c(TRUE, apply(esbl_cpe.ariba131_subset[-1], 2, function(x) !all(is.na(x))))
+] ->
+esbl_cpe.ariba131_subset
+
+
+st131_plasm_onehot %>%
+  subset(name %in% st131_subtree$tip.label) %>%
+  as.data.frame() -> st131_plasm_onehot_subset
+
+
+st131_plasm_onehot_subset[
+  c(TRUE, apply(st131_plasm_onehot_subset[-1], 2, function(x) !all(is.na(x))))
+] ->
+
+st131_plasm_onehot_subset
+
+(
+  (
+    (ggtree(treeio::tree_subset(btESBL_ecoli_globalst131_tree, 1090)) %<+%
+      (select(btESBL_ecoli_st131_metadata, Accession_number, Country) %>%
+        mutate(Country = if_else(Country == "Malawi",
+          "Malawi", NA_character_
+        ))) %>%
+      gheatmap(
+        select(btESBL_ecoli_st131_metadata, `Year`),
+        font.size = 4,
+        width = 0.035,
+        colnames_position = "top",
+        color = NA,
+        colnames_offset_y = 0,
+        colnames_angle = 90,
+        hjust = 0
+      ) +
+      scale_fill_viridis_c(
+        name = "Year", limits = c(1965, 2020),
+        na.value = "white"
+      ) +
+      new_scale_fill()) %>%
+      gheatmap(
+        select(btESBL_ecoli_st131_metadata, Continent),
+        font.size = 4,
+        width = 0.03,
+        colnames_position = "top",
+        color = NA,
+        colnames_offset_y = 0,
+        colnames_angle = 90,
+        offset = 0.0000008,
+        hjust = 0
+      ) +
+      scale_fill_viridis_d(
+        option = "plasma", name = "Continent",
+        na.translate = FALSE
+      ) +
+      geom_tippoint(aes(color = Country), na.rm = TRUE, size = 1) +
+      scale_color_manual(values = "red", na.translate = FALSE) +
+      new_scale_fill()
+  ) %>%
+    gheatmap(
+      select(esbl_cpe.ariba131_subset, -name),
+      font.size = 2.5,
+      width = (ncol(esbl_cpe.ariba131_subset) - 1) * 0.03,
+      colnames_position = "top",
+      color = NA,
+      colnames_offset_y = 0,
+      colnames_angle = 90,
+      offset = 0.0000015,
+      hjust = 0
+    ) + scale_fill_manual(
+      values = esbl_cols,
+      na.translate = FALSE,
+      name = "Beta-\nlactamase"
+    ) +
+    new_scale_fill()
+) %>% gheatmap(
+  select(st131_plasm_onehot_subset, -name),
+  font.size = 2.5,
+  width = 0.026 * (ncol(st131_plasm_onehot_subset) - 1) + 0.1,
+  colnames_position = "top",
+  color = NA,
+  colnames_offset_y = 0,
+  colnames_angle = 90,
+  offset = 0.0000032,
+  hjust = 0
+) + scale_fill_manual(
+  values = viridis_pal(option = "cividis")(7)[2],
+  na.translate = FALSE,
+  name = "Plasmid\nreplicon"
+) +
+  ylim(NA, 80) +
+  geom_treescale(x = 0.000001, y = 55, offset = 1, width = 0.000001) +
+  geom_point2(aes(subset = as.numeric(label) < 95 & !isTip), size = 0.5) ->
+st131_subtree_plot
+
+st131_subtree_plot
+
+if (write_figs) {
+
+ggsave(here("figures/ecoli-genomics/st131_subtreeplot.svg"),
+       st131_subtree_plot, width = 7, height = 6.5)
+
+ggsave(here("figures/ecoli-genomics/st131_subtreeplot.pdf"),
+       st131_subtree_plot, width = 7, height = 6.5)
+}
+
+
+
+```
+
 
 ### Reproducibility - packages, R version and OS used
 
