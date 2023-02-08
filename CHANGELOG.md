@@ -4,11 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.4.0] - 2023-02-08
 
 ### Added
 
 - Added AMR data for horesh E. coli dataset
+- Stratfied analysis of E. coli diversity vs Horesh (AMR status and source)
+- Add within-participant diversity analysis
+- Add E. coli ST131 subtree plot to show Malawian monophlyetic clade
+
+### Fixed
+
+- correct Horesh metadata prep error
 
 ## [1.3.0] - 2022-09-14
 
