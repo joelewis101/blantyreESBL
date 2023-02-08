@@ -1,4 +1,4 @@
-pandoc: '2.18'
+pandoc: 2.19.2
 pkgdown: 2.0.2
 pkgdown_sha: ~
 articles:
@@ -8,5 +8,5 @@ articles:
   contig-clusters: contig-clusters.html
   fitting-stan-models: fitting-stan-models.html
   simulations: simulations.html
-last_built: 2022-09-14T15:36Z
+last_built: 2023-02-08T16:48Z
 

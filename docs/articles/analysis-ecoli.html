@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">blantyreESBL</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4</span>
       </span>
     </div>
 
@@ -107,9 +107,8 @@ previously undescribed diversity</em></p>
 <p>Joseph M Lewis<sup>1,2,3,4</sup>, , Madalitso Mphasa<sup>1</sup>,
 Rachel Banda<sup>1</sup>, Matthew Beale<sup>4</sup>, Jane
 Mallewa<sup>5</sup>, Catherine Anscombe<sup>1,2</sup>, Allan
-Zuza<sup>1</sup>, Adam P Roberts<sup>2</sup>, Eva Heinz<em><sup>2</sup>,
-Nicholas Thomson</em><sup>4,6</sup>, Nicholas A
-Feasey*<sup>1,2</sup></p>
+Zuza<sup>1</sup>, Adam P Roberts<sup>2</sup>, Eva Heinz*<sup>2</sup>,
+Nicholas Thomson*<sup>4,6</sup>, Nicholas A Feasey*<sup>1,2</sup></p>
 <ol style="list-style-type: decimal">
 <li>Malawi Liverpool Wellcome Research Programme, Blantyre, Malawi</li>
 <li>Liverpool School of Tropical Medicine, Liverpool, UK</li>
@@ -13933,9 +13932,164 @@ amd (C) identfied Inc-type plasmid replicons.
 </div>
 </div>
 <div class="section level3">
-<h3 id="compare-phylogroup-to-horesh-collection">Compare phylogroup to horesh collection<a class="anchor" aria-label="anchor" href="#compare-phylogroup-to-horesh-collection"></a>
+<h3 id="compare-within--to-between--patient-diversity">Compare within- to between- patient diversity<a class="anchor" aria-label="anchor" href="#compare-within--to-between--patient-diversity"></a>
 </h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+
+
+<span class="va">btESBL_sequence_sample_metadata</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">species</span> <span class="op">==</span> <span class="st">"E. coli"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">pid</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>
+    n_sts_per_participant <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">ST</span><span class="op">)</span><span class="op">)</span>,
+    n_samples_per_participant <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>
+    n_samples_per_participant <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">n_samples_per_participant</span>,
+      levels <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span>
+    <span class="op">)</span>,
+    n_sts_per_participant <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">n_sts_per_participant</span>, levels <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span>
+  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">n_sts_per_participant</span>, <span class="va">n_samples_per_participant</span>, .drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">n_samples_per_participant</span><span class="op">)</span><span class="op">)</span> <span class="op">&gt;=</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">n_sts_per_participant</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">n_samples_per_participant</span>, <span class="va">n_sts_per_participant</span>,
+    label <span class="op">=</span> <span class="va">n</span>, fill <span class="op">=</span> <span class="va">n</span>, color <span class="op">=</span> <span class="op">-</span><span class="va">n</span>
+  <span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile</a></span><span class="op">(</span>color <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html" class="external-link">scale_color_gradient</a></span><span class="op">(</span>low <span class="op">=</span> <span class="st">"black"</span>, high <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html" class="external-link">guides</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>
+    x <span class="op">=</span> <span class="st">"No. of samples per participant"</span>,
+    y <span class="op">=</span> <span class="st">"No. of STs per participant"</span>,
+    fill <span class="op">=</span> <span class="st">"No. of\nParticipants"</span>
+  <span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">samples_vs_st_plot</span>
+
+
+<span class="va">btESBL_snpdists_esco</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>sample1 <span class="op">=</span> <span class="va">sample</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span><span class="op">-</span><span class="va">sample1</span>,
+    names_to <span class="op">=</span> <span class="st">"sample2"</span>,
+    values_to <span class="op">=</span> <span class="st">"snpdist"</span>
+  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span>
+    <span class="va">btESBL_sequence_sample_metadata</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">species</span> <span class="op">==</span> <span class="st">"E. coli"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">transmute</a></span><span class="op">(</span>
+        pid1 <span class="op">=</span> <span class="va">pid</span>,
+        ST1 <span class="op">=</span> <span class="va">ST</span>,
+        sample1 <span class="op">=</span> <span class="va">lane</span>
+      <span class="op">)</span>
+  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span>
+    <span class="va">btESBL_sequence_sample_metadata</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">species</span> <span class="op">==</span> <span class="st">"E. coli"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">transmute</a></span><span class="op">(</span>
+        pid2 <span class="op">=</span> <span class="va">pid</span>,
+        ST2 <span class="op">=</span> <span class="va">ST</span>,
+        sample2 <span class="op">=</span> <span class="va">lane</span>
+      <span class="op">)</span>
+  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rowwise.html" class="external-link">rowwise</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>filter_var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">sample1</span>, <span class="va">sample2</span><span class="op">)</span><span class="op">)</span>, collapse <span class="op">=</span> <span class="st">","</span><span class="op">)</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">df</span>
+<span class="co">#&gt; Joining, by = "sample1"</span>
+<span class="co">#&gt; Joining, by = "sample2"</span>
+
+<span class="va">df</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/duplicated.html" class="external-link">duplicated</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">filter_var</span><span class="op">)</span>, <span class="op">]</span> <span class="op">-&gt;</span> <span class="va">df</span>
+
+<span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">sample1</span> <span class="op">!=</span> <span class="va">sample2</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">ST1</span> <span class="op">==</span> <span class="va">ST2</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">pid1</span><span class="op">)</span> <span class="op">&amp;</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">pid2</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>btwn_var <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else</a></span><span class="op">(</span><span class="va">pid1</span> <span class="op">==</span> <span class="va">pid2</span>, <span class="st">"Within-participant, same ST"</span>,
+    <span class="st">"Between-participant, same ST"</span>
+  <span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">snpdist</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="co"># geom_density() +</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram</a></span><span class="op">(</span>bins <span class="op">=</span> <span class="fl">50</span>, color <span class="op">=</span> <span class="st">"black"</span>, size <span class="op">=</span> <span class="fl">0.4</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">xlim</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">200</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">btwn_var</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html" class="external-link">guides</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>
+    x <span class="op">=</span> <span class="st">"Core genome SNP distance"</span>,
+    y <span class="op">=</span> <span class="st">"Number of sample-pairs"</span>
+  <span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_d</a></span><span class="op">(</span>option <span class="op">=</span> <span class="st">"cividis"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">snpdist_plot</span>
+    
+
+<span class="op">(</span><span class="op">(</span><span class="va">samples_vs_st_plot</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_spacer.html" class="external-link">plot_spacer</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.5</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span>
+  <span class="va">snpdist_plot</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span>tag_levels <span class="op">=</span> <span class="st">"A"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">within_participant_diversity_plot</span>
+
+<span class="va">within_participant_diversity_plot</span>
+<span class="co">#&gt; Warning: Removed 751 rows containing non-finite values (stat_bin).</span>
+<span class="co">#&gt; Warning: Removed 4 rows containing missing values (geom_bar).</span></code></pre></div>
+<div class="figure">
+<img src="analysis-ecoli_files/figure-html/within-vs-between-diveristy-1.png" alt="Comparing within- to between- participant diversity. A: Heatmap showing number of samples per participant versus number of STs per participant demonstrating that most participants have either one sample or more than one sample with different STs. B: Histogram of pairwise core genome SNP difference comparing only sample pairs that are of the same ST, stratified by whether sample pair is between-participant (left panel) or within-participant (right panel), demonstrating a similar distribution for each." width="576"><p class="caption">
+Comparing within- to between- participant diversity. A: Heatmap showing
+number of samples per participant versus number of STs per participant
+demonstrating that most participants have either one sample or more than
+one sample with different STs. B: Histogram of pairwise core genome SNP
+difference comparing only sample pairs that are of the same ST,
+stratified by whether sample pair is between-participant (left panel) or
+within-participant (right panel), demonstrating a similar distribution
+for each.
+</p>
+</div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+
+<span class="kw">if</span> <span class="op">(</span><span class="va">write_figs</span><span class="op">)</span> <span class="op">{</span>
+
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"figures/ecoli-genomics/within_participant_diversity_plot.pdf"</span><span class="op">)</span>,
+  <span class="va">within_participant_diversity_plot</span>,
+    width <span class="op">=</span> <span class="fl">6</span>,
+    height <span class="op">=</span> <span class="fl">6</span><span class="op">)</span>
+ 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"figures/ecoli-genomics/within_participant_diversity_plot.svg"</span><span class="op">)</span>,
+    <span class="va">within_participant_diversity_plot</span>,
+    width <span class="op">=</span> <span class="fl">6</span>,
+    height <span class="op">=</span> <span class="fl">6</span><span class="op">)</span>
+
+<span class="op">}</span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="compare-phylogroup-to-horesh-collection">Compare phylogroup to horesh collection<a class="anchor" aria-label="anchor" href="#compare-phylogroup-to-horesh-collection"></a>
+</h3>
+<p>As per reviewer’s comments - stratify Horesh
+<strong>collection</strong> by invasive vs carriage and ESBL vs not ESBL
+for comparison</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="co"># add esbl status to btESBL_ecoli_horesh_metadata</span>
+
+<span class="va">btESBL_ecoli_horesh_metadata</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span>
+    <span class="va">btESBL_ecoli_horesh_amr</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span>
+        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span>
+          <span class="va">btESBL_NCBI_phenotypic_bl</span>,
+          <span class="va">allele_name</span>,
+          <span class="va">class</span>
+        <span class="op">)</span>,
+        by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ref_seq"</span> <span class="op">=</span> <span class="st">"allele_name"</span><span class="op">)</span>
+      <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">ID</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>res <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else</a></span><span class="op">(</span>
+        <span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"ESBL|AmpC|Carbapenemase"</span>, <span class="va">class</span><span class="op">)</span><span class="op">)</span>,
+        <span class="st">"ESBL/AmpC/Carbapenemase"</span>,
+        <span class="st">"No ESBL/AmpC/Carbapenemase"</span>
+      <span class="op">)</span><span class="op">)</span>,
+    by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ID"</span> <span class="op">=</span> <span class="st">"ID"</span><span class="op">)</span>
+  <span class="op">)</span> <span class="op">-&gt;</span> <span class="va">btESBL_ecoli_horesh_metadata</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_rows</a></span><span class="op">(</span>
 <span class="va">btESBL_ecoli_horesh_metadata</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
@@ -13968,14 +14122,13 @@ amd (C) identfied Inc-type plasmid replicons.
 
 <span class="va">malawi_vs_global_pgroup</span></code></pre></div>
 <div class="figure">
-<img src="analysis-ecoli_files/figure-html/globalvsmalawi_pgroup-1.png" alt="Phylogroup distribution in isolates from this study comapred to the global collection" width="480"><p class="caption">
+<img src="analysis-ecoli_files/figure-html/globalvsmalawi_pgroup-1.png" alt="Phylogroup distribution in isolates from this study comapred to the Horesh et al collection" width="480"><p class="caption">
 Phylogroup distribution in isolates from this study comapred to the
-global collection
+Horesh et al collection
 </p>
 </div>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
-
 <span class="kw">if</span> <span class="op">(</span><span class="va">write_figs</span><span class="op">)</span> <span class="op">{</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span>
     <span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"figures/ecoli-genomics/global_vs_malawi_pgroup.svg"</span><span class="op">)</span>,
@@ -13989,6 +14142,87 @@ global collection
     width <span class="op">=</span> <span class="fl">5</span>,
     height <span class="op">=</span> <span class="fl">4</span>
   <span class="op">)</span>
+<span class="op">}</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_rows</a></span><span class="op">(</span>
+  <span class="va">btESBL_ecoli_horesh_metadata</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">transmute</a></span><span class="op">(</span>
+      Study <span class="op">=</span> <span class="st">"Global"</span>,
+      Phylogroup <span class="op">=</span> <span class="va">Phylogroup</span>,
+      res <span class="op">=</span> <span class="va">res</span>,
+      source <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span>
+        <span class="va">Isolation</span> <span class="op">==</span> <span class="st">"Unknown"</span> <span class="op">~</span> <span class="st">"Unknown"</span>,
+        <span class="va">Isolation</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Feces"</span>, <span class="st">"Rectal"</span>, <span class="st">"Rectal
+                                                Swab"</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Stool"</span>,
+        <span class="cn">TRUE</span> <span class="op">~</span> <span class="st">"Invasive"</span>
+      <span class="op">)</span>
+    <span class="op">)</span>,
+  <span class="va">btESBL_sequence_sample_metadata</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">species</span> <span class="op">==</span> <span class="st">"E. coli"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">transmute</a></span><span class="op">(</span>
+      Study <span class="op">=</span> <span class="st">"This Study"</span>,
+      Phylogroup <span class="op">=</span> <span class="va">ecoli_phylogroup</span>,
+      res <span class="op">=</span> <span class="st">"ESBL/AmpC/Carbapenemase"</span>,
+      source <span class="op">=</span> <span class="st">"Stool"</span>
+    <span class="op">)</span>
+<span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>
+    Phylogroup <span class="op">=</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span>
+        <span class="va">Phylogroup</span> <span class="op">==</span> <span class="st">"Not Determined"</span> <span class="op">~</span> <span class="st">"Unknown"</span>,
+        <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"clade|Shigella"</span>, <span class="va">Phylogroup</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Other"</span>,
+        <span class="cn">TRUE</span> <span class="op">~</span> <span class="va">Phylogroup</span>
+      <span class="op">)</span>
+  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="co">#  mutate(across(everything(), as.factor)) %&gt;% */</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">Study</span>, <span class="va">Phylogroup</span>, <span class="va">res</span>, <span class="va">source</span>, .drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">Study</span>, <span class="va">res</span>, <span class="va">source</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>prop <span class="op">=</span> <span class="va">n</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>,
+         source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">source</span>,
+                      levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Stool"</span>,<span class="st">"Invasive"</span>,<span class="st">"Unknown"</span><span class="op">)</span>
+         <span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">Phylogroup</span>,
+    <span class="va">prop</span>,
+    group <span class="op">=</span> <span class="va">Study</span>,
+    fill <span class="op">=</span> <span class="va">Study</span>
+  <span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_col</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>
+    x <span class="op">=</span> <span class="st">"Phylogroup"</span>,
+    y <span class="op">=</span> <span class="st">"Proportion"</span>
+  <span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="va">source</span> <span class="op">~</span> <span class="va">res</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">malawi_vs_global_pgroup_stratified</span>
+
+<span class="va">malawi_vs_global_pgroup_stratified</span></code></pre></div>
+<div class="figure">
+<img src="analysis-ecoli_files/figure-html/stratified_pgroup_plot-1.png" alt="Phylogroup distribution in isolates from this study comapred to the Horesh et al collection, stratified by source of isolation and presence of ESBL/AmpC/carbapenemase gene. Includes only those isolates for which metadata is available to determine source of isolate (n = 3921)" width="700"><p class="caption">
+Phylogroup distribution in isolates from this study comapred to the
+Horesh et al collection, stratified by source of isolation and presence
+of ESBL/AmpC/carbapenemase gene. Includes only those isolates for which
+metadata is available to determine source of isolate (n = 3921)
+</p>
+</div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="kw">if</span> <span class="op">(</span><span class="va">write_figs</span><span class="op">)</span> <span class="op">{</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"figures/ecoli-genomics/global_vs_malawi_pgroup_stratified.svg"</span><span class="op">)</span>,
+    <span class="va">malawi_vs_global_pgroup_stratified</span>,
+    width <span class="op">=</span> <span class="fl">6</span>,
+    height <span class="op">=</span> <span class="fl">6</span>
+  <span class="op">)</span>
+
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"figures/ecoli-genomics/global_vs_malawi_pgroup_stratified.pdf"</span><span class="op">)</span>,
+    <span class="va">malawi_vs_global_pgroup_stratified</span>,
+    width <span class="op">=</span> <span class="fl">6</span>,
+    height <span class="op">=</span> <span class="fl">6</span>
+  <span class="op">)</span>
+
 <span class="op">}</span></code></pre></div>
 </div>
 <div class="section level3">
@@ -14011,7 +14245,7 @@ virulence plasmid pINV present assignmen EIEC</li>
 <div class="section level3">
 <h3 id="malawi-phylogeny">Malawi phylogeny<a class="anchor" aria-label="anchor" href="#malawi-phylogeny"></a>
 </h3>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">dassimEcoli_BTEcoli.accession</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
   <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">dassimEcoli_BTEcoli.accession</span> 
@@ -14101,7 +14335,7 @@ SUPPLEMENTARY FIGURE 1: Midpoint-rooted maximum-likelohood phylogeny of
 study isolates showing phylogroup and multilocus sequence type.
 </p>
 </div>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="kw">if</span> <span class="op">(</span><span class="va">write_figs</span><span class="op">)</span> <span class="op">{</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span>
@@ -14121,7 +14355,7 @@ study isolates showing phylogroup and multilocus sequence type.
 <div class="section level3">
 <h3 id="amr-determinants">AMR determinants<a class="anchor" aria-label="anchor" href="#amr-determinants"></a>
 </h3>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 
 <span class="co"># add class ro which resistnce is conferred --------------------------------</span>
@@ -14229,7 +14463,7 @@ study isolates showing phylogroup and multilocus sequence type.
 
 <span class="va">amrplot</span></code></pre></div>
 <p><img src="analysis-ecoli_files/figure-html/amrplot-1.png" width="576"></p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 
 <span class="kw">if</span> <span class="op">(</span><span class="va">write_figs</span><span class="op">)</span> <span class="op">{</span>
@@ -14249,7 +14483,7 @@ study isolates showing phylogroup and multilocus sequence type.
 <div class="section level4">
 <h4 id="amr-mapped-to-tree">AMR mapped to tree<a class="anchor" aria-label="anchor" href="#amr-mapped-to-tree"></a>
 </h4>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">amr</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
   <span class="co"># filter(!gene %in% c("OqxA", "OqxB", "FosA")) %&gt;% </span>
@@ -14319,7 +14553,7 @@ study isolates showing phylogroup and multilocus sequence type.
 AMR determinants mapped back to phylogeny
 </p>
 </div>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 
 <span class="kw">if</span> <span class="op">(</span><span class="va">write_figs</span><span class="op">)</span> <span class="op">{</span>
@@ -14344,14 +14578,14 @@ AMR determinants mapped back to phylogeny
 <div class="section level4">
 <h4 id="phylogeny">Phylogeny<a class="anchor" aria-label="anchor" href="#phylogeny"></a>
 </h4>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
  <span class="co">#prepare metadata ----------</span>
 <span class="co"># lookup list of horesh merged clusters </span>
 
 
 
-<span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_df</a></span><span class="op">(</span>
+<span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map_dfr.html" class="external-link">map_df</a></span><span class="op">(</span>
   <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"_"</span>, <span class="va">btESBL_ecoli_global_popPUNK_clusters</span><span class="op">$</span><span class="va">Cluster</span>, value <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>,
               <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
                 <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>mergeclust <span class="op">=</span> <span class="va">x</span>,
@@ -14367,30 +14601,33 @@ AMR determinants mapped back to phylogeny
       study <span class="op">=</span> <span class="st">"dassim"</span>,
       Country <span class="op">=</span> <span class="st">"Malawi"</span>,
       Continent <span class="op">=</span> <span class="st">"Africa"</span>,
-      Year <span class="op">=</span> <span class="fu"><a href="https://lubridate.tidyverse.org/reference/year.html" class="external-link">year</a></span><span class="op">(</span><span class="va">data_date</span><span class="op">)</span>
-    <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+      Year <span class="op">=</span> <span class="fu"><a href="https://lubridate.tidyverse.org/reference/year.html" class="external-link">year</a></span><span class="op">(</span><span class="va">data_date</span><span class="op">)</span>,
+      res <span class="op">=</span> <span class="st">"ESBL/AmpC/Carbapenemase"</span>,
+      source <span class="op">=</span> <span class="st">"Colonising"</span>
+    <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span>
       <span class="va">btESBL_ecoli_global_popPUNK_clusters</span>,
       by <span class="op">=</span> <span class="st">"lane"</span>
     <span class="op">)</span>,
-  
   <span class="va">btESBL_ecoli_musicha_metadata</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">transmute</a></span><span class="op">(</span>
       lane <span class="op">=</span> <span class="va">lane</span>,
       Cluster <span class="op">=</span> <span class="va">Cluster</span>,
       ST <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">ST</span><span class="op">)</span>,
-                   <span class="st">"Novel"</span>,
-                   <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">ST</span><span class="op">)</span><span class="op">)</span>,
+        <span class="st">"Novel"</span>,
+        <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">ST</span><span class="op">)</span>
+      <span class="op">)</span>,
       Phylogroup <span class="op">=</span> <span class="va">phylogroup</span>,
       study <span class="op">=</span> <span class="st">"musicha"</span>,
       Country <span class="op">=</span> <span class="st">"Malawi"</span>,
       Continent <span class="op">=</span> <span class="st">"Africa"</span>,
       Year <span class="op">=</span> <span class="va">Year</span>
     <span class="op">)</span>,
-  
   <span class="va">btESBL_ecoli_horesh_metadata</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>assembly_name_recode <span class="op">=</span>
-             <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">"\\..*$"</span>, <span class="st">""</span>, <span class="va">Assembly_name</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>
+      assembly_name_recode <span class="op">=</span>
+        <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">"\\..*$"</span>, <span class="st">""</span>, <span class="va">Assembly_name</span><span class="op">)</span>
+    <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">mergclust_lookup</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PopPUNK"</span> <span class="op">=</span> <span class="st">"splts"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">transmute</a></span><span class="op">(</span>
       lane <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span>
@@ -14403,8 +14640,9 @@ AMR determinants mapped back to phylogeny
         <span class="op">)</span>
       <span class="op">)</span>,
       Cluster <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">mergeclust</span><span class="op">)</span>,
-                        <span class="va">mergeclust</span>,
-                        <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">PopPUNK</span><span class="op">)</span><span class="op">)</span>,
+        <span class="va">mergeclust</span>,
+        <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">PopPUNK</span><span class="op">)</span>
+      <span class="op">)</span>,
       ST <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">"~"</span>, <span class="st">""</span>, <span class="va">ST</span><span class="op">)</span>,
       Phylogroup <span class="op">=</span> <span class="va">Phylogroup</span>,
       study <span class="op">=</span> <span class="st">"horesh"</span>,
@@ -14412,58 +14650,74 @@ AMR determinants mapped back to phylogeny
       Continent <span class="op">=</span> <span class="va">Continent</span>,
       Year <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span>
         <span class="va">Year</span> <span class="op">==</span> <span class="st">"Unknown"</span> <span class="op">~</span> <span class="cn">NA_real_</span>,
-        <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"s"</span>, <span class="va">Year</span><span class="op">)</span>  <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">"s"</span>, <span class="st">""</span>, <span class="va">Year</span><span class="op">)</span><span class="op">)</span>,
-        <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"-"</span>, <span class="va">Year</span><span class="op">)</span> <span class="op">~</span>  <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">"-.*$"</span>, <span class="st">""</span>, <span class="va">Year</span><span class="op">)</span><span class="op">)</span>,
+        <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"s"</span>, <span class="va">Year</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">"s"</span>, <span class="st">""</span>, <span class="va">Year</span><span class="op">)</span><span class="op">)</span>,
+        <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"-"</span>, <span class="va">Year</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">"-.*$"</span>, <span class="st">""</span>, <span class="va">Year</span><span class="op">)</span><span class="op">)</span>,
         <span class="cn">TRUE</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_trim.html" class="external-link">str_trim</a></span><span class="op">(</span><span class="va">Year</span><span class="op">)</span><span class="op">)</span>
       <span class="op">)</span>,
-      Pathotype <span class="op">=</span> <span class="va">Pathotype</span>
-    <span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Continent <span class="op">=</span>
-                 <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span>
-                   <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"America"</span>, <span class="va">Continent</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Americas"</span>,
-                   <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">Continent</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Unknown"</span>,
-                   <span class="cn">TRUE</span> <span class="op">~</span> <span class="va">Continent</span>
-                 <span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>
-                   cluster_recode <span class="op">=</span>
-                     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else</a></span><span class="op">(</span>
-                       <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
-                         <span class="st">"\\&lt;1"</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">1153</span>, <span class="st">"1184\\&gt;"</span>
-                       <span class="op">)</span>, collapse <span class="op">=</span> <span class="st">"\\&gt;|\\&lt;"</span><span class="op">)</span>,
-                       <span class="va">Cluster</span><span class="op">)</span> <span class="op">&amp;</span>
-                         <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"_"</span>, <span class="va">Cluster</span><span class="op">)</span>,
-                       <span class="cn">NA_character_</span>,
-                       <span class="va">Cluster</span>
-                     <span class="op">)</span>,
-                   cluster_recode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span>
-                     <span class="va">cluster_recode</span>,
-                     levels <span class="op">=</span>
-                     <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">cluster_recode</span><span class="op">)</span><span class="op">[</span>
-                       <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span>
-                         <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span>
-                           <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">"_.*$"</span>, <span class="st">""</span>, <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">cluster_recode</span><span class="op">)</span><span class="op">)</span>
-                           <span class="op">)</span>
-                         <span class="op">)</span>
-                       <span class="op">]</span><span class="op">)</span>,
-                   Phylogroup <span class="op">=</span>
-                     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span>
-                       <span class="va">Phylogroup</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Unknown"</span>, <span class="st">"Not Determined"</span>,
-                                         <span class="st">"E or cladeI"</span><span class="op">)</span> <span class="op">~</span>
-                         <span class="st">"Unknown"</span>,
-                       <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">Phylogroup</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Unknown"</span>,
-                       <span class="cn">TRUE</span> <span class="op">~</span> <span class="va">Phylogroup</span>
-                     <span class="op">)</span>
-                 <span class="op">)</span> <span class="op">-&gt;</span> <span class="va">df_all</span>
+      Pathotype <span class="op">=</span> <span class="va">Pathotype</span>,
+      res <span class="op">=</span> <span class="va">res</span>,
+      source <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span>
+        <span class="va">Isolation</span> <span class="op">==</span> <span class="st">"Unknown"</span> <span class="op">~</span> <span class="st">"Unknown"</span>,
+        <span class="va">Isolation</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Feces"</span>, <span class="st">"Rectal"</span>, <span class="st">"Rectal
+                                                Swab"</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Colonising"</span>,
+        <span class="cn">TRUE</span> <span class="op">~</span> <span class="st">"Infecting"</span>
+      <span class="op">)</span>
+    <span class="op">)</span>
+<span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>
+    Continent <span class="op">=</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span>
+        <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"America"</span>, <span class="va">Continent</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Americas"</span>,
+        <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">Continent</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Unknown"</span>,
+        <span class="cn">TRUE</span> <span class="op">~</span> <span class="va">Continent</span>
+      <span class="op">)</span>
+  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>
+    cluster_recode <span class="op">=</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else</a></span><span class="op">(</span>
+        <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span>
+          <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
+            <span class="st">"\\&lt;1"</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">1153</span>, <span class="st">"1184\\&gt;"</span>
+          <span class="op">)</span>, collapse <span class="op">=</span> <span class="st">"\\&gt;|\\&lt;"</span><span class="op">)</span>,
+          <span class="va">Cluster</span>
+        <span class="op">)</span> <span class="op">&amp;</span>
+          <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"_"</span>, <span class="va">Cluster</span><span class="op">)</span>,
+        <span class="cn">NA_character_</span>,
+        <span class="va">Cluster</span>
+      <span class="op">)</span>,
+    cluster_recode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span>
+      <span class="va">cluster_recode</span>,
+      levels <span class="op">=</span>
+        <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">cluster_recode</span><span class="op">)</span><span class="op">[</span>
+          <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span>
+            <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span>
+              <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">"_.*$"</span>, <span class="st">""</span>, <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">cluster_recode</span><span class="op">)</span><span class="op">)</span>
+            <span class="op">)</span>
+          <span class="op">)</span>
+        <span class="op">]</span>
+    <span class="op">)</span>,
+    Phylogroup <span class="op">=</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span>
+        <span class="va">Phylogroup</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
+          <span class="st">"Unknown"</span>, <span class="st">"Not Determined"</span>,
+          <span class="st">"E or cladeI"</span>
+        <span class="op">)</span> <span class="op">~</span>
+        <span class="st">"Unknown"</span>,
+        <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">Phylogroup</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Unknown"</span>,
+        <span class="cn">TRUE</span> <span class="op">~</span> <span class="va">Phylogroup</span>
+      <span class="op">)</span>
+  <span class="op">)</span> <span class="op">-&gt;</span> <span class="va">df_all</span>
 <span class="co">#&gt; Warning in eval_tidy(pair$rhs, env = default_env): NAs introduced by coercion</span>
 
 <span class="co">#&gt; Warning in eval_tidy(pair$rhs, env = default_env): NAs introduced by coercion</span>
 
 <span class="co">#&gt; Warning in eval_tidy(pair$rhs, env = default_env): NAs introduced by coercion</span>
-
 <span class="va">df_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">df_all</span><span class="op">)</span>
 
 <span class="fu"><a href="https://readr.tidyverse.org/reference/write_delim.html" class="external-link">write_csv</a></span><span class="op">(</span><span class="va">df_all</span>, <span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"tables/ecoli-genomics/horesh_globaltree_metadata.csv"</span><span class="op">)</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">df_all</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">df_all</span><span class="op">$</span><span class="va">lane</span>  </code></pre></div>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">df_all</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">df_all</span><span class="op">$</span><span class="va">lane</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="co">#define color palettes</span>
 
@@ -14876,7 +15130,7 @@ that were not identified in the original Horesh collection given no
 color.
 </p>
 </div>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="kw">if</span> <span class="op">(</span><span class="va">write_figs</span><span class="op">)</span> <span class="op">{</span>
   
@@ -14896,110 +15150,134 @@ color.
 <div class="section level4">
 <h4 id="poppunk-clusters">PopPUNK clusters<a class="anchor" aria-label="anchor" href="#poppunk-clusters"></a>
 </h4>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 
-<span class="va">df_all</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">study</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dassim"</span>, <span class="st">"horesh"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">study</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>n_tot_study <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">Cluster</span>, <span class="va">study</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+<span class="va">df_all</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">study</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dassim"</span>, <span class="st">"horesh"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>res <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"No"</span>, <span class="va">res</span><span class="op">)</span>, <span class="st">"No ESBL"</span>, <span class="st">"ESBL"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">study</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>n_tot_study <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">Cluster</span>, <span class="va">study</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>
     n_cluster <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>,
-    prop_cluster <span class="op">=</span> <span class="va">n_cluster</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">n_tot_study</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">Cluster</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>n_studies_cluster_is_in <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">Cluster</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    prop_cluster <span class="op">=</span> <span class="va">n_cluster</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">n_tot_study</span><span class="op">)</span>
+  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">Cluster</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>n_studies_cluster_is_in <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">Cluster</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span>
-    <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"\\&lt;1"</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">49</span>,<span class="st">"50\\&gt;"</span><span class="op">)</span>, collapse <span class="op">=</span> <span class="st">"\\&gt;|\\&lt;"</span><span class="op">)</span>,
-               <span class="va">Cluster</span><span class="op">)</span> <span class="op">|</span>
-           <span class="va">n_studies_cluster_is_in</span> <span class="op">&gt;</span> <span class="fl">1</span> <span class="op">|</span>
-           <span class="va">study</span> <span class="op">==</span> <span class="st">"dassim"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="op">(</span><span class="va">study</span> <span class="op">==</span> <span class="st">"dassim"</span> <span class="op">&amp;</span> <span class="va">n_cluster</span> <span class="op">&lt;=</span> <span class="fl">3</span> <span class="op">&amp;</span> <span class="va">n_studies_cluster_is_in</span> <span class="op">==</span> <span class="fl">1</span> <span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>prop_cluster <span class="op">=</span>
-           <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else</a></span><span class="op">(</span>
-             <span class="va">study</span> <span class="op">==</span> <span class="st">"dassim"</span>,
-             <span class="op">-</span><span class="fl">1</span><span class="op">*</span><span class="va">prop_cluster</span>,
-             <span class="va">prop_cluster</span>
-         <span class="op">)</span>,
-         Cluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span>
-           <span class="va">Cluster</span>,
-           levels <span class="op">=</span> 
-             <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">Cluster</span><span class="op">)</span><span class="op">[</span>
-               <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span>
-                 <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span>
-                   <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">"_.*$"</span>,<span class="st">""</span>,<span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">Cluster</span><span class="op">)</span><span class="op">)</span>
-                 <span class="op">)</span>
-               <span class="op">)</span>
-             <span class="op">]</span>
-         <span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>study <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span>
-    <span class="va">study</span> <span class="op">==</span> <span class="st">"dassim"</span> <span class="op">~</span> <span class="st">"This Study"</span>,
-    <span class="cn">TRUE</span> <span class="op">~</span> <span class="st">"Horesh Collection"</span><span class="op">)</span>,
-    study <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">study</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"This Study"</span>, <span class="st">"Horesh Collection"</span><span class="op">)</span><span class="op">)</span>
-    <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span>
+      <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"\\&lt;1"</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">49</span>, <span class="st">"50\\&gt;"</span><span class="op">)</span>, collapse <span class="op">=</span> <span class="st">"\\&gt;|\\&lt;"</span><span class="op">)</span>,
+      <span class="va">Cluster</span>
+    <span class="op">)</span> <span class="op">|</span>
+      <span class="va">n_studies_cluster_is_in</span> <span class="op">&gt;</span> <span class="fl">1</span> <span class="op">|</span>
+      <span class="va">study</span> <span class="op">==</span> <span class="st">"dassim"</span>
+  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="op">(</span><span class="va">study</span> <span class="op">==</span> <span class="st">"dassim"</span> <span class="op">&amp;</span> <span class="va">n_cluster</span> <span class="op">&lt;=</span> <span class="fl">3</span> <span class="op">&amp;</span> <span class="va">n_studies_cluster_is_in</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>
+    prop_cluster <span class="op">=</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else</a></span><span class="op">(</span>
+        <span class="va">study</span> <span class="op">==</span> <span class="st">"dassim"</span>,
+        <span class="op">-</span><span class="fl">1</span> <span class="op">*</span> <span class="va">prop_cluster</span>,
+        <span class="va">prop_cluster</span>
+      <span class="op">)</span>,
+    Cluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span>
+      <span class="va">Cluster</span>,
+      levels <span class="op">=</span>
+        <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">Cluster</span><span class="op">)</span><span class="op">[</span>
+          <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span>
+            <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span>
+              <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">"_.*$"</span>, <span class="st">""</span>, <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">Cluster</span><span class="op">)</span><span class="op">)</span>
+            <span class="op">)</span>
+          <span class="op">)</span>
+        <span class="op">]</span>
+    <span class="op">)</span>
+  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>
+    study <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span>
+      <span class="va">study</span> <span class="op">==</span> <span class="st">"dassim"</span> <span class="op">~</span> <span class="st">"This Study"</span>,
+      <span class="cn">TRUE</span> <span class="op">~</span> <span class="st">"Horesh et al."</span>
+    <span class="op">)</span>,
+    study <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">study</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"This Study"</span>, <span class="st">"Horesh et al."</span><span class="op">)</span><span class="op">)</span>
+  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">prop_cluster</span>, y <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_rev.html" class="external-link">fct_rev</a></span><span class="op">(</span><span class="va">Cluster</span><span class="op">)</span>, fill <span class="op">=</span> <span class="va">study</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_col</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_col</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"black"</span>, size <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"PopPUNK cluster"</span>, fill <span class="op">=</span> <span class="st">""</span>,
-       x <span class="op">=</span> <span class="st">"Proportion of samples"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>,<span class="fl">0.0</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.3</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/viridis_pal.html" class="external-link">viridis_pal</a></span><span class="op">(</span>option <span class="op">=</span> <span class="st">"cividis"</span><span class="op">)</span><span class="op">(</span><span class="fl">8</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">5</span><span class="op">)</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>
+    y <span class="op">=</span> <span class="st">"PopPUNK cluster"</span>, fill <span class="op">=</span> <span class="st">""</span>,
+    x <span class="op">=</span> <span class="st">"Proportion of samples"</span>
+  <span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.0</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.3</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://scales.r-lib.org/reference/viridis_pal.html" class="external-link">viridis_pal</a></span><span class="op">(</span>option <span class="op">=</span> <span class="st">"cividis"</span><span class="op">)</span><span class="op">(</span><span class="fl">8</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">]</span>,
+    <span class="st">"grey60"</span>
+  <span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>
     axis.text.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>,
-    axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>,
-    legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">p1</span>
-<span class="co">#&gt; `summarise()` has grouped output by 'Cluster'. You can override using the `.groups` argument.</span>
+    axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">7</span><span class="op">)</span>,
+    legend.position <span class="op">=</span> <span class="st">"bottom"</span>
+  <span class="op">)</span> <span class="op">-&gt;</span> <span class="va">p1</span>
+<span class="co">#&gt; `summarise()` has grouped output by 'Cluster'. You can override using the</span>
+<span class="co">#&gt; `.groups` argument.</span>
 
-
-<span class="va">df_all</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">study</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dassim"</span>, <span class="st">"horesh"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>study <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span>
-    <span class="va">study</span> <span class="op">==</span> <span class="st">"dassim"</span> <span class="op">~</span> <span class="st">"This Study"</span>,
-    <span class="cn">TRUE</span> <span class="op">~</span> <span class="st">"Horesh Collection"</span><span class="op">)</span>,
+<span class="va">df_all</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">study</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dassim"</span>, <span class="st">"horesh"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>
+    study <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span>
+      <span class="va">study</span> <span class="op">==</span> <span class="st">"dassim"</span> <span class="op">~</span> <span class="st">"This Study"</span>,
+      <span class="cn">TRUE</span> <span class="op">~</span> <span class="st">"Horesh Collection"</span>
+    <span class="op">)</span>,
     study <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">study</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"This Study"</span>, <span class="st">"Horesh Collection"</span><span class="op">)</span><span class="op">)</span>
-    <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Cluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span>
     <span class="va">Cluster</span>,
-    levels <span class="op">=</span> 
+    levels <span class="op">=</span>
       <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">Cluster</span><span class="op">)</span><span class="op">[</span>
         <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span>
           <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span>
-            <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">"_.*$"</span>,<span class="st">""</span>,<span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">Cluster</span><span class="op">)</span><span class="op">)</span>
+            <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">"_.*$"</span>, <span class="st">""</span>, <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">Cluster</span><span class="op">)</span><span class="op">)</span>
           <span class="op">)</span>
         <span class="op">)</span>
       <span class="op">]</span>
-  <span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">Cluster</span>, color <span class="op">=</span> <span class="va">study</span>, group <span class="op">=</span> <span class="va">study</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/stat_ecdf.html" class="external-link">stat_ecdf</a></span><span class="op">(</span>pad <span class="op">=</span> <span class="cn">FALSE</span>, geom <span class="op">=</span> <span class="st">"step"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/stat_ecdf.html" class="external-link">stat_ecdf</a></span><span class="op">(</span>pad <span class="op">=</span> <span class="cn">TRUE</span>, geom <span class="op">=</span> <span class="st">"step"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html" class="external-link">scale_x_discrete</a></span><span class="op">(</span>
-    breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">100</span> , to <span class="op">=</span> <span class="fl">1400</span>, by <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
-    expand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>,<span class="fl">0.01</span><span class="op">)</span>
-    <span class="op">)</span> <span class="op">+</span>
+    breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">100</span>, to <span class="op">=</span> <span class="fl">1400</span>, by <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
+    expand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.01</span><span class="op">)</span>
+  <span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"Cumulative proportion"</span>,
-      x <span class="op">=</span> <span class="st">"PopPUNK cluster"</span>, color <span class="op">=</span> <span class="st">""</span>
-      <span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>
+    y <span class="op">=</span> <span class="st">"Cumulative proportion"</span>,
+    x <span class="op">=</span> <span class="st">"PopPUNK cluster"</span>, color <span class="op">=</span> <span class="st">""</span>
+  <span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span>
     xintercept <span class="op">=</span> <span class="st">"1184"</span>,
-    alpha <span class="op">=</span> <span class="fl">0.8</span>, 
+    alpha <span class="op">=</span> <span class="fl">0.8</span>,
     linetype <span class="op">=</span> <span class="st">"dotted"</span>
-    <span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/viridis_pal.html" class="external-link">viridis_pal</a></span><span class="op">(</span>option <span class="op">=</span> <span class="st">"cividis"</span><span class="op">)</span><span class="op">(</span><span class="fl">8</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">5</span><span class="op">)</span><span class="op">]</span>,
-                     guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>
+    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
+      <span class="fu"><a href="https://scales.r-lib.org/reference/viridis_pal.html" class="external-link">viridis_pal</a></span><span class="op">(</span>option <span class="op">=</span> <span class="st">"cividis"</span><span class="op">)</span><span class="op">(</span><span class="fl">8</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">]</span>,
+      <span class="st">"grey60"</span>
+    <span class="op">)</span>,
+    guide <span class="op">=</span> <span class="st">"none"</span>
+  <span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>
-    axis.text.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>,
+    axis.text.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">7</span><span class="op">)</span>,
     axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, hjust <span class="op">=</span> <span class="fl">1</span>, size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>,
-        legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">p2</span>
+    legend.position <span class="op">=</span> <span class="st">"none"</span>
+  <span class="op">)</span> <span class="op">-&gt;</span> <span class="va">p2</span>
 
-<span class="op">(</span>
-  <span class="va">p1</span> <span class="op">+</span> 
-    <span class="op">(</span><span class="va">p2</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_spacer.html" class="external-link">plot_spacer</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
-  <span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">2</span>, guides <span class="op">=</span> <span class="st">"collect"</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span>tag_levels <span class="op">=</span> <span class="st">"A"</span><span class="op">)</span> <span class="op">&amp;</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">pp_cluster_plots</span>
+  <span class="op">(</span>
+    <span class="va">p1</span> <span class="op">+</span>
+      <span class="op">(</span><span class="va">p2</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_spacer.html" class="external-link">plot_spacer</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+  <span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">2</span>, guides <span class="op">=</span> <span class="st">"collect"</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span>tag_levels <span class="op">=</span> <span class="st">"A"</span><span class="op">)</span> <span class="op">&amp;</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">pp_cluster_plots</span>
 
-<span class="va">pp_cluster_plots</span></code></pre></div>
+  <span class="va">pp_cluster_plots</span></code></pre></div>
 <div class="figure">
 <img src="analysis-ecoli_files/figure-html/popPUNK-diversity-plots-1.png" alt="PopPUNK cluster assignments of isolates from this study, using the Horesh et al database. A: Proportion of samples assigned to a given cluster for this study (left) and the Horesh collection (right); clusters are ordered numerically which by definition is form largest to smallest in the Horesh collection. B: Cumulative proportion of isolates with cluster membership, with clusters again ordered numerically (i.e. largest to smallest). Dotted line indicates the end of clusters defined in the original Horesh popPUNK database; clusters to the right of this line are newly defined in the isolates in this study." width="576"><p class="caption">
 PopPUNK cluster assignments of isolates from this study, using the
@@ -15013,23 +15291,245 @@ defined in the original Horesh popPUNK database; clusters to the right
 of this line are newly defined in the isolates in this study.
 </p>
 </div>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="kw">if</span> <span class="op">(</span><span class="va">write_figs</span><span class="op">)</span> <span class="op">{</span>
-  
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span>
     <span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"figures/ecoli-genomics/global_poppunk_clusterplot.pdf"</span><span class="op">)</span>,
     <span class="va">pp_cluster_plots</span>,
     width <span class="op">=</span> <span class="fl">6</span>,
-    height <span class="op">=</span> <span class="fl">6</span><span class="op">)</span>
+    height <span class="op">=</span> <span class="fl">6</span>
+  <span class="op">)</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span>
     <span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"figures/ecoli-genomics/global_poppunk_clusterplot.svg"</span><span class="op">)</span>,
     <span class="va">pp_cluster_plots</span>,
     width <span class="op">=</span> <span class="fl">6</span>,
-    height <span class="op">=</span> <span class="fl">6</span><span class="op">)</span>
-  
+    height <span class="op">=</span> <span class="fl">6</span>
+  <span class="op">)</span>
 <span class="op">}</span></code></pre></div>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+
+<span class="co"># get clusters to include</span>
+
+
+<span class="va">df_all</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>res <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"No"</span>, <span class="va">res</span><span class="op">)</span>, <span class="st">"No ESBL"</span>, <span class="st">"ESBL"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">study</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dassim"</span>, <span class="st">"horesh"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">study</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>n_tot_study <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">Cluster</span>, <span class="va">study</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>
+    n_cluster <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>,
+    prop_cluster <span class="op">=</span> <span class="va">n_cluster</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">n_tot_study</span><span class="op">)</span>
+  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">Cluster</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>n_studies_cluster_is_in <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">Cluster</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span>
+      <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"\\&lt;1"</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">49</span>, <span class="st">"50\\&gt;"</span><span class="op">)</span>, collapse <span class="op">=</span> <span class="st">"\\&gt;|\\&lt;"</span><span class="op">)</span>,
+      <span class="va">Cluster</span>
+    <span class="op">)</span> <span class="op">|</span>
+      <span class="va">n_studies_cluster_is_in</span> <span class="op">&gt;</span> <span class="fl">1</span> <span class="op">|</span>
+      <span class="va">study</span> <span class="op">==</span> <span class="st">"dassim"</span>
+  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="op">(</span><span class="va">study</span> <span class="op">==</span> <span class="st">"dassim"</span> <span class="op">&amp;</span> 
+           <span class="va">n_cluster</span> <span class="op">&lt;=</span> <span class="fl">3</span> <span class="op">&amp;</span> <span class="va">n_studies_cluster_is_in</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">Cluster</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">clusters_to_include</span>
+<span class="co">#&gt; `summarise()` has grouped output by 'Cluster'. You can override using the</span>
+<span class="co">#&gt; `.groups` argument.</span>
+
+<span class="va">df_all</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>res <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"No"</span>, <span class="va">res</span><span class="op">)</span>, <span class="st">"No ESBL"</span>, <span class="st">"ESBL"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">study</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dassim"</span>, <span class="st">"horesh"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">study</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">source</span> <span class="op">!=</span> <span class="st">"Unknown"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>n_tot_study <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">Cluster</span>, <span class="va">study</span>, <span class="va">res</span>, <span class="va">source</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>
+    n_cluster <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>,
+    prop_cluster <span class="op">=</span> <span class="va">n_cluster</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">n_tot_study</span><span class="op">)</span>
+  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Cluster</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">clusters_to_include</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>
+    prop_cluster <span class="op">=</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else</a></span><span class="op">(</span>
+        <span class="va">study</span> <span class="op">==</span> <span class="st">"dassim"</span>,
+        <span class="op">-</span><span class="fl">1</span> <span class="op">*</span> <span class="va">prop_cluster</span>,
+        <span class="va">prop_cluster</span>
+      <span class="op">)</span>,
+    Cluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span>
+      <span class="va">Cluster</span>,
+      levels <span class="op">=</span>
+        <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">Cluster</span><span class="op">)</span><span class="op">[</span>
+          <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span>
+            <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span>
+              <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">"_.*$"</span>, <span class="st">""</span>, <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">Cluster</span><span class="op">)</span><span class="op">)</span>
+            <span class="op">)</span>
+          <span class="op">)</span>
+        <span class="op">]</span>
+    <span class="op">)</span>
+  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>
+    var <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span>
+      <span class="va">study</span> <span class="op">==</span> <span class="st">"dassim"</span> <span class="op">~</span> <span class="st">"This Study\nColonising"</span>,
+      <span class="va">study</span> <span class="op">==</span> <span class="st">"horesh"</span> <span class="op">&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"Colonising"</span>, <span class="va">source</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Horesh et al.\nStool"</span>,
+      <span class="cn">TRUE</span> <span class="op">~</span> <span class="st">"Horesh et al.\nInvasive"</span>
+    <span class="op">)</span>,
+    var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">var</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">var</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>
+  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">prop_cluster</span>, y <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_rev.html" class="external-link">fct_rev</a></span><span class="op">(</span><span class="va">Cluster</span><span class="op">)</span>, fill <span class="op">=</span> <span class="va">var</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_col</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"black"</span>, size <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>
+    y <span class="op">=</span> <span class="st">"PopPUNK cluster"</span>, fill <span class="op">=</span> <span class="st">""</span>,
+    x <span class="op">=</span> <span class="st">"Proportion of samples"</span>
+  <span class="op">)</span> <span class="op">+</span>
+  <span class="co"># scale_x_continuous(labels = c(0.1,0.0, 0.1, 0.2, 0.3)) +</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>
+    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
+      <span class="fu"><a href="https://scales.r-lib.org/reference/viridis_pal.html" class="external-link">viridis_pal</a></span><span class="op">(</span>option <span class="op">=</span> <span class="st">"cividis"</span><span class="op">)</span><span class="op">(</span><span class="fl">8</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">8</span>, <span class="fl">6</span><span class="op">)</span><span class="op">]</span>
+    <span class="op">)</span>,
+    breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
+      <span class="st">"This Study\nColonising"</span>,
+      <span class="st">"Horesh et al.\nInvasive"</span>,
+      <span class="st">"Horesh et al.\nStool"</span>
+    <span class="op">)</span>
+  <span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>
+    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
+      <span class="fu"><a href="https://scales.r-lib.org/reference/viridis_pal.html" class="external-link">viridis_pal</a></span><span class="op">(</span>option <span class="op">=</span> <span class="st">"cividis"</span><span class="op">)</span><span class="op">(</span><span class="fl">8</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">8</span>, <span class="fl">6</span><span class="op">)</span><span class="op">]</span>
+    <span class="op">)</span>,
+    breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
+      <span class="st">"This Study\nColonising"</span>,
+      <span class="st">"Horesh et al.\nInvasive"</span>,
+      <span class="st">"Horesh et al.\nStool"</span>
+    <span class="op">)</span>
+  <span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>
+    axis.text.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>,
+    axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">7</span><span class="op">)</span>,
+    legend.position <span class="op">=</span> <span class="st">"bottom"</span>
+  <span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="va">.</span> <span class="op">~</span> <span class="va">res</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>
+    breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.1</span>, <span class="fl">0</span>, <span class="fl">0.1</span><span class="op">)</span>,
+    labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.0</span>, <span class="fl">0.1</span><span class="op">)</span>
+  <span class="op">)</span> <span class="op">-&gt;</span> <span class="va">a</span>
+<span class="co">#&gt; `summarise()` has grouped output by 'Cluster', 'study', 'res'. You can override</span>
+<span class="co">#&gt; using the `.groups` argument.</span>
+
+<span class="va">df_all</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>res <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"No"</span>, <span class="va">res</span><span class="op">)</span>, <span class="st">"No ESBL"</span>, <span class="st">"ESBL"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">study</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dassim"</span>, <span class="st">"horesh"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="co">#   filter(source != "Unknown")  %&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Cluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span>
+    <span class="va">Cluster</span>,
+    levels <span class="op">=</span>
+      <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">Cluster</span><span class="op">)</span><span class="op">[</span>
+        <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span>
+          <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span>
+            <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">"_.*$"</span>, <span class="st">""</span>, <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">Cluster</span><span class="op">)</span><span class="op">)</span>
+          <span class="op">)</span>
+        <span class="op">)</span>
+      <span class="op">]</span>
+  <span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>
+    var <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span>
+      <span class="va">study</span> <span class="op">==</span> <span class="st">"dassim"</span> <span class="op">~</span> <span class="st">"This Study\nColonising"</span>,
+      <span class="va">study</span> <span class="op">==</span> <span class="st">"horesh"</span> <span class="op">&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"Colonising"</span>, <span class="va">source</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Horesh et al.\nStool"</span>,
+      <span class="cn">TRUE</span> <span class="op">~</span> <span class="st">"Horesh et al.\nInvasive"</span>
+    <span class="op">)</span>,
+    var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">var</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">var</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>
+  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">Cluster</span>, <span class="va">var</span>, <span class="va">res</span>, .drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"This Study"</span>, <span class="va">var</span><span class="op">)</span> <span class="op">&amp;</span> <span class="va">res</span> <span class="op">==</span> <span class="st">"No ESBL"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">var</span>, <span class="va">res</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>
+    cumsum <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html" class="external-link">cumsum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>,
+    sum <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>,
+    prop <span class="op">=</span> <span class="va">cumsum</span> <span class="op">/</span> <span class="va">sum</span>
+  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">Cluster</span>, <span class="va">prop</span>, color <span class="op">=</span> <span class="va">var</span>, fill <span class="op">=</span> <span class="va">var</span>, group <span class="op">=</span> <span class="va">var</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_step</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>
+    y <span class="op">=</span> <span class="st">"Cumulative proportion"</span>,
+    x <span class="op">=</span> <span class="st">"PopPUNK cluster"</span>, color <span class="op">=</span> <span class="st">""</span>
+  <span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span>
+    xintercept <span class="op">=</span> <span class="st">"1184"</span>,
+    alpha <span class="op">=</span> <span class="fl">0.8</span>,
+    linetype <span class="op">=</span> <span class="st">"dotted"</span>
+  <span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>
+    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
+      <span class="fu"><a href="https://scales.r-lib.org/reference/viridis_pal.html" class="external-link">viridis_pal</a></span><span class="op">(</span>option <span class="op">=</span> <span class="st">"cividis"</span><span class="op">)</span><span class="op">(</span><span class="fl">8</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">8</span>, <span class="fl">6</span><span class="op">)</span><span class="op">]</span>
+    <span class="op">)</span>,
+    breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
+      <span class="st">"This Study\nColonising"</span>,
+      <span class="st">"Horesh et al.\nInvasive"</span>,
+      <span class="st">"Horesh et al.\nStool"</span>
+    <span class="op">)</span>,
+    guide <span class="op">=</span> <span class="st">"none"</span>
+  <span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>
+    axis.text.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">7</span><span class="op">)</span>,
+    axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, hjust <span class="op">=</span> <span class="fl">1</span>, size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>,
+    legend.position <span class="op">=</span> <span class="st">"none"</span>
+  <span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="va">.</span> <span class="op">~</span> <span class="va">res</span>, ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html" class="external-link">scale_x_discrete</a></span><span class="op">(</span>
+    breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">100</span>, to <span class="op">=</span> <span class="fl">1400</span>, by <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
+    expand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.01</span><span class="op">)</span>
+  <span class="op">)</span> <span class="op">-&gt;</span> <span class="va">b</span>
+
+
+<span class="op">(</span><span class="va">p1</span> <span class="op">+</span> <span class="op">(</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_spacer.html" class="external-link">plot_spacer</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="va">p2</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>
+  guides <span class="op">=</span>
+    <span class="st">"auto"</span>, widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.7</span>, <span class="fl">1</span><span class="op">)</span>
+<span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="va">a</span> <span class="op">+</span> <span class="op">(</span><span class="va">b</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span>tag_levels <span class="op">=</span> <span class="st">"A"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">pp_cluster_plots_stratified</span>
+
+<span class="va">pp_cluster_plots_stratified</span></code></pre></div>
+<div class="figure">
+<img src="analysis-ecoli_files/figure-html/pp_cluster_plots_stratified-1.png" alt="PopPUNK cluster assignments of isolates from this study, using the Horesh et al database. A: Proportion of samples assigned to a given cluster for this study (left) and the Horesh collection (right); clusters are ordered numerically which by definition is form largest to smallest in the Horesh collection. B: Cumulative proportion of isolates with cluster membership, with clusters again ordered numerically (i.e. largest to smallest). Dotted line indicates the end of clusters defined in the original Horesh popPUNK database; clusters to the right of this line are newly defined in the isolates in this study. C-E: The same plots but restricted to samples for which metadata on source of isolation is available (n = 3921) and stratfied by source and presence of absence of ESBL gene. Isolates with an identifiable ampC or carbapenemase gene are included in this category." width="768"><p class="caption">
+PopPUNK cluster assignments of isolates from this study, using the
+Horesh et al database. A: Proportion of samples assigned to a given
+cluster for this study (left) and the Horesh collection (right);
+clusters are ordered numerically which by definition is form largest to
+smallest in the Horesh collection. B: Cumulative proportion of isolates
+with cluster membership, with clusters again ordered numerically
+(i.e. largest to smallest). Dotted line indicates the end of clusters
+defined in the original Horesh popPUNK database; clusters to the right
+of this line are newly defined in the isolates in this study. C-E: The
+same plots but restricted to samples for which metadata on source of
+isolation is available (n = 3921) and stratfied by source and presence
+of absence of ESBL gene. Isolates with an identifiable ampC or
+carbapenemase gene are included in this category.
+</p>
+</div>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="kw">if</span> <span class="op">(</span><span class="va">write_figs</span><span class="op">)</span> <span class="op">{</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"figures/ecoli-genomics/global_poppunk_clusterplot_strat.pdf"</span><span class="op">)</span>,
+    <span class="va">pp_cluster_plots_stratified</span>,
+    width <span class="op">=</span> <span class="fl">8</span>,
+    height <span class="op">=</span> <span class="fl">12</span>
+  <span class="op">)</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"figures/ecoli-genomics/global_poppunk_clusterplot_strat.svg"</span><span class="op">)</span>,
+    <span class="va">pp_cluster_plots_stratified</span>,
+    width <span class="op">=</span> <span class="fl">8</span>,
+    height <span class="op">=</span> <span class="fl">12</span>
+  <span class="op">)</span>
+<span class="op">}</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 
 <span class="va">df_all</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
@@ -18062,7 +18562,7 @@ ST3856 (1.00)
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="kw">if</span> <span class="op">(</span><span class="va">write_figs</span><span class="op">)</span> <span class="op">{</span>
  <span class="fu"><a href="https://readr.tidyverse.org/reference/write_delim.html" class="external-link">write_csv</a></span><span class="op">(</span><span class="va">df_clusttab</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
@@ -18079,7 +18579,7 @@ ST3856 (1.00)
  <span class="op">)</span>
    
 <span class="op">}</span></code></pre></div>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="co"># bits and bobs to calculate for manuscript</span>
 
@@ -18311,7 +18811,7 @@ ST3856 (1.00)
 <span class="co">#&gt;   qrdr_alone qnr_alone qrdr_qnr qrdr_qep qnr_qep</span>
 <span class="co">#&gt;        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">1</span>        299        56        6       47       1</span></code></pre></div>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 
 <span class="va">btESBL_plasmidreplicons</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
@@ -18363,7 +18863,7 @@ ST3856 (1.00)
 Plasmid replicons mapped back to tree
 </p>
 </div>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="kw">if</span> <span class="op">(</span><span class="va">write_figs</span><span class="op">)</span> <span class="op">{</span>
   
@@ -18384,7 +18884,7 @@ Plasmid replicons mapped back to tree
 <div class="section level3">
 <h3 id="st410-trees">ST410 trees<a class="anchor" aria-label="anchor" href="#st410-trees"></a>
 </h3>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 
 <span class="va">btESBL_ecoli_st410_metadata</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
@@ -18614,7 +19114,7 @@ Plasmid replicons mapped back to tree
 ST410 map-to-reference global maximum likelihood, midpoint rooted tree
 </p>
 </div>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="fu">treeio</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/treeio/reference/tree_subset.html" class="external-link">tree_subset</a></span><span class="op">(</span>
   <span class="va">btESBL_ecoli_globalst410_tree</span>, <span class="fl">390</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>  <span class="op">-&gt;</span> <span class="va">st410_subtree</span>
@@ -18745,7 +19245,7 @@ ST410 map-to-reference global maximum likelihood, midpoint rooted tree
 <span class="co">#&gt; will replace the existing scale.</span>
 <span class="co">#&gt; Scale for 'y' is already present. Adding another scale for 'y', which will</span>
 <span class="co">#&gt; replace the existing scale.</span></code></pre></div>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">btESBL_ecoli_st167_plasmids</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_rows</a></span><span class="op">(</span>
@@ -18939,7 +19439,7 @@ ST410 map-to-reference global maximum likelihood, midpoint rooted tree
 ST167 map-to-reference global maximum likelihood, midpoint rooted tree
 </p>
 </div>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="kw">if</span> <span class="op">(</span><span class="va">write_figs</span><span class="op">)</span> <span class="op">{</span>
 
@@ -18949,7 +19449,7 @@ ST167 map-to-reference global maximum likelihood, midpoint rooted tree
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"figures/ecoli-genomics/st167_globaltreeplot.pdf"</span><span class="op">)</span>,
        <span class="va">st167_globaltree_plot</span>, width <span class="op">=</span> <span class="fl">8</span>, height <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="fu">treeio</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/treeio/reference/tree_subset.html" class="external-link">tree_subset</a></span><span class="op">(</span>
   <span class="va">btESBL_ecoli_globalst167_tree</span>, <span class="fl">142</span>, levels_back <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">st167_subtree</span>
@@ -19078,7 +19578,7 @@ ST167 map-to-reference global maximum likelihood, midpoint rooted tree
 <span class="co">#&gt; will replace the existing scale.</span>
 <span class="co">#&gt; Scale for 'y' is already present. Adding another scale for 'y', which will</span>
 <span class="co">#&gt; replace the existing scale.</span></code></pre></div>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 
 
@@ -19260,7 +19760,7 @@ ST167 map-to-reference global maximum likelihood, midpoint rooted tree
 ST131 map-to-reference global maximum likelihood, midpoint rooted tree
 </p>
 </div>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">st410_subtree_plot</span> <span class="op">+</span> <span class="va">st167_subtree_plot</span>  <span class="op">+</span> <span class="va">st131_globaltree_plot</span> <span class="op">+</span> 
   <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1.5</span><span class="op">)</span>,
@@ -19287,7 +19787,7 @@ E. coli ST140 (A) and ST167 (B) subtrees and (C) ST131 tree showing
 ESBL/CPE genes and plasmid replicons
 </p>
 </div>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="kw">if</span> <span class="op">(</span><span class="va">write_figs</span><span class="op">)</span> <span class="op">{</span>
 
@@ -19297,16 +19797,154 @@ ESBL/CPE genes and plasmid replicons
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"figures/ecoli-genomics/st410_167_131_subtreeplot.pdf"</span><span class="op">)</span>,
        <span class="va">st410_167_131_subtree_plot</span>, width <span class="op">=</span> <span class="fl">12</span>, height <span class="op">=</span> <span class="fl">8.2</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+
+<span class="co"># ----------------------------------------------------------------------</span>
+<span class="co"># plot subtree of ST131</span>
+
+<span class="fu">treeio</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/treeio/reference/tree_subset.html" class="external-link">tree_subset</a></span><span class="op">(</span><span class="va">btESBL_ecoli_globalst131_tree</span>, <span class="fl">1090</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">st131_subtree</span>
+
+
+<span class="va">esbl_cpe.ariba131</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">name</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">st131_subtree</span><span class="op">$</span><span class="va">tip.label</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span>
+<span class="va">esbl_cpe.ariba131_subset</span>
+
+<span class="va">esbl_cpe.ariba131_subset</span><span class="op">[</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">esbl_cpe.ariba131_subset</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>, <span class="fl">2</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="op">]</span> <span class="op">-&gt;</span>
+<span class="va">esbl_cpe.ariba131_subset</span>
+
+
+<span class="va">st131_plasm_onehot</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">name</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">st131_subtree</span><span class="op">$</span><span class="va">tip.label</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">st131_plasm_onehot_subset</span>
+
+
+<span class="va">st131_plasm_onehot_subset</span><span class="op">[</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">st131_plasm_onehot_subset</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>, <span class="fl">2</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="op">]</span> <span class="op">-&gt;</span>
+
+<span class="va">st131_plasm_onehot_subset</span>
+
+<span class="op">(</span>
+  <span class="op">(</span>
+    <span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/ggtree.html" class="external-link">ggtree</a></span><span class="op">(</span><span class="fu">treeio</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/treeio/reference/tree_subset.html" class="external-link">tree_subset</a></span><span class="op">(</span><span class="va">btESBL_ecoli_globalst131_tree</span>, <span class="fl">1090</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggtree/man/attacher.html" class="external-link">%&lt;+%</a></span>
+      <span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">btESBL_ecoli_st131_metadata</span>, <span class="va">Accession_number</span>, <span class="va">Country</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else</a></span><span class="op">(</span><span class="va">Country</span> <span class="op">==</span> <span class="st">"Malawi"</span>,
+          <span class="st">"Malawi"</span>, <span class="cn">NA_character_</span>
+        <span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+      <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html" class="external-link">gheatmap</a></span><span class="op">(</span>
+        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">btESBL_ecoli_st131_metadata</span>, <span class="va">`Year`</span><span class="op">)</span>,
+        font.size <span class="op">=</span> <span class="fl">4</span>,
+        width <span class="op">=</span> <span class="fl">0.035</span>,
+        colnames_position <span class="op">=</span> <span class="st">"top"</span>,
+        color <span class="op">=</span> <span class="cn">NA</span>,
+        colnames_offset_y <span class="op">=</span> <span class="fl">0</span>,
+        colnames_angle <span class="op">=</span> <span class="fl">90</span>,
+        hjust <span class="op">=</span> <span class="fl">0</span>
+      <span class="op">)</span> <span class="op">+</span>
+      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span>
+        name <span class="op">=</span> <span class="st">"Year"</span>, limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1965</span>, <span class="fl">2020</span><span class="op">)</span>,
+        na.value <span class="op">=</span> <span class="st">"white"</span>
+      <span class="op">)</span> <span class="op">+</span>
+      <span class="fu"><a href="https://rdrr.io/pkg/ggnewscale/man/new_scale.html" class="external-link">new_scale_fill</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+      <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html" class="external-link">gheatmap</a></span><span class="op">(</span>
+        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">btESBL_ecoli_st131_metadata</span>, <span class="va">Continent</span><span class="op">)</span>,
+        font.size <span class="op">=</span> <span class="fl">4</span>,
+        width <span class="op">=</span> <span class="fl">0.03</span>,
+        colnames_position <span class="op">=</span> <span class="st">"top"</span>,
+        color <span class="op">=</span> <span class="cn">NA</span>,
+        colnames_offset_y <span class="op">=</span> <span class="fl">0</span>,
+        colnames_angle <span class="op">=</span> <span class="fl">90</span>,
+        offset <span class="op">=</span> <span class="fl">0.0000008</span>,
+        hjust <span class="op">=</span> <span class="fl">0</span>
+      <span class="op">)</span> <span class="op">+</span>
+      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_d</a></span><span class="op">(</span>
+        option <span class="op">=</span> <span class="st">"plasma"</span>, name <span class="op">=</span> <span class="st">"Continent"</span>,
+        na.translate <span class="op">=</span> <span class="cn">FALSE</span>
+      <span class="op">)</span> <span class="op">+</span>
+      <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_tippoint.html" class="external-link">geom_tippoint</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">Country</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span>, size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span>
+      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="st">"red"</span>, na.translate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span>
+      <span class="fu"><a href="https://rdrr.io/pkg/ggnewscale/man/new_scale.html" class="external-link">new_scale_fill</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html" class="external-link">gheatmap</a></span><span class="op">(</span>
+      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">esbl_cpe.ariba131_subset</span>, <span class="op">-</span><span class="va">name</span><span class="op">)</span>,
+      font.size <span class="op">=</span> <span class="fl">2.5</span>,
+      width <span class="op">=</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">esbl_cpe.ariba131_subset</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.03</span>,
+      colnames_position <span class="op">=</span> <span class="st">"top"</span>,
+      color <span class="op">=</span> <span class="cn">NA</span>,
+      colnames_offset_y <span class="op">=</span> <span class="fl">0</span>,
+      colnames_angle <span class="op">=</span> <span class="fl">90</span>,
+      offset <span class="op">=</span> <span class="fl">0.0000015</span>,
+      hjust <span class="op">=</span> <span class="fl">0</span>
+    <span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>
+      values <span class="op">=</span> <span class="va">esbl_cols</span>,
+      na.translate <span class="op">=</span> <span class="cn">FALSE</span>,
+      name <span class="op">=</span> <span class="st">"Beta-\nlactamase"</span>
+    <span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggnewscale/man/new_scale.html" class="external-link">new_scale_fill</a></span><span class="op">(</span><span class="op">)</span>
+<span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/gheatmap.html" class="external-link">gheatmap</a></span><span class="op">(</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">st131_plasm_onehot_subset</span>, <span class="op">-</span><span class="va">name</span><span class="op">)</span>,
+  font.size <span class="op">=</span> <span class="fl">2.5</span>,
+  width <span class="op">=</span> <span class="fl">0.026</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">st131_plasm_onehot_subset</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span> <span class="fl">0.1</span>,
+  colnames_position <span class="op">=</span> <span class="st">"top"</span>,
+  color <span class="op">=</span> <span class="cn">NA</span>,
+  colnames_offset_y <span class="op">=</span> <span class="fl">0</span>,
+  colnames_angle <span class="op">=</span> <span class="fl">90</span>,
+  offset <span class="op">=</span> <span class="fl">0.0000032</span>,
+  hjust <span class="op">=</span> <span class="fl">0</span>
+<span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>
+  values <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/viridis_pal.html" class="external-link">viridis_pal</a></span><span class="op">(</span>option <span class="op">=</span> <span class="st">"cividis"</span><span class="op">)</span><span class="op">(</span><span class="fl">7</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>,
+  na.translate <span class="op">=</span> <span class="cn">FALSE</span>,
+  name <span class="op">=</span> <span class="st">"Plasmid\nreplicon"</span>
+<span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">ylim</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">80</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_treescale.html" class="external-link">geom_treescale</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">0.000001</span>, y <span class="op">=</span> <span class="fl">55</span>, offset <span class="op">=</span> <span class="fl">1</span>, width <span class="op">=</span> <span class="fl">0.000001</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/ggtree/man/geom_point2.html" class="external-link">geom_point2</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">label</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">95</span> <span class="op">&amp;</span> <span class="op">!</span><span class="va">isTip</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">-&gt;</span>
+<span class="va">st131_subtree_plot</span>
+<span class="co">#&gt; Scale for 'fill' is already present. Adding another scale for 'fill', which</span>
+<span class="co">#&gt; will replace the existing scale.</span>
+<span class="co">#&gt; Scale for 'fill' is already present. Adding another scale for 'fill', which</span>
+<span class="co">#&gt; will replace the existing scale.</span>
+<span class="co">#&gt; Scale for 'fill' is already present. Adding another scale for 'fill', which</span>
+<span class="co">#&gt; will replace the existing scale.</span>
+<span class="co">#&gt; Scale for 'fill' is already present. Adding another scale for 'fill', which</span>
+<span class="co">#&gt; will replace the existing scale.</span>
+<span class="co">#&gt; Scale for 'y' is already present. Adding another scale for 'y', which will</span>
+<span class="co">#&gt; replace the existing scale.</span>
+
+<span class="va">st131_subtree_plot</span>
+<span class="co">#&gt; Warning in FUN(X[[i]], ...): NAs introduced by coercion</span>
+
+<span class="co">#&gt; Warning in FUN(X[[i]], ...): NAs introduced by coercion</span></code></pre></div>
+<div class="figure">
+<img src="analysis-ecoli_files/figure-html/st131-subtree-plot-1.png" alt="E. coli ST131 subtree showing detail of CTX-M-27 isolates and one area in which Malawian isolates are monophyletic" width="672"><p class="caption">
+E. coli ST131 subtree showing detail of CTX-M-27 isolates and one area
+in which Malawian isolates are monophyletic
+</p>
+</div>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="kw">if</span> <span class="op">(</span><span class="va">write_figs</span><span class="op">)</span> <span class="op">{</span>
+
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"figures/ecoli-genomics/st131_subtreeplot.svg"</span><span class="op">)</span>,
+       <span class="va">st131_subtree_plot</span>, width <span class="op">=</span> <span class="fl">7</span>, height <span class="op">=</span> <span class="fl">6.5</span><span class="op">)</span>
+
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"figures/ecoli-genomics/st131_subtreeplot.pdf"</span><span class="op">)</span>,
+       <span class="va">st131_subtree_plot</span>, width <span class="op">=</span> <span class="fl">7</span>, height <span class="op">=</span> <span class="fl">6.5</span><span class="op">)</span>
+<span class="op">}</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="reproducibility---packages-r-version-and-os-used">Reproducibility - packages, R version and OS used<a class="anchor" aria-label="anchor" href="#reproducibility---packages-r-version-and-os-used"></a>
 </h3>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; R version 4.1.1 (2021-08-10)</span>
 <span class="co">#&gt; Platform: aarch64-apple-darwin20 (64-bit)</span>
-<span class="co">#&gt; Running under: macOS Monterey 12.6</span>
+<span class="co">#&gt; Running under: macOS 13.1</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Matrix products: default</span>
 <span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.1-arm64/Resources/lib/libRblas.0.dylib</span>
@@ -19321,7 +19959,7 @@ ESBL/CPE genes and plasmid replicons
 <span class="co">#&gt; other attached packages:</span>
 <span class="co">#&gt;  [1] viridis_0.6.2     viridisLite_0.4.0 countrycode_1.3.0 ggstance_0.3.5   </span>
 <span class="co">#&gt;  [5] scales_1.1.1      here_1.0.1        patchwork_1.1.1   kableExtra_1.3.4 </span>
-<span class="co">#&gt;  [9] ggnewscale_0.4.5  lubridate_1.8.0   blantyreESBL_1.3  stringr_1.4.0    </span>
+<span class="co">#&gt;  [9] ggnewscale_0.4.5  lubridate_1.8.0   blantyreESBL_1.4  stringr_1.4.0    </span>
 <span class="co">#&gt; [13] forcats_0.5.1     ggplot2_3.3.5     readr_2.1.1       tidyr_1.1.4      </span>
 <span class="co">#&gt; [17] dplyr_1.0.7       phytools_1.0-1    maps_3.4.0        ape_5.6-1        </span>
 <span class="co">#&gt; [21] ggtree_3.0.4     </span>
@@ -19334,27 +19972,27 @@ ESBL/CPE genes and plasmid replicons
 <span class="co">#&gt; [13] DBI_1.1.2               lazyeval_0.2.2          colorspace_2.0-2       </span>
 <span class="co">#&gt; [16] withr_2.4.3             gridExtra_2.3           tidyselect_1.1.1       </span>
 <span class="co">#&gt; [19] mnormt_2.0.2            phangorn_2.8.1          bit_4.0.4              </span>
-<span class="co">#&gt; [22] compiler_4.1.1          cli_3.1.0               textshaping_0.3.6      </span>
+<span class="co">#&gt; [22] compiler_4.1.1          textshaping_0.3.6       cli_3.5.0              </span>
 <span class="co">#&gt; [25] rvest_1.0.2             expm_0.999-6            xml2_1.3.3             </span>
 <span class="co">#&gt; [28] desc_1.4.0              labeling_0.4.2          sass_0.4.0             </span>
 <span class="co">#&gt; [31] quadprog_1.5-8          pkgdown_2.0.2           systemfonts_1.0.3      </span>
 <span class="co">#&gt; [34] digest_0.6.29           yulab.utils_0.0.4       rmarkdown_2.11         </span>
 <span class="co">#&gt; [37] svglite_2.0.0           pkgconfig_2.0.3         htmltools_0.5.2        </span>
 <span class="co">#&gt; [40] plotrix_3.8-2           highr_0.9               fastmap_1.1.0          </span>
-<span class="co">#&gt; [43] rlang_0.4.12            rstudioapi_0.13         farver_2.1.0           </span>
+<span class="co">#&gt; [43] rlang_1.0.6             rstudioapi_0.13         farver_2.1.0           </span>
 <span class="co">#&gt; [46] gridGraphics_0.5-1      jquerylib_0.1.4         generics_0.1.1         </span>
 <span class="co">#&gt; [49] combinat_0.0-8          jsonlite_1.7.2          vroom_1.5.7            </span>
 <span class="co">#&gt; [52] magrittr_2.0.1          ggplotify_0.1.0         Matrix_1.4-0           </span>
 <span class="co">#&gt; [55] Rcpp_1.0.8              munsell_0.5.0           fansi_1.0.2            </span>
-<span class="co">#&gt; [58] lifecycle_1.0.1         scatterplot3d_0.3-41    stringi_1.7.6          </span>
-<span class="co">#&gt; [61] yaml_2.2.1              clusterGeneration_1.3.7 MASS_7.3-55            </span>
+<span class="co">#&gt; [58] lifecycle_1.0.3         scatterplot3d_0.3-41    stringi_1.7.6          </span>
+<span class="co">#&gt; [61] yaml_2.2.1              clusterGeneration_1.3.7 MASS_7.3-58.1          </span>
 <span class="co">#&gt; [64] grid_4.1.1              parallel_4.1.1          crayon_1.4.2           </span>
 <span class="co">#&gt; [67] lattice_0.20-45         hms_1.1.1               tmvnsim_1.0-2          </span>
 <span class="co">#&gt; [70] knitr_1.37              pillar_1.6.4            igraph_1.2.11          </span>
 <span class="co">#&gt; [73] codetools_0.2-18        fastmatch_1.1-3         glue_1.6.0             </span>
-<span class="co">#&gt; [76] evaluate_0.14           ggfun_0.0.5             vctrs_0.3.8            </span>
+<span class="co">#&gt; [76] evaluate_0.14           ggfun_0.0.5             vctrs_0.5.1            </span>
 <span class="co">#&gt; [79] treeio_1.16.2           tzdb_0.2.0              gtable_0.3.0           </span>
-<span class="co">#&gt; [82] purrr_0.3.4             assertthat_0.2.1        cachem_1.0.6           </span>
+<span class="co">#&gt; [82] purrr_1.0.0             assertthat_0.2.1        cachem_1.0.6           </span>
 <span class="co">#&gt; [85] xfun_0.29               tidytree_0.3.7          coda_0.19-4            </span>
 <span class="co">#&gt; [88] ragg_1.2.1              tibble_3.1.6            aplot_0.1.2            </span>
 <span class="co">#&gt; [91] memoise_2.0.1           ellipsis_0.3.2</span></code></pre></div>
