@@ -361,6 +361,19 @@
 #'
 "btESBL_ecoli_horesh_metadata"
 
+#' Data: AMR genes identified in Horesh et al E> coli
+#'
+#' Identified AMR genes using ARIBA and the SRST2 database.
+#' See manuscript for details
+#'
+#' @format A tidy data frame with 58446 rows and 2 variables:
+#' \describe{
+#'   \item{read_id}{Unique identfier of read file used as input to ARIBA}\
+#'   \item{ref_seq}{Identified AMR gene sequence}\
+#'   \item{ID}{Unique sample identifier to match horesh metadata table}\
+#' }
+"btESBL_ecoli_horesh_amr"
+
 #' Data: Accession numbers and metadata of 97 E. coli genomes from Malawi from Musciha et al
 #'
 #' Metadata of a collection of 97 E. coli genomes selected for temporal

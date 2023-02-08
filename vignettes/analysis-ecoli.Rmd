@@ -27,7 +27,7 @@ This document contains reproducing analysis code which generates the tables and 
 
 Joseph M Lewis^1,2,3,4^, , Madalitso Mphasa^1^, Rachel Banda^1^,  Matthew
 Beale^4^, Jane Mallewa^5^, Catherine Anscombe^1,2^, Allan Zuza^1^, Adam P Roberts^2^, Eva Heinz*^2^, Nicholas
-Thomson*^4,6^, Nicholas A Feasey*^1,2^
+Thomson\*^4,6^, Nicholas A Feasey\*^1,2^
 
 1. Malawi Liverpool Wellcome Research Programme, Blantyre, Malawi
 2. Liverpool School of Tropical Medicine, Liverpool, UK
@@ -241,9 +241,154 @@ if (write_figs) {
 mlst_plot 
 ```
 
+### Compare within- to between- patient diversity
+
+```{r within-vs-between-diveristy, fig.width = 6, fig.height = 6, fig.cap = "Comparing within- to between- participant diversity. A: Heatmap showing number of samples per participant versus number of STs per participant demonstrating that most participants have either one sample or more than one sample with different STs. B: Histogram of pairwise core genome SNP difference comparing only sample pairs that are of the same ST, stratified by whether sample pair is between-participant (left panel) or within-participant (right panel), demonstrating a similar distribution for each." }
+
+
+
+btESBL_sequence_sample_metadata %>%
+  filter(species == "E. coli") %>%
+  group_by(pid) %>%
+  summarise(
+    n_sts_per_participant = length(unique(ST)),
+    n_samples_per_participant = n()
+  ) %>%
+  mutate(
+    n_samples_per_participant = factor(n_samples_per_participant,
+      levels = 1:5
+    ),
+    n_sts_per_participant = factor(n_sts_per_participant, levels = 1:5)
+  ) %>%
+  count(n_sts_per_participant, n_samples_per_participant, .drop = FALSE) %>%
+  filter(as.numeric(as.character(n_samples_per_participant)) >=
+    as.numeric(as.character(n_sts_per_participant))) %>%
+  ggplot(aes(n_samples_per_participant, n_sts_per_participant,
+    label = n, fill = n, color = -n
+  )) +
+  geom_tile(color = NA) +
+  geom_text() +
+  scale_fill_viridis_c() +
+  scale_color_gradient(low = "black", high = "white") +
+  guides(color = "none") +
+  labs(
+    x = "No. of samples per participant",
+    y = "No. of STs per participant",
+    fill = "No. of\nParticipants"
+  ) +
+  theme_bw() -> samples_vs_st_plot
+
+
+btESBL_snpdists_esco %>%
+  rename(sample1 = sample) %>%
+  pivot_longer(-sample1,
+    names_to = "sample2",
+    values_to = "snpdist"
+  ) %>%
+  left_join(
+    btESBL_sequence_sample_metadata %>%
+      filter(species == "E. coli") %>%
+      transmute(
+        pid1 = pid,
+        ST1 = ST,
+        sample1 = lane
+      )
+  ) %>%
+  left_join(
+    btESBL_sequence_sample_metadata %>%
+      filter(species == "E. coli") %>%
+      transmute(
+        pid2 = pid,
+        ST2 = ST,
+        sample2 = lane
+      )
+  ) %>%
+  rowwise() %>%
+  mutate(filter_var = paste(sort(c(sample1, sample2)), collapse = ",")) -> df
+
+df[!duplicated(df$filter_var), ] -> df
+
+df %>%
+  filter(sample1 != sample2) %>%
+  filter(ST1 == ST2) %>%
+  filter(!is.na(pid1) & !is.na(pid2)) %>%
+  mutate(btwn_var = if_else(pid1 == pid2, "Within-participant, same ST",
+    "Between-participant, same ST"
+  )) %>%
+  ggplot(aes(snpdist)) +
+  # geom_density() +
+  geom_histogram(bins = 50, color = "black", size = 0.4) +
+  xlim(0, 200) +
+  facet_wrap(~btwn_var, scales = "free") +
+  theme_bw() +
+  guides(fill = "none") +
+  labs(
+    x = "Core genome SNP distance",
+    y = "Number of sample-pairs"
+  ) +
+  scale_fill_viridis_d(option = "cividis") -> snpdist_plot
+    
+
+((samples_vs_st_plot + plot_spacer() + plot_layout(widths = c(1.5,1))) /
+  snpdist_plot) +
+  plot_annotation(tag_levels = "A") -> within_participant_diversity_plot
+
+within_participant_diversity_plot
+
+
+if (write_figs) {
+
+  ggsave(
+    here("figures/ecoli-genomics/within_participant_diversity_plot.pdf"),
+  within_participant_diversity_plot,
+    width = 6,
+    height = 6)
+ 
+  ggsave(
+    here("figures/ecoli-genomics/within_participant_diversity_plot.svg"),
+    within_participant_diversity_plot,
+    width = 6,
+    height = 6)
+
+}
+
+```
+
+
 ### Compare phylogroup to horesh collection
 
-```{r globalvsmalawi_pgroup, fig.width = 5, fig.height = 4, fig.cap = "Phylogroup distribution in isolates from this study comapred to the global collection"}
+As per reviewer's comments - stratify Horesh **collection** by invasive vs carriage
+and ESBL vs not ESBL for comparison
+
+```{r plot-horsh-collection}
+
+# add esbl status to btESBL_ecoli_horesh_metadata
+
+btESBL_ecoli_horesh_metadata %>%
+  left_join(
+    btESBL_ecoli_horesh_amr %>%
+      left_join(
+        select(
+          btESBL_NCBI_phenotypic_bl,
+          allele_name,
+          class
+        ),
+        by = c("ref_seq" = "allele_name")
+      ) %>%
+      group_by(ID) %>%
+      summarise(res = if_else(
+        any(grepl("ESBL|AmpC|Carbapenemase", class)),
+        "ESBL/AmpC/Carbapenemase",
+        "No ESBL/AmpC/Carbapenemase"
+      )),
+    by = c("ID" = "ID")
+  ) -> btESBL_ecoli_horesh_metadata
+
+
+
+```
+
+```{r globalvsmalawi_pgroup, fig.width = 5, fig.height = 4, fig.cap = "Phylogroup distribution in isolates from this study comapred to the Horesh et al collection"}
 
 bind_rows(
 btESBL_ecoli_horesh_metadata %>% 
@@ -276,7 +421,6 @@ btESBL_sequence_sample_metadata %>%
 
 malawi_vs_global_pgroup
 
-
 if (write_figs) {
   ggsave(
     here("figures/ecoli-genomics/global_vs_malawi_pgroup.svg"),
@@ -290,6 +434,81 @@ if (write_figs) {
     width = 5,
     height = 4
   )
+}
+
+```
+
+```{r stratified_pgroup_plot, width = 6, height = 6, fig.cap = "Phylogroup distribution in isolates from this study comapred to the Horesh et al collection, stratified by source of isolation and presence of ESBL/AmpC/carbapenemase gene. Includes only those isolates for which metadata is available to determine source of isolate (n = 3921)"}
+
+bind_rows(
+  btESBL_ecoli_horesh_metadata %>%
+    transmute(
+      Study = "Global",
+      Phylogroup = Phylogroup,
+      res = res,
+      source = case_when(
+        Isolation == "Unknown" ~ "Unknown",
+        Isolation %in% c("Feces", "Rectal", "Rectal
+                                                Swab") ~ "Stool",
+        TRUE ~ "Invasive"
+      )
+    ),
+  btESBL_sequence_sample_metadata %>%
+    filter(species == "E. coli") %>%
+    transmute(
+      Study = "This Study",
+      Phylogroup = ecoli_phylogroup,
+      res = "ESBL/AmpC/Carbapenemase",
+      source = "Stool"
+    )
+) %>%
+  mutate(
+    Phylogroup =
+      case_when(
+        Phylogroup == "Not Determined" ~ "Unknown",
+        grepl("clade|Shigella", Phylogroup) ~ "Other",
+        TRUE ~ Phylogroup
+      )
+  ) %>%
+  filter(!is.na(res)) %>%
+  #  mutate(across(everything(), as.factor)) %>% */
+  count(Study, Phylogroup, res, source, .drop = FALSE) %>%
+  group_by(Study, res, source) %>%
+  mutate(prop = n / sum(n),
+         source = factor(source,
+                      levels = c("Stool","Invasive","Unknown")
+         )) %>%
+  ggplot(aes(Phylogroup,
+    prop,
+    group = Study,
+    fill = Study
+  )) +
+  geom_col(position = "dodge") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(
+    x = "Phylogroup",
+    y = "Proportion"
+  ) +
+  facet_grid(source ~ res) -> malawi_vs_global_pgroup_stratified
+
+malawi_vs_global_pgroup_stratified
+
+if (write_figs) {
+  ggsave(
+    here("figures/ecoli-genomics/global_vs_malawi_pgroup_stratified.svg"),
+    malawi_vs_global_pgroup_stratified,
+    width = 6,
+    height = 6
+  )
+
+  ggsave(
+    here("figures/ecoli-genomics/global_vs_malawi_pgroup_stratified.pdf"),
+    malawi_vs_global_pgroup_stratified,
+    width = 6,
+    height = 6
+  )
+
 }
 
 ```
@@ -640,30 +859,33 @@ bind_rows(
       study = "dassim",
       Country = "Malawi",
       Continent = "Africa",
-      Year = year(data_date)
-    ) %>% 
+      Year = year(data_date),
+      res = "ESBL/AmpC/Carbapenemase",
+      source = "Colonising"
+    ) %>%
     left_join(
       btESBL_ecoli_global_popPUNK_clusters,
       by = "lane"
     ),
-  
   btESBL_ecoli_musicha_metadata %>%
     transmute(
       lane = lane,
       Cluster = Cluster,
       ST = if_else(is.na(ST),
-                   "Novel",
-                   as.character(ST)),
+        "Novel",
+        as.character(ST)
+      ),
       Phylogroup = phylogroup,
       study = "musicha",
       Country = "Malawi",
       Continent = "Africa",
       Year = Year
     ),
-  
   btESBL_ecoli_horesh_metadata %>%
-    mutate(assembly_name_recode =
-             gsub("\\..*$", "", Assembly_name)) %>%
+    mutate(
+      assembly_name_recode =
+        gsub("\\..*$", "", Assembly_name)
+    ) %>%
     left_join(mergclust_lookup, by = c("PopPUNK" = "splts")) %>%
     transmute(
       lane = gsub(
@@ -676,8 +898,9 @@ bind_rows(
         )
       ),
       Cluster = if_else(!is.na(mergeclust),
-                        mergeclust,
-                        as.character(PopPUNK)),
+        mergeclust,
+        as.character(PopPUNK)
+      ),
       ST = gsub("~", "", ST),
       Phylogroup = Phylogroup,
       study = "horesh",
@@ -685,52 +908,68 @@ bind_rows(
       Continent = Continent,
       Year = case_when(
         Year == "Unknown" ~ NA_real_,
-        grepl("s", Year)  ~ as.numeric(gsub("s", "", Year)),
-        grepl("-", Year) ~  as.numeric(gsub("-.*$", "", Year)),
+        grepl("s", Year) ~ as.numeric(gsub("s", "", Year)),
+        grepl("-", Year) ~ as.numeric(gsub("-.*$", "", Year)),
         TRUE ~ as.numeric(str_trim(Year))
       ),
-      Pathotype = Pathotype
-    )) %>%   mutate(Continent =
-                 case_when(
-                   grepl("America", Continent) ~ "Americas",
-                   is.na(Continent) ~ "Unknown",
-                   TRUE ~ Continent
-                 )) %>%    mutate(
-                   cluster_recode =
-                     if_else(
-                       !grepl(paste(c(
-                         "\\<1", 2:1153, "1184\\>"
-                       ), collapse = "\\>|\\<"),
-                       Cluster) &
-                         !grepl("_", Cluster),
-                       NA_character_,
-                       Cluster
-                     ),
-                   cluster_recode = factor(
-                     cluster_recode,
-                     levels =
-                     unique(cluster_recode)[
-                       order(
-                         as.numeric(
-                           gsub("_.*$", "", unique(cluster_recode))
-                           )
-                         )
-                       ]),
-                   Phylogroup =
-                     case_when(
-                       Phylogroup %in% c("Unknown", "Not Determined",
-                                         "E or cladeI") ~
-                         "Unknown",
-                       is.na(Phylogroup) ~ "Unknown",
-                       TRUE ~ Phylogroup
-                     )
-                 ) -> df_all
-
+      Pathotype = Pathotype,
+      res = res,
+      source = case_when(
+        Isolation == "Unknown" ~ "Unknown",
+        Isolation %in% c("Feces", "Rectal", "Rectal
+                                                Swab") ~ "Colonising",
+        TRUE ~ "Infecting"
+      )
+    )
+) %>%
+  mutate(
+    Continent =
+      case_when(
+        grepl("America", Continent) ~ "Americas",
+        is.na(Continent) ~ "Unknown",
+        TRUE ~ Continent
+      )
+  ) %>%
+  mutate(
+    cluster_recode =
+      if_else(
+        !grepl(
+          paste(c(
+            "\\<1", 2:1153, "1184\\>"
+          ), collapse = "\\>|\\<"),
+          Cluster
+        ) &
+          !grepl("_", Cluster),
+        NA_character_,
+        Cluster
+      ),
+    cluster_recode = factor(
+      cluster_recode,
+      levels =
+        unique(cluster_recode)[
+          order(
+            as.numeric(
+              gsub("_.*$", "", unique(cluster_recode))
+            )
+          )
+        ]
+    ),
+    Phylogroup =
+      case_when(
+        Phylogroup %in% c(
+          "Unknown", "Not Determined",
+          "E or cladeI"
+        ) ~
+        "Unknown",
+        is.na(Phylogroup) ~ "Unknown",
+        TRUE ~ Phylogroup
+      )
+  ) -> df_all
 df_all <- as.data.frame(df_all)
 
 write_csv(df_all, here("tables/ecoli-genomics/horesh_globaltree_metadata.csv"))
 
-rownames(df_all) <- df_all$lane  
+rownames(df_all) <- df_all$lane
 
 ```
 
@@ -1136,124 +1375,347 @@ if (write_figs) {
 ```{r popPUNK-diversity-plots, fig.height = 6, fig.width = 6, fig.cap = "PopPUNK cluster assignments of isolates from this study, using the Horesh et al database. A: Proportion of samples assigned to a given cluster for this study (left) and the Horesh collection (right); clusters are ordered numerically which by definition is form largest to smallest in the Horesh collection. B: Cumulative proportion of isolates with cluster membership, with clusters again ordered numerically (i.e. largest to smallest). Dotted line indicates the end of clusters defined in the original Horesh popPUNK database; clusters to the right of this line are newly defined in the isolates in this study."}
 
 
-df_all %>% 
-  filter(study %in% c("dassim", "horesh")) %>% 
-  group_by(study) %>% 
-  mutate(n_tot_study = n()) %>% 
-  group_by(Cluster, study) %>% 
+df_all %>%
+  filter(study %in% c("dassim", "horesh")) %>%
+  mutate(res = if_else(grepl("No", res), "No ESBL", "ESBL")) %>%
+  group_by(study) %>%
+  mutate(n_tot_study = n()) %>%
+  group_by(Cluster, study) %>%
   summarise(
     n_cluster = n(),
-    prop_cluster = n_cluster/unique(n_tot_study)) %>% 
-  group_by(Cluster) %>% 
-  mutate(n_studies_cluster_is_in = length(Cluster)) %>% 
+    prop_cluster = n_cluster / unique(n_tot_study)
+  ) %>%
+  group_by(Cluster) %>%
+  mutate(n_studies_cluster_is_in = length(Cluster)) %>%
   filter(
-    grepl(paste(c("\\<1",2:49,"50\\>"), collapse = "\\>|\\<"),
-               Cluster) |
-           n_studies_cluster_is_in > 1 |
-           study == "dassim") %>% 
-  filter(!(study == "dassim" & n_cluster <= 3 & n_studies_cluster_is_in == 1 )) %>%
-  ungroup() %>% 
-  mutate(prop_cluster =
-           if_else(
-             study == "dassim",
-             -1*prop_cluster,
-             prop_cluster
-         ),
-         Cluster = factor(
-           Cluster,
-           levels = 
-             unique(Cluster)[
-               order(
-                 as.numeric(
-                   gsub("_.*$","",unique(Cluster))
-                 )
-               )
-             ]
-         )) %>% 
-  mutate(study = case_when(
-    study == "dassim" ~ "This Study",
-    TRUE ~ "Horesh Collection"),
-    study = factor(study, levels = c("This Study", "Horesh Collection"))
-    ) %>% 
+    grepl(
+      paste(c("\\<1", 2:49, "50\\>"), collapse = "\\>|\\<"),
+      Cluster
+    ) |
+      n_studies_cluster_is_in > 1 |
+      study == "dassim"
+  ) %>%
+  filter(!(study == "dassim" & n_cluster <= 3 & n_studies_cluster_is_in == 1)) %>%
+  ungroup() %>%
+  mutate(
+    prop_cluster =
+      if_else(
+        study == "dassim",
+        -1 * prop_cluster,
+        prop_cluster
+      ),
+    Cluster = factor(
+      Cluster,
+      levels =
+        unique(Cluster)[
+          order(
+            as.numeric(
+              gsub("_.*$", "", unique(Cluster))
+            )
+          )
+        ]
+    )
+  ) %>%
+  mutate(
+    study = case_when(
+      study == "dassim" ~ "This Study",
+      TRUE ~ "Horesh et al."
+    ),
+    study = factor(study, levels = c("This Study", "Horesh et al."))
+  ) %>%
   ggplot(aes(x = prop_cluster, y = fct_rev(Cluster), fill = study)) +
-  geom_col() +
+  geom_col(color = "black", size = 0.2) +
   theme_bw() +
-  labs(y = "PopPUNK cluster", fill = "",
-       x = "Proportion of samples") +
-  scale_x_continuous(labels = c(0.1,0.0, 0.1, 0.2, 0.3)) +
-  scale_fill_manual(values = viridis_pal(option = "cividis")(8)[c(2,5)]) +
+  labs(
+    y = "PopPUNK cluster", fill = "",
+    x = "Proportion of samples"
+  ) +
+  scale_x_continuous(labels = c(0.1, 0.0, 0.1, 0.2, 0.3)) +
+  scale_fill_manual(values = c(
+    viridis_pal(option = "cividis")(8)[c(2)],
+    "grey60"
+  )) +
   theme(
     axis.text.y = element_text(size = 5),
-    axis.text.x = element_text(size = 5),
-    legend.position = "bottom") -> p1
+    axis.text.x = element_text(size = 7),
+    legend.position = "bottom"
+  ) -> p1
 
-
-df_all %>% 
-  filter(study %in% c("dassim", "horesh")) %>% 
-  mutate(study = case_when(
-    study == "dassim" ~ "This Study",
-    TRUE ~ "Horesh Collection"),
+df_all %>%
+  filter(study %in% c("dassim", "horesh")) %>%
+  mutate(
+    study = case_when(
+      study == "dassim" ~ "This Study",
+      TRUE ~ "Horesh Collection"
+    ),
     study = factor(study, levels = c("This Study", "Horesh Collection"))
-    ) %>% 
+  ) %>%
   mutate(Cluster = factor(
     Cluster,
-    levels = 
+    levels =
       unique(Cluster)[
         order(
           as.numeric(
-            gsub("_.*$","",unique(Cluster))
+            gsub("_.*$", "", unique(Cluster))
           )
         )
       ]
-  )) %>% 
+  )) %>%
   ggplot(aes(Cluster, color = study, group = study)) +
-  stat_ecdf(pad = FALSE, geom = "step") +
+  stat_ecdf(pad = TRUE, geom = "step") +
   scale_x_discrete(
-    breaks = as.character(c(1,seq(from = 100 , to = 1400, by = 100))),
-    expand = c(0.01,0.01)
-    ) +
+    breaks = as.character(c(1, seq(from = 100, to = 1400, by = 100))),
+    expand = c(0.01, 0.01)
+  ) +
   theme_bw() +
-  labs(y = "Cumulative proportion",
-      x = "PopPUNK cluster", color = ""
-      ) +
+  labs(
+    y = "Cumulative proportion",
+    x = "PopPUNK cluster", color = ""
+  ) +
   geom_vline(
     xintercept = "1184",
-    alpha = 0.8, 
+    alpha = 0.8,
     linetype = "dotted"
-    ) +
-  scale_color_manual(values = viridis_pal(option = "cividis")(8)[c(2,5)],
-                     guide = "none") +
+  ) +
+  scale_color_manual(
+    values = c(
+      viridis_pal(option = "cividis")(8)[c(2)],
+      "grey60"
+    ),
+    guide = "none"
+  ) +
   theme(
-    axis.text.y = element_text(size = 5),
+    axis.text.y = element_text(size = 7),
     axis.text.x = element_text(angle = 45, hjust = 1, size = 5),
-        legend.position = "none") -> p2
+    legend.position = "none"
+  ) -> p2
 
-(
-  p1 + 
-    (p2 + plot_spacer() + plot_layout(ncol = 1))
-  ) + plot_layout(ncol = 2, guides = "collect") + 
-  plot_annotation(tag_levels = "A") & 
-  theme(legend.position = "bottom") -> pp_cluster_plots
+  (
+    p1 +
+      (p2 + plot_spacer() + plot_layout(ncol = 1))
+  ) + plot_layout(ncol = 2, guides = "collect") +
+    plot_annotation(tag_levels = "A") &
+    theme(legend.position = "bottom") -> pp_cluster_plots
 
-pp_cluster_plots
+  pp_cluster_plots
 
 if (write_figs) {
-  
   ggsave(
     here("figures/ecoli-genomics/global_poppunk_clusterplot.pdf"),
     pp_cluster_plots,
     width = 6,
-    height = 6)
+    height = 6
+  )
   ggsave(
     here("figures/ecoli-genomics/global_poppunk_clusterplot.svg"),
     pp_cluster_plots,
     width = 6,
-    height = 6)
-  
+    height = 6
+  )
 }
 
+```
+
+```{r pp_cluster_plots_stratified, fig.height = 12, fig.width = 8, fig.cap = "PopPUNK cluster assignments of isolates from this study, using the Horesh et al database. A: Proportion of samples assigned to a given cluster for this study (left) and the Horesh collection (right); clusters are ordered numerically which by definition is form largest to smallest in the Horesh collection. B: Cumulative proportion of isolates with cluster membership, with clusters again ordered numerically (i.e. largest to smallest). Dotted line indicates the end of clusters defined in the original Horesh popPUNK database; clusters to the right of this line are newly defined in the isolates in this study. C-E: The same plots but restricted to samples for which metadata on source of isolation is available (n = 3921) and stratfied by source and presence of absence of ESBL gene. Isolates with an identifiable ampC or carbapenemase gene are included in this category."}
 
 
+# get clusters to include
+
+
+df_all %>%
+  mutate(res = if_else(grepl("No", res), "No ESBL", "ESBL")) %>%
+  filter(study %in% c("dassim", "horesh")) %>%
+  group_by(study) %>%
+  mutate(n_tot_study = n()) %>%
+  group_by(Cluster, study) %>%
+  summarise(
+    n_cluster = n(),
+    prop_cluster = n_cluster / unique(n_tot_study)
+  ) %>%
+  group_by(Cluster) %>%
+  mutate(n_studies_cluster_is_in = length(Cluster)) %>%
+  filter(
+    grepl(
+      paste(c("\\<1", 2:49, "50\\>"), collapse = "\\>|\\<"),
+      Cluster
+    ) |
+      n_studies_cluster_is_in > 1 |
+      study == "dassim"
+  ) %>%
+  filter(!(study == "dassim" & 
+           n_cluster <= 3 & n_studies_cluster_is_in == 1)) %>%
+  ungroup() %>%
+  pull(Cluster) %>%
+  unique() -> clusters_to_include
+
+df_all %>%
+  mutate(res = if_else(grepl("No", res), "No ESBL", "ESBL")) %>%
+  filter(study %in% c("dassim", "horesh")) %>%
+  group_by(study) %>%
+  filter(source != "Unknown") %>%
+  mutate(n_tot_study = n()) %>%
+  group_by(Cluster, study, res, source) %>%
+  summarise(
+    n_cluster = n(),
+    prop_cluster = n_cluster / unique(n_tot_study)
+  ) %>%
+  filter(Cluster %in% clusters_to_include) %>%
+  ungroup() %>%
+  mutate(
+    prop_cluster =
+      if_else(
+        study == "dassim",
+        -1 * prop_cluster,
+        prop_cluster
+      ),
+    Cluster = factor(
+      Cluster,
+      levels =
+        unique(Cluster)[
+          order(
+            as.numeric(
+              gsub("_.*$", "", unique(Cluster))
+            )
+          )
+        ]
+    )
+  ) %>%
+  mutate(
+    var = case_when(
+      study == "dassim" ~ "This Study\nColonising",
+      study == "horesh" & grepl("Colonising", source) ~ "Horesh et al.\nStool",
+      TRUE ~ "Horesh et al.\nInvasive"
+    ),
+    var = factor(var, levels = sort(unique(var))[c(3, 2, 1)])
+  ) %>%
+  ggplot(aes(x = prop_cluster, y = fct_rev(Cluster), fill = var)) +
+  geom_col(color = "black", size = 0.2) +
+  theme_bw() +
+  labs(
+    y = "PopPUNK cluster", fill = "",
+    x = "Proportion of samples"
+  ) +
+  # scale_x_continuous(labels = c(0.1,0.0, 0.1, 0.2, 0.3)) +
+  scale_fill_manual(
+    values = c(
+      viridis_pal(option = "cividis")(8)[c(2, 8, 6)]
+    ),
+    breaks = c(
+      "This Study\nColonising",
+      "Horesh et al.\nInvasive",
+      "Horesh et al.\nStool"
+    )
+  ) +
+  scale_color_manual(
+    values = c(
+      viridis_pal(option = "cividis")(8)[c(2, 8, 6)]
+    ),
+    breaks = c(
+      "This Study\nColonising",
+      "Horesh et al.\nInvasive",
+      "Horesh et al.\nStool"
+    )
+  ) +
+  theme(
+    axis.text.y = element_text(size = 5),
+    axis.text.x = element_text(size = 7),
+    legend.position = "bottom"
+  ) +
+  facet_wrap(. ~ res) +
+  scale_x_continuous(
+    breaks = c(-0.1, 0, 0.1),
+    labels = c(0.1, 0.0, 0.1)
+  ) -> a
+
+df_all %>%
+  mutate(res = as.factor(if_else(grepl("No", res), "No ESBL", "ESBL"))) %>%
+  filter(study %in% c("dassim", "horesh")) %>%
+  #   filter(source != "Unknown")  %>%
+  mutate(Cluster = factor(
+    Cluster,
+    levels =
+      unique(Cluster)[
+        order(
+          as.numeric(
+            gsub("_.*$", "", unique(Cluster))
+          )
+        )
+      ]
+  )) %>%
+  mutate(
+    var = case_when(
+      study == "dassim" ~ "This Study\nColonising",
+      study == "horesh" & grepl("Colonising", source) ~ "Horesh et al.\nStool",
+      TRUE ~ "Horesh et al.\nInvasive"
+    ),
+    var = factor(var, levels = sort(unique(var))[c(3, 2, 1)])
+  ) %>%
+  count(Cluster, var, res, .drop = FALSE) %>%
+  filter(!(grepl("This Study", var) & res == "No ESBL")) %>%
+  group_by(var, res) %>%
+  mutate(
+    cumsum = cumsum(n),
+    sum = sum(n),
+    prop = cumsum / sum
+  ) %>%
+  ggplot(aes(Cluster, prop, color = var, fill = var, group = var)) +
+  geom_step() +
+  theme_bw() +
+  labs(
+    y = "Cumulative proportion",
+    x = "PopPUNK cluster", color = ""
+  ) +
+  geom_vline(
+    xintercept = "1184",
+    alpha = 0.8,
+    linetype = "dotted"
+  ) +
+  scale_color_manual(
+    values = c(
+      viridis_pal(option = "cividis")(8)[c(2, 8, 6)]
+    ),
+    breaks = c(
+      "This Study\nColonising",
+      "Horesh et al.\nInvasive",
+      "Horesh et al.\nStool"
+    ),
+    guide = "none"
+  ) +
+  theme(
+    axis.text.y = element_text(size = 7),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 5),
+    legend.position = "none"
+  ) +
+  facet_wrap(. ~ res, ncol = 1) +
+  scale_x_discrete(
+    breaks = as.character(c(1, seq(from = 100, to = 1400, by = 100))),
+    expand = c(0.01, 0.01)
+  ) -> b
+
+
+(p1 + (plot_spacer() + p2 + plot_layout(ncol = 1)) + plot_layout(
+  guides =
+    "auto", widths = c(1.7, 1)
+)) +
+  a + (b + plot_layout(ncol = 1)) +
+  plot_annotation(tag_levels = "A") -> pp_cluster_plots_stratified
+
+pp_cluster_plots_stratified
+
+if (write_figs) {
+  ggsave(
+    here("figures/ecoli-genomics/global_poppunk_clusterplot_strat.pdf"),
+    pp_cluster_plots_stratified,
+    width = 8,
+    height = 12
+  )
+  ggsave(
+    here("figures/ecoli-genomics/global_poppunk_clusterplot_strat.svg"),
+    pp_cluster_plots_stratified,
+    width = 8,
+    height = 12
+  )
+}
 
 ```
 
@@ -2492,6 +2954,129 @@ ggsave(here("figures/ecoli-genomics/st410_167_131_subtreeplot.svg"),
 ggsave(here("figures/ecoli-genomics/st410_167_131_subtreeplot.pdf"),
        st410_167_131_subtree_plot, width = 12, height = 8.2)
 }
+
+
+```
+
+```{r st131-subtree-plot, fig.width = 7, fig.height = 6.5, fig.cap = "E. coli ST131 subtree showing detail of CTX-M-27 isolates and one area in which Malawian isolates are monophyletic"}
+
+
+# ----------------------------------------------------------------------
+# plot subtree of ST131
+
+treeio::tree_subset(btESBL_ecoli_globalst131_tree, 1090) -> st131_subtree
+
+
+esbl_cpe.ariba131 %>%
+  subset(name %in% st131_subtree$tip.label) %>%
+  as.data.frame() ->
+esbl_cpe.ariba131_subset
+
+esbl_cpe.ariba131_subset[
+  c(TRUE, apply(esbl_cpe.ariba131_subset[-1], 2, function(x) !all(is.na(x))))
+] ->
+esbl_cpe.ariba131_subset
+
+
+st131_plasm_onehot %>%
+  subset(name %in% st131_subtree$tip.label) %>%
+  as.data.frame() -> st131_plasm_onehot_subset
+
+
+st131_plasm_onehot_subset[
+  c(TRUE, apply(st131_plasm_onehot_subset[-1], 2, function(x) !all(is.na(x))))
+] ->
+
+st131_plasm_onehot_subset
+
+(
+  (
+    (ggtree(treeio::tree_subset(btESBL_ecoli_globalst131_tree, 1090)) %<+%
+      (select(btESBL_ecoli_st131_metadata, Accession_number, Country) %>%
+        mutate(Country = if_else(Country == "Malawi",
+          "Malawi", NA_character_
+        ))) %>%
+      gheatmap(
+        select(btESBL_ecoli_st131_metadata, `Year`),
+        font.size = 4,
+        width = 0.035,
+        colnames_position = "top",
+        color = NA,
+        colnames_offset_y = 0,
+        colnames_angle = 90,
+        hjust = 0
+      ) +
+      scale_fill_viridis_c(
+        name = "Year", limits = c(1965, 2020),
+        na.value = "white"
+      ) +
+      new_scale_fill()) %>%
+      gheatmap(
+        select(btESBL_ecoli_st131_metadata, Continent),
+        font.size = 4,
+        width = 0.03,
+        colnames_position = "top",
+        color = NA,
+        colnames_offset_y = 0,
+        colnames_angle = 90,
+        offset = 0.0000008,
+        hjust = 0
+      ) +
+      scale_fill_viridis_d(
+        option = "plasma", name = "Continent",
+        na.translate = FALSE
+      ) +
+      geom_tippoint(aes(color = Country), na.rm = TRUE, size = 1) +
+      scale_color_manual(values = "red", na.translate = FALSE) +
+      new_scale_fill()
+  ) %>%
+    gheatmap(
+      select(esbl_cpe.ariba131_subset, -name),
+      font.size = 2.5,
+      width = (ncol(esbl_cpe.ariba131_subset) - 1) * 0.03,
+      colnames_position = "top",
+      color = NA,
+      colnames_offset_y = 0,
+      colnames_angle = 90,
+      offset = 0.0000015,
+      hjust = 0
+    ) + scale_fill_manual(
+      values = esbl_cols,
+      na.translate = FALSE,
+      name = "Beta-\nlactamase"
+    ) +
+    new_scale_fill()
+) %>% gheatmap(
+  select(st131_plasm_onehot_subset, -name),
+  font.size = 2.5,
+  width = 0.026 * (ncol(st131_plasm_onehot_subset) - 1) + 0.1,
+  colnames_position = "top",
+  color = NA,
+  colnames_offset_y = 0,
+  colnames_angle = 90,
+  offset = 0.0000032,
+  hjust = 0
+) + scale_fill_manual(
+  values = viridis_pal(option = "cividis")(7)[2],
+  na.translate = FALSE,
+  name = "Plasmid\nreplicon"
+) +
+  ylim(NA, 80) +
+  geom_treescale(x = 0.000001, y = 55, offset = 1, width = 0.000001) +
+  geom_point2(aes(subset = as.numeric(label) < 95 & !isTip), size = 0.5) ->
+st131_subtree_plot
+
+st131_subtree_plot
+
+if (write_figs) {
+
+ggsave(here("figures/ecoli-genomics/st131_subtreeplot.svg"),
+       st131_subtree_plot, width = 7, height = 6.5)
+
+ggsave(here("figures/ecoli-genomics/st131_subtreeplot.pdf"),
+       st131_subtree_plot, width = 7, height = 6.5)
+}
+
 
 
 ```

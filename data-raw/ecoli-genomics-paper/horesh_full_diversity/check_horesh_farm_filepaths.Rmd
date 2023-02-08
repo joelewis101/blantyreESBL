@@ -1,0 +1,164 @@
+---
+title: "Checking filepaths for Gal' collection"
+author: "Joe Lewis"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_document
+---
+
+# Background/Methods
+
+Wrote a cheeky script to check 1) does file exist and 2) if yes, is it symlink
+and 3) if symlink does it correctly resolve to a file. Used the metadata table
+FINAL_METADATA_CLEANED.tsv which has filepaths to reads, assemblies,
+annotations and run the script on those filepaths. 
+
+# Reads
+
+Looks like all the reads are available, and most symlink to a nfs location. The
+nfs locations seem to be the nice tracked pathogen informatics ones and running
+pf on a random bunch of them seems that they can be retrieved.
+
+The ones that are *not* on nfs all have "artificial_read" in  the filepath so
+presumably are the shredded reads. They're all on lustre.
+
+```{r setup, include = FALSE}
+
+library(tidyverse)
+library(here)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+
+```
+
+```{r plot_read_locations}
+
+
+read_filepaths <- 
+  read_tsv(here("data-raw/ecoli-genomics-paper/horesh_full_diversity/check_read_filepaths.txt"))
+
+read_filepaths %>%
+  mutate(artificial_read = 
+         if_else(grepl("artificial_read", filepath),
+                 "artificial read in path", 
+                 "not artificial read in path"),
+         storage = case_when(
+                             result == "Symlink:valid" &
+                               grepl("nfs",resolved_symlink) ~ "nfs",
+                             result == "Symlink:valid" &
+                               grepl("lustre",resolved_symlink) ~ "lustre",
+                             result == "Not_symlink:file_present" &
+                               grepl("nfs",filepath) ~ "nfs",
+                             result == "Not_symlink:file_present" &
+                               grepl("lustre",filepath) ~ "lustre")
+                             ) %>%
+  ggplot(aes(fct_infreq(result), fill = storage)) +
+  geom_bar() +
+  coord_flip() +
+  facet_wrap(~ artificial_read) +
+  labs(title = "location of reads")
+
+```
+
+```{r where_arre_reads_on nfs, fig.width = 10}
+
+read_filepaths %>%
+  filter(result == "Symlink:valid", grepl("nfs", resolved_symlink)) %>%
+  mutate(
+    dirname =
+      dirname(
+        dirname(
+          dirname(
+            dirname(
+              dirname(
+                dirname(
+                  dirname(resolved_symlink)
+                )
+              )
+            )
+          )
+        )
+      )
+  ) %>%
+  ggplot(aes(fct_infreq(dirname))) +
+  geom_bar() +
+  coord_flip() +
+  labs(title = "What are the dirnames on nfs where reads are?")
+```
+
+# Assemblies
+
+Not all the assemblies resolve to a valid file. All the ones that don't have
+"enterobase" in the file path and mostly they link back to alex wailan's lustre
+storage (which is no more). There are a few assemblies on lustre and these seem
+to be a few bits and bobs from various studies.
+
+The assemblies that are on nfs are in the nice pathogen tracked directories and
+(again in a non-systematic search) seem to be mostly available via pf.
+
+```{r plot_assembly_locations}
+
+library(here)
+
+assembly_filepaths <- 
+  read_tsv(here("data-raw/ecoli-genomics-paper/horesh_full_diversity/check_assembly_filepaths.txt"))
+
+assembly_filepaths %>%
+  mutate(enterobase = 
+         if_else(grepl("enterobase", filepath),
+                 "enterobase in path", 
+                 "enterobase not in path"),
+         storage = case_when(
+                             result == "Symlink:valid" &
+                               grepl("nfs",resolved_symlink) ~ "nfs",
+                             result == "Symlink:valid" &
+                               grepl("lustre",resolved_symlink) ~ "lustre",
+                             result == "Not_symlink:file_present" &
+                               grepl("nfs",filepath) ~ "nfs",
+                             result == "Not_symlink:file_present" &
+                               grepl("lustre",filepath) ~ "lustre")
+                             ) %>%
+  ggplot(aes(fct_infreq(result), fill = storage)) +
+  geom_bar() +
+  coord_flip() +
+  facet_wrap(~ enterobase) +
+  labs(title = "Location of assemblies")
+
+```
+
+```{r which_filepaths_are_on_lustre, fig.width = 10}
+
+assembly_filepaths %>%
+  filter(result == "Not_symlink:file_present") %>%
+  mutate(dirname = dirname(filepath)) %>%
+  ggplot(aes(fct_infreq(dirname))) +
+  geom_bar() +
+  coord_flip() +
+  labs(title = "What are the dirnames for the lustre assemblies?")
+
+```
+
+```{r where_are_assemblies_on nfs, fig.width = 10}
+
+assembly_filepaths %>%
+  filter(result == "Symlink:valid", grepl("nfs", resolved_symlink)) %>%
+  mutate(
+    dirname =
+      dirname(
+        dirname(
+          dirname(
+            dirname(
+              dirname(
+                dirname(
+                  dirname(resolved_symlink)
+                )
+              )
+            )
+          )
+        )
+      )
+  ) %>%
+  ggplot(aes(fct_infreq(dirname))) +
+  geom_bar() +
+  coord_flip() +
+  labs(title = "What are the dirnames on nfs where assemblies are?")
+
+```
