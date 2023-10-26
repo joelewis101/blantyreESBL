@@ -36,10 +36,10 @@ Catherine Anscombe<sup>1,2</sup>, Allan Zuza<sup>1</sup>, Adam P
 Roberts<sup>2</sup>, Eva Heinz*<sup>2</sup>, Nicholas
 Thomson*<sup>4,7</sup>, Nicholas A Feasey\*<sup>1,2</sup>
 
--   = contributed equally
+- = contributed equally
 
-Preprint available at BioRxiv
-[here](https://doi.org/10.1101/2021.10.07.463523)
+Preprint available at Microbial Genomics
+[here](https://doi.org/10.1099/mgen.0.001035)
 
 [**Genomic and antigenic diversity of colonising *Klebsiella pneumoniae*
 isolates mirrors that of invasive isolates in Blantyre,
