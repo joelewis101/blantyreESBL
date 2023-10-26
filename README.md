@@ -38,7 +38,7 @@ Thomson*<sup>4,7</sup>, Nicholas A Feasey\*<sup>1,2</sup>
 
 - = contributed equally
 
-Preprint available at Microbial Genomics
+Paper available at Microbial Genomics
 [here](https://doi.org/10.1099/mgen.0.001035)
 
 [**Genomic and antigenic diversity of colonising *Klebsiella pneumoniae*

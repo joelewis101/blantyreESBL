@@ -36,7 +36,7 @@ Thomson*^4,7^, Nicholas A Feasey*^1,2^
 
 * = contributed equally
 
-Preprint available at Microbial Genomics [here](https://doi.org/10.1099/mgen.0.001035)
+Paper available at Microbial Genomics [here](https://doi.org/10.1099/mgen.0.001035)
 
 [**Genomic and antigenic diversity of colonising _Klebsiella pneumoniae_ isolates mirrors that of invasive isolates in Blantyre, Malawi**](https://joelewis101.github.io/blantyreESBL/articles/analysis-kleb.html)
 
