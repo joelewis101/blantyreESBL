@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">blantyreESBL</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.1</span>
       </span>
     </div>
 
@@ -43,7 +43,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -94,7 +94,7 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">blantyreESBL</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">blantyreESBL</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h3>
@@ -129,10 +129,10 @@ University of Liverpool, Liverpool, UK</li>
 directory of the installed package, which can be located with the
 following command:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, 
-            <span class="st">"ESBLmod_finalV1.0_rk45.stan"</span>, 
-            package <span class="op">=</span> <span class="st">"blantyreESBL"</span><span class="op">)</span>
-<span class="co">#&gt; [1] "/private/var/folders/qc/twvrz5kx0gj2lrt4n8wtk1ym0000gn/T/Rtmpb1nkZ6/temp_libpath106dc71bfd600/blantyreESBL/extdata/ESBLmod_finalV1.0_rk45.stan"</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, </span>
+<span>            <span class="st">"ESBLmod_finalV1.0_rk45.stan"</span>, </span>
+<span>            package <span class="op">=</span> <span class="st">"blantyreESBL"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "/private/var/folders/qc/twvrz5kx0gj2lrt4n8wtk1ym0000gn/T/RtmpAVPCZu/temp_libpath92f6786f0f05/blantyreESBL/extdata/ESBLmod_finalV1.0_rk45.stan"</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="model-specification">Model specification<a class="anchor" aria-label="anchor" href="#model-specification"></a>
@@ -237,18 +237,18 @@ the model used in the manuscript.</p>
 </h3>
 <p>The following code (not run in this vignette) will fit the model as
 in the manuscript:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstan)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(blantyreESBL)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">stan</span>(</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">file =</span> <span class="fu">system.file</span>(<span class="st">"extdata"</span>, </span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"ESBLmod_finalV1.0_rk45.stan"</span>, </span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">package =</span> <span class="st">"blantyreESBL"</span>)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> btESBL_stanmodeldata,</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">warmup =</span> <span class="dv">500</span>,</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">iter =</span> <span class="dv">1000</span>,</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>) <span class="ot">-&gt;</span> stanfit</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">library</span>(rstan)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">library</span>(blantyreESBL)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="fu">stan</span>(</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  <span class="at">file =</span> <span class="fu">system.file</span>(<span class="st">"extdata"</span>, </span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>                     <span class="st">"ESBLmod_finalV1.0_rk45.stan"</span>, </span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>                     <span class="at">package =</span> <span class="st">"blantyreESBL"</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>  <span class="at">data =</span> btESBL_stanmodeldata,</span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>  <span class="at">warmup =</span> <span class="dv">500</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>  <span class="at">iter =</span> <span class="dv">1000</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>) <span class="ot">-&gt;</span> stanfit</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="simulating-from-the-model">Simulating from the model<a class="anchor" aria-label="anchor" href="#simulating-from-the-model"></a>
@@ -257,11 +257,11 @@ in the manuscript:</p>
 simulations used in the analysis. It is included in the package install
 and again can be located by:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, 
-            <span class="st">"simulate_from_posterior.R"</span>, 
-            package <span class="op">=</span> <span class="st">"blantyreESBL"</span><span class="op">)</span>
-<span class="co">#&gt; [1] "/private/var/folders/qc/twvrz5kx0gj2lrt4n8wtk1ym0000gn/T/Rtmpb1nkZ6/temp_libpath106dc71bfd600/blantyreESBL/extdata/simulate_from_posterior.R"</span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, </span>
+<span>            <span class="st">"simulate_from_posterior.R"</span>, </span>
+<span>            package <span class="op">=</span> <span class="st">"blantyreESBL"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "/private/var/folders/qc/twvrz5kx0gj2lrt4n8wtk1ym0000gn/T/RtmpAVPCZu/temp_libpath92f6786f0f05/blantyreESBL/extdata/simulate_from_posterior.R"</span></span></code></pre></div>
 <p>Or it is located (along withe stan model) in the
 <code>inst/extdata/</code> folder on the github repo.</p>
 </div>
@@ -282,8 +282,7 @@ and again can be located by:</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

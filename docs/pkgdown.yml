@@ -1,5 +1,5 @@
-pandoc: 2.19.2
-pkgdown: 2.0.2
+pandoc: 3.1.2
+pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   analysis-ecoli: analysis-ecoli.html
@@ -8,5 +8,5 @@ articles:
   contig-clusters: contig-clusters.html
   fitting-stan-models: fitting-stan-models.html
   simulations: simulations.html
-last_built: 2023-02-08T16:48Z
+last_built: 2023-10-27T08:16Z
 

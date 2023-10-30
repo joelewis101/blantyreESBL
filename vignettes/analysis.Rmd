@@ -65,6 +65,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+
+library(tidytree)
 library(DescTools)
 library(here)
 library(igraph)
@@ -98,7 +100,7 @@ p.uci <- function(x,n) {
   return(binom.test(x,n)$conf.int[[2]])
 }
 
-write_figs <- TRUE
+write_figs <- FALSE
 
 
 if (write_figs) {
@@ -969,7 +971,7 @@ left_join(
       group_by(pid) %>%
       filter(any_abx == 1) %>%
       arrange(pid, assess_type) %>%
-      slice(n = 1) %>%
+      slice(1) %>%
       mutate(first_ab = assess_type) %>%
       select(pid, first_ab)) %>% 
   # and hospital exposure
@@ -981,7 +983,7 @@ left_join(
       group_by(pid) %>% 
       filter(hosp == 1) %>% 
       arrange(pid, assess_type) %>% 
-      slice(n=1) %>% 
+      slice(1) %>% 
       mutate(first_hosp = assess_type) %>%
       select(pid, first_hosp)) %>% 
   # censor as described
@@ -1402,7 +1404,7 @@ btESBL_model2simulations_2 %>%
 
 (a / b) + plot_annotation(tag_levels = "A") -> antimicrob_vs_hosp_plot
 
-
+antimicrob_vs_hosp_plot
 
 if (write_figs) {
   ggsave(here("figures/long-modelling/SUP_FIG_antimicrob_vs_hosp_plot.pdf"),
@@ -1654,7 +1656,7 @@ btESBL_contigclusters %>% arrange(desc(clstr_size)) %>%
   mutate(clstr_name = "Other") %>% 
   select(lane, clstr_name)) %>% 
   pivot_wider(
-    id_col = lane,
+    id_cols = lane,
     names_from = clstr_name,
     values_from = clstr_name,
     values_fn = length,
@@ -1683,7 +1685,7 @@ ggtree(btESBL_coregene_tree_esco) %>%
   theme(plot.margin = unit(c(0.5,0.5,0,0.5), units = "cm")) -> 
   contigclusters_map_to_tree_esco
 
-ggtree(treeio::tree_subset(btESBL_coregene_tree_kleb, 210, 
+ggtree(tree_subset(btESBL_coregene_tree_kleb, 210, 
                            levels_back = 0)) %>% 
   gheatmap((clst.onehot[-c(1,ncol(clst.onehot))]),
            font.size = 2.5,
@@ -1836,7 +1838,7 @@ ggtree(btESBL_coregene_tree_esco) %>%
  scale_fill_manual(values = c( "lightgrey", viridis_pal()(4)[1]) )  ->
   pp.maptotree.e
 
-ggtree(treeio::tree_subset(btESBL_coregene_tree_kleb, 210, 
+ggtree(tree_subset(btESBL_coregene_tree_kleb, 210, 
                            levels_back = 0)) %>%
   gheatmap((pp.onehot.k[-1]),
            font.size = 2,
@@ -1868,6 +1870,7 @@ if (write_figs) {
          width = 12, 
          height = 10)
 }
+
 pp.maptotree
 
 ```
@@ -1892,7 +1895,7 @@ btESBL_snpdists_esco %>%
       rename("lab_id.y" = "supplier_name"),
     by = c("sample.y" = "lane")) %>% 
   group_by(lab_id.x, lab_id.y) %>% 
-  slice(n = 1) %>% 
+  slice(1) %>% 
   mutate(same_snpclust_esco = snpdist_esco <= 5) -> snpdist.e.long
 
 btESBL_snpdists_kleb  %>% 
@@ -1909,7 +1912,7 @@ btESBL_snpdists_kleb  %>%
       rename("lab_id.y" = "supplier_name"),
     by = c("sample.y" = "lane")) %>% 
   group_by(lab_id.x, lab_id.y) %>% 
-  slice(n = 1) %>% 
+  slice(1) %>% 
   mutate(same_snpclust_kleb = snpdist_kleb <= 5) -> snpdist.k.long
 
 # make list-column df -----------------------------------------------------
@@ -2537,7 +2540,7 @@ ggtree(btESBL_coregene_tree_esco) %>%
                     na.translate = FALSE)  +
   theme(legend.title = element_blank()) -> hospassoc.tree.esco
 
-ggtree(treeio::tree_subset(btESBL_coregene_tree_kleb, 210, 
+ggtree(tree_subset(btESBL_coregene_tree_kleb, 210, 
                            levels_back = 0)) %>% 
   gheatmap(
     clusts["hosp_assoc"], 
@@ -2902,7 +2905,7 @@ bind_rows(
             by = c("lane" = "sample")
   ) %>% 
   group_by(lane) %>% 
-  slice(n = 1) %>% 
+  slice(1) %>% 
     filter(!is.na(hosp_assoc)) %>% 
   mutate(
     hosp_assoc = case_when(
@@ -2916,7 +2919,7 @@ bind_rows(
 edges.e %>% 
   mutate(sortvar = map2_chr(from, to, ~paste(sort(c(.x,.y)), collapse = ""))) %>% 
   group_by(sortvar,type) %>% 
-  slice(n = 1) %>% 
+  slice(1) %>% 
   ungroup() %>% 
   select(-sortvar) %>% 
   group_by(from,to) %>% 
@@ -2987,7 +2990,7 @@ bind_rows(
             by = c("lane" = "sample")
   ) %>% 
   group_by(lane) %>% 
-  slice(n=1) %>% 
+  slice(1) %>% 
     filter(!is.na(hosp_assoc)) %>% 
   mutate(
     hosp_assoc = case_when(
@@ -3001,7 +3004,7 @@ bind_rows(
 edges.k %>% 
   mutate(sortvar = map2_chr(from, to, ~paste(sort(c(.x,.y)), collapse = ""))) %>% 
   group_by(sortvar,type) %>% 
-  slice(n=1) %>% 
+  slice(1) %>% 
   ungroup() %>% 
   select(-sortvar) %>% 
   group_by(from,to) %>% 
@@ -3233,7 +3236,7 @@ btESBL_snpdists_esco %>%
       rename("lab_id.y" = "supplier_name"),
     by = c("sample.y" = "lane")) %>%
   group_by(lab_id.x, lab_id.y) %>%
-  slice(n = 1) -> snpdist.e.long
+  slice(1) -> snpdist.e.long
 
 
 
@@ -3251,7 +3254,7 @@ btESBL_snpdists_kleb  %>%
       rename("lab_id.y" = "supplier_name"),
     by = c("sample.y" = "lane")) %>%
   group_by(lab_id.x, lab_id.y) %>%
-  slice(n = 1)  -> snpdist.k.long
+  slice(1)  -> snpdist.k.long
 
 # make list-column df -----------------------------------------------------
 
@@ -3572,7 +3575,7 @@ for (i in c(0,3,7,10)) {
     semi_join(btESBL_snpdists_esco,
               by = c("lane" = "sample")) %>%
     group_by(lane) %>%
-    slice(n = 1) %>%
+    slice(1) %>%
     filter(!is.na(hosp_assoc)) %>%
     mutate(
       hosp_assoc = case_when(
@@ -3589,7 +3592,7 @@ for (i in c(0,3,7,10)) {
       .x, .y
     )), collapse = ""))) %>%
     group_by(sortvar, type) %>%
-    slice(n = 1) %>%
+    slice(1) %>%
     ungroup() %>%
     select(-sortvar) %>%
     group_by(from, to) %>%
@@ -3668,7 +3671,7 @@ for (i in c(0,3,7,10)) {
     semi_join(btESBL_snpdists_kleb,
               by = c("lane" = "sample")) %>%
     group_by(lane) %>%
-    slice(n = 1) %>%
+    slice(1) %>%
     filter(!is.na(hosp_assoc)) %>%
     mutate(
       hosp_assoc = case_when(
@@ -3685,7 +3688,7 @@ for (i in c(0,3,7,10)) {
       .x, .y
     )), collapse = ""))) %>%
     group_by(sortvar, type) %>%
-    slice(n = 1) %>%
+    slice(1) %>%
     ungroup() %>%
     select(-sortvar) %>%
     group_by(from, to) %>%

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">blantyreESBL</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.1</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -64,20 +64,26 @@
 
 <div id="changelog" class="section level1">
 
-<p>All notable changes to this project will be documented in this
-file.</p>
-<p>The format is based on <a href="https://keepachangelog.com/en/1.0.0/" class="external-link">Keep a Changelog</a>, and
-this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class="external-link">Semantic Versioning</a>.</p>
+<p>All notable changes to this project will be documented in this file.</p>
+<p>The format is based on <a href="https://keepachangelog.com/en/1.0.0/" class="external-link">Keep a Changelog</a>, and this project adheres to <a href="https://semver.org/spec/v2.0.0.html" class="external-link">Semantic Versioning</a>.</p>
+<div class="section level2">
+<h2 id="id_141---2023-10-26">[1.4.1] - 2023-10-26<a class="anchor" aria-label="anchor" href="#id_141---2023-10-26"></a></h2>
+<p>Minor syntax changes due to dependency changes</p>
+<div class="section level3">
+<h3 id="changed">Changed<a class="anchor" aria-label="anchor" href="#changed"></a></h3>
+<ul><li>Updated readme with published paper doi</li>
+<li>Changed subset_tree (is now in tidytree package)</li>
+<li>Changed dplyr::slice calls to latest syntax</li>
+</ul></div>
+</div>
 <div class="section level2">
 <h2 id="id_140---2023-02-08">[1.4.0] - 2023-02-08<a class="anchor" aria-label="anchor" href="#id_140---2023-02-08"></a></h2>
 <div class="section level3">
 <h3 id="added">Added<a class="anchor" aria-label="anchor" href="#added"></a></h3>
 <ul><li>Added AMR data for horesh E. coli dataset</li>
-<li>Stratfied analysis of E. coli diversity vs Horesh (AMR status and
-source)</li>
+<li>Stratfied analysis of E. coli diversity vs Horesh (AMR status and source)</li>
 <li>Add within-participant diversity analysis</li>
-<li>Add E. coli ST131 subtree plot to show Malawian monophlyetic
-clade</li>
+<li>Add E. coli ST131 subtree plot to show Malawian monophlyetic clade</li>
 </ul></div>
 <div class="section level3">
 <h3 id="fixed">Fixed<a class="anchor" aria-label="anchor" href="#fixed"></a></h3>
@@ -87,7 +93,7 @@ clade</li>
 <div class="section level2">
 <h2 id="id_130---2022-09-14">[1.3.0] - 2022-09-14<a class="anchor" aria-label="anchor" href="#id_130---2022-09-14"></a></h2>
 <div class="section level3">
-<h3 id="changed">Changed<a class="anchor" aria-label="anchor" href="#changed"></a></h3>
+<h3 id="changed-1">Changed<a class="anchor" aria-label="anchor" href="#changed-1"></a></h3>
 <ul><li>Changed st167 e coli global analysis to not use enterobase</li>
 <li>changed st410 e coli global analysis to not use enterobase</li>
 </ul></div>
@@ -99,15 +105,14 @@ clade</li>
 <ul><li>Longitudinal carriage model ceftriaxone vs all other abx</li>
 <li>btESBL_AST: phenotypic AST data and plots in carriage paper</li>
 <li>btESBL_model2simulations_2: further simulations from posterior</li>
-<li>Contig cluster sensitivity analysis and mapping of ID/AMR
-genes/plasmid replicon</li>
+<li>Contig cluster sensitivity analysis and mapping of ID/AMR genes/plasmid replicon</li>
 </ul></div>
 <div class="section level3">
 <h3 id="fixed-1">Fixed<a class="anchor" aria-label="anchor" href="#fixed-1"></a></h3>
 <ul><li>bTESBL_plasmidreplicons didn’t include kleb in error - fixed</li>
 </ul></div>
 <div class="section level3">
-<h3 id="changed-1">Changed<a class="anchor" aria-label="anchor" href="#changed-1"></a></h3>
+<h3 id="changed-2">Changed<a class="anchor" aria-label="anchor" href="#changed-2"></a></h3>
 <ul><li>Correct typos throughout</li>
 </ul></div>
 </div>
@@ -115,8 +120,7 @@ genes/plasmid replicon</li>
 <h2 id="id_114---2021-12-13">[1.1.4] - 2021-12-13<a class="anchor" aria-label="anchor" href="#id_114---2021-12-13"></a></h2>
 <div class="section level3">
 <h3 id="added-2">Added<a class="anchor" aria-label="anchor" href="#added-2"></a></h3>
-<ul><li>Table of Kleb isolates showing ESBL status and which study they came
-from</li>
+<ul><li>Table of Kleb isolates showing ESBL status and which study they came from</li>
 <li>Within-participant Kleb ST correlation plots</li>
 <li>Sensitivity analysis plots</li>
 <li>Add VFDB virulence screening for Kleb</li>
@@ -125,7 +129,7 @@ from</li>
 <div class="section level2">
 <h2 id="id_113---2021-11-12">[1.1.3] - 2021-11-12<a class="anchor" aria-label="anchor" href="#id_113---2021-11-12"></a></h2>
 <div class="section level3">
-<h3 id="changed-2">Changed<a class="anchor" aria-label="anchor" href="#changed-2"></a></h3>
+<h3 id="changed-3">Changed<a class="anchor" aria-label="anchor" href="#changed-3"></a></h3>
 <ul><li>Tweak E. coli plots</li>
 </ul></div>
 </div>
@@ -139,21 +143,19 @@ from</li>
 <div class="section level2">
 <h2 id="id_111---2021-11-12">[1.1.1] - 2021-11-12<a class="anchor" aria-label="anchor" href="#id_111---2021-11-12"></a></h2>
 <div class="section level3">
-<h3 id="changed-3">Changed<a class="anchor" aria-label="anchor" href="#changed-3"></a></h3>
+<h3 id="changed-4">Changed<a class="anchor" aria-label="anchor" href="#changed-4"></a></h3>
 <ul><li>Switch E coli Malawi carriage tree to non ASC</li>
-<li>Switch E coli global tree to non ASC, using full Horesh
-collection</li>
+<li>Switch E coli global tree to non ASC, using full Horesh collection</li>
 <li>Use ClermonTyping v20.3 instead of isPcr for phylogroups</li>
 <li>switch E coli ST410 and ST167 trees to non-ASC</li>
 <li>add E coli ST131 tree and metadata ### Fixed</li>
-<li>Updated kleb Malawi carriage tree to non ASC - 1.1.0 didn’t have
-correct ones</li>
+<li>Updated kleb Malawi carriage tree to non ASC - 1.1.0 didn’t have correct ones</li>
 </ul></div>
 </div>
 <div class="section level2">
 <h2 id="id_110---2021-11-01">[1.1.0] - 2021-11-01<a class="anchor" aria-label="anchor" href="#id_110---2021-11-01"></a></h2>
 <div class="section level3">
-<h3 id="changed-4">Changed<a class="anchor" aria-label="anchor" href="#changed-4"></a></h3>
+<h3 id="changed-5">Changed<a class="anchor" aria-label="anchor" href="#changed-5"></a></h3>
 <ul><li>Switch Klebsiella Malawi carriage tree to be without ASC</li>
 <li>Switch Kleb global tree to be without ASC</li>
 <li>Switch Kleb Malawi all isolate tree to be without ASC</li>
@@ -200,8 +202,7 @@ correct ones</li>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -1,13 +1,13 @@
 Package: blantyreESBL
 Title: Data and Code Repository For a Study Describing Antimicrobial Resistance in Blantyre, Malawi
-Version: 1.4
+Version: 1.4.1
 Authors@R: 
     person(given = "Joseph",
            family = "Lewis",
            role = c("aut", "cre"),
            email = "joseph.lewis@lstmed.ac.uk",
            comment = c(ORCID = "0000-0002-3837-5188"))
-Description: Data and code repository for a study to undertand antimicrobial resistance in Blantyre, Malawi
+Description: Data and code repository for a study to understand antimicrobial resistance in Blantyre, Malawi
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -49,6 +49,7 @@ Suggests:
     scales,
     stringr,
     tidyr,
+    tidytree,
     viridis,
 Remotes:
     bioc::ggtree

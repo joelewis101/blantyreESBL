@@ -623,7 +623,7 @@ pick_best_fitting_gene <- function(df) {
       # if they are all same group, use group
       df %>%
         arrange(desc(pident), desc(length)) %>%
-        dplyr::slice(n = 1) %>%
+        dplyr::slice(1) %>%
         mutate(
           gene = paste0(sseqid_group, "*"),
           duplicate_flag = 0
@@ -633,7 +633,7 @@ pick_best_fitting_gene <- function(df) {
       df %>%
         group_by(sseqid_group) %>%
         arrange(sseqid_group, desc(pident), desc(length)) %>%
-        dplyr::slice(n = 1) %>%
+        dplyr::slice(1) %>%
         mutate(
           gene = paste0(sseqid_group, "*"),
           duplicate_flag = 1

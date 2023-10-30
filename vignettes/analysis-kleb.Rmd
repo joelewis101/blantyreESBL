@@ -17,6 +17,7 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
 ```{r setup}
+library(tidytree)
 library(rstatix)
 library(phytools)
 library(ggtree)
@@ -118,7 +119,7 @@ btESBL_sequence_sample_metadata %>%
        group = "Within-participant\nDuplicate STs exlcuded"
      ) %>%
      arrange(pid, ST) %>%
-     slice(n = 1)
+     slice(1)
  ) %>%
    select(pid, ST, group, kleb_k_locus, kleb_o_locus) %>%
    rename_with(~ gsub("kleb_", "", .x)) %>%
@@ -150,7 +151,7 @@ btESBL_sequence_sample_metadata %>%
        group = "Within-participant\nDuplicate STs exlcuded"
      ) %>%
      arrange(pid, ST) %>%
-     slice(n = 1)
+     slice(1)
  ) %>%
    select(pid, ST, group, kleb_k_locus, kleb_o_locus) %>%
    rename_with(~ gsub("kleb_", "", .x)) %>%
@@ -244,7 +245,7 @@ prop_same_ST_within(btESBL_sequence_sample_metadata)
 btESBL_sequence_sample_metadata %>%
   filter(grepl("Kleb", species)) %>%
   group_by(pid, ST) %>%
-  slice(n = 1) %>%
+  slice(1) %>%
   nrow()
 
 
@@ -620,7 +621,7 @@ rownames(spec_hm) <- spec_hm$strain
     geom_treescale(x = 0.05, y = 180, offset = 2) -> 
     p1
   
-  ggtree(treeio::tree_subset(btESBL_coregene_tree_kleb, 210, 
+  ggtree(tree_subset(btESBL_coregene_tree_kleb, 210, 
                              levels_back = 0)) %>% 
     gheatmap(
       select(mlst.onehot,-lane),
@@ -912,7 +913,7 @@ names(colz) <- sort(unique(dassimKleb_BTKleb.amr %>%
                         #     filter(class != "Fosfomycin") %>% 
                              pull(class)))
 
-ggtree(treeio::tree_subset(btESBL_coregene_tree_kleb, 210, 
+ggtree(tree_subset(btESBL_coregene_tree_kleb, 210, 
                            levels_back = 0)) %>% 
 #ggtree(tree) %>% 
     gheatmap(
@@ -1213,7 +1214,7 @@ names(col) <-
       (
         (
           ggtree(
-            treeio::tree_subset(btESBL_kleb_globaltree, 734, levels_back = 0),
+            tree_subset(btESBL_kleb_globaltree, 734, levels_back = 0),
             size = 0.3
           ) %>%
             gheatmap(
@@ -1366,7 +1367,7 @@ if (write_figs) {
 (
   (
     ggtree(
-      treeio::tree_subset(
+      tree_subset(
         btESBL_kleb_malawi_allisolate_core_gene_tree,
         372,
         levels_back = 0
@@ -2498,7 +2499,7 @@ rownames(vfdb_onehot) <- vfdb_onehot$name
 
 (
 (ggtree(
-  treeio::tree_subset(
+  tree_subset(
     btESBL_kleb_malawi_allisolate_core_gene_tree,
     372,
     levels_back = 0

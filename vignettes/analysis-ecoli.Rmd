@@ -40,6 +40,7 @@ Thomson\*^4,6^, Nicholas A Feasey\*^1,2^
 
 ```{r setup}
 
+library(tidytree)
 library(ggtree)
 library(ape)
 library(phytools)
@@ -995,13 +996,13 @@ btESBL_ecoli_globaltree -> horesh_context_tree
 popPUNK_clusts_inplots <- 
   df_all %>% 
    filter(lane %in% 
-           c(treeio::tree_subset(
+           c(tree_subset(
              btESBL_ecoli_globaltree,
              3555, levels_back = 0)$tip.label,
-             treeio::tree_subset(
+             tree_subset(
                btESBL_ecoli_globaltree,
                5404, levels_back = 0)$tip.label,
-             treeio::tree_subset(
+             tree_subset(
                btESBL_ecoli_globaltree,
                5652, levels_back = 0)$tip.label)
   ) %>% 
@@ -1052,13 +1053,13 @@ popPUNK_cols <- c(
 
 names(popPUNK_cols) <- df_all %>% 
   filter(lane %in% 
-           c(treeio::tree_subset(
+           c(tree_subset(
              btESBL_ecoli_globaltree,
              3565, levels_back = 0)$tip.label,
-             treeio::tree_subset(
+             tree_subset(
                btESBL_ecoli_globaltree,
                5404, levels_back = 0)$tip.label,
-             treeio::tree_subset(
+             tree_subset(
                btESBL_ecoli_globaltree,
                5652, levels_back = 0)$tip.label)
   ) %>% 
@@ -1179,7 +1180,7 @@ tippoint_alpha = 0.7
 
 (
   ggtree(
-    treeio::tree_subset(
+    tree_subset(
       btESBL_ecoli_globaltree, 3565, levels_back = 0)
     ) %<+% select(df_all, lane, cluster_recode) %>% 
     gheatmap(
@@ -1239,7 +1240,7 @@ p_phylo_a_subtree +
 offset_add <- 0.0004
 (
   ggtree(
-    treeio::tree_subset(
+    tree_subset(
       btESBL_ecoli_globaltree, 5652, levels_back = 0)
     ) %<+% select(df_all, lane, cluster_recode) %>%
     gheatmap(
@@ -1295,7 +1296,7 @@ offset_add <- 0.00007
 
 (
   ggtree(
-    treeio::tree_subset(
+    tree_subset(
       btESBL_ecoli_globaltree, 5404, levels_back = 0)
     ) %<+% select(df_all, lane, cluster_recode) %>%
     gheatmap(
@@ -2328,7 +2329,7 @@ st410_globaltree_plot
 
 ```{r st410 subtree}
 
-treeio::tree_subset(
+tree_subset(
   btESBL_ecoli_globalst410_tree, 390, levels_back = 0)  -> st410_subtree
 
 esbl_cpe.ariba410 %>%
@@ -2644,7 +2645,7 @@ ggsave(here("figures/ecoli-genomics/st167_globaltreeplot.pdf"),
 
 ```{r st167subtree}
 
-treeio::tree_subset(
+tree_subset(
   btESBL_ecoli_globalst167_tree, 142, levels_back = 0) -> st167_subtree
 
 esbl_cpe.ariba %>%
@@ -2964,7 +2965,7 @@ ggsave(here("figures/ecoli-genomics/st410_167_131_subtreeplot.pdf"),
 # ----------------------------------------------------------------------
 # plot subtree of ST131
 
-treeio::tree_subset(btESBL_ecoli_globalst131_tree, 1090) -> st131_subtree
+tree_subset(btESBL_ecoli_globalst131_tree, 1090) -> st131_subtree
 
 
 esbl_cpe.ariba131 %>%
@@ -2991,7 +2992,7 @@ st131_plasm_onehot_subset
 
 (
   (
-    (ggtree(treeio::tree_subset(btESBL_ecoli_globalst131_tree, 1090)) %<+%
+    (ggtree(tree_subset(btESBL_ecoli_globalst131_tree, 1090)) %<+%
       (select(btESBL_ecoli_st131_metadata, Accession_number, Country) %>%
         mutate(Country = if_else(Country == "Malawi",
           "Malawi", NA_character_
